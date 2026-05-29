@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Mail, MapPin, Bed, DollarSign } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AnimatedHeading } from "./anim/AnimatedHeading";
 import { Eyebrow } from "./Eyebrow";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 export function HeroSection() {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const setStore = useOnboardingStore((s) => s.set);
 
   return (
     <section className="relative overflow-hidden bg-paper">
