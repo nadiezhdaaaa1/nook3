@@ -1,8 +1,8 @@
-import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart } from "lucide-react";
 import { useState } from "react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
-import { getReferralCode } from "@/lib/onboarding/store";
+import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/preferences")({
@@ -49,12 +49,7 @@ function PreferencesShell() {
               Customize your apartment alerts and notification settings.
             </p>
           </div>
-          <button
-            type="button"
-            className="h-11 px-5 inline-flex items-center gap-2 rounded-pill border border-charcoal-200 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950"
-          >
-            <BellOff className="h-4 w-4" /> Unsubscribe
-          </button>
+          <UnsubscribeButton />
         </div>
 
         <div className="grid lg:grid-cols-[240px_1fr] gap-8">
