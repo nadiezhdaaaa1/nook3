@@ -14,6 +14,7 @@ export function Step3Location() {
   const cityConfig = getCity(city);
   const [query, setQuery] = useState("");
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+  const [view, setView] = useState<"list" | "map">("list");
 
   const groups = useMemo(
     () => (cityConfig ? Object.entries(cityConfig.neighborhoodGroups) : []),
@@ -49,6 +50,30 @@ export function Step3Location() {
           Pick neighborhoods in {cityConfig.displayName}. Add as many as you want.
         </p>
       </header>
+
+      {/* View toggle */}
+      <div className="inline-flex p-1 rounded-pill bg-surface-elevated border border-border">
+        <button
+          type="button"
+          onClick={() => setView("list")}
+          className={cn(
+            "h-9 px-4 inline-flex items-center gap-2 rounded-pill text-xs font-semibold transition-colors",
+            view === "list" ? "bg-charcoal-950 text-paper" : "text-charcoal-600",
+          )}
+        >
+          <List className="h-3.5 w-3.5" /> List
+        </button>
+        <button
+          type="button"
+          onClick={() => setView("map")}
+          className={cn(
+            "h-9 px-4 inline-flex items-center gap-2 rounded-pill text-xs font-semibold transition-colors",
+            view === "map" ? "bg-charcoal-950 text-paper" : "text-charcoal-600",
+          )}
+        >
+          <MapIcon className="h-3.5 w-3.5" /> Map
+        </button>
+      </div>
 
       {/* Selected chips */}
       {neighborhoods.length > 0 && (
