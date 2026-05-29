@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, X, MapPin } from "lucide-react";
 import { SaveBar } from "@/components/preferences/SaveBar";
+import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
@@ -71,6 +72,14 @@ function LocationTab() {
           Neighborhoods in {cityConfig.displayName} and preferred transit lines.
         </p>
       </header>
+
+      <NeighborhoodMap
+        city={cityConfig}
+        selected={neighborhoods}
+        onToggle={toggleNeighborhood}
+      />
+
+
 
       {neighborhoods.length > 0 && (
         <div className="p-4 rounded-card bg-sage-100/60 border border-sage-300/40">

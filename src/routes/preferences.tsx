@@ -52,9 +52,9 @@ function PreferencesShell() {
           <UnsubscribeButton />
         </div>
 
-        <div className="grid lg:grid-cols-[240px_1fr] gap-8">
-          <aside>
-            <nav className="space-y-1">
+        <div className="grid lg:grid-cols-[240px_1fr] gap-6 lg:gap-8">
+          <aside className="lg:sticky lg:top-6 lg:self-start">
+            <nav className="flex lg:flex-col gap-1 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 lg:overflow-visible">
               {TABS.map((t) => {
                 const active = t.exact ? pathname === t.to : pathname.startsWith(t.to);
                 const Icon = t.icon;
@@ -63,10 +63,10 @@ function PreferencesShell() {
                     key={t.to}
                     to={t.to}
                     className={cn(
-                      "flex items-center gap-3 px-4 h-11 rounded-md text-sm font-medium transition-colors",
+                      "shrink-0 lg:shrink inline-flex items-center gap-2 lg:gap-3 px-4 h-11 rounded-pill lg:rounded-md text-sm font-medium transition-colors whitespace-nowrap",
                       active
                         ? "bg-charcoal-950 text-paper"
-                        : "text-charcoal-700 hover:bg-charcoal-950/5",
+                        : "text-charcoal-700 hover:bg-charcoal-950/5 border border-charcoal-200 lg:border-0",
                     )}
                   >
                     <Icon className="h-4 w-4" />

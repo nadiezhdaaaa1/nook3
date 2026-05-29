@@ -47,7 +47,7 @@ export function OnboardingShell() {
         </div>
       )}
 
-      <main className="flex-1 max-w-3xl w-full mx-auto px-6 lg:px-10 py-10 lg:py-14">
+      <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-10 lg:py-14">
         <Outlet />
       </main>
     </div>
