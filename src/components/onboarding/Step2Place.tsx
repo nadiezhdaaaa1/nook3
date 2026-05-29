@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { PillGroup } from "@/components/onboarding/PillGroup";
@@ -30,8 +30,7 @@ export function Step2Place() {
   const cityConfig = getCity(city);
 
   if (!cityConfig) {
-    navigate({ to: "/onboarding/step/$step", params: { step: "1" } });
-    return null;
+    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
   }
 
   const canContinue = bedrooms.length > 0;

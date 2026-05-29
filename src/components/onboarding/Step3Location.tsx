@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Search, X, MapPin } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
