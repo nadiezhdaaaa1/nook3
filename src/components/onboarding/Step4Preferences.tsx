@@ -16,18 +16,19 @@ export function Step4Preferences() {
   const cityConfig = getCity(city);
   const [showAllLines, setShowAllLines] = useState(false);
 
-  if (!cityConfig) {
-    navigate({ to: "/onboarding/step/$step", params: { step: "1" } });
-    return null;
-  }
-
-  const allLines = cityConfig.transit.lines;
+  const allLines = cityConfig?.transit.lines ?? [];
   const smartLines = useMemo(() => {
     if (neighborhoods.length === 0) return allLines;
     const filtered = allLines.filter((l) =>
       l.servesNeighborhoods.some((n) => neighborhoods.includes(n)),
     );
     return filtered.length === 0 ? allLines : filtered;
+  }, [allLines, neighborhoods]);
+
+  if (!cityConfig) {
+    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
+  }
+
   }, [allLines, neighborhoods]);
 
   const visibleLines = showAllLines ? allLines : smartLines;
