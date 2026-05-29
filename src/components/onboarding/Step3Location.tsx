@@ -14,12 +14,10 @@ export function Step3Location() {
   const [query, setQuery] = useState("");
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
 
-  if (!cityConfig) {
-    navigate({ to: "/onboarding/step/$step", params: { step: "1" } });
-    return null;
-  }
-
-  const groups = Object.entries(cityConfig.neighborhoodGroups);
+  const groups = useMemo(
+    () => (cityConfig ? Object.entries(cityConfig.neighborhoodGroups) : []),
+    [cityConfig],
+  );
 
   const matchedByQuery = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -32,6 +30,10 @@ export function Step3Location() {
     }
     return all;
   }, [query, groups]);
+
+  if (!cityConfig) {
+    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
+  }
 
   const canContinue = neighborhoods.length > 0;
 
