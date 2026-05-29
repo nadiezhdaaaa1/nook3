@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, X, MapPin } from "lucide-react";
 import { SaveBar } from "@/components/preferences/SaveBar";
+import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
