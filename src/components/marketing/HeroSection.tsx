@@ -42,7 +42,11 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.55, duration: 0.6 }}
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (email) setStore("email", email);
+                navigate({ to: "/onboarding/step/$step", params: { step: "1" } });
+              }}
               className="mt-10 flex flex-col sm:flex-row gap-3 max-w-lg"
             >
               <div className="relative flex-1">
@@ -55,13 +59,13 @@ export function HeroSection() {
                   className="w-full h-14 pl-11 pr-4 rounded-pill bg-surface-elevated border border-border text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20 transition-all"
                 />
               </div>
-              <Link
-                to="/signup"
+              <button
+                type="submit"
                 className="group inline-flex h-14 items-center justify-center gap-2 px-8 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 transition-colors whitespace-nowrap"
               >
                 Get alerts
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+              </button>
             </motion.form>
 
             <p className="mt-4 text-xs font-mono uppercase tracking-[0.15em] text-charcoal-500">
