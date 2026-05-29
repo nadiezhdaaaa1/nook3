@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
+import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
+import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -22,31 +25,71 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingPreviewRoute = OnboardingPreviewRouteImport.update({
+  id: '/preview',
+  path: '/preview',
+  getParentRoute: () => OnboardingRoute,
+} as any)
+const OnboardingLoadingRoute = OnboardingLoadingRouteImport.update({
+  id: '/loading',
+  path: '/loading',
+  getParentRoute: () => OnboardingRoute,
+} as any)
+const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
+  id: '/step/$step',
+  path: '/step/$step',
+  getParentRoute: () => OnboardingRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof OnboardingRouteWithChildren
+  '/onboarding/loading': typeof OnboardingLoadingRoute
+  '/onboarding/preview': typeof OnboardingPreviewRoute
+  '/onboarding/step/$step': typeof OnboardingStepStepRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof OnboardingRouteWithChildren
+  '/onboarding/loading': typeof OnboardingLoadingRoute
+  '/onboarding/preview': typeof OnboardingPreviewRoute
+  '/onboarding/step/$step': typeof OnboardingStepStepRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof OnboardingRouteWithChildren
+  '/onboarding/loading': typeof OnboardingLoadingRoute
+  '/onboarding/preview': typeof OnboardingPreviewRoute
+  '/onboarding/step/$step': typeof OnboardingStepStepRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/onboarding/loading'
+    | '/onboarding/preview'
+    | '/onboarding/step/$step'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding'
-  id: '__root__' | '/' | '/onboarding'
+  to:
+    | '/'
+    | '/onboarding'
+    | '/onboarding/loading'
+    | '/onboarding/preview'
+    | '/onboarding/step/$step'
+  id:
+    | '__root__'
+    | '/'
+    | '/onboarding'
+    | '/onboarding/loading'
+    | '/onboarding/preview'
+    | '/onboarding/step/$step'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  OnboardingRoute: typeof OnboardingRoute
+  OnboardingRoute: typeof OnboardingRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +108,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/preview': {
+      id: '/onboarding/preview'
+      path: '/preview'
+      fullPath: '/onboarding/preview'
+      preLoaderRoute: typeof OnboardingPreviewRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
+    '/onboarding/loading': {
+      id: '/onboarding/loading'
+      path: '/loading'
+      fullPath: '/onboarding/loading'
+      preLoaderRoute: typeof OnboardingLoadingRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
+    '/onboarding/step/$step': {
+      id: '/onboarding/step/$step'
+      path: '/step/$step'
+      fullPath: '/onboarding/step/$step'
+      preLoaderRoute: typeof OnboardingStepStepRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
   }
 }
 
+interface OnboardingRouteChildren {
+  OnboardingLoadingRoute: typeof OnboardingLoadingRoute
+  OnboardingPreviewRoute: typeof OnboardingPreviewRoute
+  OnboardingStepStepRoute: typeof OnboardingStepStepRoute
+}
+
+const OnboardingRouteChildren: OnboardingRouteChildren = {
+  OnboardingLoadingRoute: OnboardingLoadingRoute,
+  OnboardingPreviewRoute: OnboardingPreviewRoute,
+  OnboardingStepStepRoute: OnboardingStepStepRoute,
+}
+
+const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
+  OnboardingRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  OnboardingRoute: OnboardingRoute,
+  OnboardingRoute: OnboardingRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
