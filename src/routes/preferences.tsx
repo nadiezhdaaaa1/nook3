@@ -87,6 +87,46 @@ function PreferencesShell() {
   );
 }
 
+function UnsubscribeButton() {
+  const navigate = useNavigate();
+  const reset = useOnboardingStore((s) => s.reset);
+  const [confirming, setConfirming] = useState(false);
+
+  if (!confirming) {
+    return (
+      <button
+        type="button"
+        onClick={() => setConfirming(true)}
+        className="h-11 px-5 inline-flex items-center gap-2 rounded-pill border border-charcoal-200 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950"
+      >
+        <BellOff className="h-4 w-4" /> Unsubscribe
+      </button>
+    );
+  }
+  return (
+    <div className="inline-flex items-center gap-2">
+      <span className="text-xs text-charcoal-600">Stop all alerts?</span>
+      <button
+        type="button"
+        onClick={() => {
+          reset();
+          navigate({ to: "/" });
+        }}
+        className="h-9 px-3 rounded-pill bg-danger text-paper text-xs font-semibold"
+      >
+        Yes, unsubscribe
+      </button>
+      <button
+        type="button"
+        onClick={() => setConfirming(false)}
+        className="h-9 px-3 rounded-pill border border-charcoal-200 text-xs font-semibold text-charcoal-700"
+      >
+        Cancel
+      </button>
+    </div>
+  );
+}
+
 function ReferralBlock() {
   const [copied, setCopied] = useState(false);
   const code = typeof window === "undefined" ? "RB000000" : getReferralCode();
