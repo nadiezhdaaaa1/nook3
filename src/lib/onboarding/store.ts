@@ -143,9 +143,10 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
       name: "nook.onboarding.v1",
       storage: createJSONStorage(() =>
         typeof window === "undefined"
-          ? ({ getItem: () => null, setItem: () => null, removeItem: () => null } as Storage)
+          ? (undefined as unknown as Storage)
           : localStorage,
       ),
+      skipHydration: typeof window === "undefined",
     },
   ),
 );
