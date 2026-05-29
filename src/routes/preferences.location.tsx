@@ -73,6 +73,14 @@ function LocationTab() {
         </p>
       </header>
 
+      <NeighborhoodMap
+        city={cityConfig}
+        selected={neighborhoods}
+        onToggle={toggleNeighborhood}
+      />
+
+
+
       {neighborhoods.length > 0 && (
         <div className="p-4 rounded-card bg-sage-100/60 border border-sage-300/40">
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
