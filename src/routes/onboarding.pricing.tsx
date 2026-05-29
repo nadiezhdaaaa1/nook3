@@ -1,6 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
+import { TrialModal } from "@/components/onboarding/TrialModal";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/onboarding/pricing")({
@@ -46,14 +48,15 @@ const PLANS: Array<{
 function PricingScreen() {
   const navigate = useNavigate();
   const { billingCycle, set } = useOnboardingStore();
+  const [trialFor, setTrialFor] = useState<Plan | null>(null);
 
   const handleSelect = (plan: Plan) => {
-    set("selectedPlan", plan);
     if (plan === "free") {
+      set("selectedPlan", "free");
+      set("trialActive", false);
       navigate({ to: "/onboarding/success" });
     } else {
-      set("trialActive", true);
-      navigate({ to: "/onboarding/success" });
+      setTrialFor(plan);
     }
   };
 
@@ -64,7 +67,7 @@ function PricingScreen() {
         <h1 className="font-display text-3xl lg:text-4xl font-bold text-charcoal-950">
           Choose your <span className="accent-italic">plan</span>
         </h1>
-        <p className="mt-3 text-charcoal-600">Select your preferred alert frequency.</p>
+        <p className="mt-3 text-charcoal-600">Start free, upgrade anytime.</p>
 
         <div className="mt-6 inline-flex rounded-pill border border-border p-1 bg-surface-elevated">
           {(["monthly", "annual"] as const).map((c) => (
@@ -118,7 +121,7 @@ function PricingScreen() {
                 type="button"
                 onClick={() => handleSelect(p.id)}
                 className={cn(
-                  "mt-6 h-11 rounded-pill text-sm font-semibold",
+                  "mt-6 h-11 rounded-pill text-sm font-semibold transition-colors",
                   p.highlight
                     ? "bg-peach-700 text-paper hover:bg-peach-900"
                     : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
@@ -130,6 +133,17 @@ function PricingScreen() {
           );
         })}
       </div>
+
+      {trialFor && (
+        <TrialModal
+          plan={trialFor}
+          onClose={() => setTrialFor(null)}
+          onConfirm={() => {
+            setTrialFor(null);
+            navigate({ to: "/onboarding/success" });
+          }}
+        />
+      )}
     </div>
   );
 }
