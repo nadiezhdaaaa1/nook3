@@ -29,7 +29,7 @@ export function Step4Preferences() {
     return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
   }
 
-  }, [allLines, neighborhoods]);
+
 
   const visibleLines = showAllLines ? allLines : smartLines;
   const hiddenCount = allLines.length - smartLines.length;
