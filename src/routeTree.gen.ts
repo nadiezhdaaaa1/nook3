@@ -9,12 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PreferencesIndexRouteImport } from './routes/preferences.index'
+import { Route as PreferencesLocationRouteImport } from './routes/preferences.location'
+import { Route as PreferencesBudgetRouteImport } from './routes/preferences.budget'
+import { Route as PreferencesApartmentRouteImport } from './routes/preferences.apartment'
+import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
+import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
 
+const PreferencesRoute = PreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -24,6 +36,36 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PreferencesIndexRoute = PreferencesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PreferencesRoute,
+} as any)
+const PreferencesLocationRoute = PreferencesLocationRouteImport.update({
+  id: '/location',
+  path: '/location',
+  getParentRoute: () => PreferencesRoute,
+} as any)
+const PreferencesBudgetRoute = PreferencesBudgetRouteImport.update({
+  id: '/budget',
+  path: '/budget',
+  getParentRoute: () => PreferencesRoute,
+} as any)
+const PreferencesApartmentRoute = PreferencesApartmentRouteImport.update({
+  id: '/apartment',
+  path: '/apartment',
+  getParentRoute: () => PreferencesRoute,
+} as any)
+const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => OnboardingRoute,
+} as any)
+const OnboardingPricingRoute = OnboardingPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => OnboardingRoute,
 } as any)
 const OnboardingPreviewRoute = OnboardingPreviewRouteImport.update({
   id: '/preview',
@@ -44,8 +86,15 @@ const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/preferences': typeof PreferencesRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
+  '/onboarding/pricing': typeof OnboardingPricingRoute
+  '/onboarding/success': typeof OnboardingSuccessRoute
+  '/preferences/apartment': typeof PreferencesApartmentRoute
+  '/preferences/budget': typeof PreferencesBudgetRoute
+  '/preferences/location': typeof PreferencesLocationRoute
+  '/preferences/': typeof PreferencesIndexRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
 }
 export interface FileRoutesByTo {
@@ -53,14 +102,27 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
+  '/onboarding/pricing': typeof OnboardingPricingRoute
+  '/onboarding/success': typeof OnboardingSuccessRoute
+  '/preferences/apartment': typeof PreferencesApartmentRoute
+  '/preferences/budget': typeof PreferencesBudgetRoute
+  '/preferences/location': typeof PreferencesLocationRoute
+  '/preferences': typeof PreferencesIndexRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/preferences': typeof PreferencesRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
+  '/onboarding/pricing': typeof OnboardingPricingRoute
+  '/onboarding/success': typeof OnboardingSuccessRoute
+  '/preferences/apartment': typeof PreferencesApartmentRoute
+  '/preferences/budget': typeof PreferencesBudgetRoute
+  '/preferences/location': typeof PreferencesLocationRoute
+  '/preferences/': typeof PreferencesIndexRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
 }
 export interface FileRouteTypes {
@@ -68,8 +130,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/onboarding'
+    | '/preferences'
     | '/onboarding/loading'
     | '/onboarding/preview'
+    | '/onboarding/pricing'
+    | '/onboarding/success'
+    | '/preferences/apartment'
+    | '/preferences/budget'
+    | '/preferences/location'
+    | '/preferences/'
     | '/onboarding/step/$step'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -77,23 +146,44 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/onboarding/loading'
     | '/onboarding/preview'
+    | '/onboarding/pricing'
+    | '/onboarding/success'
+    | '/preferences/apartment'
+    | '/preferences/budget'
+    | '/preferences/location'
+    | '/preferences'
     | '/onboarding/step/$step'
   id:
     | '__root__'
     | '/'
     | '/onboarding'
+    | '/preferences'
     | '/onboarding/loading'
     | '/onboarding/preview'
+    | '/onboarding/pricing'
+    | '/onboarding/success'
+    | '/preferences/apartment'
+    | '/preferences/budget'
+    | '/preferences/location'
+    | '/preferences/'
     | '/onboarding/step/$step'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
+  PreferencesRoute: typeof PreferencesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/preferences': {
+      id: '/preferences'
+      path: '/preferences'
+      fullPath: '/preferences'
+      preLoaderRoute: typeof PreferencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -107,6 +197,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/preferences/': {
+      id: '/preferences/'
+      path: '/'
+      fullPath: '/preferences/'
+      preLoaderRoute: typeof PreferencesIndexRouteImport
+      parentRoute: typeof PreferencesRoute
+    }
+    '/preferences/location': {
+      id: '/preferences/location'
+      path: '/location'
+      fullPath: '/preferences/location'
+      preLoaderRoute: typeof PreferencesLocationRouteImport
+      parentRoute: typeof PreferencesRoute
+    }
+    '/preferences/budget': {
+      id: '/preferences/budget'
+      path: '/budget'
+      fullPath: '/preferences/budget'
+      preLoaderRoute: typeof PreferencesBudgetRouteImport
+      parentRoute: typeof PreferencesRoute
+    }
+    '/preferences/apartment': {
+      id: '/preferences/apartment'
+      path: '/apartment'
+      fullPath: '/preferences/apartment'
+      preLoaderRoute: typeof PreferencesApartmentRouteImport
+      parentRoute: typeof PreferencesRoute
+    }
+    '/onboarding/success': {
+      id: '/onboarding/success'
+      path: '/success'
+      fullPath: '/onboarding/success'
+      preLoaderRoute: typeof OnboardingSuccessRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
+    '/onboarding/pricing': {
+      id: '/onboarding/pricing'
+      path: '/pricing'
+      fullPath: '/onboarding/pricing'
+      preLoaderRoute: typeof OnboardingPricingRouteImport
+      parentRoute: typeof OnboardingRoute
     }
     '/onboarding/preview': {
       id: '/onboarding/preview'
@@ -135,12 +267,16 @@ declare module '@tanstack/react-router' {
 interface OnboardingRouteChildren {
   OnboardingLoadingRoute: typeof OnboardingLoadingRoute
   OnboardingPreviewRoute: typeof OnboardingPreviewRoute
+  OnboardingPricingRoute: typeof OnboardingPricingRoute
+  OnboardingSuccessRoute: typeof OnboardingSuccessRoute
   OnboardingStepStepRoute: typeof OnboardingStepStepRoute
 }
 
 const OnboardingRouteChildren: OnboardingRouteChildren = {
   OnboardingLoadingRoute: OnboardingLoadingRoute,
   OnboardingPreviewRoute: OnboardingPreviewRoute,
+  OnboardingPricingRoute: OnboardingPricingRoute,
+  OnboardingSuccessRoute: OnboardingSuccessRoute,
   OnboardingStepStepRoute: OnboardingStepStepRoute,
 }
 
@@ -148,9 +284,28 @@ const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
   OnboardingRouteChildren,
 )
 
+interface PreferencesRouteChildren {
+  PreferencesApartmentRoute: typeof PreferencesApartmentRoute
+  PreferencesBudgetRoute: typeof PreferencesBudgetRoute
+  PreferencesLocationRoute: typeof PreferencesLocationRoute
+  PreferencesIndexRoute: typeof PreferencesIndexRoute
+}
+
+const PreferencesRouteChildren: PreferencesRouteChildren = {
+  PreferencesApartmentRoute: PreferencesApartmentRoute,
+  PreferencesBudgetRoute: PreferencesBudgetRoute,
+  PreferencesLocationRoute: PreferencesLocationRoute,
+  PreferencesIndexRoute: PreferencesIndexRoute,
+}
+
+const PreferencesRouteWithChildren = PreferencesRoute._addFileChildren(
+  PreferencesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
+  PreferencesRoute: PreferencesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
