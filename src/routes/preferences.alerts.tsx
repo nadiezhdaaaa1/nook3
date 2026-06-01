@@ -81,7 +81,7 @@ function SavedAlertsPage() {
       return next;
     });
 
-  const selectedItems = items.filter((a) => selected.has(a.id));
+  const selectedItems = itemsWithSearch.filter((a) => selected.has(a.id));
 
   return (
     <div className="space-y-6">
@@ -93,6 +93,32 @@ function SavedAlertsPage() {
           Every listing we've sent you. Select 2–3 to compare with Wren AI.
         </p>
       </div>
+
+      {/* Per-search scope chips — only if user has more than one search */}
+      {searches.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1 border-b border-border pb-3">
+          <ScopeChip
+            label="All searches"
+            icon={Layers}
+            active={scope === "all"}
+            count={itemsWithSearch.length}
+            onClick={() => setScope("all")}
+          />
+          {searches.map((s) => {
+            const cnt = itemsWithSearch.filter((a) => a.searchId === s.id).length;
+            return (
+              <ScopeChip
+                key={s.id}
+                label={s.name}
+                active={scope === s.id}
+                count={cnt}
+                highlight={s.id === activeSearchId}
+                onClick={() => setScope(s.id)}
+              />
+            );
+          })}
+        </div>
+      )}
 
       {/* Filter chips */}
       <div className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1">
