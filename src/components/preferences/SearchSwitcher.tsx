@@ -149,6 +149,8 @@ export function SearchSwitcher() {
         </div>
       )}
     </div>
+    {modalOpen && <NewSearchModal onClose={() => setModalOpen(false)} />}
+    </>
   );
 }
 
