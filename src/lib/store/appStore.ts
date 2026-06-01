@@ -42,6 +42,7 @@ interface AppActions {
   duplicateSearch: (searchId: string) => { ok: true; search: Search } | { ok: false; error: string };
   deleteSearch: (searchId: string) => void;
   archiveSearch: (searchId: string) => void;
+  restoreSearch: (searchId: string) => { ok: true } | { ok: false; error: string };
   setActiveSearch: (searchId: string) => void;
 
   // Snapshotting (used by useOnboardingStore facade — call before switching searches
@@ -166,8 +167,34 @@ export const useAppStore = create<AppStore>()(
 
       pauseSearch: (id) => get().updateSearch(id, { status: "paused" }),
       resumeSearch: (id) => get().updateSearch(id, { status: "active" }),
-      archiveSearch: (id) =>
-        get().updateSearch(id, { status: "archived", archivedAt: nowIso() }),
+      archiveSearch: (id) => {
+        const { searches, activeSearchId } = get();
+        const next = searches.map((s) =>
+          s.id === id ? { ...s, status: "archived" as SearchStatus, archivedAt: nowIso(), updatedAt: nowIso() } : s,
+        );
+        const stillActive = activeSearchId === id
+          ? (next.find((s) => s.status !== "archived")?.id ?? null)
+          : activeSearchId;
+        // If nothing left non-archived, bootstrap a fresh one
+        if (!stillActive) {
+          const fresh = buildSearch({ cityId: "nyc" }, next);
+          set({ searches: [...next, fresh], activeSearchId: fresh.id });
+          return;
+        }
+        set({ searches: next, activeSearchId: stillActive });
+      },
+
+      restoreSearch: (id) => {
+        const { searches, user } = get();
+        const src = searches.find((s) => s.id === id);
+        if (!src) return { ok: false, error: "Search not found" };
+        const plan = user?.plan ?? "free";
+        const limit = SEARCH_LIMITS[plan];
+        const activeCount = searches.filter((s) => s.status !== "archived").length;
+        if (activeCount >= limit) return { ok: false, error: "Plan limit reached" };
+        get().updateSearch(id, { status: "active", archivedAt: undefined });
+        return { ok: true };
+      },
 
       duplicateSearch: (id) => {
         const { searches, user } = get();
