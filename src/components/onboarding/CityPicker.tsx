@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
-import { Search, MapPin, Check } from "lucide-react";
+import { Search, Check } from "lucide-react";
 import { CITY_LIST, type CityId, type CityConfig } from "@/data/cities";
+import { CITY_EMOJI } from "@/data/cities/icons";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -29,6 +30,7 @@ export function CityPicker({ value, onChange }: Props) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search cities..."
+          autoComplete="off"
           className="w-full h-12 pl-11 pr-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium placeholder:text-charcoal-400"
         />
         {filtered.length > 0 && (
@@ -43,7 +45,7 @@ export function CityPicker({ value, onChange }: Props) {
                 }}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper-warm text-left"
               >
-                <MapPin className="h-4 w-4 text-charcoal-400" />
+                <span className="text-lg leading-none">{CITY_EMOJI[c.id]}</span>
                 <span className="text-sm font-medium text-charcoal-950">
                   {c.displayName}
                 </span>
@@ -75,7 +77,11 @@ export function CityPicker({ value, onChange }: Props) {
                     : "bg-transparent border-charcoal-200 text-charcoal-800 hover:border-charcoal-950",
                 )}
               >
-                {selected && <Check className="h-3.5 w-3.5" />}
+                {selected ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <span className="text-base leading-none">{CITY_EMOJI[c.id]}</span>
+                )}
                 {c.displayName}
               </button>
             );
