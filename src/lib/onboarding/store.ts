@@ -43,6 +43,8 @@ export interface OnboardingState {
     hasPreference: boolean;
     lines: Record<string, TriState>;
   };
+  commute: { maxMinutes: number | null };
+
 
   // Step 5
   alertChannel: AlertChannel;
@@ -88,6 +90,8 @@ const initial: OnboardingState = {
   neighborhoods: [],
   amenities: {},
   transit: { hasPreference: false, lines: {} },
+  commute: { maxMinutes: null },
+
   alertChannel: "email",
   email: "",
   phone: "",
