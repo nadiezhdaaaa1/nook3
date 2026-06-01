@@ -16,8 +16,9 @@ export function Step1Where() {
   // when city changes, pre-fill budget if not set
   useEffect(() => {
     if (cityConfig && budget === null) {
+      const d = cityConfig.budget.default;
       patch({
-        budget: cityConfig.budget.default,
+        budget: [Math.max(cityConfig.budget.min, Math.round(d * 0.5)), d],
         includeBrokerFee: cityConfig.brokerFeeDefault,
       });
     }
@@ -45,9 +46,10 @@ export function Step1Where() {
           value={city}
           onChange={(id) => {
             const c = getCity(id);
+            const d = c?.budget.default ?? null;
             patch({
               city: id,
-              budget: c?.budget.default ?? null,
+              budget: c && d !== null ? [Math.max(c.budget.min, Math.round(d * 0.5)), d] : null,
               includeBrokerFee: c?.brokerFeeDefault ?? false,
             });
           }}
@@ -57,7 +59,7 @@ export function Step1Where() {
       {cityConfig && budget !== null && (
         <section className="space-y-4">
           <h2 className="font-display text-lg font-semibold text-charcoal-950">
-            2. Maximum monthly rent
+            2. Monthly rent range
           </h2>
           <RentSlider
             city={cityConfig}
