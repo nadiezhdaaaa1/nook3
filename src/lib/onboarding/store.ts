@@ -147,11 +147,14 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
     }),
     {
       name: "nook.onboarding.v1",
-      version: 2,
+      version: 3,
       migrate: (persisted: unknown, version) => {
         const s = (persisted ?? {}) as Partial<OnboardingState> & { budget?: unknown };
         if (version < 2 && typeof s.budget === "number") {
           s.budget = [Math.max(0, Math.round(s.budget * 0.5)), s.budget] as [number, number];
+        }
+        if (version < 3 && s.rentProtection === "likely") {
+          s.rentProtection = "all";
         }
         return s as OnboardingState;
       },
