@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useOnboardingStore, getReferralCode } from "@/lib/onboarding/store";
 import { MoveOutModal } from "@/components/onboarding/MoveOutModal";
-import { useAppStore, selectQuota } from "@/lib/store";
+import { useAppStore, selectQuota, syncOnboardingToUser, syncOnboardingToActiveSearch } from "@/lib/store";
 import { Plus, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding/success")({
@@ -32,6 +32,9 @@ function Success() {
       set("completedAt", new Date().toISOString());
     }
     setReferral(getReferralCode());
+    // Push account-level + active-search snapshots up to the new store.
+    syncOnboardingToActiveSearch();
+    syncOnboardingToUser();
   }, [set]);
 
   const origin =
