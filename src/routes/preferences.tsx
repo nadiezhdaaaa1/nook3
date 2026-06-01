@@ -109,6 +109,8 @@ function EditingLine() {
     </p>
   );
 }
+
+function UnsubscribeButton() {
   const navigate = useNavigate();
   const reset = useOnboardingStore((s) => s.reset);
   const [confirming, setConfirming] = useState(false);
