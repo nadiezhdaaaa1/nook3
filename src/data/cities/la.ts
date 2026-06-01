@@ -13,6 +13,9 @@ export const la: CityConfig = {
     label: "Rent-Controlled (RSO)",
     tooltip:
       "LA's Rent Stabilization Ordinance covers ~624k units in buildings built before October 1, 1978.",
+    tooltipShort:
+      "LA's Rent Stabilization Ordinance (RSO) covers ~624k units in buildings built before Oct 1, 1978.",
+    matchBaseline: 8500,
     options: RENT_PROTECTION_OPTIONS,
   },
   brokerFeeDefault: false,

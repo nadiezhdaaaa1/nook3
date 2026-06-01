@@ -13,6 +13,9 @@ export const dc: CityConfig = {
     label: "Rent Stabilization",
     tooltip:
       "DC's Rental Housing Act protects ~80k apartments from large rent increases. Inclusionary Zoning (IZ) lottery offers affordable units in market-rate buildings.",
+    tooltipShort:
+      "DC's Rental Housing Act protects ~80k apartments from large rent increases.",
+    matchBaseline: 3100,
     options: RENT_PROTECTION_OPTIONS,
   },
   brokerFeeDefault: false,

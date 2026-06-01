@@ -24,7 +24,7 @@ const BATHS = [
 export function Step2Place() {
   const navigate = useNavigate();
   const {
-    city, bedrooms, bathrooms, rentProtection, includeBrokerFee,
+    city, bedrooms, bathrooms, rentProtection, includeBrokerFee, neighborhoods,
     set, toggleBedroom,
   } = useOnboardingStore();
   const cityConfig = getCity(city);
@@ -74,13 +74,11 @@ export function Step2Place() {
 
       {cityConfig.rentProtection.enabled && (
         <section className="space-y-4">
-          <h2 className="font-display text-lg font-semibold text-charcoal-950">
-            3. {cityConfig.rentProtection.label}
-          </h2>
           <RentProtectionPicker
             city={cityConfig}
             value={rentProtection}
             onChange={(v) => set("rentProtection", v)}
+            neighborhoodCount={neighborhoods.length}
           />
         </section>
       )}
