@@ -213,6 +213,45 @@ function Success() {
   );
 }
 
+function AddAnotherSearchCTA() {
+  const navigate = useNavigate();
+  const quota = useAppStore(selectQuota);
+  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const canAdd = quota.remaining > 0;
+  const headline = canAdd
+    ? "Looking in more than one area? Add another search."
+    : plan === "free"
+      ? "Want to track a second city? Upgrade to Premium."
+      : "Need more searches? Go Max for unlimited.";
+
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        navigate({ to: canAdd ? "/preferences" : "/onboarding/pricing" })
+      }
+      className="w-full text-left rounded-card border border-charcoal-200 hover:border-charcoal-950 bg-paper p-4 flex items-center gap-4 transition-colors"
+    >
+      <div className="h-10 w-10 rounded-pill bg-sage-100 flex items-center justify-center shrink-0">
+        {canAdd ? (
+          <Plus className="h-4 w-4 text-sage-700" />
+        ) : (
+          <Lock className="h-4 w-4 text-peach-900" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-semibold text-charcoal-950">{headline}</div>
+        <div className="text-xs text-charcoal-600 mt-0.5">
+          {quota.label}
+          {canAdd ? " · add up to your plan limit from the dashboard." : " · upgrade to unlock more slots."}
+        </div>
+      </div>
+      <ArrowRight className="h-4 w-4 text-charcoal-500 shrink-0" />
+    </button>
+  );
+}
+
+
 function ReferralIllustration() {
   return (
     <svg
