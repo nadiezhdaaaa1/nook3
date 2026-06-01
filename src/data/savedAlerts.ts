@@ -3,6 +3,8 @@ export type AlertSource = "StreetEasy" | "Zillow" | "Craigslist" | "Private land
 
 export interface SavedAlert {
   id: string;
+  /** Owning search id — optional in legacy mock data; required for new alerts. */
+  searchId?: string;
   title: string;
   neighborhood: string;
   beds: number;
