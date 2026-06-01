@@ -35,13 +35,7 @@ function SavedAlertsPage() {
 
   const [filter, setFilter] = useState<Filter>("all");
   const [scope, setScope] = useState<string>("all"); // "all" | searchId
-  const [items, setItems] = useState<SavedAlert[]>(() => {
-    // Deterministically assign mock alerts to existing searches (round-robin).
-    return SAVED_ALERTS.map((a, i) => ({
-      ...a,
-      searchId: a.searchId,
-    }));
-  });
+  const [items, setItems] = useState<SavedAlert[]>(() => SAVED_ALERTS);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [compareOpen, setCompareOpen] = useState(false);
 
