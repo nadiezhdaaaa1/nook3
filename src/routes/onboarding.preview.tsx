@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { MapPin, TrendingDown, Shield, Heart, GitCompare, MessageCircle, Bookmark, ShieldCheck } from "lucide-react";
+import { MapPin, TrendingDown, Shield, Sparkles, ExternalLink, ShieldCheck, X } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
