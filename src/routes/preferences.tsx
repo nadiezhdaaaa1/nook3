@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart } from "lucide-react";
+import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
@@ -17,9 +17,12 @@ export const Route = createFileRoute("/preferences")({
 
 const TABS = [
   { to: "/preferences", label: "Notifications", icon: Bell, exact: true },
+  { to: "/preferences/alerts", label: "Saved Alerts", icon: Inbox, exact: false },
   { to: "/preferences/budget", label: "Budget & Criteria", icon: DollarSign, exact: false },
   { to: "/preferences/apartment", label: "Apartment Details", icon: Home, exact: false },
   { to: "/preferences/location", label: "Location", icon: MapPin, exact: false },
+  { to: "/preferences/referrals", label: "Referrals", icon: Gift, exact: false },
+  { to: "/preferences/account", label: "Account", icon: UserCircle, exact: false },
 ] as const;
 
 function PreferencesShell() {
