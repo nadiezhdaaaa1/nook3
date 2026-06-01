@@ -24,7 +24,7 @@ export interface MoveOutInfo {
 export interface OnboardingState {
   // Step 1
   city: CityId | null;
-  budget: number | null;
+  budget: [number, number] | null;
   moveIn: { mode: "specific" | "flexible"; date?: string };
 
   // Step 2
@@ -141,6 +141,14 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
     }),
     {
       name: "nook.onboarding.v1",
+      version: 2,
+      migrate: (persisted: unknown, version) => {
+        const s = (persisted ?? {}) as Partial<OnboardingState> & { budget?: unknown };
+        if (version < 2 && typeof s.budget === "number") {
+          s.budget = [Math.max(0, Math.round(s.budget * 0.5)), s.budget] as [number, number];
+        }
+        return s as OnboardingState;
+      },
       storage: createJSONStorage(() =>
         typeof window === "undefined"
           ? (undefined as unknown as Storage)

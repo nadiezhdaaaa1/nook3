@@ -42,7 +42,7 @@ function BudgetTab() {
       </header>
 
       <section className="space-y-4">
-        <h3 className="font-display text-lg font-semibold text-charcoal-950">Maximum monthly rent</h3>
+        <h3 className="font-display text-lg font-semibold text-charcoal-950">Monthly rent range</h3>
         <RentSlider city={cityConfig} value={budget} onChange={(v) => set("budget", v)} />
       </section>
 

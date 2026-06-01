@@ -18,7 +18,7 @@ function SamplePreview() {
   const count = useMemo(() => {
     if (!cityConfig || !budget) return 8;
     const nCount = Math.max(neighborhoods.length, 3);
-    const ratio = budget / cityConfig.budget.median1BR;
+    const ratio = budget[1] / cityConfig.budget.median1BR;
     const c = Math.round(nCount * ratio * 2);
     return Math.max(2, Math.min(50, c));
   }, [cityConfig, budget, neighborhoods]);
