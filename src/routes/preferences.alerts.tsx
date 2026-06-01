@@ -30,21 +30,45 @@ const FILTERS: { key: Filter; label: string; icon: any }[] = [
 ];
 
 function SavedAlertsPage() {
+  const searches = useAppStore((s) => s.searches.filter((x) => x.status !== "archived"));
+  const activeSearchId = useAppStore((s) => s.activeSearchId);
+
   const [filter, setFilter] = useState<Filter>("all");
-  const [items, setItems] = useState<SavedAlert[]>(SAVED_ALERTS);
+  const [scope, setScope] = useState<string>("all"); // "all" | searchId
+  const [items, setItems] = useState<SavedAlert[]>(() => {
+    // Deterministically assign mock alerts to existing searches (round-robin).
+    return SAVED_ALERTS.map((a, i) => ({
+      ...a,
+      searchId: a.searchId,
+    }));
+  });
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [compareOpen, setCompareOpen] = useState(false);
 
+  // Round-robin searchId assignment when alert has none.
+  const itemsWithSearch = useMemo(() => {
+    if (searches.length === 0) return items;
+    return items.map((a, i) => ({
+      ...a,
+      searchId: a.searchId ?? searches[i % searches.length].id,
+    }));
+  }, [items, searches]);
+
+  const scopeFiltered = useMemo(
+    () => (scope === "all" ? itemsWithSearch : itemsWithSearch.filter((a) => a.searchId === scope)),
+    [itemsWithSearch, scope],
+  );
+
   const filtered = useMemo(
-    () => (filter === "all" ? items : items.filter((a) => a.status === filter)),
-    [items, filter],
+    () => (filter === "all" ? scopeFiltered : scopeFiltered.filter((a) => a.status === filter)),
+    [scopeFiltered, filter],
   );
 
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: items.length, new: 0, saved: 0, contacted: 0, dismissed: 0 };
-    items.forEach((a) => (c[a.status as Exclude<Filter, "all">] += 1));
+    const c: Record<Filter, number> = { all: scopeFiltered.length, new: 0, saved: 0, contacted: 0, dismissed: 0 };
+    scopeFiltered.forEach((a) => (c[a.status as Exclude<Filter, "all">] += 1));
     return c;
-  }, [items]);
+  }, [scopeFiltered]);
 
   const updateStatus = (id: string, status: AlertStatus) =>
     setItems((arr) => arr.map((a) => (a.id === id ? { ...a, status } : a)));
