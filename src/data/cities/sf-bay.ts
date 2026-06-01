@@ -13,6 +13,9 @@ export const sfBay: CityConfig = {
     label: "Rent Control (SF only)",
     tooltip:
       "SF Rent Control covers multi-unit buildings built before June 13, 1979. Oakland has separate rent control covering buildings built before 1983.",
+    tooltipShort:
+      "SF Rent Control covers multi-unit buildings built before June 13, 1979. Oakland covers pre-1983.",
+    matchBaseline: 4200,
     options: RENT_PROTECTION_OPTIONS,
   },
   brokerFeeDefault: false,
