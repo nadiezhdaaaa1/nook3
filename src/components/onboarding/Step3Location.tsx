@@ -1,12 +1,13 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
-import { Search, X, MapPin, Map as MapIcon, List, Sparkles } from "lucide-react";
+import { Search, X, MapPin, Map as MapIcon, List, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { getNeighborhoodPrice, scoreNeighborhood } from "@/data/cities/neighborhoodPrices";
+import { getCityPresets, resolvePreset } from "@/data/cities/presets";
 import { cn } from "@/lib/utils";
 
 export function Step3Location() {
@@ -34,11 +35,27 @@ export function Step3Location() {
     return all;
   }, [query, groups]);
 
+  const allKnown = useMemo(() => {
+    const s = new Set<string>();
+    if (!cityConfig) return s;
+    for (const items of Object.values(cityConfig.neighborhoodGroups)) {
+      for (const n of items) s.add(n);
+    }
+    return s;
+  }, [cityConfig]);
+  const presets = useMemo(() => (cityConfig ? getCityPresets(cityConfig.id) : []), [cityConfig]);
+
   if (!cityConfig) {
     return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
   }
 
+  const applyPreset = (names: string[]) => {
+    const merged = Array.from(new Set([...neighborhoods, ...names]));
+    set("neighborhoods", merged);
+  };
+
   const canContinue = neighborhoods.length > 0;
+  const tooMany = neighborhoods.length >= 15;
 
   return (
     <div className="space-y-10">
@@ -75,6 +92,55 @@ export function Step3Location() {
           <MapIcon className="h-3.5 w-3.5" /> Map
         </button>
       </div>
+
+      {/* Quick presets */}
+      {presets.length > 0 && (
+        <div>
+          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-3">
+            Quick picks · tap to add a bundle
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5">
+            {presets.map((p) => {
+              const resolved = resolvePreset(p, allKnown);
+              const allSelected = resolved.length > 0 && resolved.every((n) => neighborhoods.includes(n));
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => applyPreset(resolved)}
+                  disabled={resolved.length === 0}
+                  className={cn(
+                    "group text-left p-3.5 rounded-card border transition-colors",
+                    allSelected
+                      ? "bg-sage-100/60 border-sage-400/60"
+                      : "bg-surface-elevated border-border hover:border-charcoal-950 disabled:opacity-40 disabled:hover:border-border",
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg leading-none">{p.emoji}</span>
+                    <span className="text-sm font-semibold text-charcoal-950">{p.label}</span>
+                  </div>
+                  <div className="text-[11px] text-charcoal-500 leading-snug">{p.description}</div>
+                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5 text-charcoal-400">
+                    +{resolved.length} areas{allSelected ? " · added" : ""}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 15+ warning */}
+      {tooMany && (
+        <div className="flex items-start gap-3 p-4 rounded-card bg-peach-100/50 border border-peach-300/60">
+          <AlertTriangle className="h-4 w-4 text-peach-700 mt-0.5 shrink-0" />
+          <div className="text-sm text-charcoal-800">
+            <strong className="text-charcoal-950">{neighborhoods.length} neighborhoods selected.</strong>{" "}
+            That's a wide net — you may get more alerts than you want. Consider trimming to your top 5–10.
+          </div>
+        </div>
+      )}
 
       {/* Selected chips */}
       {neighborhoods.length > 0 && (
@@ -281,6 +347,19 @@ export function Step3Location() {
           )}
         </>
       )}
+
+      {/* Trust signal */}
+      <div className="flex items-start gap-3 p-4 rounded-card bg-charcoal-950/[0.03] border border-charcoal-200/60">
+        <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
+        <div className="text-xs text-charcoal-600 leading-relaxed">
+          Nook monitors every new listing in your selected {cityConfig.displayName} neighborhoods
+          {cityConfig.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
+            <> and cross-checks {cityConfig.buildingDataSources.join(" + ")} records before alerting you</>
+          )}
+          . You can change this anytime in your dashboard.
+        </div>
+      </div>
+
 
       <OnboardingFooter
         canContinue={canContinue}
