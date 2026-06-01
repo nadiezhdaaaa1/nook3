@@ -16,9 +16,8 @@ function SamplePreview() {
   const navigate = useNavigate();
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
-  const [saved, setSaved] = useState<Set<string>>(new Set());
-  const [compare, setCompare] = useState<Set<string>>(new Set());
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
