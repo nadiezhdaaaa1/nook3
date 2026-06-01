@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { useOnboardingStore, getReferralCode } from "@/lib/onboarding/store";
 import { MoveOutModal } from "@/components/onboarding/MoveOutModal";
+import { useAppStore, selectQuota } from "@/lib/store";
+import { Plus, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding/success")({
   component: Success,
