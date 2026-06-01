@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import { CitySwitcher } from "@/components/landing/CitySwitcher";
 import { cn } from "@/lib/utils";
 
 export function MarketingHeader() {
