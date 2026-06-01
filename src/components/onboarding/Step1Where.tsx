@@ -85,20 +85,20 @@ export function Step1Where() {
       {cityConfig && (
         <section>
           <label
-            className="flex gap-3 items-start p-5 rounded-card bg-sage-50 border border-sage-200 cursor-pointer hover:border-sage-300 transition-colors"
+            className="flex gap-3 items-start p-5 rounded-card bg-sage-100/60 border border-sage-300 cursor-pointer hover:border-sage-500 transition-colors"
           >
             <input
               type="checkbox"
               checked={movingOut}
               onChange={(e) => set("movingOut", e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-sage-400 text-sage-700 focus:ring-sage-500"
+              className="mt-0.5 h-4 w-4 rounded border-sage-500 text-sage-700 focus:ring-sage-500"
             />
             <div>
               <div className="text-sm font-semibold text-charcoal-950">
                 I'm also moving out of my current place
               </div>
               <div className="text-xs text-charcoal-600 mt-1">
-                Share your move-out date later for <span className="font-semibold text-sage-800">$50 off Premium annual</span>.
+                Share your move-out date later for <span className="font-semibold text-sage-900">$50 off Premium annual</span>.
               </div>
             </div>
           </label>

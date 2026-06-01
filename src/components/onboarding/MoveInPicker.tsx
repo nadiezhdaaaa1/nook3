@@ -67,7 +67,7 @@ export function MoveInPicker({ mode, date, onChange }: Props) {
       </div>
 
       {isPast && (
-        <div className="rounded-md border border-red-300/60 bg-red-50 text-red-800 text-xs px-3 py-2">
+        <div className="rounded-md border border-peach-500 bg-peach-100 text-peach-900 text-xs px-3 py-2">
           Move-in date must be in the future.
         </div>
       )}

@@ -58,12 +58,12 @@ export function RentSlider({ city, value, onChange }: Props) {
       </div>
 
       {hi < median1BR * 0.5 && (
-        <div className="rounded-md border border-amber-300/60 bg-amber-50 text-amber-900 text-xs px-3 py-2">
+        <div className="rounded-md border border-peach-300 bg-peach-100/60 text-peach-900 text-xs px-3 py-2">
           This may be limiting. Expect 1–2 listings/week at this budget.
         </div>
       )}
       {hi > median1BR * 2 && (
-        <div className="rounded-md border border-amber-300/60 bg-amber-50 text-amber-900 text-xs px-3 py-2">
+        <div className="rounded-md border border-peach-300 bg-peach-100/60 text-peach-900 text-xs px-3 py-2">
           Luxury budget — expect ~5 listings/week. Consider broadening neighborhoods.
         </div>
       )}
