@@ -5,6 +5,7 @@ import { Logo, LogoMark } from "@/components/brand/Logo";
 import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
 import { cn } from "@/lib/utils";
 import { SearchSwitcher } from "@/components/preferences/SearchSwitcher";
+import { PlanLimitsBanner } from "@/components/preferences/PlanLimitsBanner";
 import { useActiveSearch } from "@/lib/store";
 
 export const Route = createFileRoute("/preferences")({
@@ -84,6 +85,7 @@ function PreferencesShell() {
           </aside>
 
           <main>
+            <PlanLimitsBanner />
             <Outlet />
             <ReferralBlock />
           </main>

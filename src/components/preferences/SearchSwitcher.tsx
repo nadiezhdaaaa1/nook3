@@ -12,6 +12,7 @@ import {
 import { getCity } from "@/data/cities";
 import type { Search } from "@/lib/store";
 import { NewSearchModal } from "./NewSearchModal";
+import { UpgradeModal } from "./UpgradeModal";
 
 /**
  * Multi-search switcher dropdown.
@@ -30,6 +31,7 @@ export function SearchSwitcher() {
 
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -52,8 +54,11 @@ export function SearchSwitcher() {
   };
 
   const handleNew = () => {
-    if (!canCreate) return;
     setOpen(false);
+    if (!canCreate) {
+      setUpgradeOpen(true);
+      return;
+    }
     setModalOpen(true);
   };
 
@@ -133,13 +138,7 @@ export function SearchSwitcher() {
             <button
               type="button"
               onClick={handleNew}
-              disabled={!canCreate}
-              className={cn(
-                "w-full flex items-center gap-2 h-10 px-3 rounded-md text-sm font-semibold transition-colors",
-                canCreate
-                  ? "text-charcoal-950 hover:bg-charcoal-950/5"
-                  : "text-charcoal-400 cursor-not-allowed",
-              )}
+              className="w-full flex items-center gap-2 h-10 px-3 rounded-md text-sm font-semibold transition-colors text-charcoal-950 hover:bg-charcoal-950/5"
             >
               {canCreate ? <Plus className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
               {canCreate ? "New search" : `Upgrade to add more (${quota.label})`}
@@ -149,6 +148,7 @@ export function SearchSwitcher() {
       )}
     </div>
     {modalOpen && <NewSearchModal onClose={() => setModalOpen(false)} />}
+    {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </>
   );
 }
