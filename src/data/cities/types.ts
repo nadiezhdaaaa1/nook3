@@ -39,7 +39,12 @@ export interface CityConfig {
   rentProtection: {
     enabled: boolean;
     label?: string;
+    /** Long-form tooltip copy (legacy). */
     tooltip?: string;
+    /** Short educational intro shown above the cards (Block 3). */
+    tooltipShort?: string;
+    /** Baseline weekly match count for "Show all" — scaled by neighborhood breadth. */
+    matchBaseline?: number;
     options?: RentProtectionOption[];
   };
   brokerFeeDefault: boolean;
