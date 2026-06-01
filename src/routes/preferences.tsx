@@ -93,7 +93,22 @@ function PreferencesShell() {
   );
 }
 
-function UnsubscribeButton() {
+function EditingLine() {
+  const active = useActiveSearch();
+  if (!active) {
+    return (
+      <p className="mt-3 text-charcoal-600">
+        Customize your apartment alerts and notification settings.
+      </p>
+    );
+  }
+  return (
+    <p className="mt-3 text-charcoal-600">
+      Editing <span className="font-semibold text-charcoal-950">{active.name}</span>
+      <span className="text-charcoal-400"> · changes apply to this search only.</span>
+    </p>
+  );
+}
   const navigate = useNavigate();
   const reset = useOnboardingStore((s) => s.reset);
   const [confirming, setConfirming] = useState(false);
