@@ -93,8 +93,6 @@ function SamplePreview() {
 
           <div className="space-y-4">
             {matched.map((s) => {
-              const isSaved = saved.has(s.id);
-              const isCompare = compare.has(s.id);
               const isActive = activeId === s.id;
               return (
                 <article
@@ -155,42 +153,29 @@ function SamplePreview() {
                         </div>
                       )}
 
-                      {/* CTAs */}
-                      <div className="flex items-center gap-2 pt-2">
+                      {/* Wren's take */}
+                      <div className="mt-3 p-3 rounded-md bg-sage-100/70 border border-sage-300/40">
+                        <div className="flex items-start gap-2">
+                          <Sparkles className="h-3.5 w-3.5 text-sage-700 mt-0.5 shrink-0" />
+                          <div>
+                            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 font-semibold mb-1">
+                              Wren's take
+                            </div>
+                            <p className="text-xs text-charcoal-800 leading-relaxed">
+                              {wrenTake(s)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* External link */}
+                      <div className="pt-2">
                         <button
                           type="button"
-                          className="flex-1 sm:flex-initial h-10 px-4 inline-flex items-center justify-center gap-2 rounded-pill bg-charcoal-950 text-paper text-xs font-semibold hover:bg-charcoal-800 transition-colors"
+                          onClick={() => setModalOpen(true)}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-peach-700 hover:text-peach-900 transition-colors"
                         >
-                          <MessageCircle className="h-3.5 w-3.5" /> Contact
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => toggle(saved, s.id, setSaved)}
-                          aria-pressed={isSaved}
-                          title={isSaved ? "Saved" : "Save for later"}
-                          className={cn(
-                            "h-10 w-10 inline-flex items-center justify-center rounded-pill border transition-colors",
-                            isSaved
-                              ? "bg-sage-700 border-sage-700 text-paper"
-                              : "border-charcoal-300 text-charcoal-700 hover:border-charcoal-950",
-                          )}
-                        >
-                          {isSaved ? <Bookmark className="h-4 w-4 fill-current" /> : <Heart className="h-4 w-4" />}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => toggle(compare, s.id, setCompare)}
-                          aria-pressed={isCompare}
-                          title={isCompare ? "Remove from compare" : "Add to compare"}
-                          className={cn(
-                            "h-10 px-3 inline-flex items-center gap-1.5 rounded-pill border text-xs font-semibold transition-colors",
-                            isCompare
-                              ? "bg-charcoal-950 border-charcoal-950 text-paper"
-                              : "border-charcoal-300 text-charcoal-700 hover:border-charcoal-950",
-                          )}
-                        >
-                          <GitCompare className="h-3.5 w-3.5" />
-                          {isCompare ? "Comparing" : "Compare"}
+                          View on listing site <ExternalLink className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
@@ -199,28 +184,47 @@ function SamplePreview() {
               );
             })}
           </div>
+
+          <p className="text-center text-xs text-charcoal-500 font-mono uppercase tracking-[0.16em] mt-6">
+            Sample preview · Real alerts after signup
+          </p>
         </>
       )}
 
-      {/* Compare bar */}
-      {compare.size >= 2 && (
-        <div className="sticky bottom-4 z-20 mx-auto max-w-md p-3 pl-5 flex items-center justify-between gap-3 rounded-pill bg-charcoal-950 text-paper shadow-xl">
-          <span className="text-xs font-mono uppercase tracking-[0.18em]">
-            {compare.size} to compare
-          </span>
-          <div className="flex items-center gap-2">
+      {/* External link explanation modal */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-950/60 backdrop-blur-sm p-4"
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            className="relative max-w-sm w-full rounded-card bg-paper border border-border shadow-xl p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
-              onClick={() => setCompare(new Set())}
-              className="text-xs text-paper/70 hover:text-paper px-2"
+              onClick={() => setModalOpen(false)}
+              className="absolute top-3 right-3 h-8 w-8 inline-flex items-center justify-center rounded-pill hover:bg-charcoal-100"
+              aria-label="Close"
             >
-              Clear
+              <X className="h-4 w-4" />
             </button>
+            <div className="h-10 w-10 rounded-pill bg-peach-100 flex items-center justify-center mb-4">
+              <ExternalLink className="h-4 w-4 text-peach-700" />
+            </div>
+            <h3 className="font-display text-lg font-bold text-charcoal-950 mb-2">
+              This is a sample preview
+            </h3>
+            <p className="text-sm text-charcoal-700 leading-relaxed mb-5">
+              After signup, this would link to the listing on StreetEasy,
+              Zillow, or whichever source posted it.
+            </p>
             <button
               type="button"
-              className="h-9 px-4 rounded-pill bg-paper text-charcoal-950 text-xs font-semibold hover:bg-paper/90"
+              onClick={() => setModalOpen(false)}
+              className="w-full h-11 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800"
             >
-              Compare side-by-side
+              Got it
             </button>
           </div>
         </div>
