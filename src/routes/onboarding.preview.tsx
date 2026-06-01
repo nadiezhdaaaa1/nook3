@@ -225,6 +225,20 @@ function SamplePreview() {
         </div>
       )}
 
+      {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
+        <div className="rounded-card border border-border bg-surface-elevated p-4 flex gap-3">
+          <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
+          <div className="space-y-1">
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+              How we vet {cityConfig.displayName} listings
+            </div>
+            <p className="text-sm text-charcoal-700">
+              Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")} records before it reaches your inbox.
+            </p>
+          </div>
+        </div>
+      )}
+
       <button
         type="button"
         onClick={() => navigate({ to: "/onboarding/pricing" })}
