@@ -30,6 +30,7 @@ export function SearchSwitcher() {
   const deleteSearch = useAppStore((s) => s.deleteSearch);
 
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -53,12 +54,8 @@ export function SearchSwitcher() {
 
   const handleNew = () => {
     if (!canCreate) return;
-    syncOnboardingToActiveSearch();
-    const res = createSearch({ cityId: active.cityId });
-    if (res.ok) {
-      hydrateActiveSearchIntoOnboarding();
-      setOpen(false);
-    }
+    setOpen(false);
+    setModalOpen(true);
   };
 
   const handleDuplicate = (id: string) => {
