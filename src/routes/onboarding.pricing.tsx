@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Bell, Mail, Zap } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
 import { TrialModal } from "@/components/onboarding/TrialModal";
+import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/onboarding/pricing")({
