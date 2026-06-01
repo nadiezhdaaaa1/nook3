@@ -1,12 +1,13 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
-import { Search, X, MapPin, Map as MapIcon, List, Sparkles } from "lucide-react";
+import { Search, X, MapPin, Map as MapIcon, List, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { getNeighborhoodPrice, scoreNeighborhood } from "@/data/cities/neighborhoodPrices";
+import { getCityPresets, resolvePreset } from "@/data/cities/presets";
 import { cn } from "@/lib/utils";
 
 export function Step3Location() {
