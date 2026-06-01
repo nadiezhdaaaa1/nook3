@@ -9,8 +9,10 @@ import {
   Sparkles,
   ExternalLink,
   Check,
+  Layers,
 } from "lucide-react";
 import { SAVED_ALERTS, type AlertStatus, type SavedAlert } from "@/data/savedAlerts";
+import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/preferences/alerts")({
