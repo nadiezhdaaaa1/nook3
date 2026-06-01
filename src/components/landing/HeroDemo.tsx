@@ -134,11 +134,8 @@ export function HeroDemo() {
                   step={cityConfig.budget.step}
                   value={budget}
                   onChange={(e) => setBudget(parseInt(e.target.value, 10))}
-                  className="w-full accent-charcoal-950"
+                  className="w-full h-2 rounded-pill appearance-none cursor-pointer bg-border accent-charcoal-950"
                   aria-label="Budget"
-                  style={{
-                    background: `linear-gradient(to right, hsl(var(--charcoal-950)) 0%, hsl(var(--charcoal-950)) ${sliderPct}%, hsl(var(--border)) ${sliderPct}%, hsl(var(--border)) 100%)`,
-                  }}
                 />
                 <div className="flex justify-between text-[10px] font-mono text-charcoal-400">
                   <span>${cityConfig.budget.min.toLocaleString()}</span>
