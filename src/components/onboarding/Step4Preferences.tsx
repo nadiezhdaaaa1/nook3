@@ -27,10 +27,13 @@ const LEGEND = (
 export function Step4Preferences() {
   const navigate = useNavigate();
   const {
-    city, neighborhoods, amenities, transit, cycleAmenity, cycleTransit, setTransit, patch, set,
+    city, neighborhoods, amenities, transit, commute, cycleAmenity, cycleTransit, setTransit, patch, set,
   } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [showAllLines, setShowAllLines] = useState(false);
+  const isCommuteCity = cityConfig?.transit.type === "limited";
+  const COMMUTE_OPTIONS = [15, 30, 45, 60] as const;
+
 
   const allLines = cityConfig?.transit.lines ?? [];
   const smartLines = useMemo(() => {
