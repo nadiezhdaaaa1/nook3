@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles, Check } from "lucide-react";
+import { z } from "zod";
 import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { cn } from "@/lib/utils";
@@ -27,14 +29,33 @@ const FREQS: { id: Frequency; label: string; desc: string; icon: typeof Zap }[] 
   { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", icon: Sparkles },
 ];
 
+const emailSchema = z.string().trim().max(255).email();
+const phoneSchema = z
+  .string()
+  .trim()
+  .max(20)
+  .refine((v) => v.replace(/\D/g, "").length >= 10, "Enter a valid phone");
+
+function formatPhone(raw: string): string {
+  const d = raw.replace(/\D/g, "").slice(0, 10);
+  if (d.length < 4) return d;
+  if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+}
+
 function NotificationsTab() {
   const {
-    selectedPlan, alertChannel, frequency, email, phone,
+    selectedPlan, alertChannel, frequency, email, phone, trialActive,
     set,
   } = useOnboardingStore();
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
 
   const needsEmail = alertChannel === "email" || alertChannel === "both";
   const needsPhone = alertChannel === "text" || alertChannel === "both";
+  const emailError = needsEmail && email ? (emailSchema.safeParse(email).success ? null : "Enter a valid email.") : null;
+  const phoneError = needsPhone && phone ? (phoneSchema.safeParse(phone).success ? null : "Enter a valid phone number.") : null;
+  const currentPlan = selectedPlan ?? "free";
 
   return (
     <div className="space-y-12">
