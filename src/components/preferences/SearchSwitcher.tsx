@@ -11,6 +11,7 @@ import {
 } from "@/lib/store";
 import { getCity } from "@/data/cities";
 import type { Search } from "@/lib/store";
+import { NewSearchModal } from "./NewSearchModal";
 
 /**
  * Multi-search switcher dropdown.
