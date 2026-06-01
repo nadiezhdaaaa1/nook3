@@ -120,6 +120,16 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    // Hydrate persisted appStore + migrate legacy onboarding state (one-time).
+    void (async () => {
+      const { useAppStore } = await import("@/lib/store/appStore");
+      const { ensureMigratedFromLegacy } = await import("@/lib/store/migrate");
+      await useAppStore.persist.rehydrate();
+      ensureMigratedFromLegacy();
+    })();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
