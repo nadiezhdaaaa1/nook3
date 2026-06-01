@@ -45,9 +45,11 @@ function LandingPage() {
       <WhyStillLooking />
       <HowItWorksLanding />
       <ComparisonTable />
+      <TimeLossCalculator />
+      <WrenAIBlock />
       <SourcesSection />
       <StatsSection />
-      <PricingSection />
+      <PricingLanding />
       <FaqSection />
       <CtaStrip />
     </MarketingLayout>
