@@ -100,3 +100,23 @@ export function hydrateActiveSearchIntoOnboarding(): void {
   const s = selectActiveSearch(useAppStore.getState());
   if (s) hydrateOnboardingFromSearch(s);
 }
+
+/**
+ * Push account-level fields from the legacy onboarding store up to the new
+ * user record (contacts, plan, move-out). Search-scoped fields stay in
+ * snapshotActiveSearch — this is for cross-search account data only.
+ */
+export function syncOnboardingToUser(): void {
+  const app = useAppStore.getState();
+  const o = useOnboardingStore.getState();
+  app.updateProfile({
+    email: o.email,
+    phone: o.phone,
+    plan: o.selectedPlan ?? app.user?.plan ?? "free",
+    billingCycle: o.billingCycle,
+    trialActive: o.trialActive,
+    completedAt: o.completedAt ?? app.user?.completedAt ?? null,
+  });
+  if (o.moveOut) app.setMoveOut(o.moveOut);
+}
+

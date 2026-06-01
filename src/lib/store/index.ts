@@ -6,6 +6,7 @@ export {
   useAppHydrated,
   switchActiveSearch,
   syncOnboardingToActiveSearch,
+  syncOnboardingToUser,
   hydrateActiveSearchIntoOnboarding,
 } from "./bridge";
 export { ensureMigratedFromLegacy } from "./migrate";
