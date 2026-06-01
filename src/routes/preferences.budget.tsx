@@ -11,7 +11,7 @@ export const Route = createFileRoute("/preferences/budget")({
 });
 
 function BudgetTab() {
-  const { city, budget, moveIn, rentProtection, includeBrokerFee, set } = useOnboardingStore();
+  const { city, budget, moveIn, rentProtection, includeBrokerFee, neighborhoods, set } = useOnboardingStore();
   const cityConfig = getCity(city);
 
   if (!cityConfig || budget === null) {
