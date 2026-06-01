@@ -35,18 +35,19 @@ export function Step3Location() {
     return all;
   }, [query, groups]);
 
-  if (!cityConfig) {
-    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
-  }
-
   const allKnown = useMemo(() => {
     const s = new Set<string>();
+    if (!cityConfig) return s;
     for (const items of Object.values(cityConfig.neighborhoodGroups)) {
       for (const n of items) s.add(n);
     }
     return s;
   }, [cityConfig]);
-  const presets = useMemo(() => getCityPresets(cityConfig.id), [cityConfig.id]);
+  const presets = useMemo(() => (cityConfig ? getCityPresets(cityConfig.id) : []), [cityConfig]);
+
+  if (!cityConfig) {
+    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
+  }
 
   const applyPreset = (names: string[]) => {
     const merged = Array.from(new Set([...neighborhoods, ...names]));
