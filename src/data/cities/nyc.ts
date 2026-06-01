@@ -63,6 +63,9 @@ export const nyc: CityConfig = {
     label: "Rent Stabilization",
     tooltip:
       "NYC has ~1M rent-stabilized apartments protected by law from large rent increases.",
+    tooltipShort:
+      "NYC has ~1M rent-stabilized apartments protected by law from large rent increases.",
+    matchBaseline: 12000,
     options: RENT_PROTECTION_OPTIONS,
   },
   brokerFeeDefault: true,
