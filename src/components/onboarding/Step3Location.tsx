@@ -1,16 +1,17 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
-import { Search, X, MapPin, Map as MapIcon, List } from "lucide-react";
+import { Search, X, MapPin, Map as MapIcon, List, Sparkles } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
+import { getNeighborhoodPrice, scoreNeighborhood } from "@/data/cities/neighborhoodPrices";
 import { cn } from "@/lib/utils";
 
 export function Step3Location() {
   const navigate = useNavigate();
-  const { city, neighborhoods, set, toggleNeighborhood } = useOnboardingStore();
+  const { city, neighborhoods, budget, set, toggleNeighborhood } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [query, setQuery] = useState("");
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
@@ -157,11 +158,25 @@ export function Step3Location() {
               )}
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {groups.map(([group, items]) => {
                 const isExpanded = expandedGroup === group;
-                const visible = isExpanded ? items : items.slice(0, 10);
                 const selectedInGroup = items.filter((n) => neighborhoods.includes(n)).length;
+
+                // Rank items by budget fit (when we have prices + range)
+                const ranked = items
+                  .map((name) => {
+                    const price = city ? getNeighborhoodPrice(city, name) : null;
+                    const { score, fit } = scoreNeighborhood(price, budget);
+                    return { name, price, score, fit };
+                  })
+                  .sort((a, b) => b.score - a.score);
+
+                const bestFits = ranked.filter((r) => r.fit === "in").slice(0, 3);
+                const bestFitNames = new Set(bestFits.map((r) => r.name));
+                const rest = ranked.filter((r) => !bestFitNames.has(r.name));
+                const restVisible = isExpanded ? rest : rest.slice(0, Math.max(0, 10 - bestFits.length));
+
                 return (
                   <section key={group}>
                     <div className="flex items-baseline justify-between mb-3">
@@ -177,32 +192,85 @@ export function Step3Location() {
                         {items.length} areas
                       </span>
                     </div>
+
+                    {bestFits.length > 0 && (
+                      <div className="mb-3 p-3 rounded-card bg-sage-100/40 border border-sage-300/30">
+                        <div className="flex items-center gap-1.5 mb-2 text-[10px] font-mono uppercase tracking-[0.18em] text-sage-900">
+                          <Sparkles className="h-3 w-3" />
+                          Best fit for your budget
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {bestFits.map(({ name, price }) => {
+                            const selected = neighborhoods.includes(name);
+                            return (
+                              <button
+                                key={name}
+                                type="button"
+                                onClick={() => toggleNeighborhood(name)}
+                                className={cn(
+                                  "h-9 pl-3.5 pr-2.5 inline-flex items-center gap-2 rounded-pill border text-sm font-medium transition-colors",
+                                  selected
+                                    ? "bg-charcoal-950 text-paper border-charcoal-950"
+                                    : "bg-paper border-sage-400/60 text-charcoal-900 hover:border-charcoal-950",
+                                )}
+                              >
+                                {name}
+                                {price !== null && (
+                                  <span
+                                    className={cn(
+                                      "text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded",
+                                      selected ? "bg-paper/15 text-paper/90" : "bg-sage-200/60 text-sage-900",
+                                    )}
+                                  >
+                                    ~${(price / 1000).toFixed(price >= 10000 ? 0 : 1)}k
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2">
-                      {visible.map((n) => {
-                        const selected = neighborhoods.includes(n);
+                      {restVisible.map(({ name, price, fit }) => {
+                        const selected = neighborhoods.includes(name);
+                        const above = fit === "above";
                         return (
                           <button
-                            key={n}
+                            key={name}
                             type="button"
-                            onClick={() => toggleNeighborhood(n)}
+                            onClick={() => toggleNeighborhood(name)}
+                            title={price !== null ? `~$${price.toLocaleString()}/mo` : undefined}
                             className={cn(
                               "h-9 px-3.5 inline-flex items-center rounded-pill border text-sm font-medium transition-colors",
                               selected
                                 ? "bg-charcoal-950 text-paper border-charcoal-950"
-                                : "bg-transparent border-charcoal-200 text-charcoal-800 hover:border-charcoal-950",
+                                : above
+                                  ? "bg-transparent border-charcoal-200 text-charcoal-400 hover:border-charcoal-950 hover:text-charcoal-950"
+                                  : "bg-transparent border-charcoal-200 text-charcoal-800 hover:border-charcoal-950",
                             )}
                           >
-                            {n}
+                            {name}
                           </button>
                         );
                       })}
-                      {items.length > 10 && (
+                      {rest.length > restVisible.length && !isExpanded && (
                         <button
                           type="button"
-                          onClick={() => setExpandedGroup(isExpanded ? null : group)}
+                          onClick={() => setExpandedGroup(group)}
                           className="h-9 px-3.5 inline-flex items-center rounded-pill border border-dashed border-charcoal-300 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950 hover:text-charcoal-950"
                         >
-                          {isExpanded ? "Show less" : `+ ${items.length - 10} more`}
+                          + {rest.length - restVisible.length} more
+                        </button>
+                      )}
+                      {isExpanded && rest.length > 10 - bestFits.length && (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedGroup(null)}
+                          className="h-9 px-3.5 inline-flex items-center rounded-pill border border-dashed border-charcoal-300 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950 hover:text-charcoal-950"
+                        >
+                          Show less
                         </button>
                       )}
                     </div>
