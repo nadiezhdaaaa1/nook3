@@ -82,7 +82,7 @@ export function HeroDemo() {
     navigate({ to: "/onboarding/step/$step", params: { step: "2" } });
   };
 
-  const sliderPct = ((budget - cityConfig.budget.min) / (cityConfig.budget.max - cityConfig.budget.min)) * 100;
+  
 
   return (
     <section className="relative overflow-hidden bg-paper">
