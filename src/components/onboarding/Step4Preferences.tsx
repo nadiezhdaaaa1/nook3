@@ -73,7 +73,9 @@ export function Step4Preferences() {
         <p className="mt-4 text-base text-charcoal-600">
           Tap once for "Nice to have", twice for "Must have", three times to clear.
         </p>
+        <div className="mt-4">{LEGEND}</div>
       </header>
+
 
       {/* Presets */}
       <section className="space-y-3">
