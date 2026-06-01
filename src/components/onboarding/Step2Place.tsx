@@ -24,7 +24,7 @@ const BATHS = [
 export function Step2Place() {
   const navigate = useNavigate();
   const {
-    city, bedrooms, bathrooms, rentProtection, includeBrokerFee,
+    city, bedrooms, bathrooms, rentProtection, includeBrokerFee, neighborhoods,
     set, toggleBedroom,
   } = useOnboardingStore();
   const cityConfig = getCity(city);
