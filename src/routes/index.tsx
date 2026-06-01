@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
-import { HeroSection } from "@/components/marketing/HeroSection";
+import { HeroDemo } from "@/components/landing/HeroDemo";
+import { UrgencyStrip } from "@/components/landing/UrgencyStrip";
 import { HowItWorksSection } from "@/components/marketing/HowItWorksSection";
 import { SourcesSection } from "@/components/marketing/SourcesSection";
 import { StatsSection } from "@/components/marketing/StatsSection";
@@ -11,19 +12,20 @@ import { CtaStrip } from "@/components/marketing/CtaStrip";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Nook — Be first to every apartment in NYC" },
+      { title: "Nook — Real-time apartment alerts in 10 US cities" },
       {
         name: "description",
         content:
-          "Stop refreshing StreetEasy. Nook monitors 104+ NYC rental sources and alerts you the second a rent-stabilized listing or price drop matches your search.",
+          "Stop refreshing listings. Get real-time alerts for rent-stabilized and market-rate apartments in NYC, LA, SF Bay, Chicago, DC, Boston, Seattle, Miami, Austin & Philadelphia. Free tier · Premium $14.99/mo.",
       },
-      { property: "og:title", content: "Nook — Be first to every apartment in NYC" },
+      { property: "og:title", content: "Nook — Real-time apartment alerts" },
       {
         property: "og:description",
         content:
-          "Real-time NYC apartment alerts. Rent-stabilized first. 53k+ renters trust Nook.",
+          "Real-time alerts the moment a rent-stabilized or market-rate listing hits 100+ rental sources. Median delivery: 47 seconds.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://nook3.lovable.app/" },
     ],
   }),
   component: LandingPage,
@@ -32,7 +34,10 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   return (
     <MarketingLayout>
-      <HeroSection />
+      <section id="hero" className="scroll-mt-20">
+        <HeroDemo />
+      </section>
+      <UrgencyStrip />
       <HowItWorksSection />
       <SourcesSection />
       <StatsSection />
