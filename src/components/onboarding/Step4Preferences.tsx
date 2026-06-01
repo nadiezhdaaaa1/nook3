@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
+import { Heart, Star } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
@@ -7,6 +8,21 @@ import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
 import { cn } from "@/lib/utils";
+
+const LEGEND = (
+  <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.14em] text-charcoal-500">
+    <span className="inline-flex items-center gap-1.5">
+      <span className="h-2 w-2 rounded-full bg-surface-elevated border border-border" /> Tap
+    </span>
+    <span className="inline-flex items-center gap-1.5 text-sage-900">
+      <Heart className="h-3 w-3 fill-current" /> Nice
+    </span>
+    <span className="inline-flex items-center gap-1.5 text-sage-900">
+      <Star className="h-3 w-3 fill-current" /> Must
+    </span>
+  </div>
+);
+
 
 export function Step4Preferences() {
   const navigate = useNavigate();
