@@ -348,6 +348,19 @@ export function Step3Location() {
         </>
       )}
 
+      {/* Trust signal */}
+      <div className="flex items-start gap-3 p-4 rounded-card bg-charcoal-950/[0.03] border border-charcoal-200/60">
+        <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
+        <div className="text-xs text-charcoal-600 leading-relaxed">
+          Nook monitors every new listing in your selected {cityConfig.displayName} neighborhoods
+          {cityConfig.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
+            <> and cross-checks {cityConfig.buildingDataSources.join(" + ")} records before alerting you</>
+          )}
+          . You can change this anytime in your dashboard.
+        </div>
+      </div>
+
+
       <OnboardingFooter
         canContinue={canContinue}
         onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "2" } })}
