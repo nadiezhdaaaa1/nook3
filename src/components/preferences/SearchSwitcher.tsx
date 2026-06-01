@@ -11,6 +11,7 @@ import {
 } from "@/lib/store";
 import { getCity } from "@/data/cities";
 import type { Search } from "@/lib/store";
+import { NewSearchModal } from "./NewSearchModal";
 
 /**
  * Multi-search switcher dropdown.
@@ -22,13 +23,13 @@ export function SearchSwitcher() {
   const searches = useAppStore((s) => s.searches);
   const quota = useAppStore(selectQuota);
   const user = useAppStore((s) => s.user);
-  const createSearch = useAppStore((s) => s.createSearch);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
   const deleteSearch = useAppStore((s) => s.deleteSearch);
 
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -52,12 +53,8 @@ export function SearchSwitcher() {
 
   const handleNew = () => {
     if (!canCreate) return;
-    syncOnboardingToActiveSearch();
-    const res = createSearch({ cityId: active.cityId });
-    if (res.ok) {
-      hydrateActiveSearchIntoOnboarding();
-      setOpen(false);
-    }
+    setOpen(false);
+    setModalOpen(true);
   };
 
   const handleDuplicate = (id: string) => {
@@ -71,6 +68,7 @@ export function SearchSwitcher() {
   };
 
   return (
+    <>
     <div ref={ref} className="relative">
       <button
         type="button"
@@ -150,6 +148,8 @@ export function SearchSwitcher() {
         </div>
       )}
     </div>
+    {modalOpen && <NewSearchModal onClose={() => setModalOpen(false)} />}
+    </>
   );
 }
 

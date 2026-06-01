@@ -9,8 +9,10 @@ import {
   Sparkles,
   ExternalLink,
   Check,
+  Layers,
 } from "lucide-react";
 import { SAVED_ALERTS, type AlertStatus, type SavedAlert } from "@/data/savedAlerts";
+import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/preferences/alerts")({
@@ -28,21 +30,39 @@ const FILTERS: { key: Filter; label: string; icon: any }[] = [
 ];
 
 function SavedAlertsPage() {
+  const searches = useAppStore((s) => s.searches.filter((x) => x.status !== "archived"));
+  const activeSearchId = useAppStore((s) => s.activeSearchId);
+
   const [filter, setFilter] = useState<Filter>("all");
-  const [items, setItems] = useState<SavedAlert[]>(SAVED_ALERTS);
+  const [scope, setScope] = useState<string>("all"); // "all" | searchId
+  const [items, setItems] = useState<SavedAlert[]>(() => SAVED_ALERTS);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [compareOpen, setCompareOpen] = useState(false);
 
+  // Round-robin searchId assignment when alert has none.
+  const itemsWithSearch = useMemo(() => {
+    if (searches.length === 0) return items;
+    return items.map((a, i) => ({
+      ...a,
+      searchId: a.searchId ?? searches[i % searches.length].id,
+    }));
+  }, [items, searches]);
+
+  const scopeFiltered = useMemo(
+    () => (scope === "all" ? itemsWithSearch : itemsWithSearch.filter((a) => a.searchId === scope)),
+    [itemsWithSearch, scope],
+  );
+
   const filtered = useMemo(
-    () => (filter === "all" ? items : items.filter((a) => a.status === filter)),
-    [items, filter],
+    () => (filter === "all" ? scopeFiltered : scopeFiltered.filter((a) => a.status === filter)),
+    [scopeFiltered, filter],
   );
 
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: items.length, new: 0, saved: 0, contacted: 0, dismissed: 0 };
-    items.forEach((a) => (c[a.status as Exclude<Filter, "all">] += 1));
+    const c: Record<Filter, number> = { all: scopeFiltered.length, new: 0, saved: 0, contacted: 0, dismissed: 0 };
+    scopeFiltered.forEach((a) => (c[a.status as Exclude<Filter, "all">] += 1));
     return c;
-  }, [items]);
+  }, [scopeFiltered]);
 
   const updateStatus = (id: string, status: AlertStatus) =>
     setItems((arr) => arr.map((a) => (a.id === id ? { ...a, status } : a)));
@@ -55,7 +75,7 @@ function SavedAlertsPage() {
       return next;
     });
 
-  const selectedItems = items.filter((a) => selected.has(a.id));
+  const selectedItems = itemsWithSearch.filter((a) => selected.has(a.id));
 
   return (
     <div className="space-y-6">
@@ -67,6 +87,32 @@ function SavedAlertsPage() {
           Every listing we've sent you. Select 2–3 to compare with Wren AI.
         </p>
       </div>
+
+      {/* Per-search scope chips — only if user has more than one search */}
+      {searches.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1 border-b border-border pb-3">
+          <ScopeChip
+            label="All searches"
+            icon={Layers}
+            active={scope === "all"}
+            count={itemsWithSearch.length}
+            onClick={() => setScope("all")}
+          />
+          {searches.map((s) => {
+            const cnt = itemsWithSearch.filter((a) => a.searchId === s.id).length;
+            return (
+              <ScopeChip
+                key={s.id}
+                label={s.name}
+                active={scope === s.id}
+                count={cnt}
+                highlight={s.id === activeSearchId}
+                onClick={() => setScope(s.id)}
+              />
+            );
+          })}
+        </div>
+      )}
 
       {/* Filter chips */}
       <div className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1">
@@ -248,6 +294,43 @@ function RowAction({ icon: Icon, label, onClick }: { icon: any; label: string; o
     </button>
   );
 }
+
+function ScopeChip({
+  label,
+  icon: Icon,
+  active,
+  count,
+  highlight,
+  onClick,
+}: {
+  label: string;
+  icon?: typeof Layers;
+  active: boolean;
+  count: number;
+  highlight?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "shrink-0 inline-flex items-center gap-2 h-9 px-3.5 rounded-pill text-xs font-semibold transition-colors",
+        active
+          ? "bg-sage-700 text-paper"
+          : "bg-paper border border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
+        !active && highlight && "border-charcoal-950",
+      )}
+    >
+      {Icon && <Icon className="h-3.5 w-3.5" />}
+      <span className="max-w-[140px] truncate">{label}</span>
+      <span className={cn("text-[10px] font-mono", active ? "text-paper/70" : "text-charcoal-500")}>
+        {count}
+      </span>
+    </button>
+  );
+}
+
 
 function StatusBadge({ status }: { status: AlertStatus }) {
   const map: Record<AlertStatus, { label: string; cls: string }> = {
