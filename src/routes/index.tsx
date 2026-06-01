@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { HeroDemo } from "@/components/landing/HeroDemo";
 import { UrgencyStrip } from "@/components/landing/UrgencyStrip";
-import { HowItWorksSection } from "@/components/marketing/HowItWorksSection";
+import { WhyStillLooking } from "@/components/landing/WhyStillLooking";
+import { HowItWorksLanding } from "@/components/landing/HowItWorksLanding";
+import { ComparisonTable } from "@/components/landing/ComparisonTable";
 import { SourcesSection } from "@/components/marketing/SourcesSection";
 import { StatsSection } from "@/components/marketing/StatsSection";
 import { PricingSection } from "@/components/marketing/PricingSection";
@@ -38,7 +40,9 @@ function LandingPage() {
         <HeroDemo />
       </section>
       <UrgencyStrip />
-      <HowItWorksSection />
+      <WhyStillLooking />
+      <HowItWorksLanding />
+      <ComparisonTable />
       <SourcesSection />
       <StatsSection />
       <PricingSection />
