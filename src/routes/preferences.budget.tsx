@@ -61,6 +61,7 @@ function BudgetTab() {
             city={cityConfig}
             value={rentProtection}
             onChange={(v) => set("rentProtection", v)}
+            neighborhoodCount={neighborhoods.length}
           />
         </section>
       )}
