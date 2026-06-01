@@ -7,13 +7,13 @@ import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
+import { CITY_ACTIVE_LISTINGS } from "@/data/cities/icons";
 
 export function Step1Where() {
   const navigate = useNavigate();
-  const { city, budget, moveIn, set, patch } = useOnboardingStore();
+  const { city, budget, moveIn, movingOut, set, patch } = useOnboardingStore();
   const cityConfig = getCity(city);
 
-  // when city changes, pre-fill budget if not set
   useEffect(() => {
     if (cityConfig && budget === null) {
       const d = cityConfig.budget.default;
@@ -82,6 +82,39 @@ export function Step1Where() {
         </section>
       )}
 
+      {cityConfig && (
+        <section>
+          <label
+            className="flex gap-3 items-start p-5 rounded-card bg-sage-100/60 border border-sage-300 cursor-pointer hover:border-sage-500 transition-colors"
+          >
+            <input
+              type="checkbox"
+              checked={movingOut}
+              onChange={(e) => set("movingOut", e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-sage-500 text-sage-700 focus:ring-sage-500"
+            />
+            <div>
+              <div className="text-sm font-semibold text-charcoal-950">
+                I'm also moving out of my current place
+              </div>
+              <div className="text-xs text-charcoal-600 mt-1">
+                Share your move-out date later for <span className="font-semibold text-sage-900">$50 off Premium annual</span>.
+              </div>
+            </div>
+          </label>
+        </section>
+      )}
+
+      {cityConfig && (
+        <p className="text-xs text-charcoal-500 text-center -mt-4">
+          Today we're monitoring{" "}
+          <span className="font-mono tabular-nums text-charcoal-700">
+            {CITY_ACTIVE_LISTINGS[cityConfig.id].toLocaleString()}
+          </span>{" "}
+          active {cityConfig.displayName} listings.
+        </p>
+      )}
+
       <OnboardingFooter
         canContinue={canContinue}
         onBack={() => navigate({ to: "/" })}
@@ -93,3 +126,4 @@ export function Step1Where() {
     </div>
   );
 }
+

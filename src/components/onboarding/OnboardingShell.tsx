@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { ProgressBar } from "@/components/onboarding/ProgressBar";
+import { ExitModal } from "@/components/onboarding/ExitModal";
 
 const STEP_ROUTE_RE = /^\/onboarding\/step\/(\d)/;
 
@@ -10,15 +12,7 @@ export function OnboardingShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const stepMatch = pathname.match(STEP_ROUTE_RE);
   const step = stepMatch ? Number(stepMatch[1]) : null;
-
-  const onClose = () => {
-    if (
-      typeof window !== "undefined" &&
-      window.confirm("Exit? Your progress will be saved.")
-    ) {
-      navigate({ to: "/" });
-    }
-  };
+  const [exitOpen, setExitOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-paper flex flex-col">
@@ -30,7 +24,7 @@ export function OnboardingShell() {
           </Link>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => setExitOpen(true)}
             className="h-9 w-9 inline-flex items-center justify-center rounded-pill hover:bg-charcoal-950/5"
             aria-label="Exit onboarding"
           >
@@ -50,6 +44,15 @@ export function OnboardingShell() {
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-10 lg:py-14">
         <Outlet />
       </main>
+
+      <ExitModal
+        open={exitOpen}
+        onStay={() => setExitOpen(false)}
+        onExit={() => {
+          setExitOpen(false);
+          navigate({ to: "/" });
+        }}
+      />
     </div>
   );
 }

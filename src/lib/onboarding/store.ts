@@ -26,6 +26,7 @@ export interface OnboardingState {
   city: CityId | null;
   budget: [number, number] | null;
   moveIn: { mode: "specific" | "flexible"; date?: string };
+  movingOut: boolean;
 
   // Step 2
   bedrooms: string[];
@@ -79,6 +80,7 @@ const initial: OnboardingState = {
   city: null,
   budget: null,
   moveIn: { mode: "flexible" },
+  movingOut: false,
   bedrooms: [],
   bathrooms: "1ba",
   rentProtection: "all",
