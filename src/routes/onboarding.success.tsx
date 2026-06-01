@@ -110,6 +110,8 @@ function Success() {
 
       {/* Secondary section */}
       <div className="mt-12 space-y-6 max-w-xl mx-auto">
+        <AddAnotherSearchCTA />
+
         {/* Move-out */}
         <button
           type="button"
