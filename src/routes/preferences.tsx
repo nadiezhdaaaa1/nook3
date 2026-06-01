@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
 import { cn } from "@/lib/utils";
+import { SearchSwitcher } from "@/components/preferences/SearchSwitcher";
+import { useActiveSearch } from "@/lib/store";
 
 export const Route = createFileRoute("/preferences")({
   head: () => ({
@@ -31,14 +33,17 @@ function PreferencesShell() {
   return (
     <div className="min-h-screen bg-paper">
       <header className="border-b border-charcoal-950/8 bg-paper">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <LogoMark size={28} />
-            <Logo className="text-lg" />
+            <Logo className="text-lg hidden sm:block" />
           </Link>
-          <Link to="/" className="text-sm font-semibold text-charcoal-700 hover:text-charcoal-950">
-            ← Back to home
-          </Link>
+          <div className="flex items-center gap-3 min-w-0">
+            <SearchSwitcher />
+            <Link to="/" className="hidden md:inline text-sm font-semibold text-charcoal-700 hover:text-charcoal-950">
+              ← Home
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -48,9 +53,7 @@ function PreferencesShell() {
             <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05]">
               Manage <span className="accent-italic">Preferences</span>
             </h1>
-            <p className="mt-3 text-charcoal-600">
-              Customize your apartment alerts and notification settings.
-            </p>
+            <EditingLine />
           </div>
           <UnsubscribeButton />
         </div>
@@ -87,6 +90,23 @@ function PreferencesShell() {
         </div>
       </div>
     </div>
+  );
+}
+
+function EditingLine() {
+  const active = useActiveSearch();
+  if (!active) {
+    return (
+      <p className="mt-3 text-charcoal-600">
+        Customize your apartment alerts and notification settings.
+      </p>
+    );
+  }
+  return (
+    <p className="mt-3 text-charcoal-600">
+      Editing <span className="font-semibold text-charcoal-950">{active.name}</span>
+      <span className="text-charcoal-400"> · changes apply to this search only.</span>
+    </p>
   );
 }
 
