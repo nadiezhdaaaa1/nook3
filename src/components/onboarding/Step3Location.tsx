@@ -39,7 +39,22 @@ export function Step3Location() {
     return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
   }
 
+  const allKnown = useMemo(() => {
+    const s = new Set<string>();
+    for (const items of Object.values(cityConfig.neighborhoodGroups)) {
+      for (const n of items) s.add(n);
+    }
+    return s;
+  }, [cityConfig]);
+  const presets = useMemo(() => getCityPresets(cityConfig.id), [cityConfig.id]);
+
+  const applyPreset = (names: string[]) => {
+    const merged = Array.from(new Set([...neighborhoods, ...names]));
+    set("neighborhoods", merged);
+  };
+
   const canContinue = neighborhoods.length > 0;
+  const tooMany = neighborhoods.length >= 15;
 
   return (
     <div className="space-y-10">
