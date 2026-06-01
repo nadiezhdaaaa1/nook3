@@ -93,6 +93,55 @@ export function Step3Location() {
         </button>
       </div>
 
+      {/* Quick presets */}
+      {presets.length > 0 && (
+        <div>
+          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-3">
+            Quick picks · tap to add a bundle
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5">
+            {presets.map((p) => {
+              const resolved = resolvePreset(p, allKnown);
+              const allSelected = resolved.length > 0 && resolved.every((n) => neighborhoods.includes(n));
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => applyPreset(resolved)}
+                  disabled={resolved.length === 0}
+                  className={cn(
+                    "group text-left p-3.5 rounded-card border transition-colors",
+                    allSelected
+                      ? "bg-sage-100/60 border-sage-400/60"
+                      : "bg-surface-elevated border-border hover:border-charcoal-950 disabled:opacity-40 disabled:hover:border-border",
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg leading-none">{p.emoji}</span>
+                    <span className="text-sm font-semibold text-charcoal-950">{p.label}</span>
+                  </div>
+                  <div className="text-[11px] text-charcoal-500 leading-snug">{p.description}</div>
+                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5 text-charcoal-400">
+                    +{resolved.length} areas{allSelected ? " · added" : ""}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 15+ warning */}
+      {tooMany && (
+        <div className="flex items-start gap-3 p-4 rounded-card bg-peach-100/50 border border-peach-300/60">
+          <AlertTriangle className="h-4 w-4 text-peach-700 mt-0.5 shrink-0" />
+          <div className="text-sm text-charcoal-800">
+            <strong className="text-charcoal-950">{neighborhoods.length} neighborhoods selected.</strong>{" "}
+            That's a wide net — you may get more alerts than you want. Consider trimming to your top 5–10.
+          </div>
+        </div>
+      )}
+
       {/* Selected chips */}
       {neighborhoods.length > 0 && (
         <div className="p-4 rounded-card bg-sage-100/60 border border-sage-300/40">
