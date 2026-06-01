@@ -99,12 +99,20 @@ export function Step2Place() {
                 Include apartments with a broker fee
               </div>
               <div className="text-xs text-charcoal-600 mt-0.5">
-                Common in {cityConfig.displayName}. Uncheck to see no-fee only.
+                {cityConfig.brokerFeeContext ??
+                  `Common in ${cityConfig.displayName}. Uncheck to see no-fee only.`}
               </div>
             </div>
           </label>
         </section>
       )}
+
+      <div className="rounded-card border border-border bg-surface-muted px-4 py-3 text-xs text-charcoal-600">
+        {cityConfig.buildingDataAvailable && cityConfig.buildingDataLabel
+          ? `Nook checks ${cityConfig.buildingDataLabel} for every ${cityConfig.displayName} listing.`
+          : "Nook checks 100+ sources for every listing."}
+      </div>
+
 
       <OnboardingFooter
         canContinue={canContinue}

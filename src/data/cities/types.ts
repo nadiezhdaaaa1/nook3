@@ -28,6 +28,7 @@ export interface CityConfig {
   name: string;
   displayName: string;
   state: string;
+  iconEmoji?: string;
   budget: {
     min: number;
     max: number;
@@ -42,6 +43,8 @@ export interface CityConfig {
     options?: RentProtectionOption[];
   };
   brokerFeeDefault: boolean;
+  /** Helper copy shown beside the broker-fee toggle on Step 2. */
+  brokerFeeContext?: string;
   neighborhoodGroups: Record<string, string[]>;
   transit: {
     type: "subway" | "metro" | "light-rail" | "mixed" | "limited";
@@ -50,6 +53,13 @@ export interface CityConfig {
   };
   buildingDataAvailable: boolean;
   buildingDataLabel?: string;
+  buildingDataSources?: string[];
+  /** Anchor copy on the pricing screen. */
+  pricingAnchor?: string;
+  /** Median hours between new listings — used for time-to-first-alert. */
+  listingVelocityHours?: number;
+  /** Typical per-application fee, in dollars (null when not applicable). */
+  applicationFee?: number | null;
 }
 
 export const RENT_PROTECTION_OPTIONS: RentProtectionOption[] = [
