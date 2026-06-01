@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles, Check } from "lucide-react";
+import { z } from "zod";
 import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { cn } from "@/lib/utils";
@@ -27,14 +29,33 @@ const FREQS: { id: Frequency; label: string; desc: string; icon: typeof Zap }[] 
   { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", icon: Sparkles },
 ];
 
+const emailSchema = z.string().trim().max(255).email();
+const phoneSchema = z
+  .string()
+  .trim()
+  .max(20)
+  .refine((v) => v.replace(/\D/g, "").length >= 10, "Enter a valid phone");
+
+function formatPhone(raw: string): string {
+  const d = raw.replace(/\D/g, "").slice(0, 10);
+  if (d.length < 4) return d;
+  if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+}
+
 function NotificationsTab() {
   const {
-    selectedPlan, alertChannel, frequency, email, phone,
+    selectedPlan, alertChannel, frequency, email, phone, trialActive,
     set,
   } = useOnboardingStore();
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
 
   const needsEmail = alertChannel === "email" || alertChannel === "both";
   const needsPhone = alertChannel === "text" || alertChannel === "both";
+  const emailError = needsEmail && email ? (emailSchema.safeParse(email).success ? null : "Enter a valid email.") : null;
+  const phoneError = needsPhone && phone ? (phoneSchema.safeParse(phone).success ? null : "Enter a valid phone number.") : null;
+  const currentPlan = selectedPlan ?? "free";
 
   return (
     <div className="space-y-12">
@@ -50,24 +71,34 @@ function NotificationsTab() {
         <h3 className="font-display text-lg font-semibold text-charcoal-950">Subscription plan</h3>
         <div className="grid sm:grid-cols-3 gap-3">
           {PLANS.map((p) => {
-            const selected = (selectedPlan ?? "free") === p.id;
+            const isCurrent = currentPlan === p.id;
             return (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => set("selectedPlan", p.id)}
                 className={cn(
-                  "p-5 rounded-card border-2 text-left transition-colors",
-                  selected
+                  "p-5 rounded-card border-2 text-left transition-colors relative",
+                  isCurrent
                     ? "border-charcoal-950 bg-surface-elevated"
                     : "border-border bg-transparent hover:border-charcoal-400",
                 )}
               >
-                <div className="flex items-baseline justify-between">
+                {isCurrent && (
+                  <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-sage-700 text-paper text-[9px] font-mono uppercase tracking-[0.16em]">
+                    <Check className="h-2.5 w-2.5" /> Current
+                  </div>
+                )}
+                <div className="flex items-baseline justify-between pr-16">
                   <div className="font-display text-base font-bold text-charcoal-950">{p.label}</div>
                   <div className="text-xs font-mono text-charcoal-600">{p.price}</div>
                 </div>
                 <div className="text-xs text-charcoal-600 mt-2 leading-relaxed">{p.desc}</div>
+                {isCurrent && trialActive && p.id !== "free" && (
+                  <div className="mt-3 text-[10px] font-mono uppercase tracking-[0.16em] text-peach-700">
+                    Free trial active
+                  </div>
+                )}
               </button>
             );
           })}
@@ -102,30 +133,48 @@ function NotificationsTab() {
 
         {needsEmail && (
           <div className="space-y-2">
-            <label className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+            <label htmlFor="pref-email" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
               Email address
             </label>
             <input
+              id="pref-email"
               type="email"
+              inputMode="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => set("email", e.target.value)}
+              onBlur={() => setEmailTouched(true)}
               placeholder="you@example.com"
-              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
+              aria-invalid={!!(emailTouched && emailError)}
+              className={cn(
+                "w-full h-11 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
+                emailTouched && emailError ? "border-danger focus:border-danger" : "border-border focus:border-charcoal-950",
+              )}
             />
+            {emailTouched && emailError && <p className="text-xs text-danger">{emailError}</p>}
           </div>
         )}
         {needsPhone && (
           <div className="space-y-2">
-            <label className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+            <label htmlFor="pref-phone" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
               Phone number
             </label>
             <input
+              id="pref-phone"
               type="tel"
+              inputMode="tel"
+              autoComplete="tel"
               value={phone}
-              onChange={(e) => set("phone", e.target.value)}
+              onChange={(e) => set("phone", formatPhone(e.target.value))}
+              onBlur={() => setPhoneTouched(true)}
               placeholder="(555) 123-4567"
-              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
+              aria-invalid={!!(phoneTouched && phoneError)}
+              className={cn(
+                "w-full h-11 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
+                phoneTouched && phoneError ? "border-danger focus:border-danger" : "border-border focus:border-charcoal-950",
+              )}
             />
+            {phoneTouched && phoneError && <p className="text-xs text-danger">{phoneError}</p>}
           </div>
         )}
       </section>
