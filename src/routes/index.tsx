@@ -5,9 +5,11 @@ import { UrgencyStrip } from "@/components/landing/UrgencyStrip";
 import { WhyStillLooking } from "@/components/landing/WhyStillLooking";
 import { HowItWorksLanding } from "@/components/landing/HowItWorksLanding";
 import { ComparisonTable } from "@/components/landing/ComparisonTable";
+import { TimeLossCalculator } from "@/components/landing/TimeLossCalculator";
+import { PricingLanding } from "@/components/landing/PricingLanding";
+import { WrenAIBlock } from "@/components/landing/WrenAIBlock";
 import { SourcesSection } from "@/components/marketing/SourcesSection";
 import { StatsSection } from "@/components/marketing/StatsSection";
-import { PricingSection } from "@/components/marketing/PricingSection";
 import { FaqSection } from "@/components/marketing/FaqSection";
 import { CtaStrip } from "@/components/marketing/CtaStrip";
 
