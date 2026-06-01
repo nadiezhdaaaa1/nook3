@@ -69,6 +69,7 @@ export function SearchSwitcher() {
   };
 
   return (
+    <>
     <div ref={ref} className="relative">
       <button
         type="button"
