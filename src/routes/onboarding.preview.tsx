@@ -43,10 +43,12 @@ function SamplePreview() {
     [matched],
   );
 
-  const toggle = (set: Set<string>, id: string, fn: (s: Set<string>) => void) => {
-    const n = new Set(set);
-    n.has(id) ? n.delete(id) : n.add(id);
-    fn(n);
+  const wrenTake = (s: SampleListing) => {
+    if (s.belowMedianPct && s.belowMedianPct >= 10)
+      return `Below-market price + just hit. Buildings in this ZIP have low turnover — act fast.`;
+    if (s.tag?.toLowerCase().includes("stab") || s.tag?.toLowerCase().includes("rs"))
+      return `Verified protection means predictable rent for years. Worth touring this week.`;
+    return `Fair price for ${s.neighborhood}. Tour it before the weekend — units like this don't last.`;
   };
 
   return (
