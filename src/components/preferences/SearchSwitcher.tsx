@@ -23,7 +23,6 @@ export function SearchSwitcher() {
   const searches = useAppStore((s) => s.searches);
   const quota = useAppStore(selectQuota);
   const user = useAppStore((s) => s.user);
-  const createSearch = useAppStore((s) => s.createSearch);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
