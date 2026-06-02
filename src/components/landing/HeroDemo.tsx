@@ -113,6 +113,29 @@ export function HeroDemo() {
             <form onSubmit={handleSubmit} className="mt-8 max-w-lg space-y-4">
               <div className="space-y-1.5">
                 <label className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+                  Your email
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-400" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) setEmailError(null);
+                    }}
+                    placeholder="your.email@example.com"
+                    className={cn(
+                      "w-full h-12 pl-11 pr-4 rounded-md bg-surface-elevated border text-sm focus:outline-none",
+                      emailError ? "border-danger" : "border-border focus:border-charcoal-950",
+                    )}
+                  />
+                </div>
+                {emailError && <p className="text-xs text-danger">{emailError}</p>}
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
                   Show me apartments in
                 </label>
                 <CitySwitcher variant="form" />
