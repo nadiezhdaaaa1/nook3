@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import type { CityId } from "@/data/cities";
 
 export type TriState = "nice" | "required";
-export type AlertChannel = "email" | "text" | "both";
+export type AlertChannel = "email";
 export type Plan = "free" | "premium" | "max";
 export type BillingCycle = "monthly" | "annual";
 export type Frequency = "minimal" | "balanced" | "maximum" | "weekly";
