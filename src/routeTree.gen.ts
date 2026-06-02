@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
@@ -42,6 +43,10 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -69,9 +74,9 @@ const OnboardingLoadingRoute = OnboardingLoadingRouteImport.update({
 } as any)
 const AuthenticatedPreferencesRoute =
   AuthenticatedPreferencesRouteImport.update({
-    id: '/_authenticated/preferences',
+    id: '/preferences',
     path: '/preferences',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedPreferencesIndexRoute =
   AuthenticatedPreferencesIndexRouteImport.update({
@@ -161,6 +166,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/signup': typeof SignupRoute
@@ -219,6 +225,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/login'
     | '/onboarding'
     | '/signup'
@@ -239,10 +246,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
   SignupRoute: typeof SignupRoute
-  AuthenticatedPreferencesRoute: typeof AuthenticatedPreferencesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -266,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -308,7 +322,7 @@ declare module '@tanstack/react-router' {
       path: '/preferences'
       fullPath: '/preferences'
       preLoaderRoute: typeof AuthenticatedPreferencesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/preferences/': {
       id: '/_authenticated/preferences/'
@@ -369,26 +383,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface OnboardingRouteChildren {
-  OnboardingLoadingRoute: typeof OnboardingLoadingRoute
-  OnboardingPreviewRoute: typeof OnboardingPreviewRoute
-  OnboardingPricingRoute: typeof OnboardingPricingRoute
-  OnboardingSuccessRoute: typeof OnboardingSuccessRoute
-  OnboardingStepStepRoute: typeof OnboardingStepStepRoute
-}
-
-const OnboardingRouteChildren: OnboardingRouteChildren = {
-  OnboardingLoadingRoute: OnboardingLoadingRoute,
-  OnboardingPreviewRoute: OnboardingPreviewRoute,
-  OnboardingPricingRoute: OnboardingPricingRoute,
-  OnboardingSuccessRoute: OnboardingSuccessRoute,
-  OnboardingStepStepRoute: OnboardingStepStepRoute,
-}
-
-const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
-  OnboardingRouteChildren,
-)
-
 interface AuthenticatedPreferencesRouteChildren {
   AuthenticatedPreferencesAccountRoute: typeof AuthenticatedPreferencesAccountRoute
   AuthenticatedPreferencesAlertsRoute: typeof AuthenticatedPreferencesAlertsRoute
@@ -418,12 +412,44 @@ const AuthenticatedPreferencesRouteWithChildren =
     AuthenticatedPreferencesRouteChildren,
   )
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedPreferencesRoute: typeof AuthenticatedPreferencesRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedPreferencesRoute: AuthenticatedPreferencesRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+interface OnboardingRouteChildren {
+  OnboardingLoadingRoute: typeof OnboardingLoadingRoute
+  OnboardingPreviewRoute: typeof OnboardingPreviewRoute
+  OnboardingPricingRoute: typeof OnboardingPricingRoute
+  OnboardingSuccessRoute: typeof OnboardingSuccessRoute
+  OnboardingStepStepRoute: typeof OnboardingStepStepRoute
+}
+
+const OnboardingRouteChildren: OnboardingRouteChildren = {
+  OnboardingLoadingRoute: OnboardingLoadingRoute,
+  OnboardingPreviewRoute: OnboardingPreviewRoute,
+  OnboardingPricingRoute: OnboardingPricingRoute,
+  OnboardingSuccessRoute: OnboardingSuccessRoute,
+  OnboardingStepStepRoute: OnboardingStepStepRoute,
+}
+
+const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
+  OnboardingRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
   SignupRoute: SignupRoute,
-  AuthenticatedPreferencesRoute: AuthenticatedPreferencesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
