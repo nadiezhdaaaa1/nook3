@@ -1,8 +1,10 @@
-import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, BedDouble, Bath, Ruler, ShieldCheck } from "lucide-react";
+import { ArrowRight, BedDouble, Bath, Ruler, ShieldCheck, Mail } from "lucide-react";
 import { LandingCitySelector } from "./LandingCitySelector";
 import { useLandingStore } from "@/lib/landing/landingStore";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS } from "@/data/sampleListings";
 
