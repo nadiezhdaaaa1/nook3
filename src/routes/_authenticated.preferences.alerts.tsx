@@ -10,10 +10,16 @@ import {
   ExternalLink,
   Check,
   Layers,
+  Loader2,
 } from "lucide-react";
-import { SAVED_ALERTS, type AlertStatus, type SavedAlert } from "@/data/savedAlerts";
+import type { AlertStatus, SavedAlert } from "@/data/savedAlerts";
 import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import {
+  useAlertsQuery,
+  useUpdateAlertStatusMutation,
+} from "@/lib/queries/alerts";
+import type { AlertRow } from "@/lib/alerts.functions";
 
 export const Route = createFileRoute("/_authenticated/preferences/alerts")({
   component: SavedAlertsPage,
@@ -29,24 +35,43 @@ const FILTERS: { key: Filter; label: string; icon: any }[] = [
   { key: "dismissed", label: "Dismissed", icon: X },
 ];
 
+function rowToSavedAlert(r: AlertRow): SavedAlert {
+  const l = r.listing as Partial<SavedAlert>;
+  return {
+    id: r.id,
+    searchId: r.searchId ?? undefined,
+    title: l.title ?? "Listing",
+    neighborhood: l.neighborhood ?? "—",
+    beds: l.beds ?? 0,
+    baths: l.baths ?? 1,
+    price: l.price ?? 0,
+    receivedAt: l.receivedAt ?? r.createdAt,
+    source: (l.source as SavedAlert["source"]) ?? "StreetEasy",
+    status: r.status as AlertStatus,
+    tags: l.tags ?? [],
+    imageHue: l.imageHue ?? 200,
+  };
+}
+
 function SavedAlertsPage() {
   const searches = useAppStore((s) => s.searches.filter((x) => x.status !== "archived"));
   const activeSearchId = useAppStore((s) => s.activeSearchId);
 
   const [filter, setFilter] = useState<Filter>("all");
   const [scope, setScope] = useState<string>("all"); // "all" | searchId
-  const [items, setItems] = useState<SavedAlert[]>(() => SAVED_ALERTS);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [compareOpen, setCompareOpen] = useState(false);
 
-  // Round-robin searchId assignment when alert has none.
-  const itemsWithSearch = useMemo(() => {
-    if (searches.length === 0) return items;
-    return items.map((a, i) => ({
-      ...a,
-      searchId: a.searchId ?? searches[i % searches.length].id,
-    }));
-  }, [items, searches]);
+  const alertsQuery = useAlertsQuery();
+  const updateStatusMutation = useUpdateAlertStatusMutation();
+
+  const items: SavedAlert[] = useMemo(
+    () => (alertsQuery.data ?? []).map(rowToSavedAlert),
+    [alertsQuery.data],
+  );
+
+  // searchId is required at DB level — no round-robin needed.
+  const itemsWithSearch = items;
 
   const scopeFiltered = useMemo(
     () => (scope === "all" ? itemsWithSearch : itemsWithSearch.filter((a) => a.searchId === scope)),
@@ -65,7 +90,7 @@ function SavedAlertsPage() {
   }, [scopeFiltered]);
 
   const updateStatus = (id: string, status: AlertStatus) =>
-    setItems((arr) => arr.map((a) => (a.id === id ? { ...a, status } : a)));
+    updateStatusMutation.mutate({ id, status });
 
   const toggle = (id: string) =>
     setSelected((s) => {
