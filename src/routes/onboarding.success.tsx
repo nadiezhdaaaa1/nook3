@@ -173,12 +173,6 @@ function Success() {
             {/* Share buttons */}
             <div className="px-6 py-4 mt-2 flex flex-wrap gap-2">
               <a
-                href={smsHref}
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-pill bg-paper border border-border text-xs font-semibold text-charcoal-800 hover:border-charcoal-950"
-              >
-                <MessageCircle className="h-3.5 w-3.5" /> Text
-              </a>
-              <a
                 href={emailHref}
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-pill bg-paper border border-border text-xs font-semibold text-charcoal-800 hover:border-charcoal-950"
               >
