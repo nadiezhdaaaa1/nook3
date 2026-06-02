@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Gift, Users, Calendar, Copy, Check, Mail, MessageSquare,
   Share2, Sparkles, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getReferralCode } from "@/lib/onboarding/store";
+import { referralStatsQueryOptions } from "@/lib/queries/referrals";
+import type { ReferralStats } from "@/lib/referrals.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/preferences/referrals")({
@@ -13,6 +16,25 @@ export const Route = createFileRoute("/_authenticated/preferences/referrals")({
 });
 
 const REWARD_THRESHOLD = 5;
+
+function ReferralsPage() {
+  const [copied, setCopied] = useState<"link" | "blurb" | null>(null);
+  const { data, isLoading } = useQuery(referralStatsQueryOptions());
+
+  const fallbackCode = typeof window === "undefined" ? "RB000000" : getReferralCode();
+  const code = data?.code || fallbackCode;
+  const url = `https://thenook.rent/r/${code}`;
+  const blurb = `I'm using Nook to find my next apartment — they ping me the moment a real match shows up. Use my link and we both get 7 days of Premium free: ${url}`;
+
+  const stats: ReferralStats = data ?? {
+    code,
+    invited: 0,
+    signedUp: 0,
+    rewarded: 0,
+    recent: [],
+  };
+  const progress = Math.min(stats.signedUp / REWARD_THRESHOLD, 1);
+  const remaining = Math.max(REWARD_THRESHOLD - stats.signedUp, 0);
 
 function ReferralsPage() {
   const [copied, setCopied] = useState<"link" | "blurb" | null>(null);
