@@ -53,7 +53,7 @@ function Success() {
   };
 
   const shareText = "I'm using Nook to track NYC rentals in real time — get an extra free week of Premium with my link:";
-  const smsHref = `sms:?&body=${encodeURIComponent(`${shareText} ${fullLink}`)}`;
+  
   const emailHref = `mailto:?subject=${encodeURIComponent("Try Nook with me")}&body=${encodeURIComponent(`${shareText}\n\n${fullLink}`)}`;
   const nativeShare = async () => {
     if (typeof navigator !== "undefined" && (navigator as any).share) {
