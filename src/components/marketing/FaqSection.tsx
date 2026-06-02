@@ -6,7 +6,7 @@ import { SectionReveal } from "./anim/SectionReveal";
 const faqs = [
   {
     q: "How fast are the alerts?",
-    a: "Most listings land in your inbox within 18 minutes of going live. Premium plans get SMS in seconds.",
+    a: "Most listings land in your inbox within 18 minutes of going live. Premium plans get real-time email alerts in seconds.",
   },
   {
     q: "What does rent-stabilized actually mean?",
