@@ -9,9 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SubprocessorsRouteImport } from './routes/subprocessors'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RefundsRouteImport } from './routes/refunds'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FairHousingRouteImport } from './routes/fair-housing'
+import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
+import { Route as DmcaRouteImport } from './routes/dmca'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as AccessibilityRouteImport } from './routes/accessibility'
+import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
@@ -28,9 +38,29 @@ import { Route as AuthenticatedPreferencesApartmentRouteImport } from './routes/
 import { Route as AuthenticatedPreferencesAlertsRouteImport } from './routes/_authenticated.preferences.alerts'
 import { Route as AuthenticatedPreferencesAccountRouteImport } from './routes/_authenticated.preferences.account'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubprocessorsRoute = SubprocessorsRouteImport.update({
+  id: '/subprocessors',
+  path: '/subprocessors',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -41,6 +71,36 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FairHousingRoute = FairHousingRouteImport.update({
+  id: '/fair-housing',
+  path: '/fair-housing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoNotSellRoute = DoNotSellRouteImport.update({
+  id: '/do-not-sell',
+  path: '/do-not-sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DmcaRoute = DmcaRouteImport.update({
+  id: '/dmca',
+  path: '/dmca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessibilityRoute = AccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcceptableUseRoute = AcceptableUseRouteImport.update({
+  id: '/acceptable-use',
+  path: '/acceptable-use',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -128,9 +188,19 @@ const AuthenticatedPreferencesAccountRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acceptable-use': typeof AcceptableUseRoute
+  '/accessibility': typeof AccessibilityRoute
+  '/cookies': typeof CookiesRoute
+  '/dmca': typeof DmcaRoute
+  '/do-not-sell': typeof DoNotSellRoute
+  '/fair-housing': typeof FairHousingRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/subprocessors': typeof SubprocessorsRoute
+  '/terms': typeof TermsRoute
   '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
@@ -147,9 +217,19 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acceptable-use': typeof AcceptableUseRoute
+  '/accessibility': typeof AccessibilityRoute
+  '/cookies': typeof CookiesRoute
+  '/dmca': typeof DmcaRoute
+  '/do-not-sell': typeof DoNotSellRoute
+  '/fair-housing': typeof FairHousingRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/subprocessors': typeof SubprocessorsRoute
+  '/terms': typeof TermsRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -167,9 +247,19 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/acceptable-use': typeof AcceptableUseRoute
+  '/accessibility': typeof AccessibilityRoute
+  '/cookies': typeof CookiesRoute
+  '/dmca': typeof DmcaRoute
+  '/do-not-sell': typeof DoNotSellRoute
+  '/fair-housing': typeof FairHousingRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/subprocessors': typeof SubprocessorsRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
@@ -188,9 +278,19 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acceptable-use'
+    | '/accessibility'
+    | '/cookies'
+    | '/dmca'
+    | '/do-not-sell'
+    | '/fair-housing'
     | '/login'
     | '/onboarding'
+    | '/privacy'
+    | '/refunds'
     | '/signup'
+    | '/subprocessors'
+    | '/terms'
     | '/preferences'
     | '/onboarding/loading'
     | '/onboarding/preview'
@@ -207,9 +307,19 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acceptable-use'
+    | '/accessibility'
+    | '/cookies'
+    | '/dmca'
+    | '/do-not-sell'
+    | '/fair-housing'
     | '/login'
     | '/onboarding'
+    | '/privacy'
+    | '/refunds'
     | '/signup'
+    | '/subprocessors'
+    | '/terms'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -226,9 +336,19 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/acceptable-use'
+    | '/accessibility'
+    | '/cookies'
+    | '/dmca'
+    | '/do-not-sell'
+    | '/fair-housing'
     | '/login'
     | '/onboarding'
+    | '/privacy'
+    | '/refunds'
     | '/signup'
+    | '/subprocessors'
+    | '/terms'
     | '/_authenticated/preferences'
     | '/onboarding/loading'
     | '/onboarding/preview'
@@ -247,18 +367,56 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AcceptableUseRoute: typeof AcceptableUseRoute
+  AccessibilityRoute: typeof AccessibilityRoute
+  CookiesRoute: typeof CookiesRoute
+  DmcaRoute: typeof DmcaRoute
+  DoNotSellRoute: typeof DoNotSellRoute
+  FairHousingRoute: typeof FairHousingRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
   SignupRoute: typeof SignupRoute
+  SubprocessorsRoute: typeof SubprocessorsRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subprocessors': {
+      id: '/subprocessors'
+      path: '/subprocessors'
+      fullPath: '/subprocessors'
+      preLoaderRoute: typeof SubprocessorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -273,6 +431,48 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fair-housing': {
+      id: '/fair-housing'
+      path: '/fair-housing'
+      fullPath: '/fair-housing'
+      preLoaderRoute: typeof FairHousingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/do-not-sell': {
+      id: '/do-not-sell'
+      path: '/do-not-sell'
+      fullPath: '/do-not-sell'
+      preLoaderRoute: typeof DoNotSellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dmca': {
+      id: '/dmca'
+      path: '/dmca'
+      fullPath: '/dmca'
+      preLoaderRoute: typeof DmcaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessibility': {
+      id: '/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof AccessibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acceptable-use': {
+      id: '/acceptable-use'
+      path: '/acceptable-use'
+      fullPath: '/acceptable-use'
+      preLoaderRoute: typeof AcceptableUseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -447,9 +647,19 @@ const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AcceptableUseRoute: AcceptableUseRoute,
+  AccessibilityRoute: AccessibilityRoute,
+  CookiesRoute: CookiesRoute,
+  DmcaRoute: DmcaRoute,
+  DoNotSellRoute: DoNotSellRoute,
+  FairHousingRoute: FairHousingRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
   SignupRoute: SignupRoute,
+  SubprocessorsRoute: SubprocessorsRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
