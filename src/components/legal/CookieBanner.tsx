@@ -115,7 +115,6 @@ function CookieManageModal({
 
   const save = () => {
     setConsent({
-      necessary: true,
       analytics,
       functional,
       advertising,
