@@ -45,7 +45,6 @@ const TIERS: Tier[] = [
       { text: "Verified regulated unit badges", included: true },
       { text: "Browse Nook web app", included: true },
       { text: "Real-time alerts", included: false },
-      { text: "Real-time alerts", included: false },
       { text: "Wren AI assistant", included: false },
       { text: "Search pause/resume", included: false },
       { text: "Move-out listing tool", included: false },
