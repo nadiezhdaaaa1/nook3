@@ -235,7 +235,7 @@ export function PricingThreeTiers() {
                 )}
                 style={{
                   backgroundColor: t.highlight
-                    ? "var(--color-brand-terracotta)"
+                    ? "var(--color-brand-sage)"
                     : "var(--color-brand-charcoal)",
                   color: "white",
                 }}
