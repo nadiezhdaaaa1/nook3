@@ -7,7 +7,7 @@ import {
 import { z } from "zod";
 import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
-import { usePreferencesStore, type PerSearchOverride, type QuietHours } from "@/lib/preferences/store";
+import { usePreferencesStore } from "@/lib/preferences/store";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { cn } from "@/lib/utils";
 
