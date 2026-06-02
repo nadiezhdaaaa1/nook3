@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Bell, DollarSign, Home as HomeIcon, MapPin, Inbox, Gift, UserCircle,
-  LogOut, Sparkles, Lock, Pause, Play, Trash2,
+  LogOut, Sparkles, Lock, Pause, Play, Trash2, Menu,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
