@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { useUpdatePlanMutation } from "@/lib/queries/billing";
 
 export const Route = createFileRoute("/_authenticated/preferences/account")({
   component: AccountPage,
@@ -192,60 +193,8 @@ function AccountPage() {
       </section>
 
       {/* Subscription */}
-      <section>
-        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
-          Subscription &amp; billing
-        </h2>
-        <div className="rounded-card bg-paper-warm border border-charcoal-950/12 p-6">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-sage-700">
-                Current plan
-              </div>
-              <div className="mt-1 font-display text-2xl font-bold text-charcoal-950">
-                {currentPlan.label}
-                {trialActive && plan !== "free" && (
-                  <span className="ml-2 text-[10px] font-mono uppercase tracking-[0.14em] text-peach-700">
-                    Trial active
-                  </span>
-                )}
-              </div>
-              <div className="text-sm text-charcoal-600 mt-1">
-                {plan === "free"
-                  ? "$0 / forever"
-                  : cycle === "annual"
-                    ? `$${currentPlan.annual}/year`
-                    : `$${currentPlan.monthly}/mo`}
-              </div>
-            </div>
-            <div className="text-xs text-charcoal-600">
-              Next billing:{" "}
-              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : "—"}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} />
 
-      {/* Plans */}
-      <section>
-        <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
-          <div>
-            <h2 className="font-display text-xl font-semibold text-charcoal-950">
-              {plan === "max" ? "Plan options" : "Upgrade your plan"}
-            </h2>
-            <p className="text-sm text-charcoal-600 mt-1">
-              Get faster alerts, more searches, and Wren AI.
-            </p>
-          </div>
-          <BillingToggle cycle={cycle} onChange={setCycle} />
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-3">
-          {PLANS.map((p) => (
-            <PlanCard key={p.id} plan={p} currentPlan={plan} cycle={cycle} />
-          ))}
-        </div>
-      </section>
 
       {/* Privacy */}
       <section>
@@ -487,6 +436,20 @@ function PlanCard({
   const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
   const priceLabel =
     plan.id === "free" ? "Free" : `$${price}${cycle === "annual" ? "/yr" : "/mo"}`;
+  const updatePlanMut = useUpdatePlanMutation();
+  const [open, setOpen] = useState(false);
+
+  const planRank: Record<Plan, number> = { free: 0, premium: 1, max: 2 };
+  const isUpgrade = planRank[plan.id] > planRank[currentPlan];
+  const isDowngrade = planRank[plan.id] < planRank[currentPlan];
+
+  const ctaLabel = isCurrent
+    ? "Current plan"
+    : isUpgrade
+      ? `Upgrade to ${plan.label}`
+      : isDowngrade && plan.id === "free"
+        ? "Cancel subscription"
+        : `Switch to ${plan.label}`;
 
   return (
     <div
@@ -521,18 +484,132 @@ function PlanCard({
         ))}
       </ul>
 
-      <button
-        type="button"
-        disabled={isCurrent}
-        className={cn(
-          "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
-          isCurrent
-            ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
-            : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
-        )}
-      >
-        {isCurrent ? "Current plan" : `Upgrade to ${plan.label}`}
-      </button>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogTrigger asChild>
+          <button
+            type="button"
+            disabled={isCurrent || updatePlanMut.isPending}
+            className={cn(
+              "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
+              isCurrent
+                ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
+                : isDowngrade
+                  ? "border border-danger/40 text-danger hover:bg-danger/10"
+                  : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
+            )}
+          >
+            {ctaLabel}
+          </button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {isDowngrade && plan.id === "free"
+                ? "Cancel your subscription?"
+                : `Switch to ${plan.label}?`}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {isDowngrade && plan.id === "free" ? (
+                <>You'll lose access to paid features and your saved searches will be capped at the Free plan limit.</>
+              ) : (
+                <>
+                  You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                  ({priceLabel}).{" "}
+                  <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={updatePlanMut.isPending}
+              onClick={() => {
+                updatePlanMut.mutate(
+                  { plan: plan.id, billingCycle: cycle },
+                  { onSuccess: () => setOpen(false) },
+                );
+              }}
+              className={cn(
+                isDowngrade && plan.id === "free"
+                  ? "bg-danger text-paper hover:bg-danger/90"
+                  : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
+              )}
+            >
+              {updatePlanMut.isPending ? "Updating…" : "Confirm"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
+
+function SubscriptionSection({
+  plan, cycle, setCycle, trialActive, currentPlan,
+}: {
+  plan: Plan;
+  cycle: BillingCycle;
+  setCycle: (c: BillingCycle) => void;
+  trialActive: boolean;
+  currentPlan: PlanDef;
+}) {
+  return (
+    <>
+      <section>
+        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
+          Subscription &amp; billing
+        </h2>
+        <div className="rounded-card bg-paper-warm border border-charcoal-950/12 p-6">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-sage-700">
+                Current plan
+              </div>
+              <div className="mt-1 font-display text-2xl font-bold text-charcoal-950">
+                {currentPlan.label}
+                {trialActive && plan !== "free" && (
+                  <span className="ml-2 text-[10px] font-mono uppercase tracking-[0.14em] text-peach-700">
+                    Trial active
+                  </span>
+                )}
+              </div>
+              <div className="text-sm text-charcoal-600 mt-1">
+                {plan === "free"
+                  ? "$0 / forever"
+                  : cycle === "annual"
+                    ? `$${currentPlan.annual}/year`
+                    : `$${currentPlan.monthly}/mo`}
+              </div>
+            </div>
+            <div className="text-xs text-charcoal-600">
+              Next billing:{" "}
+              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : "—"}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
+          <div>
+            <h2 className="font-display text-xl font-semibold text-charcoal-950">
+              {plan === "max" ? "Plan options" : "Upgrade your plan"}
+            </h2>
+            <p className="text-sm text-charcoal-600 mt-1">
+              Get faster alerts, more searches, and Wren AI.
+            </p>
+          </div>
+          <BillingToggle cycle={cycle} onChange={setCycle} />
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-3">
+          {PLANS.map((p) => (
+            <PlanCard key={p.id} plan={p} currentPlan={plan} cycle={cycle} />
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
