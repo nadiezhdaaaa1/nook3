@@ -309,24 +309,34 @@ function Field({
 }
 
 function ToggleRow({
-  label, desc, checked, onChange,
+  label, desc, checked, onChange, disabled, alwaysOnNote,
 }: {
   label: string; desc: string; checked: boolean; onChange: (v: boolean) => void;
+  disabled?: boolean; alwaysOnNote?: string;
 }) {
   return (
     <div className="px-5 py-4 flex items-start justify-between gap-4">
       <div className="min-w-0">
-        <div className="text-sm font-semibold text-charcoal-950">{label}</div>
+        <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
+          {label}
+          {alwaysOnNote && (
+            <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
+              {alwaysOnNote}
+            </span>
+          )}
+        </div>
         <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
       </div>
       <button
         type="button"
         role="switch"
         aria-checked={checked}
-        onClick={() => onChange(!checked)}
+        aria-disabled={disabled}
+        onClick={() => !disabled && onChange(!checked)}
         className={cn(
           "relative h-6 w-11 rounded-full transition-colors shrink-0 mt-0.5",
           checked ? "bg-charcoal-950" : "bg-charcoal-300",
+          disabled && "opacity-60 cursor-not-allowed",
         )}
       >
         <span
@@ -339,6 +349,7 @@ function ToggleRow({
     </div>
   );
 }
+
 
 function DeleteAccountButton() {
   const [text, setText] = useState("");
