@@ -2,6 +2,7 @@ import { Check, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Eyebrow } from "./Eyebrow";
 import { SectionReveal } from "./anim/SectionReveal";
+import { AutoRenewalDisclosure } from "@/components/legal/AutoRenewalDisclosure";
 
 const plans = [
   {
@@ -105,6 +106,13 @@ export function PricingSection() {
                   {p.cta}
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
+                {p.price !== "$0" && (
+                  <AutoRenewalDisclosure
+                    price={p.price}
+                    cadence="month"
+                    tone={p.highlighted ? "onDark" : "default"}
+                  />
+                )}
               </div>
             </SectionReveal>
           ))}
