@@ -5,19 +5,19 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const ALERT_STATUSES = ["new", "saved", "contacted", "dismissed"] as const;
 export type AlertStatusDb = (typeof ALERT_STATUSES)[number];
 
-const listingSchema = z
-  .object({
-    title: z.string().max(200),
-    neighborhood: z.string().max(120),
-    beds: z.number().int().min(0).max(20),
-    baths: z.number().min(0).max(20),
-    price: z.number().int().min(0).max(1_000_000),
-    receivedAt: z.string().max(40),
-    source: z.string().max(60),
-    tags: z.array(z.string().max(40)).max(20),
-    imageHue: z.number().int().min(0).max(360),
-  })
-  .passthrough();
+const listingSchema = z.object({
+  title: z.string().max(200),
+  neighborhood: z.string().max(120),
+  beds: z.number().int().min(0).max(20),
+  baths: z.number().min(0).max(20),
+  price: z.number().int().min(0).max(1_000_000),
+  receivedAt: z.string().max(40),
+  source: z.string().max(60),
+  tags: z.array(z.string().max(40)).max(20),
+  imageHue: z.number().int().min(0).max(360),
+});
+
+export type AlertListing = z.infer<typeof listingSchema>;
 
 export type AlertRow = {
   id: string;
