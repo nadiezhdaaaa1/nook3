@@ -54,16 +54,15 @@ export function HeroCityAware() {
               transition={{ duration: 0.5 }}
               className="font-display font-medium text-[44px] sm:text-[56px] lg:text-[68px] leading-[1.02] tracking-[-0.025em] text-[var(--color-brand-charcoal)] mt-6"
             >
-              Find your next apartment before it's gone.
+              Find it before it's gone.
               <span className="block italic font-normal text-[var(--color-brand-sage)] mt-2">
                 Without losing your mind.
               </span>
             </motion.h1>
 
             <p className="mt-7 text-base lg:text-lg text-[var(--color-charcoal-700)] max-w-xl leading-relaxed">
-              Nook watches the rental market 24/7 and pings you the moment a real
-              match appears. Verified listings, rent-regulated units flagged, no
-              spam.
+              Nook watches the rental market 24/7 and pings you the moment a
+              match appears. Verified, no spam.
             </p>
 
             <form onSubmit={handleStart} className="mt-9 max-w-md">
