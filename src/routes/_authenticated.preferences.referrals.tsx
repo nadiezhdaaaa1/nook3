@@ -153,7 +153,7 @@ function ReferralsPage() {
               </div>
             </div>
           </div>
-          <div className="mt-4 h-2 rounded-pill bg-charcoal-950/8 overflow-hidden" role="progressbar" aria-valuenow={signedUp} aria-valuemin={0} aria-valuemax={REWARD_THRESHOLD}>
+          <div className="mt-4 h-2 rounded-pill bg-charcoal-950/8 overflow-hidden" role="progressbar" aria-valuenow={stats.signedUp} aria-valuemin={0} aria-valuemax={REWARD_THRESHOLD}>
             <div
               className="h-full bg-gradient-to-r from-sage-500 to-sage-700 rounded-pill transition-all duration-500"
               style={{ width: `${progress * 100}%` }}
