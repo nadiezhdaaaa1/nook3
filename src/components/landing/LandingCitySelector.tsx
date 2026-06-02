@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, MapPin, Check, Clock } from "lucide-react";
-import { toast } from "sonner";
 import { CITY_LIST, type CityId } from "@/data/cities";
 import { useLandingStore } from "@/lib/landing/landingStore";
 import { cn } from "@/lib/utils";
+import { WaitlistDialog } from "./WaitlistDialog";
 
 // Only NYC is active at launch. Others appear in the picker with a
 // "Coming soon" tag and add the user to a (front-end-only) waitlist toast.
