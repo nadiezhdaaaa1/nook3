@@ -1,104 +1,117 @@
-# Nook — Onboarding + Cabinet Implementation Plan
+# Nook — Plan: повна готовність frontend + backend
 
-## Скоуп
-Реалізуємо повний flow по ТЗ: 5-кроковий onboarding → loading → sample alert → pricing → trial → success → cabinet (4 таби). Усе на існуючій Nook design system (charcoal/sage/paper/peach, Fraunces/Inter Tight/JetBrains Mono).
+Зараз застосунок — frontend-only demo: всі дані в localStorage (Zustand persist), бекенду немає, валідація лише на email/phone у двох місцях, нема login, акаунт лише read-only, sonner підключений, але `toast()` не викликається жодного разу. Нижче — що саме треба, поділено на фази. Усе нове знає, що шар сторів (`useOnboardingStore` + `useAppStore`) лишається як "локальний кеш" поверх бази.
 
-Лендінг чіпаємо мінімально: додаємо city dropdown в header + редірект з email-форми в `/onboarding/step/1`.
+## Фаза 1 — Lovable Cloud + Auth (фундамент)
 
-## Архітектура
+1. Увімкнути Lovable Cloud (Supabase під капотом) — створяться `src/integrations/supabase/{client,client.server,auth-middleware,auth-attacher}`, `.env` отримає `VITE_SUPABASE_*` + серверні ключі.
+2. Авторизація:
+   - Маршрути `/login`, `/signup`, `/auth/callback` з email+password (швидкий старт). Magic-link опціонально другою ітерацією.
+   - Pathless layout route `src/routes/_authenticated.tsx` з `beforeLoad`, що редіректить на `/login` для `/preferences/*`.
+   - На `__root` слухач `supabase.auth.onAuthStateChange` → синхронізує `useAppStore.user`.
+   - Onboarding лишається публічним; завершення (`onboarding.success`) пропонує "Create account to save", якщо сесії нема.
+3. Verification:
+   - Email verified через Supabase auth (вже з коробки).
+   - Phone — окремо: серверна функція `sendPhoneOtp` / `verifyPhoneOtp` (поки що mock-успіх, але з реальним state у БД).
 
-### Маршрути (TanStack file-based)
-```
-src/routes/
-  index.tsx                          (існує, додаємо city dropdown + redirect)
-  onboarding.tsx                     layout (shell + ProgressBar + Outlet + persist guard)
-  onboarding.step.$n.tsx             splat-style: один файл, switch по n (1..5)
-  onboarding.loading.tsx
-  onboarding.preview.tsx
-  onboarding.pricing.tsx
-  onboarding.success.tsx
-  preferences.tsx                    layout (sidebar + referral block + Outlet)
-  preferences.index.tsx              Notifications (default)
-  preferences.budget.tsx
-  preferences.apartment.tsx
-  preferences.location.tsx
-```
+## Фаза 2 — Схема БД + RLS + міграція
 
-### Дані по містах
-`src/data/cities/*.ts` — окремий файл на місто (10 шт: nyc, la, sf-bay, chicago, dc, boston, seattle, miami, austin, philadelphia). Експортує `CityConfig` згідно типу з ТЗ §5. `src/data/cities/index.ts` — `CITIES` map + `getCity(id)` helper.
+Створити міграції для:
 
-Кожен файл містить: budget range/median, rentProtection (опц.), brokerFeeDefault, neighborhoodGroups, transit.lines з `servesNeighborhoods` для smart filter, buildingDataAvailable.
+- `profiles` (id PK = auth.uid, email, email_verified, phone, phone_verified, timezone, plan, billing_cycle, trial_active, trial_started_at, referral_code unique, is_affiliate, completed_at, move_out jsonb).
+- `searches` (id, user_id, name, city_id, status, archived_at, всі поля з `Search.filters`, created_at, updated_at). Унікальний індекс по `(user_id, lower(name))`.
+- `saved_alerts` (id, user_id, search_id FK, listing snapshot jsonb, status, snoozed_until, created_at).
+- `user_roles` + enum `app_role` + `has_role()` SECURITY DEFINER (за патерном з інструкцій).
+- `referrals` (id, referrer_user_id, referred_user_id, created_at, reward_status).
 
-### State (Zustand + localStorage)
-`src/lib/onboarding/store.ts` — `useOnboardingStore` із persist middleware, ключ `nook.onboarding.v1`. Структура — точно `OnboardingState` з ТЗ §6. Селектори: `useCity()`, `useStep(n)`, `setField(key, val)`.
+Для кожної таблиці: `GRANT` для `authenticated` + `service_role`, `ENABLE RLS`, політики "owner only" через `auth.uid() = user_id`. На `searches` — тригер, що валідує ліміт плану (free=1, premium=3, max=∞) перед insert.
 
-Cabinet читає той самий store + auto-save on blur/change.
+Auto-profile тригер `on_auth_user_created` → створює `profiles` рядок + дефолтний `searches` (з даних onboarding, переданих через `raw_user_meta_data`).
 
-### Бібліотеки до встановлення
-- `zustand` — state + persist
-- `react-leaflet` + `leaflet` — мапа (Step 3 + cabinet Location). Polygons з спрощеного GeoJSON; на старті — bounding-box rectangles per neighborhood, замість справжніх кордонів (інакше треба тягнути сотні KB геоданих). Структура готова під заміну на реальний GeoJSON пізніше.
-- `date-fns` (вже може бути) — для DatePicker
+## Фаза 3 — Server functions + перенос стора на БД
 
-Без Lovable Cloud цього разу (юзер сказав «кабінет буде інший» — лише UI + localStorage; auth/БД в окремому ТЗ).
+`src/lib/searches.functions.ts`, `src/lib/alerts.functions.ts`, `src/lib/profile.functions.ts` з `requireSupabaseAuth`:
 
-### Reusable компоненти
-`src/components/onboarding/` — `ProgressBar`, `CityPills`, `CitySearchDropdown`, `RentSlider`, `MoveInPicker`, `MultiSelectPills`, `SingleSelectPills`, `TriStateToggle`, `RentProtectionPicker`, `NeighborhoodMap`, `NeighborhoodList`, `AmenityPresetChips`, `TransitLineGrid`, `AlertChannelCards`, `LoadingChecklist`, `SampleListingCard`, `PricingCards`, `TrialModal`, `MoveOutModal`.
+- `listSearches`, `createSearch`, `updateSearch`, `renameSearch`, `pauseSearch`, `resumeSearch`, `archiveSearch`, `restoreSearch`, `deleteSearch`, `duplicateSearch`.
+- `listAlerts({ searchId | "all", status })`, `updateAlertStatus`, `snoozeAlert`.
+- `updateProfile`, `setMoveOut`, `sendPhoneOtp`, `verifyPhoneOtp`.
 
-`src/components/preferences/` — `PreferencesSidebar`, `ReferralBlock`, `FrequencyRadioCards`, `PlanCards` (reuse `PricingCards` з варіантом `currentPlan`).
+Усі з Zod-валідацією в `.inputValidator()` (бюджет як кортеж, статус enum, довжини, регекси).
 
-Усі візуальні токени — з існуючого `src/styles.css` (sage, peach, charcoal, paper, mono accents). Жодних hardcoded `text-white`.
+Інтеграція з React Query: один `QueryClient` у роутер-контексті, `queryOptions` у `src/lib/queries/*`. `useAppStore` стає тонкою обгорткою — `activeSearchId` у `localStorage`, решта через `useSuspenseQuery`. Мутації — оптимістичні з rollback + `queryClient.invalidateQueries`.
 
-## План по фазах (відповідає Build Sequence з ТЗ §9)
+Onboarding: завершення кроку 5 виконує `signUp` + `createSearch(snapshot)` одним flow; bridge-хелпери (`syncOnboardingToActiveSearch`, `syncOnboardingToUser`) переписуються в "push to server".
 
-### Фаза A — Фундамент (Prompts 1-2)
-1. Створити city configs (10 файлів) + типи + index.
-2. Створити Zustand store з persist.
-3. Додати city dropdown в `MarketingHeader` + handler «Get alerts» → store.email + nav `/onboarding/step/1`.
-4. `onboarding.tsx` layout: top bar з логотипом, ProgressBar (1..5), close (✕) з confirm, Skip slot.
-5. Step 1: city (search + pills) → budget slider (city-aware) → move-in (specific/flexible).
+## Фаза 4 — Валідація скрізь (Zod)
 
-### Фаза B — Кроки фільтрів (Prompts 3-7)
-6. Step 2: beds multi, baths single, rent-protection (city-aware show/hide), broker-fee checkbox.
-7. `NeighborhoodMap` (react-leaflet, OSM tiles, rectangle polygons з config).
-8. Step 3: split-screen (desktop) / tabs (mobile). Search, presets chips, grouped list з «Show all», selected chips bar, nearby suggestions.
-9. Step 4: AmenityPresetChips + tri-state amenities (3 групи) + transit з smart filter по `servesNeighborhoods ∩ selectedNeighborhoods`, toggle «Show all lines».
-10. Step 5: AlertChannelCards (3 шт) + email/phone з валідацією (zod). Frequency не показуємо — default `balanced`.
+Винести спільні схеми у `src/lib/validation/`:
 
-### Фаза C — Post-flow (Prompts 8-10)
-11. Loading screen: 4-крокова анімована checklist (~1с кожен), auto-nav на preview.
-12. Sample alert preview: захардкоджені 10 sample listings per city у `src/data/sampleListings.ts`; SampleListingCard з building-data блоком тільки якщо `buildingDataAvailable`.
-13. Pricing: monthly/annual toggle, visual comparison strip (heuristic alert count), 3 cards. Continue → free → Success, paid → TrialModal.
-14. TrialModal (Premium pre-selected) → «Start Free Trial» (mock, no Stripe) → Success.
-15. Success screen + MoveOutModal + ReferralBlock-link → `/preferences`.
+- `email`, `phone (E.164 +1 fallback)`, `searchName (2–50, без емодзі/керівних)`.
+- `budgetRange` (`[min, max]`, 500 ≤ min ≤ max ≤ 20000).
+- `moveIn` (mode="specific" → date обов'язкова, не в минулому, ≤ +18 міс).
+- `commute.maxMinutes` (5–120 або null).
+- `MoveOutInfo` (адреса, дата, повний об'єкт).
 
-### Фаза D — Cabinet (Prompts 11-13)
-16. `preferences.tsx` layout: top bar (logo + Back to home), page header (H1 + Unsubscribe), vertical TabSidebar (4 пункти + active indicator), ReferralBlock внизу. Outlet справа.
-17. Notifications tab: PlanCards (current badge), AlertChannelCards, FrequencyRadioCards. Auto-save в store.
-18. Budget & Criteria tab: RentSlider, MoveInPicker, RentProtectionPicker (city-aware), broker fee checkbox.
-19. Apartment Details tab: beds multi, baths single, TriStateToggle для 16 amenities (2 cols desktop).
-20. Location tab: simplified NeighborhoodList (без presets/search) + map view + TransitLineGrid з smart-filter toggle.
+Підключити:
 
-### Фаза E — Поліровка (Prompt 14)
-21. Mobile pass (375/768/1280), accessibility (focus rings, aria-labels, keyboard nav на tri-state), edge cases (no matches, map fail fallback, refresh-resume modal на landing).
+- `NewSearchModal` — лічильник символів, помилка під полем, disabled submit поки невалідно.
+- `SearchSwitcher` inline rename — показувати помилку під інпутом замість тихого no-op; toast при успіху/конфлікті імен.
+- `Step1Where` — блокувати Continue, якщо `moveIn.mode==="specific"` без date.
+- `Step4Preferences` — числовий інпут commute з мін/макс і повідомленням.
+- `MoveOutModal` — Zod-схема, aria-invalid, повідомлення.
+- `preferences.index` — підсилити: email/phone тепер required при `alertChannel === "email"/"phone"`.
+- `preferences.account` — повноцінні edit-форми (email change → re-verify, phone change → OTP).
+- Усі сервер-функції повторюють ту саму схему — клієнт показує, сервер енфорсить.
 
-## Технічні деталі
+## Фаза 5 — Помилки, тости, стан UI
 
-**Tri-state toggle цикл:** `neutral → nice → required → neutral`. Зберігається як `Record<string, 'neutral'|'nice'|'required'>` у store (відсутній ключ = neutral, щоб не роздувати persist).
+- Sonner `toast.success/error` у кожній мутації: створення/перейменування/пауза/архів/відновлення/видалення/snooze + "Undo" на archive/delete (5 с window).
+- `errorComponent` + `pendingComponent` на:
+  - `routes/_authenticated.tsx`,
+  - `routes/preferences.tsx` (батьківський layout),
+  - `routes/onboarding.tsx`.
+- Loading skeletons для `preferences.alerts` (список), `preferences.index` (form), `SearchSwitcher` (поки React Query завантажує).
+- Empty states з CTA: "немає алертів — спробуйте розширити фільтри / створити новий пошук".
+- `PlanLimitsBanner` — прибрати hydration flicker (читати `localStorage` у `useEffect` з init `null`, не показувати до резолву).
+- Network/offline banner: глобальний слухач `online/offline` + toast.
+- Standalone `not-found` для глибоких маршрутів (наприклад, неіснуючий `searchId` у URL — коли додамо `/preferences/searches/$id`).
 
-**Smart subway filter:** `lines.filter(l => l.servesNeighborhoods.some(n => selected.includes(n)))`. Якщо результат порожній (юзер не вибрав сусіди, які покриваються лініями) — fallback на «Show all».
+## Фаза 6 — Multi-search polish
 
-**Auto-save в кабінеті:** every setter в store одразу пише в localStorage через persist — окремий save button не треба. Toast «Saved» через `sonner` на blur (опц., можна без).
+- Реальні per-search `saved_alerts` з БД (генератор сидів-даних запускається в Edge `cron` або одноразово при створенні пошуку — для демо).
+- Per-search статистика (`totalAlertsReceived`, `alertsLast7Days`, `alertsToday`) — обчислюється SQL view або `select count() filter (where ...)`.
+- Авто-sync редактора → snapshot:
+  - debounced effect у `preferences.tsx` (1.5 с після останньої зміни) викликає `syncOnboardingToActiveSearch()` + серверну мутацію.
+  - також на `router.subscribe("onBeforeNavigate")` — flush перед переходом.
+- Snooze алерту (Until tomorrow / +3 days / +1 week / custom).
+- Rename — унікальність імен у межах юзера, помилка з конфлікту з БД конвертується у людський меседж.
+- Сторінка `/preferences/archive` — повне керування архівом.
 
-**Heuristic alert count для preview/pricing:** `Math.round(neighborhoods.length * (budget/median1BR) * 2)`, clamp [2, 50].
+## Фаза 7 — Білінг + рефералки + Wren AI
 
-**Resume modal:** при mount `index.tsx` перевіряє `store.city && !store.completedAt` → показує banner «Continue where you left off → /onboarding/step/N» (N = last step з заповненими полями).
+- Stripe через `payments--enable_stripe` + серверні функції `createCheckoutSession`, `cancelSubscription`, webhook `/api/public/stripe/webhook` (з підписом).
+- `UpgradeModal` запускає реальний checkout, success-redirect оновлює `profiles.plan`.
+- `preferences.referrals`: реальні лічильники з таблиці `referrals`, копія посилання, applied-at-signup флоу через `?ref=` query param.
+- Wren AI compare: серверна функція `compareListings` через Lovable AI Gateway (модель Gemini 2.5 Flash для дешевого аналізу), результат у `saved_alerts.ai_summary` jsonb.
 
-**Mock Stripe:** «Start Free Trial» просто ставить `selectedPlan='premium'`, `trialActive=true` в store і веде на success. Реальна оплата — в окремому ТЗ.
+## Фаза 8 — Дрібниці якості
 
-**Лендінг:** не переробляємо. Тільки `MarketingHeader` отримує `<CitySwitcher />` (dropdown 10 міст, пише в store.city) та `<HeroSection>` email-форма редіректить.
+- `__root.tsx` `title` → "Nook — Apartment alerts that actually work" (не "Lovable App"); meta description, OG image.
+- Унікальні `head()` на кожному route (SEO).
+- `robots.txt` + `sitemap` route.
+- Перевірити `errorComponent` шаблон на retry → `router.invalidate()` + `reset()`.
+- Audit-фікс: будь-який `dangerouslySetInnerHTML` (зараз не знайдено — добре), DOMPurify якщо з'явиться user-generated rich text.
 
-**Що НЕ робимо** (явно з ТЗ §11): listings catalog, favorites, saved searches list, pause, quiet hours, account/email change, billing history, roommate UI, Wren AI, lasso/draw, public SEO pages.
+---
 
-## Що очікую підтвердити перед стартом
+## Технічні нотатки
 
-Жодних блокерів — спека дуже детальна. Якщо «погнали» — починаю з Фази A (cities config + store + landing wiring + onboarding shell + Step 1) одним великим коммітом, потім по фазах.
+- **Стек**: TanStack Start v1, React 19, Vite 7, Tailwind v4. Server runtime — Cloudflare Worker (нативні Node-only пакети — заборонені).
+- **Auth flow**: `attachSupabaseAuth` уже є в шаблоні; підтвердити в `src/start.ts` після enable.
+- **React Query**: `defaultPreloadStaleTime: 0`, окремий `QueryClient` на запит у `getRouter`.
+- **Міграції**: окрема міграція на таблицю + GRANT + RLS + політики в тому самому файлі. Поле `Search.id` лишаємо string (UUID), щоб поточний фронт-код не ламався.
+- **Backward compat**: одноразова `ensureMigratedFromLegacy()` уже є; додамо нову `pushLocalToCloudOnFirstLogin()` — якщо в `localStorage` є завершений onboarding, при першому логіні апсертимо `profiles` + `searches`.
+
+## Порядок виконання
+
+Я б ішов фазами по черзі (1→2→3 блокують решту), у 3 фазі робив би менші PR'и (по одній сутності). Фази 4/5 можна частково паралелити після того, як з'явилися serverFn. Скажіть, з якої фази стартуємо, чи робимо все підряд.
