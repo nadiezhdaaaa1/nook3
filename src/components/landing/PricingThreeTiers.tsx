@@ -67,7 +67,6 @@ const TIERS: Tier[] = [
       { text: "3 saved searches (run parallel)", included: true },
       { text: "Real-time email alerts (within minutes)", included: true },
       { text: "Unlimited email frequency", included: true },
-      { text: "SMS alerts — 1 per day", included: true },
       { text: "Verified regulated unit badges", included: true },
       { text: "Wren AI assistant — chat about any listing", included: true },
       { text: "Pause/resume searches anytime", included: true },
