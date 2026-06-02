@@ -1,6 +1,7 @@
-import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle } from "lucide-react";
+import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle, LogOut } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
 import { cn } from "@/lib/utils";
@@ -8,8 +9,15 @@ import { SearchSwitcher } from "@/components/preferences/SearchSwitcher";
 import { PlanLimitsBanner } from "@/components/preferences/PlanLimitsBanner";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import { useActiveSearch } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/preferences")({
+  beforeLoad: async ({ location }) => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      throw redirect({ to: "/login", search: { redirect: location.href } });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Manage preferences — Nook" },
