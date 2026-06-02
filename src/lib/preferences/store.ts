@@ -45,6 +45,7 @@ export const usePreferencesStore = create<PreferencesState & PreferencesActions>
         const cur = get().perSearch[searchId] ?? { emailOverride: null, phoneOverride: null };
         set({ perSearch: { ...get().perSearch, [searchId]: { ...cur, ...patch } } });
       },
+      setPref: (key, val) => set({ [key]: val } as Partial<PreferencesState>),
     }),
     {
       name: "nook.preferences.v1",
