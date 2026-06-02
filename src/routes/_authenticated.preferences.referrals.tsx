@@ -36,18 +36,7 @@ function ReferralsPage() {
   const progress = Math.min(stats.signedUp / REWARD_THRESHOLD, 1);
   const remaining = Math.max(REWARD_THRESHOLD - stats.signedUp, 0);
 
-function ReferralsPage() {
-  const [copied, setCopied] = useState<"link" | "blurb" | null>(null);
-  const code = typeof window === "undefined" ? "RB000000" : getReferralCode();
-  const url = `https://thenook.rent/r/${code}`;
-  const blurb = `I'm using Nook to find my next apartment — they ping me the moment a real match shows up. Use my link and we both get 7 days of Premium free: ${url}`;
 
-  // TODO(phase-6): wire to real `referrals` table via server fn
-  const invited = 3;
-  const signedUp = 1;
-  const earned = 1;
-  const progress = Math.min(signedUp / REWARD_THRESHOLD, 1);
-  const remaining = Math.max(REWARD_THRESHOLD - signedUp, 0);
 
   const copy = (text: string, what: "link" | "blurb", label: string) => {
     navigator.clipboard?.writeText(text);
