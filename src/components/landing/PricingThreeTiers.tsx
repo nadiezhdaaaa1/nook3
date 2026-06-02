@@ -175,7 +175,7 @@ export function PricingThreeTiers() {
                 <span
                   className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-pill text-[10px] font-mono uppercase tracking-[0.18em] font-semibold whitespace-nowrap"
                   style={{
-                    backgroundColor: "var(--color-brand-terracotta)",
+                    backgroundColor: "var(--color-brand-sage)",
                     color: "white",
                   }}
                 >
@@ -235,7 +235,7 @@ export function PricingThreeTiers() {
                 )}
                 style={{
                   backgroundColor: t.highlight
-                    ? "var(--color-brand-terracotta)"
+                    ? "var(--color-brand-sage)"
                     : "var(--color-brand-charcoal)",
                   color: "white",
                 }}
