@@ -21,7 +21,7 @@ export const Route = createFileRoute("/onboarding/success")({
 
 function Success() {
   const navigate = useNavigate();
-  const { email, phone, alertChannel, selectedPlan, trialActive, moveOut, set } =
+  const { email, selectedPlan, trialActive, moveOut, set } =
     useOnboardingStore();
   const [moveOutOpen, setMoveOutOpen] = useState(false);
   const [referral, setReferral] = useState("");
