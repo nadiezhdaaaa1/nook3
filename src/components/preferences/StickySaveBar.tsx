@@ -7,6 +7,10 @@ interface StickySaveBarProps<T> {
   state: T;
   onDiscard: (snapshot: T) => void;
   label?: string;
+  /** Optional fn returning a list of human-readable labels for changed fields. */
+  getChanges?: (baseline: T, current: T) => string[];
+  /** Optional success toast message. */
+  successMessage?: string;
 }
 
 /**
