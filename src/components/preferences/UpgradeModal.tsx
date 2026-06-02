@@ -107,7 +107,6 @@ function TierCard({ tier }: { tier: "premium" | "max" }) {
     : [
         "Up to 3 active searches",
         "Real-time email alerts, no delay",
-        "1 text alert per day",
         "Per-search notification settings",
       ];
   return (
