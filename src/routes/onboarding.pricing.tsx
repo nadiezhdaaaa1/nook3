@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Bell, Mail, Zap } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
+import { AutoRenewalDisclosure } from "@/components/legal/AutoRenewalDisclosure";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
 import { TrialModal } from "@/components/onboarding/TrialModal";
 import { getCity } from "@/data/cities";
@@ -131,6 +132,13 @@ function PricingScreen() {
               >
                 {p.id === "free" ? "Continue with free" : "Start 3-day free trial"}
               </button>
+              {p.id !== "free" && (
+                <AutoRenewalDisclosure
+                  price={billingCycle === "annual" ? `$${p.annual}` : `$${p.monthly}`}
+                  cadence={billingCycle === "annual" ? "year" : "month"}
+                  align="left"
+                />
+              )}
             </div>
           );
         })}

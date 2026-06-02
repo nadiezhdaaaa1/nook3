@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
+import { AutoRenewalDisclosure } from "@/components/legal/AutoRenewalDisclosure";
 import { useLandingStore } from "@/lib/landing/landingStore";
 import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
@@ -225,16 +226,24 @@ export function PricingLanding() {
                     "group inline-flex w-full items-center justify-center gap-2 h-12 rounded-pill text-sm font-semibold transition-colors",
                     p.highlight
                       ? "bg-sage-500 text-paper hover:bg-sage-700"
-                      : "border-2 border-charcoal-950 text-charcoal-950 hover:bg-charcoal-950 hover:text-paper",
+                      : "border-2 border-charcoal-950 text-charcoal-950 text-charcoal-950 hover:bg-charcoal-950 hover:text-paper",
                   )}
                 >
                   {p.cta}
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
-                {p.highlight && (
-                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-paper/50 text-center mt-3">
-                    No credit card required
-                  </div>
+                {p.monthly > 0 ? (
+                  <AutoRenewalDisclosure
+                    price={cycle === "annual" ? `$${p.annual}` : `$${p.monthly}`}
+                    cadence={cycle === "annual" ? "year" : "month"}
+                    tone={p.highlight ? "onDark" : "default"}
+                  />
+                ) : (
+                  p.highlight && (
+                    <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-paper/50 text-center mt-3">
+                      No credit card required
+                    </div>
+                  )
                 )}
               </div>
             );

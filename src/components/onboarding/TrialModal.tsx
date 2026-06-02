@@ -97,6 +97,12 @@ export function TrialModal({ plan, onClose, onConfirm }: Props) {
           >
             {busy ? "Starting trial…" : "Start free trial"}
           </button>
+          <p className="text-xs text-charcoal-600 leading-relaxed text-center -mt-1">
+            After your 3-day free trial, your plan auto-renews at{" "}
+            <span className="font-semibold text-charcoal-950">{copy.price}</span> until cancelled.
+            Cancel anytime in{" "}
+            <span className="font-semibold text-charcoal-950">Account → Subscription</span>.
+          </p>
           <button
             type="button"
             onClick={onClose}

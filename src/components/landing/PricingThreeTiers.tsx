@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
+import { AutoRenewalDisclosure } from "@/components/legal/AutoRenewalDisclosure";
 import { cn } from "@/lib/utils";
 
 type Cycle = "monthly" | "annual";
@@ -242,6 +243,13 @@ export function PricingThreeTiers() {
               >
                 {t.cta}
               </Link>
+              {t.id !== "free" && (
+                <AutoRenewalDisclosure
+                  price={cycle === "annual" ? t.priceAnnual : t.priceMonthly}
+                  cadence={cycle === "annual" ? "year" : "month"}
+                  tone={t.highlight ? "onDark" : "default"}
+                />
+              )}
               {t.footnote && (
                 <div
                   className="mt-2 text-center text-[12px]"
