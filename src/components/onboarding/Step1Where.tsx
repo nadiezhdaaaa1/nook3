@@ -1,7 +1,7 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { Pencil } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
-import { CityPicker } from "@/components/onboarding/CityPicker";
 import { RentSlider } from "@/components/onboarding/RentSlider";
 import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
