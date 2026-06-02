@@ -40,7 +40,7 @@ export function HowItWorksThreeSteps() {
             n="01"
             title="Tell us what you want"
             badge="Set up in 60 seconds"
-            body="60 seconds of setup. Budget, bedrooms, neighborhoods you'd actually live in, deal-breakers like 'no walk-up' or 'pet-friendly only'. We save it. You can have up to 3 different searches running at once."
+            body="Budget, bedrooms, neighborhoods, deal-breakers. Save up to 3 searches at once."
             reduce={reduce}
             mock={<FormMock pills={samplePills} />}
             delay={0}
@@ -49,7 +49,7 @@ export function HowItWorksThreeSteps() {
             n="02"
             title="We do the watching"
             badge="Updates every few minutes"
-            body="Our system scans the rental market in your city continuously and checks every new listing against public records — building violations, regulation status, recent complaints. You don't see the noise. We filter it before it reaches you."
+            body="We scan the market 24/7 and check every listing against public records — violations, regulation status, complaints. The noise gets filtered out."
             reduce={reduce}
             mock={<FeedMock />}
             delay={0.1}
@@ -57,8 +57,8 @@ export function HowItWorksThreeSteps() {
           <Step
             n="03"
             title="You get pinged. You go see it."
-            badge="Most alerts arrive within 30 minutes"
-            body="Email or text the second something matches. Listing has the full address, real rent, verified status, and a one-tap link to contact the landlord. You're often the first person to inquire."
+            badge="Alerts within 30 minutes"
+            body="Email or text the second a match drops. Full address, real rent, one-tap to contact the landlord. You're usually first."
             reduce={reduce}
             mock={<NotificationMock />}
             delay={0.2}
