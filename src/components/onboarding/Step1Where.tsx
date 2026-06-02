@@ -12,6 +12,7 @@ import { CITY_ACTIVE_LISTINGS } from "@/data/cities/icons";
 export function Step1Where() {
   const navigate = useNavigate();
   const { city, budget, moveIn, movingOut, set, patch } = useOnboardingStore();
+  void patch;
   const cityConfig = getCity(city);
 
   useEffect(() => {
