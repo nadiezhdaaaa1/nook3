@@ -164,6 +164,40 @@ function SignupPage() {
                     <p className="mt-1 text-xs text-charcoal-500">At least 8 characters.</p>
                   )}
                 </div>
+                <div className="space-y-3 pt-1">
+                  <label className="flex items-start gap-2 text-sm text-charcoal-700">
+                    <input
+                      type="checkbox"
+                      checked={acceptTerms}
+                      onChange={(e) => setAcceptTerms(e.target.checked)}
+                      aria-invalid={!!errors.terms}
+                      className="mt-0.5 h-4 w-4 rounded border-charcoal-300 text-charcoal-950 focus:ring-charcoal-950"
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <Link to="/terms" className="font-semibold underline text-charcoal-950">
+                        Terms of Service
+                      </Link>{" "}
+                      and{" "}
+                      <Link to="/privacy" className="font-semibold underline text-charcoal-950">
+                        Privacy Policy
+                      </Link>
+                      .
+                    </span>
+                  </label>
+                  {errors.terms && <p className="text-xs text-danger">{errors.terms}</p>}
+                  <label className="flex items-start gap-2 text-sm text-charcoal-700">
+                    <input
+                      type="checkbox"
+                      checked={marketing}
+                      onChange={(e) => setMarketing(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 rounded border-charcoal-300 text-charcoal-950 focus:ring-charcoal-950"
+                    />
+                    <span>
+                      Send me product updates and apartment-hunting tips. You can unsubscribe anytime.
+                    </span>
+                  </label>
+                </div>
                 {errors.form && <p className="text-sm text-danger">{errors.form}</p>}
                 <button
                   type="submit"
