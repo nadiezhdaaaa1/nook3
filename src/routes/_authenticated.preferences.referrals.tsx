@@ -142,7 +142,7 @@ function ReferralsPage() {
             <div>
               <div className="text-xs text-charcoal-600">Signups toward next reward</div>
               <div className="font-display text-3xl font-bold text-charcoal-950 tabular-nums mt-1">
-                {signedUp} <span className="text-charcoal-400 text-xl font-medium">/ {REWARD_THRESHOLD}</span>
+                {stats.signedUp} <span className="text-charcoal-400 text-xl font-medium">/ {REWARD_THRESHOLD}</span>
               </div>
             </div>
             <div className="text-right">
