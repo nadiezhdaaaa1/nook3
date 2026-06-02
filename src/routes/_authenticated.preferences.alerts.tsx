@@ -166,8 +166,12 @@ function SavedAlertsPage() {
         })}
       </div>
 
-      {/* List or empty */}
-      {filtered.length === 0 ? (
+      {/* List, loading, or empty */}
+      {alertsQuery.isLoading ? (
+        <div className="flex items-center justify-center py-16 text-charcoal-500">
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </div>
+      ) : filtered.length === 0 ? (
         <EmptyState filter={filter} />
       ) : (
         <ul className="space-y-3">
