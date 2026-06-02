@@ -64,6 +64,15 @@
   --color-match-mid: #b89548;
   --color-match-low: #8a8a82;
 
+  /* Brand tokens (Nook landing) */
+  --color-brand-cream: #F5EDE0;
+  --color-brand-soft: #FAF6EE;
+  --color-brand-charcoal: #2B2521;
+  --color-brand-terracotta: #C2664E;
+  --color-brand-terracotta-dark: #9E4F3C;
+  --color-brand-sage: #9DAA8E;
+  --color-brand-clay: #D9C7B2;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);

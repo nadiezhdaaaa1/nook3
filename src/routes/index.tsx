@@ -1,32 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
-import { HeroDemo } from "@/components/landing/HeroDemo";
-import { UrgencyStrip } from "@/components/landing/UrgencyStrip";
-import { WhyStillLooking } from "@/components/landing/WhyStillLooking";
-import { HowItWorksLanding } from "@/components/landing/HowItWorksLanding";
-
-import { TimeLossCalculator } from "@/components/landing/TimeLossCalculator";
-import { PricingLanding } from "@/components/landing/PricingLanding";
-import { WrenAIBlock } from "@/components/landing/WrenAIBlock";
-import { SourcesSection } from "@/components/marketing/SourcesSection";
-import { StatsSection } from "@/components/marketing/StatsSection";
-import { FaqSection } from "@/components/marketing/FaqSection";
+import { HeroCityAware } from "@/components/landing/HeroCityAware";
+import { HowItWorksThreeSteps } from "@/components/landing/HowItWorksThreeSteps";
+import { WhatYouGetGrid } from "@/components/landing/WhatYouGetGrid";
+import { TiredOfSection } from "@/components/landing/TiredOfSection";
+import { ReviewsMasonry } from "@/components/landing/ReviewsMasonry";
+import { PricingThreeTiers } from "@/components/landing/PricingThreeTiers";
+import { FaqFifteen } from "@/components/landing/FaqFifteen";
+import { BlogTeaser } from "@/components/landing/BlogTeaser";
 import { CtaStrip } from "@/components/marketing/CtaStrip";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Nook — Real-time apartment alerts in 10 US cities" },
+      { title: "Nook — Find your next apartment before it's gone" },
       {
         name: "description",
         content:
-          "Stop refreshing listings. Get real-time alerts for rent-stabilized and market-rate apartments in NYC, LA, SF Bay, Chicago, DC, Boston, Seattle, Miami, Austin & Philadelphia. Free tier · Premium $14.99/mo.",
+          "Nook watches the rental market 24/7 and pings you the moment a real match appears. Verified listings, rent-regulated units flagged, no spam. Free tier · Premium $14.99/mo.",
       },
-      { property: "og:title", content: "Nook — Real-time apartment alerts" },
+      { property: "og:title", content: "Nook — Find your next apartment before it's gone" },
       {
         property: "og:description",
         content:
-          "Real-time alerts the moment a rent-stabilized or market-rate listing hits 100+ rental sources. Median delivery: 47 seconds.",
+          "Real-time alerts the moment a verified rental match appears in your city. Built for renters who are tired of refreshing.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://nook3.lovable.app/" },
@@ -38,19 +35,14 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   return (
     <MarketingLayout>
-      <section id="hero" className="scroll-mt-20">
-        <HeroDemo />
-      </section>
-      <UrgencyStrip />
-      <WhyStillLooking />
-      <HowItWorksLanding />
-      
-      <TimeLossCalculator />
-      <WrenAIBlock />
-      <SourcesSection />
-      <StatsSection />
-      <PricingLanding />
-      <FaqSection />
+      <HeroCityAware />
+      <HowItWorksThreeSteps />
+      <WhatYouGetGrid />
+      <TiredOfSection />
+      <ReviewsMasonry />
+      <PricingThreeTiers />
+      <FaqFifteen />
+      <BlogTeaser />
       <CtaStrip />
     </MarketingLayout>
   );
