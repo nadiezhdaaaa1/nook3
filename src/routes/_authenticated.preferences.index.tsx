@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles, Check } from "lucide-react";
+import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles, ArrowRight } from "lucide-react";
 import { z } from "zod";
-import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
+import { useOnboardingStore, type AlertChannel, type Frequency } from "@/lib/onboarding/store";
+import { useAppStore } from "@/lib/store";
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { cn } from "@/lib/utils";
 
@@ -10,11 +11,11 @@ export const Route = createFileRoute("/_authenticated/preferences/")({
   component: NotificationsTab,
 });
 
-const PLANS: { id: Plan; label: string; price: string; desc: string }[] = [
-  { id: "free", label: "Free", price: "$0", desc: "Daily digest, basic filters." },
-  { id: "premium", label: "Premium", price: "$15/mo", desc: "Instant alerts, all filters, no-fee finder." },
-  { id: "max", label: "Max", price: "$29/mo", desc: "Concierge matches + early access." },
-];
+const PLAN_PILL: Record<string, { text: string; cta: string | null }> = {
+  free: { text: "Free plan — 1 search, email alerts only", cta: "Upgrade" },
+  premium: { text: "Premium — 3 searches, real-time alerts, SMS", cta: "Manage plan" },
+  max: { text: "Max — Unlimited searches, all features unlocked", cta: null },
+};
 
 const CHANNELS: { id: AlertChannel; label: string; icon: typeof Mail }[] = [
   { id: "email", label: "Email only", icon: Mail },
