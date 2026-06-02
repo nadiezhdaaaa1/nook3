@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Gift, Users, Calendar } from "lucide-react";
 
-export const Route = createFileRoute("/preferences/referrals")({
+export const Route = createFileRoute("/_authenticated/preferences/referrals")({
   component: ReferralsPage,
 });
 

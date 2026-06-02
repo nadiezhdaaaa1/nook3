@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 
-export const Route = createFileRoute("/preferences/account")({
+export const Route = createFileRoute("/_authenticated/preferences/account")({
   component: AccountPage,
 });
 
