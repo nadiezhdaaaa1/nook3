@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Gift, Users, Calendar, Copy, Check, Mail, MessageSquare,
   Share2, Sparkles, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getReferralCode } from "@/lib/onboarding/store";
+import { referralStatsQueryOptions } from "@/lib/queries/referrals";
+import type { ReferralStats } from "@/lib/referrals.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/preferences/referrals")({
@@ -16,16 +19,24 @@ const REWARD_THRESHOLD = 5;
 
 function ReferralsPage() {
   const [copied, setCopied] = useState<"link" | "blurb" | null>(null);
-  const code = typeof window === "undefined" ? "RB000000" : getReferralCode();
+  const { data, isLoading } = useQuery(referralStatsQueryOptions());
+
+  const fallbackCode = typeof window === "undefined" ? "RB000000" : getReferralCode();
+  const code = data?.code || fallbackCode;
   const url = `https://thenook.rent/r/${code}`;
   const blurb = `I'm using Nook to find my next apartment — they ping me the moment a real match shows up. Use my link and we both get 7 days of Premium free: ${url}`;
 
-  // TODO(phase-6): wire to real `referrals` table via server fn
-  const invited = 3;
-  const signedUp = 1;
-  const earned = 1;
-  const progress = Math.min(signedUp / REWARD_THRESHOLD, 1);
-  const remaining = Math.max(REWARD_THRESHOLD - signedUp, 0);
+  const stats: ReferralStats = data ?? {
+    code,
+    invited: 0,
+    signedUp: 0,
+    rewarded: 0,
+    recent: [],
+  };
+  const progress = Math.min(stats.signedUp / REWARD_THRESHOLD, 1);
+  const remaining = Math.max(REWARD_THRESHOLD - stats.signedUp, 0);
+
+
 
   const copy = (text: string, what: "link" | "blurb", label: string) => {
     navigator.clipboard?.writeText(text);
@@ -131,7 +142,7 @@ function ReferralsPage() {
             <div>
               <div className="text-xs text-charcoal-600">Signups toward next reward</div>
               <div className="font-display text-3xl font-bold text-charcoal-950 tabular-nums mt-1">
-                {signedUp} <span className="text-charcoal-400 text-xl font-medium">/ {REWARD_THRESHOLD}</span>
+                {stats.signedUp} <span className="text-charcoal-400 text-xl font-medium">/ {REWARD_THRESHOLD}</span>
               </div>
             </div>
             <div className="text-right">
@@ -142,7 +153,7 @@ function ReferralsPage() {
               </div>
             </div>
           </div>
-          <div className="mt-4 h-2 rounded-pill bg-charcoal-950/8 overflow-hidden" role="progressbar" aria-valuenow={signedUp} aria-valuemin={0} aria-valuemax={REWARD_THRESHOLD}>
+          <div className="mt-4 h-2 rounded-pill bg-charcoal-950/8 overflow-hidden" role="progressbar" aria-valuenow={stats.signedUp} aria-valuemin={0} aria-valuemax={REWARD_THRESHOLD}>
             <div
               className="h-full bg-gradient-to-r from-sage-500 to-sage-700 rounded-pill transition-all duration-500"
               style={{ width: `${progress * 100}%` }}
@@ -152,16 +163,16 @@ function ReferralsPage() {
 
         {/* Quick stats */}
         <div className="grid sm:grid-cols-3 gap-3">
-          <StatCard icon={Users} label="Friends invited" value={invited} />
-          <StatCard icon={Calendar} label="Signed up" value={signedUp} accent />
-          <StatCard icon={Gift} label="Rewards earned" value={earned} />
+          <StatCard icon={Users} label="Friends invited" value={stats.invited} />
+          <StatCard icon={Calendar} label="Signed up" value={stats.signedUp} accent />
+          <StatCard icon={Gift} label="Rewards earned" value={stats.rewarded} />
         </div>
       </section>
 
       {/* ===== Recent referrals ===== */}
       <section aria-labelledby="recent-heading" className="space-y-4">
         <SectionHeading id="recent-heading" eyebrow="03 — Activity" title="Recent referrals" />
-        <RecentList />
+        <RecentList items={stats.recent} isLoading={isLoading} />
       </section>
 
       {/* ===== How it works ===== */}
@@ -271,13 +282,22 @@ function StatCard({
   );
 }
 
-function RecentList() {
-  // Empty state for now; phase 6 will wire real data
-  const items: { email: string; status: "invited" | "signed_up" | "rewarded"; date: string }[] = [
-    { email: "j****@gmail.com", status: "rewarded", date: "Apr 12" },
-    { email: "m****@outlook.com", status: "invited", date: "Apr 10" },
-    { email: "s****@yahoo.com", status: "invited", date: "Apr 8" },
-  ];
+function RecentList({
+  items,
+  isLoading,
+}: {
+  items: ReferralStats["recent"];
+  isLoading: boolean;
+}) {
+  if (isLoading && items.length === 0) {
+    return (
+      <div className="rounded-card border border-charcoal-950/8 bg-paper-warm/50 p-6 space-y-3" aria-busy="true">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="h-8 rounded-md bg-charcoal-950/5 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -290,20 +310,26 @@ function RecentList() {
 
   return (
     <ul className="divide-y divide-charcoal-950/8 border border-charcoal-950/8 rounded-card overflow-hidden bg-paper">
-      {items.map((it) => (
-        <li key={it.email} className="flex items-center justify-between gap-4 px-4 py-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="h-8 w-8 rounded-pill bg-sage-100 text-sage-900 inline-flex items-center justify-center text-xs font-bold shrink-0">
-              {it.email.charAt(0).toUpperCase()}
+      {items.map((it) => {
+        const date = new Date(it.createdAt).toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+        });
+        return (
+          <li key={it.id} className="flex items-center justify-between gap-4 px-4 py-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="h-8 w-8 rounded-pill bg-sage-100 text-sage-900 inline-flex items-center justify-center text-xs font-bold shrink-0">
+                {it.email.charAt(0).toUpperCase()}
+              </div>
+              <div className="text-sm text-charcoal-800 font-mono truncate">{it.email}</div>
             </div>
-            <div className="text-sm text-charcoal-800 font-mono truncate">{it.email}</div>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <StatusPill status={it.status} />
-            <span className="text-xs text-charcoal-500 tabular-nums hidden sm:inline">{it.date}</span>
-          </div>
-        </li>
-      ))}
+            <div className="flex items-center gap-3 shrink-0">
+              <StatusPill status={it.status} />
+              <span className="text-xs text-charcoal-500 tabular-nums hidden sm:inline">{date}</span>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }
