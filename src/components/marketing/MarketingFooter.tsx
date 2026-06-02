@@ -83,7 +83,7 @@ export function MarketingFooter() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mt-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mt-12">
           <FooterCol title="Product">
             <FooterAnchor href="#how">How it works</FooterAnchor>
             <FooterAnchor href="#what">What you get</FooterAnchor>
@@ -93,18 +93,11 @@ export function MarketingFooter() {
           </FooterCol>
           <FooterCol title="Company">
             <FooterAnchor href="mailto:hello@thenook.rent">Contact</FooterAnchor>
-            <FooterAnchor href="mailto:press@thenook.rent">Press kit</FooterAnchor>
           </FooterCol>
           <FooterCol title="Legal">
             <FooterAnchor href="#">Terms of Service</FooterAnchor>
             <FooterAnchor href="#">Privacy Policy</FooterAnchor>
             <FooterAnchor href="#">Cookie Policy</FooterAnchor>
-            <FooterAnchor href="#">Acceptable Use</FooterAnchor>
-          </FooterCol>
-          <FooterCol title="Account">
-            <FooterLink to="/login">Sign in</FooterLink>
-            <FooterLink to="/onboarding">Start free</FooterLink>
-            <FooterAnchor href="mailto:hello@thenook.rent">Help center</FooterAnchor>
           </FooterCol>
         </div>
 
