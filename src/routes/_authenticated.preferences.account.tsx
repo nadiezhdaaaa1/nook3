@@ -179,24 +179,52 @@ function AccountPage() {
       <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} />
 
 
+      {/* Communications */}
+      <section>
+        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
+          Communications
+        </h2>
+        <p className="text-xs text-charcoal-600 mb-4">
+          We always send essential service emails. You control the optional ones.
+        </p>
+        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
+          <ToggleRow
+            label="Rental match alerts"
+            alwaysOnNote="Always on"
+            desc="The listings you signed up for. Core to the service."
+            checked
+            onChange={() => {}}
+            disabled
+          />
+          <ToggleRow
+            label="Billing & account notices"
+            alwaysOnNote="Always on"
+            desc="Receipts, renewals, password resets, security alerts, policy changes."
+            checked
+            onChange={() => {}}
+            disabled
+          />
+          <ToggleRow
+            label="Product updates & tips"
+            desc="Occasional emails about new features and how to get more out of Nook."
+            checked={prefs.productUpdates}
+            onChange={(v) => prefs.setPref("productUpdates", v)}
+          />
+          <ToggleRow
+            label="Partner offers & promotions"
+            desc="Promotional content from partners and special offers. Unsubscribe anytime."
+            checked={prefs.marketingEmails}
+            onChange={(v) => prefs.setPref("marketingEmails", v)}
+          />
+        </div>
+      </section>
+
       {/* Privacy */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
           Privacy &amp; data
         </h2>
         <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-          <ToggleRow
-            label="Product updates"
-            desc="Occasional emails about new features and tips."
-            checked={prefs.productUpdates}
-            onChange={(v) => prefs.setPref("productUpdates", v)}
-          />
-          <ToggleRow
-            label="Marketing emails"
-            desc="Promotional content from partners and special offers."
-            checked={prefs.marketingEmails}
-            onChange={(v) => prefs.setPref("marketingEmails", v)}
-          />
           <div className="px-5 py-4 flex items-center justify-between gap-4">
             <div className="min-w-0">
               <div className="text-sm font-semibold text-charcoal-950">Export your data</div>
@@ -309,24 +337,34 @@ function Field({
 }
 
 function ToggleRow({
-  label, desc, checked, onChange,
+  label, desc, checked, onChange, disabled, alwaysOnNote,
 }: {
   label: string; desc: string; checked: boolean; onChange: (v: boolean) => void;
+  disabled?: boolean; alwaysOnNote?: string;
 }) {
   return (
     <div className="px-5 py-4 flex items-start justify-between gap-4">
       <div className="min-w-0">
-        <div className="text-sm font-semibold text-charcoal-950">{label}</div>
+        <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
+          {label}
+          {alwaysOnNote && (
+            <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
+              {alwaysOnNote}
+            </span>
+          )}
+        </div>
         <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
       </div>
       <button
         type="button"
         role="switch"
         aria-checked={checked}
-        onClick={() => onChange(!checked)}
+        aria-disabled={disabled}
+        onClick={() => !disabled && onChange(!checked)}
         className={cn(
           "relative h-6 w-11 rounded-full transition-colors shrink-0 mt-0.5",
           checked ? "bg-charcoal-950" : "bg-charcoal-300",
+          disabled && "opacity-60 cursor-not-allowed",
         )}
       >
         <span
@@ -339,6 +377,7 @@ function ToggleRow({
     </div>
   );
 }
+
 
 function DeleteAccountButton() {
   const [text, setText] = useState("");
