@@ -8,7 +8,7 @@ import { z } from "zod";
 import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
 import { usePreferencesStore } from "@/lib/preferences/store";
-import { SaveBar } from "@/components/preferences/SaveBar";
+import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/preferences/")({
@@ -353,8 +353,24 @@ function NotificationsTab() {
         </section>
       )}
 
-      <SaveBar
-        signal={`${plan}|${alertChannel}|${frequency}|${email}|${phone}|${quietHours.enabled}|${quietHours.start}|${quietHours.end}|${override.emailOverride}|${override.phoneOverride}`}
+      <StickySaveBar
+        state={{
+          alertChannel, frequency, email, phone,
+          quietHours,
+          override: activeSearchId ? override : null,
+        }}
+        onDiscard={(snap) => {
+          set("alertChannel", snap.alertChannel);
+          set("frequency", snap.frequency);
+          set("email", snap.email);
+          set("phone", snap.phone);
+          setQuiet("enabled", snap.quietHours.enabled);
+          setQuiet("start", snap.quietHours.start);
+          setQuiet("end", snap.quietHours.end);
+          if (activeSearchId && snap.override) {
+            setPerSearch(activeSearchId, snap.override);
+          }
+        }}
       />
     </div>
   );
