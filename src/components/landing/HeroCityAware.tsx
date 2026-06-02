@@ -9,7 +9,12 @@ import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS } from "@/data/sampleListings";
 
 export function HeroCityAware() {
+  const navigate = useNavigate();
   const { city, budget } = useLandingStore();
+  const setOnboarding = useOnboardingStore((s) => s.set);
+  const storedEmail = useOnboardingStore((s) => s.email);
+  const [email, setEmail] = useState(storedEmail);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const cityConfig = getCity(city)!;
   const listing =
     (SAMPLE_LISTINGS[city] ?? []).find((l) => l.tag) ??
@@ -17,6 +22,18 @@ export function HeroCityAware() {
 
   const lowEnd = Math.max(cityConfig.budget.min, Math.round(budget * 0.7) - 250);
   const highEnd = budget;
+
+  const handleStart = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setEmailError("Enter a valid email");
+      return;
+    }
+    setEmailError(null);
+    setOnboarding("email", trimmed);
+    navigate({ to: "/onboarding" });
+  };
 
   return (
     <section
