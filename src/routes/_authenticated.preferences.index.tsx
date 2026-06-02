@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles, Check } from "lucide-react";
+import { Mail, MessageSquare, Bell, Zap, CalendarDays, CalendarRange, Sparkles, ArrowRight } from "lucide-react";
 import { z } from "zod";
-import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
+import { useOnboardingStore, type AlertChannel, type Frequency } from "@/lib/onboarding/store";
+import { useAppStore } from "@/lib/store";
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { cn } from "@/lib/utils";
 
@@ -10,11 +11,11 @@ export const Route = createFileRoute("/_authenticated/preferences/")({
   component: NotificationsTab,
 });
 
-const PLANS: { id: Plan; label: string; price: string; desc: string }[] = [
-  { id: "free", label: "Free", price: "$0", desc: "Daily digest, basic filters." },
-  { id: "premium", label: "Premium", price: "$15/mo", desc: "Instant alerts, all filters, no-fee finder." },
-  { id: "max", label: "Max", price: "$29/mo", desc: "Concierge matches + early access." },
-];
+const PLAN_PILL: Record<string, { text: string; cta: string | null }> = {
+  free: { text: "Free plan — 1 search, email alerts only", cta: "Upgrade" },
+  premium: { text: "Premium — 3 searches, real-time alerts, SMS", cta: "Manage plan" },
+  max: { text: "Max — Unlimited searches, all features unlocked", cta: null },
+};
 
 const CHANNELS: { id: AlertChannel; label: string; icon: typeof Mail }[] = [
   { id: "email", label: "Email only", icon: Mail },
@@ -45,9 +46,10 @@ function formatPhone(raw: string): string {
 
 function NotificationsTab() {
   const {
-    selectedPlan, alertChannel, frequency, email, phone, trialActive,
+    alertChannel, frequency, email, phone,
     set,
   } = useOnboardingStore();
+  const plan = useAppStore((s) => s.user?.plan ?? "free");
   const [emailTouched, setEmailTouched] = useState(false);
   const [phoneTouched, setPhoneTouched] = useState(false);
 
@@ -55,55 +57,27 @@ function NotificationsTab() {
   const needsPhone = alertChannel === "text" || alertChannel === "both";
   const emailError = needsEmail && email ? (emailSchema.safeParse(email).success ? null : "Enter a valid email.") : null;
   const phoneError = needsPhone && phone ? (phoneSchema.safeParse(phone).success ? null : "Enter a valid phone number.") : null;
-  const currentPlan = selectedPlan ?? "free";
+
+  const pill = PLAN_PILL[plan] ?? PLAN_PILL.free;
 
   return (
     <div className="space-y-12">
-      <header>
-        <h2 className="font-display text-2xl font-bold text-charcoal-950">Notifications</h2>
-        <p className="text-sm text-charcoal-600 mt-1">
-          Plan, alert channel, and how often we ping you.
-        </p>
-      </header>
-
-      {/* Plan */}
-      <section className="space-y-4">
-        <h3 className="font-display text-lg font-semibold text-charcoal-950">Subscription plan</h3>
-        <div className="grid sm:grid-cols-3 gap-3">
-          {PLANS.map((p) => {
-            const isCurrent = currentPlan === p.id;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => set("selectedPlan", p.id)}
-                className={cn(
-                  "p-5 rounded-card border-2 text-left transition-colors relative",
-                  isCurrent
-                    ? "border-charcoal-950 bg-surface-elevated"
-                    : "border-border bg-transparent hover:border-charcoal-400",
-                )}
-              >
-                {isCurrent && (
-                  <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-sage-700 text-paper text-[9px] font-mono uppercase tracking-[0.16em]">
-                    <Check className="h-2.5 w-2.5" /> Current
-                  </div>
-                )}
-                <div className="flex items-baseline justify-between pr-16">
-                  <div className="font-display text-base font-bold text-charcoal-950">{p.label}</div>
-                  <div className="text-xs font-mono text-charcoal-600">{p.price}</div>
-                </div>
-                <div className="text-xs text-charcoal-600 mt-2 leading-relaxed">{p.desc}</div>
-                {isCurrent && trialActive && p.id !== "free" && (
-                  <div className="mt-3 text-[10px] font-mono uppercase tracking-[0.16em] text-peach-700">
-                    Free trial active
-                  </div>
-                )}
-              </button>
-            );
-          })}
+      {/* Plan-context pill */}
+      <div className="flex items-center justify-between gap-4 px-5 h-14 rounded-card bg-paper-warm border border-charcoal-950/8">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Sparkles className="h-4 w-4 text-sage-700 shrink-0" />
+          <span className="text-sm text-charcoal-700 truncate">{pill.text}</span>
         </div>
-      </section>
+        {pill.cta && (
+          <Link
+            to="/preferences/account"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-sage-800 hover:text-sage-900 whitespace-nowrap"
+          >
+            {pill.cta} <ArrowRight className="h-3 w-3" />
+          </Link>
+        )}
+      </div>
+
 
       {/* Channel */}
       <section className="space-y-4">
@@ -209,7 +183,7 @@ function NotificationsTab() {
         </div>
       </section>
 
-      <SaveBar signal={`${selectedPlan}|${alertChannel}|${frequency}|${email}|${phone}`} />
+      <SaveBar signal={`${plan}|${alertChannel}|${frequency}|${email}|${phone}`} />
     </div>
   );
 }
