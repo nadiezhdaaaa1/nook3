@@ -36,7 +36,7 @@ export function OnboardingShell() {
       {step !== null && (
         <div className="border-b border-charcoal-950/8 bg-paper-warm">
           <div className="max-w-3xl mx-auto px-6 lg:px-10 py-4">
-            <ProgressBar step={step} total={5} />
+            <ProgressBar step={step} total={4} />
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export function ProgressBar({ step, total = 5 }: { step: number; total?: number }) {
+export function ProgressBar({ step, total = 4 }: { step: number; total?: number }) {
   const pct = Math.max(0, Math.min(1, step / total));
   return (
     <div className="w-full">
