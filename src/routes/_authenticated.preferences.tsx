@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle, LogOut } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -13,13 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
 
-export const Route = createFileRoute("/preferences")({
-  beforeLoad: async ({ location }) => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) {
-      throw redirect({ to: "/login", search: { redirect: location.href } });
-    }
-  },
+export const Route = createFileRoute("/_authenticated/preferences")({
   head: () => ({
     meta: [
       { title: "Manage preferences — Nook" },

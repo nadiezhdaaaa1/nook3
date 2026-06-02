@@ -15,7 +15,7 @@ import { SAVED_ALERTS, type AlertStatus, type SavedAlert } from "@/data/savedAle
 import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/preferences/alerts")({
+export const Route = createFileRoute("/_authenticated/preferences/alerts")({
   component: SavedAlertsPage,
 });
 

@@ -6,7 +6,7 @@ import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/preferences/")({
+export const Route = createFileRoute("/_authenticated/preferences/")({
   component: NotificationsTab,
 });
 

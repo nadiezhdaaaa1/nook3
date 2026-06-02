@@ -5,7 +5,7 @@ import { SaveBar } from "@/components/preferences/SaveBar";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
 
-export const Route = createFileRoute("/preferences/apartment")({
+export const Route = createFileRoute("/_authenticated/preferences/apartment")({
   component: ApartmentTab,
 });
 

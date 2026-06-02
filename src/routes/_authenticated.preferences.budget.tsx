@@ -6,7 +6,7 @@ import { SaveBar } from "@/components/preferences/SaveBar";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 
-export const Route = createFileRoute("/preferences/budget")({
+export const Route = createFileRoute("/_authenticated/preferences/budget")({
   component: BudgetTab,
 });
 

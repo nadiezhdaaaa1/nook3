@@ -10,31 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PreferencesIndexRouteImport } from './routes/preferences.index'
-import { Route as PreferencesReferralsRouteImport } from './routes/preferences.referrals'
-import { Route as PreferencesLocationRouteImport } from './routes/preferences.location'
-import { Route as PreferencesBudgetRouteImport } from './routes/preferences.budget'
-import { Route as PreferencesApartmentRouteImport } from './routes/preferences.apartment'
-import { Route as PreferencesAlertsRouteImport } from './routes/preferences.alerts'
-import { Route as PreferencesAccountRouteImport } from './routes/preferences.account'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
+import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
+import { Route as AuthenticatedPreferencesIndexRouteImport } from './routes/_authenticated.preferences.index'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
+import { Route as AuthenticatedPreferencesReferralsRouteImport } from './routes/_authenticated.preferences.referrals'
+import { Route as AuthenticatedPreferencesLocationRouteImport } from './routes/_authenticated.preferences.location'
+import { Route as AuthenticatedPreferencesBudgetRouteImport } from './routes/_authenticated.preferences.budget'
+import { Route as AuthenticatedPreferencesApartmentRouteImport } from './routes/_authenticated.preferences.apartment'
+import { Route as AuthenticatedPreferencesAlertsRouteImport } from './routes/_authenticated.preferences.alerts'
+import { Route as AuthenticatedPreferencesAccountRouteImport } from './routes/_authenticated.preferences.account'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreferencesRoute = PreferencesRouteImport.update({
-  id: '/preferences',
-  path: '/preferences',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -47,45 +43,14 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PreferencesIndexRoute = PreferencesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PreferencesRoute,
-} as any)
-const PreferencesReferralsRoute = PreferencesReferralsRouteImport.update({
-  id: '/referrals',
-  path: '/referrals',
-  getParentRoute: () => PreferencesRoute,
-} as any)
-const PreferencesLocationRoute = PreferencesLocationRouteImport.update({
-  id: '/location',
-  path: '/location',
-  getParentRoute: () => PreferencesRoute,
-} as any)
-const PreferencesBudgetRoute = PreferencesBudgetRouteImport.update({
-  id: '/budget',
-  path: '/budget',
-  getParentRoute: () => PreferencesRoute,
-} as any)
-const PreferencesApartmentRoute = PreferencesApartmentRouteImport.update({
-  id: '/apartment',
-  path: '/apartment',
-  getParentRoute: () => PreferencesRoute,
-} as any)
-const PreferencesAlertsRoute = PreferencesAlertsRouteImport.update({
-  id: '/alerts',
-  path: '/alerts',
-  getParentRoute: () => PreferencesRoute,
-} as any)
-const PreferencesAccountRoute = PreferencesAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => PreferencesRoute,
 } as any)
 const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
   id: '/success',
@@ -107,30 +72,78 @@ const OnboardingLoadingRoute = OnboardingLoadingRouteImport.update({
   path: '/loading',
   getParentRoute: () => OnboardingRoute,
 } as any)
+const AuthenticatedPreferencesRoute =
+  AuthenticatedPreferencesRouteImport.update({
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPreferencesIndexRoute =
+  AuthenticatedPreferencesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
 const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
   id: '/step/$step',
   path: '/step/$step',
   getParentRoute: () => OnboardingRoute,
 } as any)
+const AuthenticatedPreferencesReferralsRoute =
+  AuthenticatedPreferencesReferralsRouteImport.update({
+    id: '/referrals',
+    path: '/referrals',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
+const AuthenticatedPreferencesLocationRoute =
+  AuthenticatedPreferencesLocationRouteImport.update({
+    id: '/location',
+    path: '/location',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
+const AuthenticatedPreferencesBudgetRoute =
+  AuthenticatedPreferencesBudgetRouteImport.update({
+    id: '/budget',
+    path: '/budget',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
+const AuthenticatedPreferencesApartmentRoute =
+  AuthenticatedPreferencesApartmentRouteImport.update({
+    id: '/apartment',
+    path: '/apartment',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
+const AuthenticatedPreferencesAlertsRoute =
+  AuthenticatedPreferencesAlertsRouteImport.update({
+    id: '/alerts',
+    path: '/alerts',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
+const AuthenticatedPreferencesAccountRoute =
+  AuthenticatedPreferencesAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
-  '/preferences': typeof PreferencesRouteWithChildren
   '/signup': typeof SignupRoute
+  '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
-  '/preferences/account': typeof PreferencesAccountRoute
-  '/preferences/alerts': typeof PreferencesAlertsRoute
-  '/preferences/apartment': typeof PreferencesApartmentRoute
-  '/preferences/budget': typeof PreferencesBudgetRoute
-  '/preferences/location': typeof PreferencesLocationRoute
-  '/preferences/referrals': typeof PreferencesReferralsRoute
-  '/preferences/': typeof PreferencesIndexRoute
+  '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
+  '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
+  '/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
+  '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
+  '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
+  '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
+  '/preferences/': typeof AuthenticatedPreferencesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,34 +154,35 @@ export interface FileRoutesByTo {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
-  '/preferences/account': typeof PreferencesAccountRoute
-  '/preferences/alerts': typeof PreferencesAlertsRoute
-  '/preferences/apartment': typeof PreferencesApartmentRoute
-  '/preferences/budget': typeof PreferencesBudgetRoute
-  '/preferences/location': typeof PreferencesLocationRoute
-  '/preferences/referrals': typeof PreferencesReferralsRoute
-  '/preferences': typeof PreferencesIndexRoute
+  '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
+  '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
+  '/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
+  '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
+  '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
+  '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
+  '/preferences': typeof AuthenticatedPreferencesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
-  '/preferences': typeof PreferencesRouteWithChildren
   '/signup': typeof SignupRoute
+  '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
-  '/preferences/account': typeof PreferencesAccountRoute
-  '/preferences/alerts': typeof PreferencesAlertsRoute
-  '/preferences/apartment': typeof PreferencesApartmentRoute
-  '/preferences/budget': typeof PreferencesBudgetRoute
-  '/preferences/location': typeof PreferencesLocationRoute
-  '/preferences/referrals': typeof PreferencesReferralsRoute
-  '/preferences/': typeof PreferencesIndexRoute
+  '/_authenticated/preferences/account': typeof AuthenticatedPreferencesAccountRoute
+  '/_authenticated/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
+  '/_authenticated/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
+  '/_authenticated/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
+  '/_authenticated/preferences/location': typeof AuthenticatedPreferencesLocationRoute
+  '/_authenticated/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
+  '/_authenticated/preferences/': typeof AuthenticatedPreferencesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -176,8 +190,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/onboarding'
-    | '/preferences'
     | '/signup'
+    | '/preferences'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -188,8 +202,8 @@ export interface FileRouteTypes {
     | '/preferences/budget'
     | '/preferences/location'
     | '/preferences/referrals'
-    | '/preferences/'
     | '/onboarding/step/$step'
+    | '/preferences/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -206,34 +220,35 @@ export interface FileRouteTypes {
     | '/preferences/budget'
     | '/preferences/location'
     | '/preferences/referrals'
-    | '/preferences'
     | '/onboarding/step/$step'
+    | '/preferences'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/login'
     | '/onboarding'
-    | '/preferences'
     | '/signup'
+    | '/_authenticated/preferences'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
-    | '/preferences/account'
-    | '/preferences/alerts'
-    | '/preferences/apartment'
-    | '/preferences/budget'
-    | '/preferences/location'
-    | '/preferences/referrals'
-    | '/preferences/'
+    | '/_authenticated/preferences/account'
+    | '/_authenticated/preferences/alerts'
+    | '/_authenticated/preferences/apartment'
+    | '/_authenticated/preferences/budget'
+    | '/_authenticated/preferences/location'
+    | '/_authenticated/preferences/referrals'
     | '/onboarding/step/$step'
+    | '/_authenticated/preferences/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
-  PreferencesRoute: typeof PreferencesRouteWithChildren
   SignupRoute: typeof SignupRoute
 }
 
@@ -244,13 +259,6 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preferences': {
-      id: '/preferences'
-      path: '/preferences'
-      fullPath: '/preferences'
-      preLoaderRoute: typeof PreferencesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -267,61 +275,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/preferences/': {
-      id: '/preferences/'
-      path: '/'
-      fullPath: '/preferences/'
-      preLoaderRoute: typeof PreferencesIndexRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
-    '/preferences/referrals': {
-      id: '/preferences/referrals'
-      path: '/referrals'
-      fullPath: '/preferences/referrals'
-      preLoaderRoute: typeof PreferencesReferralsRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
-    '/preferences/location': {
-      id: '/preferences/location'
-      path: '/location'
-      fullPath: '/preferences/location'
-      preLoaderRoute: typeof PreferencesLocationRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
-    '/preferences/budget': {
-      id: '/preferences/budget'
-      path: '/budget'
-      fullPath: '/preferences/budget'
-      preLoaderRoute: typeof PreferencesBudgetRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
-    '/preferences/apartment': {
-      id: '/preferences/apartment'
-      path: '/apartment'
-      fullPath: '/preferences/apartment'
-      preLoaderRoute: typeof PreferencesApartmentRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
-    '/preferences/alerts': {
-      id: '/preferences/alerts'
-      path: '/alerts'
-      fullPath: '/preferences/alerts'
-      preLoaderRoute: typeof PreferencesAlertsRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
-    '/preferences/account': {
-      id: '/preferences/account'
-      path: '/account'
-      fullPath: '/preferences/account'
-      preLoaderRoute: typeof PreferencesAccountRouteImport
-      parentRoute: typeof PreferencesRoute
     }
     '/onboarding/success': {
       id: '/onboarding/success'
@@ -351,6 +317,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingLoadingRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/_authenticated/preferences': {
+      id: '/_authenticated/preferences'
+      path: '/preferences'
+      fullPath: '/preferences'
+      preLoaderRoute: typeof AuthenticatedPreferencesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/preferences/': {
+      id: '/_authenticated/preferences/'
+      path: '/'
+      fullPath: '/preferences/'
+      preLoaderRoute: typeof AuthenticatedPreferencesIndexRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
     '/onboarding/step/$step': {
       id: '/onboarding/step/$step'
       path: '/step/$step'
@@ -358,8 +338,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingStepStepRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/_authenticated/preferences/referrals': {
+      id: '/_authenticated/preferences/referrals'
+      path: '/referrals'
+      fullPath: '/preferences/referrals'
+      preLoaderRoute: typeof AuthenticatedPreferencesReferralsRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
+    '/_authenticated/preferences/location': {
+      id: '/_authenticated/preferences/location'
+      path: '/location'
+      fullPath: '/preferences/location'
+      preLoaderRoute: typeof AuthenticatedPreferencesLocationRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
+    '/_authenticated/preferences/budget': {
+      id: '/_authenticated/preferences/budget'
+      path: '/budget'
+      fullPath: '/preferences/budget'
+      preLoaderRoute: typeof AuthenticatedPreferencesBudgetRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
+    '/_authenticated/preferences/apartment': {
+      id: '/_authenticated/preferences/apartment'
+      path: '/apartment'
+      fullPath: '/preferences/apartment'
+      preLoaderRoute: typeof AuthenticatedPreferencesApartmentRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
+    '/_authenticated/preferences/alerts': {
+      id: '/_authenticated/preferences/alerts'
+      path: '/alerts'
+      fullPath: '/preferences/alerts'
+      preLoaderRoute: typeof AuthenticatedPreferencesAlertsRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
+    '/_authenticated/preferences/account': {
+      id: '/_authenticated/preferences/account'
+      path: '/account'
+      fullPath: '/preferences/account'
+      preLoaderRoute: typeof AuthenticatedPreferencesAccountRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
   }
 }
+
+interface AuthenticatedPreferencesRouteChildren {
+  AuthenticatedPreferencesAccountRoute: typeof AuthenticatedPreferencesAccountRoute
+  AuthenticatedPreferencesAlertsRoute: typeof AuthenticatedPreferencesAlertsRoute
+  AuthenticatedPreferencesApartmentRoute: typeof AuthenticatedPreferencesApartmentRoute
+  AuthenticatedPreferencesBudgetRoute: typeof AuthenticatedPreferencesBudgetRoute
+  AuthenticatedPreferencesLocationRoute: typeof AuthenticatedPreferencesLocationRoute
+  AuthenticatedPreferencesReferralsRoute: typeof AuthenticatedPreferencesReferralsRoute
+  AuthenticatedPreferencesIndexRoute: typeof AuthenticatedPreferencesIndexRoute
+}
+
+const AuthenticatedPreferencesRouteChildren: AuthenticatedPreferencesRouteChildren =
+  {
+    AuthenticatedPreferencesAccountRoute: AuthenticatedPreferencesAccountRoute,
+    AuthenticatedPreferencesAlertsRoute: AuthenticatedPreferencesAlertsRoute,
+    AuthenticatedPreferencesApartmentRoute:
+      AuthenticatedPreferencesApartmentRoute,
+    AuthenticatedPreferencesBudgetRoute: AuthenticatedPreferencesBudgetRoute,
+    AuthenticatedPreferencesLocationRoute:
+      AuthenticatedPreferencesLocationRoute,
+    AuthenticatedPreferencesReferralsRoute:
+      AuthenticatedPreferencesReferralsRoute,
+    AuthenticatedPreferencesIndexRoute: AuthenticatedPreferencesIndexRoute,
+  }
+
+const AuthenticatedPreferencesRouteWithChildren =
+  AuthenticatedPreferencesRoute._addFileChildren(
+    AuthenticatedPreferencesRouteChildren,
+  )
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedPreferencesRoute: typeof AuthenticatedPreferencesRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedPreferencesRoute: AuthenticatedPreferencesRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface OnboardingRouteChildren {
   OnboardingLoadingRoute: typeof OnboardingLoadingRoute
@@ -381,35 +444,11 @@ const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
   OnboardingRouteChildren,
 )
 
-interface PreferencesRouteChildren {
-  PreferencesAccountRoute: typeof PreferencesAccountRoute
-  PreferencesAlertsRoute: typeof PreferencesAlertsRoute
-  PreferencesApartmentRoute: typeof PreferencesApartmentRoute
-  PreferencesBudgetRoute: typeof PreferencesBudgetRoute
-  PreferencesLocationRoute: typeof PreferencesLocationRoute
-  PreferencesReferralsRoute: typeof PreferencesReferralsRoute
-  PreferencesIndexRoute: typeof PreferencesIndexRoute
-}
-
-const PreferencesRouteChildren: PreferencesRouteChildren = {
-  PreferencesAccountRoute: PreferencesAccountRoute,
-  PreferencesAlertsRoute: PreferencesAlertsRoute,
-  PreferencesApartmentRoute: PreferencesApartmentRoute,
-  PreferencesBudgetRoute: PreferencesBudgetRoute,
-  PreferencesLocationRoute: PreferencesLocationRoute,
-  PreferencesReferralsRoute: PreferencesReferralsRoute,
-  PreferencesIndexRoute: PreferencesIndexRoute,
-}
-
-const PreferencesRouteWithChildren = PreferencesRoute._addFileChildren(
-  PreferencesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
-  PreferencesRoute: PreferencesRouteWithChildren,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport

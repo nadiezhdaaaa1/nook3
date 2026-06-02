@@ -7,7 +7,7 @@ import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/preferences/location")({
+export const Route = createFileRoute("/_authenticated/preferences/location")({
   component: LocationTab,
 });
 
