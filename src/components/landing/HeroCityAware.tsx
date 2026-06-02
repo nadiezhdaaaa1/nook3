@@ -1,13 +1,20 @@
-import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, BedDouble, Bath, Ruler, ShieldCheck } from "lucide-react";
+import { ArrowRight, BedDouble, Bath, Ruler, ShieldCheck, Mail } from "lucide-react";
 import { LandingCitySelector } from "./LandingCitySelector";
 import { useLandingStore } from "@/lib/landing/landingStore";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS } from "@/data/sampleListings";
 
 export function HeroCityAware() {
+  const navigate = useNavigate();
   const { city, budget } = useLandingStore();
+  const setOnboarding = useOnboardingStore((s) => s.set);
+  const storedEmail = useOnboardingStore((s) => s.email);
+  const [email, setEmail] = useState(storedEmail);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const cityConfig = getCity(city)!;
   const listing =
     (SAMPLE_LISTINGS[city] ?? []).find((l) => l.tag) ??
@@ -15,6 +22,18 @@ export function HeroCityAware() {
 
   const lowEnd = Math.max(cityConfig.budget.min, Math.round(budget * 0.7) - 250);
   const highEnd = budget;
+
+  const handleStart = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setEmailError("Enter a valid email");
+      return;
+    }
+    setEmailError(null);
+    setOnboarding("email", trimmed);
+    navigate({ to: "/onboarding" });
+  };
 
   return (
     <section
@@ -47,19 +66,40 @@ export function HeroCityAware() {
               spam.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link
-                to="/onboarding"
-                className="group inline-flex items-center justify-center gap-2 h-13 px-7 rounded-pill text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-elevated"
-                style={{ backgroundColor: "var(--color-brand-terracotta)" }}
+            <form onSubmit={handleStart} className="mt-9 max-w-md">
+              <label htmlFor="hero-email" className="sr-only">Email</label>
+              <div
+                className="flex items-center gap-2 rounded-pill border bg-white pl-4 pr-1.5 py-1.5 transition-colors focus-within:border-[var(--color-brand-terracotta)]"
+                style={{ borderColor: emailError ? "var(--color-brand-terracotta)" : "var(--color-brand-clay)" }}
               >
-                Start free
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <div className="text-[13px] text-[var(--color-charcoal-600)]">
-                3-day trial. Cancel anytime.
+                <Mail className="h-4 w-4 text-[var(--color-charcoal-500)] shrink-0" />
+                <input
+                  id="hero-email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(null); }}
+                  placeholder="you@example.com"
+                  className="flex-1 bg-transparent outline-none text-sm text-[var(--color-brand-charcoal)] placeholder:text-[var(--color-charcoal-500)] min-w-0"
+                />
+                <button
+                  type="submit"
+                  className="group inline-flex items-center justify-center gap-2 h-11 px-5 rounded-pill text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-elevated whitespace-nowrap"
+                  style={{ backgroundColor: "var(--color-brand-terracotta)" }}
+                >
+                  Start free
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                </button>
               </div>
-            </div>
+              {emailError && (
+                <p className="mt-2 text-xs text-[var(--color-brand-terracotta)] pl-4">{emailError}</p>
+              )}
+              <p className="mt-2 text-[13px] text-[var(--color-charcoal-600)] pl-4">
+                3-day trial. Cancel anytime.
+              </p>
+            </form>
           </div>
 
           {/* RIGHT — preview card */}
