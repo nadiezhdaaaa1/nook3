@@ -123,6 +123,33 @@ function EditingLine() {
   );
 }
 
+function SignOutButton() {
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={async () => {
+        setBusy(true);
+        const { error } = await supabase.auth.signOut();
+        setBusy(false);
+        if (error) {
+          toast.error("Sign out failed", { description: error.message });
+          return;
+        }
+        toast.success("Signed out");
+        navigate({ to: "/login", replace: true });
+      }}
+      className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill border border-charcoal-200 text-xs font-semibold text-charcoal-700 hover:border-charcoal-950 disabled:opacity-60"
+      title="Sign out"
+    >
+      <LogOut className="h-3.5 w-3.5" />
+      <span className="hidden sm:inline">Sign out</span>
+    </button>
+  );
+}
+
 function UnsubscribeButton() {
   const navigate = useNavigate();
   const reset = useOnboardingStore((s) => s.reset);
