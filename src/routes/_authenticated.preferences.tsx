@@ -1,17 +1,28 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle, LogOut } from "lucide-react";
-import { useState } from "react";
+import {
+  Bell, DollarSign, Home as HomeIcon, MapPin, Inbox, Gift, UserCircle,
+  LogOut, Sparkles, Lock, Pause, Play, Trash2,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Logo, LogoMark } from "@/components/brand/Logo";
-import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 import { cn } from "@/lib/utils";
 import { SearchSwitcher } from "@/components/preferences/SearchSwitcher";
-import { PlanLimitsBanner } from "@/components/preferences/PlanLimitsBanner";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
-import { useActiveSearch } from "@/lib/store";
+import { useAppStore, useActiveSearch, SEARCH_LIMITS } from "@/lib/store";
+import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import { supabase } from "@/integrations/supabase/client";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
+  DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/_authenticated/preferences")({
   head: () => ({
@@ -23,79 +34,76 @@ export const Route = createFileRoute("/_authenticated/preferences")({
   component: PreferencesShell,
 });
 
-const TABS = [
-  { to: "/preferences", label: "Notifications", icon: Bell, exact: true },
-  { to: "/preferences/alerts", label: "Saved Alerts", icon: Inbox, exact: false },
-  { to: "/preferences/budget", label: "Budget & Criteria", icon: DollarSign, exact: false },
-  { to: "/preferences/apartment", label: "Apartment Details", icon: Home, exact: false },
-  { to: "/preferences/location", label: "Location", icon: MapPin, exact: false },
-  { to: "/preferences/referrals", label: "Referrals", icon: Gift, exact: false },
-  { to: "/preferences/account", label: "Account", icon: UserCircle, exact: false },
-] as const;
+type NavItem = {
+  to?: "/preferences" | "/preferences/alerts" | "/preferences/budget" | "/preferences/apartment" | "/preferences/location" | "/preferences/referrals" | "/preferences/account";
+  label: string;
+  icon: typeof Bell;
+  exact?: boolean;
+  locked?: boolean;
+  lockedReason?: string;
+};
+
+const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
+  {
+    label: "Search settings",
+    items: [
+      { to: "/preferences", label: "Notifications", icon: Bell, exact: true },
+      { to: "/preferences/budget", label: "Budget & Criteria", icon: DollarSign },
+      { to: "/preferences/apartment", label: "Apartment Details", icon: HomeIcon },
+      { to: "/preferences/location", label: "Location", icon: MapPin },
+    ],
+  },
+  {
+    label: "Activity",
+    items: [
+      { to: "/preferences/alerts", label: "Saved Alerts", icon: Inbox },
+      { label: "Wren AI Chat", icon: Sparkles, locked: true, lockedReason: "Premium" },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { to: "/preferences/referrals", label: "Referrals", icon: Gift },
+      { to: "/preferences/account", label: "Account", icon: UserCircle },
+    ],
+  },
+];
+
+const SECTION_LABELS: Record<string, string> = {
+  "/preferences": "Notification settings",
+  "/preferences/alerts": "Saved listings",
+  "/preferences/budget": "Search criteria",
+  "/preferences/apartment": "Apartment details",
+  "/preferences/location": "Location",
+  "/preferences/referrals": "Invite friends",
+  "/preferences/account": "Account & billing",
+};
 
 function PreferencesShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isHydrating } = useDbSync();
+  const sectionLabel = useMemo(() => {
+    const exact = SECTION_LABELS[pathname];
+    if (exact) return exact;
+    const key = Object.keys(SECTION_LABELS).find((k) => k !== "/preferences" && pathname.startsWith(k));
+    return key ? SECTION_LABELS[key] : "Preferences";
+  }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-paper">
-      <header className="border-b border-charcoal-950/8 bg-paper">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <LogoMark size={28} />
-            <Logo className="text-lg hidden sm:block" />
-          </Link>
-          <div className="flex items-center gap-3 min-w-0">
-            <SearchSwitcher />
-            <Link to="/" className="hidden md:inline text-sm font-semibold text-charcoal-700 hover:text-charcoal-950">
-              ← Home
-            </Link>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-dvh bg-paper">
+      <TopBar />
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-10 py-10">
-        <div className="flex items-start justify-between flex-wrap gap-4 mb-10">
-          <div>
-            <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05]">
-              Manage <span className="accent-italic">Preferences</span>
-            </h1>
-            <EditingLine />
-          </div>
-          <UnsubscribeButton />
-        </div>
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 pt-8 lg:pt-10 pb-24">
+        <PageHeader sectionLabel={sectionLabel} />
 
-        <div className="grid lg:grid-cols-[240px_1fr] gap-6 lg:gap-8">
-          <aside className="lg:sticky lg:top-6 lg:self-start">
-            <nav className="flex lg:flex-col gap-1 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 lg:overflow-visible">
-              {TABS.map((t) => {
-                const active = t.exact ? pathname === t.to : pathname.startsWith(t.to);
-                const Icon = t.icon;
-                return (
-                  <Link
-                    key={t.to}
-                    to={t.to}
-                    className={cn(
-                      "shrink-0 lg:shrink inline-flex items-center gap-2 lg:gap-3 px-4 h-11 rounded-pill lg:rounded-md text-sm font-medium transition-colors whitespace-nowrap",
-                      active
-                        ? "bg-charcoal-950 text-paper"
-                        : "text-charcoal-700 hover:bg-charcoal-950/5 border border-charcoal-200 lg:border-0",
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {t.label}
-                  </Link>
-                );
-              })}
-            </nav>
+        <div className="grid lg:grid-cols-[240px_1fr] gap-8 lg:gap-12 mt-12">
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <SidebarNav pathname={pathname} />
           </aside>
 
           <main>
             <PausedSearchBanner />
-            <PlanLimitsBanner />
             {isHydrating ? <HydrationSkeleton /> : <Outlet />}
-            <ReferralBlock />
           </main>
         </div>
       </div>
@@ -103,126 +111,338 @@ function PreferencesShell() {
   );
 }
 
-function EditingLine() {
+/* ---------- Top bar ---------- */
+
+function TopBar() {
   const active = useActiveSearch();
-  if (!active) {
-    return (
-      <p className="mt-3 text-charcoal-600">
-        Customize your apartment alerts and notification settings.
-      </p>
-    );
-  }
-  return (
-    <p className="mt-3 text-charcoal-600">
-      Editing <span className="font-semibold text-charcoal-950">{active.name}</span>
-      <span className="text-charcoal-400"> · changes apply to this search only.</span>
-    </p>
-  );
-}
-
-function SignOutButton() {
-  const navigate = useNavigate();
-  const [busy, setBusy] = useState(false);
-  return (
-    <button
-      type="button"
-      disabled={busy}
-      onClick={async () => {
-        setBusy(true);
-        const { error } = await supabase.auth.signOut();
-        setBusy(false);
-        if (error) {
-          toast.error("Sign out failed", { description: error.message });
-          return;
-        }
-        toast.success("Signed out");
-        navigate({ to: "/login", replace: true });
-      }}
-      className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill border border-charcoal-200 text-xs font-semibold text-charcoal-700 hover:border-charcoal-950 disabled:opacity-60"
-      title="Sign out"
-    >
-      <LogOut className="h-3.5 w-3.5" />
-      <span className="hidden sm:inline">Sign out</span>
-    </button>
-  );
-}
-
-function UnsubscribeButton() {
-  const navigate = useNavigate();
-  const reset = useOnboardingStore((s) => s.reset);
-  const [confirming, setConfirming] = useState(false);
-
-  if (!confirming) {
-    return (
-      <button
-        type="button"
-        onClick={() => setConfirming(true)}
-        className="h-11 px-5 inline-flex items-center gap-2 rounded-pill border border-charcoal-200 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950"
-      >
-        <BellOff className="h-4 w-4" /> Unsubscribe
-      </button>
-    );
-  }
-  return (
-    <div className="inline-flex items-center gap-2">
-      <span className="text-xs text-charcoal-600">Stop all alerts?</span>
-      <button
-        type="button"
-        onClick={() => {
-          reset();
-          navigate({ to: "/" });
-        }}
-        className="h-9 px-3 rounded-pill bg-danger text-paper text-xs font-semibold"
-      >
-        Yes, unsubscribe
-      </button>
-      <button
-        type="button"
-        onClick={() => setConfirming(false)}
-        className="h-9 px-3 rounded-pill border border-charcoal-200 text-xs font-semibold text-charcoal-700"
-      >
-        Cancel
-      </button>
-    </div>
-  );
-}
-
-function ReferralBlock() {
-  const [copied, setCopied] = useState(false);
-  const code = typeof window === "undefined" ? "RB000000" : getReferralCode();
-  const url = `https://thenook.rent?affiliate=${code}`;
+  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const searches = useAppStore((s) => s.searches);
+  const quota = useMemo(() => {
+    const max = SEARCH_LIMITS[plan];
+    const used = searches.filter((x) => x.status !== "archived").length;
+    return {
+      used,
+      max,
+      maxLabel: max === Number.POSITIVE_INFINITY ? "∞" : String(max),
+      atLimit: max !== Number.POSITIVE_INFINITY && used >= max,
+    };
+  }, [plan, searches]);
 
   return (
-    <div className="mt-12 p-6 rounded-card bg-peach-100 border border-peach-300">
-      <div className="flex items-start gap-3 mb-4">
-        <div className="h-10 w-10 rounded-pill bg-paper flex items-center justify-center shrink-0">
-          <Heart className="h-4 w-4 text-peach-700" />
-        </div>
-        <div>
-          <div className="font-display text-lg font-bold text-charcoal-950">Your referral link</div>
-          <div className="text-sm text-charcoal-700 mt-0.5">
-            Share with friends — you'll both get Premium for 7 days free.
+    <header className="sticky top-0 z-30 border-b border-charcoal-950/8 bg-paper/95 backdrop-blur">
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between gap-4">
+        {/* LEFT */}
+        <div className="flex items-center gap-4 min-w-0">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+            <LogoMark size={28} />
+            <Logo className="text-lg hidden sm:block" />
+          </Link>
+          <span aria-hidden className="h-6 w-px bg-charcoal-950/10 hidden lg:block" />
+          <div className="min-w-0">
+            <SearchSwitcher />
           </div>
+          {active && (
+            <span
+              className={cn(
+                "hidden md:inline-flex items-center gap-1.5 text-[11px] font-medium tabular-nums",
+                active.status === "active" ? "text-sage-700" : "text-peach-700",
+              )}
+            >
+              <span
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full",
+                  active.status === "active" ? "bg-sage-700" : "bg-peach-700",
+                )}
+              />
+              {active.status === "paused" ? "Paused" : "Active"}
+            </span>
+          )}
+        </div>
+
+        {/* CENTER */}
+        <div className="hidden lg:flex items-center gap-2">
+          <span className="text-xs text-charcoal-600 tabular-nums">
+            <span className="font-semibold text-charcoal-950">{quota.used}</span>
+            <span className="text-charcoal-400"> of </span>
+            <span className="font-semibold text-charcoal-950">{quota.maxLabel}</span>
+            <span className="text-charcoal-500"> search{quota.used === 1 ? "" : "es"}</span>
+          </span>
+          {plan === "free" && quota.atLimit && (
+            <Link
+              to="/preferences/account"
+              className="h-7 px-3 inline-flex items-center rounded-pill bg-charcoal-950 text-paper text-[11px] font-semibold hover:bg-charcoal-800"
+            >
+              Upgrade
+            </Link>
+          )}
+        </div>
+
+        {/* RIGHT */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            to="/"
+            className="hidden md:inline-flex items-center h-9 px-3 rounded-pill text-xs font-semibold text-charcoal-700 hover:bg-charcoal-950/5"
+          >
+            ← Home
+          </Link>
+          <AvatarMenu />
         </div>
       </div>
-      <div className="flex gap-2">
-        <input
-          readOnly
-          value={url}
-          className="flex-1 h-11 px-3 rounded-md bg-paper border border-peach-300 text-sm font-mono"
-        />
+    </header>
+  );
+}
+
+function AvatarMenu() {
+  const navigate = useNavigate();
+  const email = useOnboardingStore((s) => s.email);
+  const initial = (email || "?").trim().charAt(0).toUpperCase() || "?";
+  const [busy, setBusy] = useState(false);
+
+  const handleSignOut = async () => {
+    setBusy(true);
+    const { error } = await supabase.auth.signOut();
+    setBusy(false);
+    if (error) {
+      toast.error("Sign out failed", { description: error.message });
+      return;
+    }
+    toast.success("Signed out");
+    navigate({ to: "/login", replace: true });
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label="Account menu"
+          className="h-9 w-9 rounded-pill bg-sage-200 text-sage-900 inline-flex items-center justify-center text-sm font-bold border border-sage-300 hover:border-sage-500 transition-colors"
+        >
+          {initial}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        {email && (
+          <>
+            <DropdownMenuLabel className="font-normal text-xs text-charcoal-600 truncate">
+              {email}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        <DropdownMenuItem onSelect={() => navigate({ to: "/preferences/account" })}>
+          <UserCircle className="h-4 w-4 mr-2" /> Account
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => window.open("mailto:hello@thenook.rent", "_self")}>
+          <Bell className="h-4 w-4 mr-2" /> Help
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          disabled={busy}
+          onSelect={(e) => { e.preventDefault(); void handleSignOut(); }}
+          className="text-danger focus:text-danger"
+        >
+          <LogOut className="h-4 w-4 mr-2" /> Sign out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+/* ---------- Page header ---------- */
+
+function PageHeader({ sectionLabel }: { sectionLabel: string }) {
+  const active = useActiveSearch();
+  const pauseSearch = useAppStore((s) => s.pauseSearch);
+  const resumeSearch = useAppStore((s) => s.resumeSearch);
+
+  if (!active) {
+    return (
+      <div>
+        <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
+          Preferences
+        </h1>
+        <p className="mt-3 text-charcoal-600">No active search yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+      <div className="min-w-0">
+        <h1 className="font-display text-[36px] lg:text-[44px] font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em] truncate">
+          {active.name}
+        </h1>
+        <div className="mt-2 font-display text-xl lg:text-2xl italic font-medium text-sage-800">
+          {sectionLabel}
+        </div>
+        <p className="mt-2 text-xs text-charcoal-500">
+          Changes apply to this search only.
+        </p>
+      </div>
+
+      <div className="flex items-center gap-2 shrink-0">
         <button
           type="button"
           onClick={() => {
-            navigator.clipboard?.writeText(url);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
+            if (active.status === "paused") {
+              resumeSearch(active.id);
+              toast.success("Search resumed");
+            } else {
+              pauseSearch(active.id);
+              toast.success("Search paused");
+            }
           }}
-          className="h-11 px-4 inline-flex items-center gap-2 rounded-md bg-charcoal-950 text-paper text-sm font-semibold"
+          className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-charcoal-200 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950 transition-colors"
         >
-          <Copy className="h-3.5 w-3.5" /> {copied ? "Copied" : "Copy"}
+          {active.status === "paused" ? (
+            <><Play className="h-4 w-4" /> Resume search</>
+          ) : (
+            <><Pause className="h-4 w-4" /> Pause search</>
+          )}
         </button>
+        <DeleteSearchButton />
       </div>
     </div>
+  );
+}
+
+function DeleteSearchButton() {
+  const navigate = useNavigate();
+  const active = useActiveSearch();
+  const deleteSearch = useAppStore((s) => s.deleteSearch);
+  const deleteMut = useDeleteSearchMutation();
+  const [open, setOpen] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+
+  if (!active) return null;
+  const matches = confirmText.trim() === active.name;
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(active.id);
+
+  return (
+    <AlertDialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setConfirmText(""); }}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-transparent text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
+      >
+        <Trash2 className="h-4 w-4" /> Delete search
+      </button>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete "{active.name}"?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This permanently removes the search and all its history. This cannot be undone.
+            Type <span className="font-semibold text-charcoal-950">{active.name}</span> to confirm.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <input
+          autoFocus
+          value={confirmText}
+          onChange={(e) => setConfirmText(e.target.value)}
+          placeholder={active.name}
+          className="w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:outline-none focus:border-charcoal-950"
+        />
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            disabled={!matches}
+            onClick={() => {
+              if (isUuid) deleteMut.mutate(active.id);
+              deleteSearch(active.id);
+              toast.success("Search deleted");
+              navigate({ to: "/" });
+            }}
+            className="bg-danger text-paper hover:bg-danger/90"
+          >
+            Delete search
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+/* ---------- Sidebar ---------- */
+
+function SidebarNav({ pathname }: { pathname: string }) {
+  return (
+    <nav className="flex lg:flex-col gap-1 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 lg:overflow-visible">
+      <div className="lg:hidden flex gap-1">
+        {NAV_GROUPS.flatMap((g) => g.items).map((item) => (
+          <NavLinkItem key={item.label} item={item} pathname={pathname} mobile />
+        ))}
+      </div>
+      <div className="hidden lg:block">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label} className="first:mt-0 mt-6 first:[&>.label]:mt-0">
+            <div className="label mt-0 mb-2 px-3 text-[11px] font-mono uppercase tracking-[0.12em] text-sage-700">
+              {group.label}
+            </div>
+            <div className="flex flex-col gap-1">
+              {group.items.map((item) => (
+                <NavLinkItem key={item.label} item={item} pathname={pathname} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function NavLinkItem({
+  item,
+  pathname,
+  mobile,
+}: {
+  item: NavItem;
+  pathname: string;
+  mobile?: boolean;
+}) {
+  const Icon = item.icon;
+  const active =
+    item.to !== undefined &&
+    (item.exact ? pathname === item.to : pathname.startsWith(item.to));
+
+  const classes = cn(
+    "inline-flex items-center gap-3 text-sm font-medium transition-colors whitespace-nowrap",
+    mobile
+      ? "shrink-0 h-10 px-3.5 rounded-pill border"
+      : "h-11 px-3 rounded-lg w-full",
+    active
+      ? mobile
+        ? "bg-charcoal-950 text-paper border-charcoal-950"
+        : "bg-charcoal-950 text-paper"
+      : item.locked
+        ? mobile
+          ? "text-charcoal-400 border-charcoal-200"
+          : "text-charcoal-400 cursor-not-allowed"
+        : mobile
+          ? "text-charcoal-700 border-charcoal-200 hover:border-charcoal-950"
+          : "text-charcoal-700 hover:bg-paper-warm",
+  );
+
+  if (item.locked || !item.to) {
+    return (
+      <button
+        type="button"
+        disabled
+        aria-disabled
+        title={item.lockedReason ?? "Upgrade required"}
+        className={classes}
+      >
+        <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} />
+        <span className="flex-1 text-left">{item.label}</span>
+        <Lock className="h-3.5 w-3.5 text-charcoal-400" />
+      </button>
+    );
+  }
+
+  return (
+    <Link to={item.to} className={classes}>
+      <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} />
+      <span className="flex-1 text-left">{item.label}</span>
+    </Link>
   );
 }
