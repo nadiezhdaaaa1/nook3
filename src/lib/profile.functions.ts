@@ -35,12 +35,14 @@ export const getProfile = createServerFn({ method: "GET" })
     return dbRowToUser(data);
   });
 
+// SECURITY: billing fields (plan, billing_cycle, trial_active, trial_started_at,
+// trial_ends_at) MUST NOT be writable via this endpoint. Subscription state can
+// only be changed by a privileged server path gated behind a verified payment
+// webhook (e.g. Stripe). Allowing them here would let any authenticated user
+// self-upgrade to a paid plan for free.
 const profilePatchSchema = z.object({
   phone: z.string().trim().max(40).optional(),
   timezone: z.string().max(60).optional(),
-  plan: z.enum(["free", "premium", "max"]).optional(),
-  billingCycle: z.enum(["monthly", "annual"]).optional(),
-  trialActive: z.boolean().optional(),
   completedAt: z.string().nullable().optional(),
   moveOut: z
     .object({
@@ -67,9 +69,6 @@ export const updateProfile = createServerFn({ method: "POST" })
     const patch: Record<string, unknown> = {};
     if (data.phone !== undefined) patch.phone = data.phone;
     if (data.timezone !== undefined) patch.timezone = data.timezone;
-    if (data.plan !== undefined) patch.plan = data.plan;
-    if (data.billingCycle !== undefined) patch.billing_cycle = data.billingCycle;
-    if (data.trialActive !== undefined) patch.trial_active = data.trialActive;
     if (data.completedAt !== undefined) patch.completed_at = data.completedAt;
     if (data.moveOut !== undefined) patch.move_out = data.moveOut;
 
