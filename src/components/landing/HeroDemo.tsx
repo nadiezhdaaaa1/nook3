@@ -189,25 +189,6 @@ export function HeroDemo() {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-400" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (emailError) setEmailError(null);
-                    }}
-                    placeholder="your.email@example.com"
-                    className={cn(
-                      "w-full h-12 pl-11 pr-4 rounded-md bg-surface-elevated border text-sm focus:outline-none",
-                      emailError ? "border-danger" : "border-border focus:border-charcoal-950",
-                    )}
-                  />
-                </div>
-                {emailError && <p className="text-xs text-danger">{emailError}</p>}
-              </div>
 
               <button
                 type="submit"
