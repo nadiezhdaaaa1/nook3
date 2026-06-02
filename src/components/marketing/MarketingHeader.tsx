@@ -36,7 +36,6 @@ export function MarketingHeader() {
           <a href="#what" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">What you get</a>
           <a href="#pricing" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Pricing</a>
           <a href="#faq" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">FAQ</a>
-          <a href="#blog" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Blog</a>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -83,7 +82,7 @@ export function MarketingHeader() {
             <a href="#what" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">What you get</a>
             <a href="#pricing" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">Pricing</a>
             <a href="#faq" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">FAQ</a>
-            <a href="#blog" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">Blog</a>
+            
             <Link to="/login" onClick={() => setOpen(false)} className="mt-4 h-12 inline-flex items-center justify-center px-5 rounded-pill border-2 border-charcoal-950 text-sm font-semibold">
               Sign in
             </Link>
