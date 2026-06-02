@@ -7,6 +7,10 @@ import {
   syncOnboardingToActiveSearch,
   selectActiveSearch,
 } from "@/lib/store";
+import {
+  useCreateSearchMutation,
+  useDuplicateSearchMutation,
+} from "@/lib/queries/searches";
 import { cn } from "@/lib/utils";
 
 type Mode = "blank" | "duplicate";
@@ -15,28 +19,44 @@ export function NewSearchModal({ onClose }: { onClose: () => void }) {
   const active = useAppStore(selectActiveSearch);
   const createSearch = useAppStore((s) => s.createSearch);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
+  const createMut = useCreateSearchMutation();
+  const dupMut = useDuplicateSearchMutation();
 
   const [mode, setMode] = useState<Mode>("blank");
   const [cityId, setCityId] = useState<CityId>((active?.cityId ?? "nyc") as CityId);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const submit = () => {
+  const submit = async () => {
     setError(null);
-    // Snapshot the currently active search before mutating the collection.
     syncOnboardingToActiveSearch();
 
-    const res =
-      mode === "duplicate" && active
-        ? duplicateSearch(active.id)
-        : createSearch({ cityId, name: name.trim() || undefined });
-
-    if (!res.ok) {
-      setError(res.error);
-      return;
+    try {
+      if (mode === "duplicate" && active) {
+        // DB authoritative: dup on server, then mirror locally.
+        await dupMut.mutateAsync(active.id);
+        const localRes = duplicateSearch(active.id);
+        if (!localRes.ok) {
+          setError(localRes.error);
+          return;
+        }
+      } else {
+        const trimmed = name.trim() || `Search ${Date.now().toString().slice(-4)}`;
+        await createMut.mutateAsync({
+          name: trimmed,
+          cityId,
+        });
+        const localRes = createSearch({ cityId, name: trimmed });
+        if (!localRes.ok) {
+          setError(localRes.error);
+          return;
+        }
+      }
+      hydrateActiveSearchIntoOnboarding();
+      onClose();
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to create search");
     }
-    hydrateActiveSearchIntoOnboarding();
-    onClose();
   };
 
   return (

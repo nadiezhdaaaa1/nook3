@@ -23,6 +23,7 @@ import {
 } from "@/lib/store";
 import { getCity } from "@/data/cities";
 import type { Search } from "@/lib/store";
+import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import { NewSearchModal } from "./NewSearchModal";
 import { UpgradeModal } from "./UpgradeModal";
 
@@ -43,6 +44,16 @@ export function SearchSwitcher() {
   const restoreSearch = useAppStore((s) => s.restoreSearch);
   const deleteSearch = useAppStore((s) => s.deleteSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
+  const deleteMut = useDeleteSearchMutation();
+
+  const isUuid = (id: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+  const dbAwareDelete = (id: string) => {
+    if (isUuid(id)) deleteMut.mutate(id);
+    deleteSearch(id);
+  };
+
 
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -163,7 +174,7 @@ export function SearchSwitcher() {
                   onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
                     if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
-                      deleteSearch(s.id);
+                      dbAwareDelete(s.id);
                       hydrateActiveSearchIntoOnboarding();
                     }
                   }}
@@ -194,7 +205,7 @@ export function SearchSwitcher() {
                         search={s}
                         onRestore={() => handleRestore(s.id)}
                         onDelete={() => {
-                          if (confirm(`Permanently delete "${s.name}"?`)) deleteSearch(s.id);
+                          if (confirm(`Permanently delete "${s.name}"?`)) dbAwareDelete(s.id);
                         }}
                       />
                     ))}

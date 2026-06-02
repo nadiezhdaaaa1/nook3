@@ -10,6 +10,7 @@ import { PlanLimitsBanner } from "@/components/preferences/PlanLimitsBanner";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import { useActiveSearch } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
+import { useDbSync } from "@/lib/queries/useDbSync";
 
 export const Route = createFileRoute("/preferences")({
   beforeLoad: async ({ location }) => {
@@ -39,6 +40,7 @@ const TABS = [
 
 function PreferencesShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useDbSync();
 
   return (
     <div className="min-h-screen bg-paper">
