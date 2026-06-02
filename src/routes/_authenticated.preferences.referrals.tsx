@@ -368,7 +368,7 @@ function FaqRow({ q, a }: { q: string; a: string }) {
 /* ---------- Data ---------- */
 
 const HOW_STEPS = [
-  { title: "Share your link", body: "Copy and send it — email, SMS, anywhere. Each link is uniquely yours." },
+  { title: "Share your link", body: "Copy and send it — email, message, anywhere. Each link is uniquely yours." },
   { title: "Friend signs up", body: "They create a Nook account through your link and start their trial." },
   { title: "Both get rewarded", body: "7 days of Premium free, instantly. Hit 5 signups for a full month." },
 ];
