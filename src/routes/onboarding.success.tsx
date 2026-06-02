@@ -86,11 +86,8 @@ function Success() {
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
             Alerts going to
           </div>
-          {email && (alertChannel === "email" || alertChannel === "both") && (
+          {email && (
             <div className="font-medium text-charcoal-950">📧 {email}</div>
-          )}
-          {phone && (alertChannel === "text" || alertChannel === "both") && (
-            <div className="font-medium text-charcoal-950">📱 {phone}</div>
           )}
           {selectedPlan && selectedPlan !== "free" && (
             <div className="text-xs text-sage-700 font-semibold pt-1">
