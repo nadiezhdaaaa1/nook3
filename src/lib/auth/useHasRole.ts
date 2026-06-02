@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "admin" | "moderator" | "user";
+export type AppRole = "admin" | "user";
 
 /**
  * Reads the current user's roles from `public.user_roles` and checks
