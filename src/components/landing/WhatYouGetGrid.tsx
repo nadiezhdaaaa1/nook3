@@ -6,32 +6,32 @@ const ITEMS = [
   {
     icon: ShieldCheck,
     title: "Verified regulated units",
-    body: "We cross-check every listing against public regulation databases. If a unit is genuinely rent-stabilized or rent-controlled, you'll see the badge. If a landlord is claiming it falsely — you'll know.",
+    body: "Every listing cross-checked against public databases. Real regulation gets a badge. Fake claims don't.",
   },
   {
     icon: Zap,
     title: "First-mover advantage",
-    body: "The best apartments are gone in 2–6 hours. We notify you within minutes of a listing going live — so you're inquiring before the crowd shows up to the open house.",
+    body: "Best apartments vanish in hours. We ping you within minutes — before the open house crowd shows up.",
   },
   {
     icon: Filter,
     title: "Filters that actually filter",
-    body: "Pet-friendly that means pet-friendly. Budget that means budget. We strip out 'starting from' bait pricing and listings that don't match your hard requirements.",
+    body: "Pet-friendly that means pet-friendly. Budget that means budget. No bait pricing, no fake matches.",
   },
   {
     icon: Sparkles,
     title: "Wren AI on every match",
-    body: "Ask Wren about any listing — 'is this overpriced?', 'how's the neighborhood after dark?', 'what about the commute?'. You get answers, not just listings.",
+    body: "Ask Wren anything about a listing — price, neighborhood, commute. Answers, not just listings.",
   },
   {
     icon: Layers,
     title: "3 searches at once",
-    body: "Looking in one neighborhood but also open to another? Considering a 1BR or splitting a 2BR? Run parallel searches without resetting filters every time.",
+    body: "Two neighborhoods? 1BR or split 2BR? Run searches in parallel, no filter resets.",
   },
   {
     icon: Pause,
     title: "Pause whenever",
-    body: "Took a break to think? Pause your search. No alerts while you're paused. Resume in one click when you're ready again.",
+    body: "Need a break? Pause. No alerts while paused. One click to resume.",
   },
 ];
 
