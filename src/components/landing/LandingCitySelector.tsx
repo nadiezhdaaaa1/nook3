@@ -141,6 +141,13 @@ export function LandingCitySelector({ className, size = "md" }: Props) {
           </li>
         </ul>
       )}
+
+      <WaitlistDialog
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        requestedCity={waitlistCity.id}
+        requestedCityLabel={waitlistCity.label}
+      />
     </div>
   );
 }
