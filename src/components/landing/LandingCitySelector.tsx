@@ -17,6 +17,11 @@ interface Props {
 
 export function LandingCitySelector({ className, size = "md" }: Props) {
   const [open, setOpen] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistCity, setWaitlistCity] = useState<{ id: string | null; label: string | null }>({
+    id: null,
+    label: null,
+  });
   const { city, setCity } = useLandingStore();
   const ref = useRef<HTMLDivElement>(null);
   const current = CITY_LIST.find((c) => c.id === city) ?? CITY_LIST[0];
@@ -37,17 +42,15 @@ export function LandingCitySelector({ className, size = "md" }: Props) {
       return;
     }
     const c = CITY_LIST.find((x) => x.id === id);
-    toast.success(`You're on the ${c?.displayName ?? "waitlist"} waitlist`, {
-      description: "We'll email you the moment Nook opens here.",
-    });
+    setWaitlistCity({ id, label: c?.displayName ?? null });
     setOpen(false);
+    setWaitlistOpen(true);
   };
 
   const handleOther = () => {
-    toast.success("Got it — we'll let you know.", {
-      description: "Tell us your city and we'll prioritize it.",
-    });
+    setWaitlistCity({ id: null, label: null });
     setOpen(false);
+    setWaitlistOpen(true);
   };
 
   return (
