@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2, Mail, Phone, Globe } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
