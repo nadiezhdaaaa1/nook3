@@ -12,6 +12,7 @@ import {
   useDuplicateSearchMutation,
 } from "@/lib/queries/searches";
 import { cn } from "@/lib/utils";
+import { searchNameSchema } from "@/lib/validation/schemas";
 
 type Mode = "blank" | "duplicate";
 
