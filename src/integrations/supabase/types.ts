@@ -226,6 +226,42 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist: {
+        Row: {
+          budget_max: number | null
+          city: string | null
+          created_at: string
+          email: string
+          id: string
+          move_in_timeframe: string | null
+          requested_city: string | null
+          source: string
+          user_agent: string | null
+        }
+        Insert: {
+          budget_max?: number | null
+          city?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          move_in_timeframe?: string | null
+          requested_city?: string | null
+          source?: string
+          user_agent?: string | null
+        }
+        Update: {
+          budget_max?: number | null
+          city?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          move_in_timeframe?: string | null
+          requested_city?: string | null
+          source?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
