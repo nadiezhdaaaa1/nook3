@@ -13,6 +13,7 @@ export const Route = createFileRoute("/signup")({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
   }),
   beforeLoad: async ({ search }) => {
+    if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getUser();
     if (data.user) {
       throw redirect({ to: search.redirect ?? "/preferences" });

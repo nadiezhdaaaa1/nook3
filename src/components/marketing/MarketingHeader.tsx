@@ -48,12 +48,12 @@ export function MarketingHeader() {
           >
             Sign in
           </Link>
-          <a
-            href="#hero"
+          <Link
+            to="/onboarding"
             className="inline-flex h-11 items-center px-5 rounded-pill text-sm font-semibold bg-peach-700 text-paper hover:bg-peach-900 transition-colors"
           >
             Get free alerts
-          </a>
+          </Link>
 
           <button
             onClick={() => setOpen(true)}

@@ -3,14 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Pathless layout route that gates every child under `_authenticated`.
- * Async `getUser()` re-validates the bearer token with the Auth server,
- * so server fns called below are guaranteed to have a hydrated session.
  *
- * Add admin/role layers as additional pathless layouts (e.g.
- * `_authenticated._admin.tsx`) and place protected children underneath.
+ * Supabase persists the session in `localStorage`, so on the SERVER
+ * `getUser()` always returns null and would bounce every direct navigation
+ * (e.g. OAuth callback landing on /preferences) to /login. We skip the
+ * check during SSR and rely on the client-side re-run after hydration —
+ * that's when the session is actually available.
  */
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ location }) => {
+    if (typeof window === "undefined") return;
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
