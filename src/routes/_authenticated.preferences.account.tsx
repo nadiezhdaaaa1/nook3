@@ -193,60 +193,8 @@ function AccountPage() {
       </section>
 
       {/* Subscription */}
-      <section>
-        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
-          Subscription &amp; billing
-        </h2>
-        <div className="rounded-card bg-paper-warm border border-charcoal-950/12 p-6">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-sage-700">
-                Current plan
-              </div>
-              <div className="mt-1 font-display text-2xl font-bold text-charcoal-950">
-                {currentPlan.label}
-                {trialActive && plan !== "free" && (
-                  <span className="ml-2 text-[10px] font-mono uppercase tracking-[0.14em] text-peach-700">
-                    Trial active
-                  </span>
-                )}
-              </div>
-              <div className="text-sm text-charcoal-600 mt-1">
-                {plan === "free"
-                  ? "$0 / forever"
-                  : cycle === "annual"
-                    ? `$${currentPlan.annual}/year`
-                    : `$${currentPlan.monthly}/mo`}
-              </div>
-            </div>
-            <div className="text-xs text-charcoal-600">
-              Next billing:{" "}
-              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : "—"}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} />
 
-      {/* Plans */}
-      <section>
-        <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
-          <div>
-            <h2 className="font-display text-xl font-semibold text-charcoal-950">
-              {plan === "max" ? "Plan options" : "Upgrade your plan"}
-            </h2>
-            <p className="text-sm text-charcoal-600 mt-1">
-              Get faster alerts, more searches, and Wren AI.
-            </p>
-          </div>
-          <BillingToggle cycle={cycle} onChange={setCycle} />
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-3">
-          {PLANS.map((p) => (
-            <PlanCard key={p.id} plan={p} currentPlan={plan} cycle={cycle} />
-          ))}
-        </div>
-      </section>
 
       {/* Privacy */}
       <section>
