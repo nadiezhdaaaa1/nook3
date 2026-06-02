@@ -19,7 +19,7 @@ interface StickySaveBarProps<T> {
  * - Discard restores the snapshot via `onDiscard`.
  * - Changes auto-persist via zustand; Save commits the baseline + toasts.
  */
-export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes" }: StickySaveBarProps<T>) {
+export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes", getChanges, successMessage = "Preferences saved" }: StickySaveBarProps<T>) {
   const [baseline, setBaseline] = useState<string>(() => JSON.stringify(state));
   const [saving, setSaving] = useState(false);
   const mounted = useRef(false);
