@@ -53,6 +53,7 @@ function PreferencesShell() {
             <Link to="/" className="hidden md:inline text-sm font-semibold text-charcoal-700 hover:text-charcoal-950">
               ← Home
             </Link>
+            <SignOutButton />
           </div>
         </div>
       </header>
