@@ -1,8 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Check, Sparkles, Zap, Crown } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2, Mail, Phone, Globe } from "lucide-react";
+import { z } from "zod";
+import { toast } from "sonner";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { useAppStore, type Plan, type BillingCycle } from "@/lib/store";
+import { SEARCH_LIMITS } from "@/lib/store/types";
+import { usePreferencesStore } from "@/lib/preferences/store";
+import { StickySaveBar } from "@/components/preferences/StickySaveBar";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/preferences/account")({
@@ -49,29 +59,142 @@ const PLANS: PlanDef[] = [
   },
 ];
 
+const emailSchema = z.string().trim().email();
+const TIMEZONES = [
+  "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
+  "America/Phoenix", "America/Anchorage", "Pacific/Honolulu", "UTC",
+];
+
+function formatPhone(raw: string): string {
+  const d = raw.replace(/\D/g, "").slice(0, 10);
+  if (d.length < 4) return d;
+  if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+}
+
 function AccountPage() {
-  const { email, phone } = useOnboardingStore();
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
-  const trialActive = useAppStore((s) => s.user?.trialActive ?? false);
-  const [cycle, setCycle] = useState<BillingCycle>("monthly");
+  const onboarding = useOnboardingStore();
+  const user = useAppStore((s) => s.user);
+  const searches = useAppStore((s) => s.searches);
+  const updateProfile = useAppStore((s) => s.updateProfile);
+
+  const plan: Plan = user?.plan ?? "free";
+  const trialActive = user?.trialActive ?? false;
+  const [cycle, setCycle] = useState<BillingCycle>(user?.billingCycle ?? "monthly");
+
+  // Profile editable fields (sourced from onboarding store + user)
+  const [email, setEmail] = useState(user?.email || onboarding.email);
+  const [phone, setPhone] = useState(user?.phone || onboarding.phone);
+  const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
+
+  const prefs = usePreferencesStore();
 
   const currentPlan = PLANS.find((p) => p.id === plan) ?? PLANS[0];
 
+  // Usage stats
+  const stats = useMemo(() => {
+    const max = SEARCH_LIMITS[plan];
+    const used = searches.filter((s) => s.status !== "archived").length;
+    const totalAlerts = searches.reduce((sum, s) => sum + (s.totalAlertsReceived ?? 0), 0);
+    const alerts7d = searches.reduce((sum, s) => sum + (s.alertsLast7Days ?? 0), 0);
+    return {
+      used,
+      max,
+      maxLabel: max === Infinity ? "Unlimited" : String(max),
+      pct: max === Infinity ? 100 : Math.min(100, Math.round((used / max) * 100)),
+      totalAlerts,
+      alerts7d,
+    };
+  }, [searches, plan]);
+
+  const emailValid = !email || emailSchema.safeParse(email).success;
+
   return (
-    <div className="space-y-12">
-      {/* Profile summary */}
+    <div className="space-y-12 pb-24">
+      {/* Usage stats */}
       <section>
-        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
-        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-          <Row label="Email" value={email || "—"} />
-          <Row label="Phone" value={phone || "—"} />
+        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
+          Usage this month
+        </h2>
+        <div className="grid sm:grid-cols-3 gap-3">
+          <StatCard
+            icon={SearchIcon}
+            label="Saved searches"
+            value={`${stats.used} / ${stats.maxLabel}`}
+            footer={
+              stats.max === Infinity
+                ? "No limit on your plan."
+                : stats.used >= stats.max
+                  ? "Limit reached — upgrade to add more."
+                  : `${stats.max - stats.used} slot${stats.max - stats.used === 1 ? "" : "s"} left.`
+            }
+            progress={stats.pct}
+          />
+          <StatCard
+            icon={Bell}
+            label="Alerts received"
+            value={String(stats.totalAlerts)}
+            footer="All-time across your searches."
+          />
+          <StatCard
+            icon={Clock}
+            label="Last 7 days"
+            value={String(stats.alerts7d)}
+            footer="Recent activity volume."
+          />
         </div>
       </section>
 
-      {/* Current plan */}
+      {/* Profile */}
+      <section>
+        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
+        <div className="space-y-4">
+          <Field id="acct-email" label="Email" icon={Mail} error={!emailValid ? "Enter a valid email." : undefined}>
+            <input
+              id="acct-email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className={cn(
+                "w-full h-11 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
+                emailValid ? "border-border focus:border-charcoal-950" : "border-danger focus:border-danger",
+              )}
+            />
+          </Field>
+
+          <Field id="acct-phone" label="Phone" icon={Phone}>
+            <input
+              id="acct-phone"
+              type="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(formatPhone(e.target.value))}
+              placeholder="(555) 123-4567"
+              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
+            />
+          </Field>
+
+          <Field id="acct-tz" label="Timezone" icon={Globe}>
+            <select
+              id="acct-tz"
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
+            >
+              {TIMEZONES.map((tz) => (
+                <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
+              ))}
+            </select>
+          </Field>
+        </div>
+      </section>
+
+      {/* Subscription */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
-          Subscription & billing
+          Subscription &amp; billing
         </h2>
         <div className="rounded-card bg-paper-warm border border-charcoal-950/12 p-6">
           <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -96,18 +219,19 @@ function AccountPage() {
               </div>
             </div>
             <div className="text-xs text-charcoal-600">
-              Next billing: <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : "—"}</span>
+              Next billing:{" "}
+              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : "—"}</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Upgrade */}
+      {/* Plans */}
       <section>
         <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
           <div>
             <h2 className="font-display text-xl font-semibold text-charcoal-950">
-              Upgrade your plan
+              {plan === "max" ? "Plan options" : "Upgrade your plan"}
             </h2>
             <p className="text-sm text-charcoal-600 mt-1">
               Get faster alerts, more searches, and Wren AI.
@@ -122,17 +246,224 @@ function AccountPage() {
           ))}
         </div>
       </section>
+
+      {/* Privacy */}
+      <section>
+        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
+          Privacy &amp; data
+        </h2>
+        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
+          <ToggleRow
+            label="Product updates"
+            desc="Occasional emails about new features and tips."
+            checked={prefs.productUpdates}
+            onChange={(v) => prefs.setPref("productUpdates", v)}
+          />
+          <ToggleRow
+            label="Marketing emails"
+            desc="Promotional content from partners and special offers."
+            checked={prefs.marketingEmails}
+            onChange={(v) => prefs.setPref("marketingEmails", v)}
+          />
+          <div className="px-5 py-4 flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">Export your data</div>
+              <div className="text-xs text-charcoal-600 mt-0.5">
+                Download a JSON copy of your searches and alerts.
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const blob = new Blob(
+                  [JSON.stringify({ user, searches }, null, 2)],
+                  { type: "application/json" },
+                );
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "nook-export.json";
+                a.click();
+                URL.revokeObjectURL(url);
+                toast.success("Export downloaded");
+              }}
+              className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
+            >
+              <Download className="h-3.5 w-3.5" /> Export
+            </button>
+          </div>
+
+          <div className="px-5 py-4 flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-danger">Delete account</div>
+              <div className="text-xs text-charcoal-600 mt-0.5">
+                Permanently remove your account, searches, and alerts.
+              </div>
+            </div>
+            <DeleteAccountButton />
+          </div>
+        </div>
+      </section>
+
+      <StickySaveBar
+        state={{ email, phone, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        onDiscard={(snap) => {
+          setEmail(snap.email);
+          setPhone(snap.phone);
+          setTimezone(snap.timezone);
+          setCycle(snap.cycle);
+          prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
+          prefs.setPref("productUpdates", snap.prefs.productUpdates);
+        }}
+      />
+
+      {/* Apply on save via effect inside StickySaveBar would be cleaner; for now commit on change too: */}
+      <SyncProfile email={email} phone={phone} timezone={timezone} cycle={cycle} update={updateProfile} />
     </div>
   );
 }
 
-function BillingToggle({
-  cycle,
-  onChange,
+function SyncProfile({
+  email, phone, timezone, cycle, update,
 }: {
-  cycle: BillingCycle;
-  onChange: (c: BillingCycle) => void;
+  email: string; phone: string; timezone: string; cycle: BillingCycle;
+  update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
+  // Persist to app store on every change so refresh keeps values.
+  // The "Save" toast comes from StickySaveBar; this just mirrors local → store.
+  useMemoSync(() => update({ email, phone, timezone, billingCycle: cycle }), [email, phone, timezone, cycle]);
+  return null;
+}
+
+// Tiny inline hook to avoid an extra import
+function useMemoSync(fn: () => void, deps: unknown[]) {
+  useMemo(fn, deps); // intentional: runs on dep changes
+}
+
+function StatCard({
+  icon: Icon, label, value, footer, progress,
+}: {
+  icon: typeof Sparkles; label: string; value: string; footer: string; progress?: number;
+}) {
+  return (
+    <div className="rounded-card border border-border bg-paper-warm p-5">
+      <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+        <Icon className="h-3.5 w-3.5" /> {label}
+      </div>
+      <div className="mt-2 font-display text-2xl font-bold text-charcoal-950 tabular-nums">{value}</div>
+      {typeof progress === "number" && (
+        <div className="mt-3 h-1.5 w-full rounded-full bg-charcoal-950/8 overflow-hidden">
+          <div
+            className={cn(
+              "h-full transition-all",
+              progress >= 100 ? "bg-peach-700" : "bg-charcoal-950",
+            )}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+      <div className="mt-2 text-xs text-charcoal-600">{footer}</div>
+    </div>
+  );
+}
+
+function Field({
+  id, label, icon: Icon, error, children,
+}: {
+  id: string; label: string; icon: typeof Mail; error?: string; children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-2">
+      <label htmlFor={id} className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+        <Icon className="h-3 w-3" /> {label}
+      </label>
+      {children}
+      {error && <p className="text-xs text-danger">{error}</p>}
+    </div>
+  );
+}
+
+function ToggleRow({
+  label, desc, checked, onChange,
+}: {
+  label: string; desc: string; checked: boolean; onChange: (v: boolean) => void;
+}) {
+  return (
+    <div className="px-5 py-4 flex items-start justify-between gap-4">
+      <div className="min-w-0">
+        <div className="text-sm font-semibold text-charcoal-950">{label}</div>
+        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={cn(
+          "relative h-6 w-11 rounded-full transition-colors shrink-0 mt-0.5",
+          checked ? "bg-charcoal-950" : "bg-charcoal-300",
+        )}
+      >
+        <span
+          className={cn(
+            "absolute top-0.5 h-5 w-5 rounded-full bg-paper transition-transform",
+            checked ? "translate-x-5" : "translate-x-0.5",
+          )}
+        />
+      </button>
+    </div>
+  );
+}
+
+function DeleteAccountButton() {
+  const [text, setText] = useState("");
+  const reset = useAppStore((s) => s.reset);
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-danger/40 text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
+        >
+          <Trash2 className="h-3.5 w-3.5" /> Delete
+        </button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This permanently removes your searches, alerts, and profile. Type{" "}
+            <span className="font-mono font-semibold text-charcoal-950">DELETE</span> to confirm.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <input
+          autoFocus
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="DELETE"
+          className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-danger focus:outline-none text-sm font-mono"
+        />
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => setText("")}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            disabled={text !== "DELETE"}
+            onClick={() => {
+              reset();
+              toast.success("Account deleted");
+            }}
+            className="bg-danger text-paper hover:bg-danger/90"
+          >
+            Delete account
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function BillingToggle({
+  cycle, onChange,
+}: { cycle: BillingCycle; onChange: (c: BillingCycle) => void }) {
   return (
     <div className="inline-flex items-center bg-paper-warm border border-charcoal-950/10 rounded-pill p-1">
       {(["monthly", "annual"] as const).map((c) => (
@@ -154,14 +485,8 @@ function BillingToggle({
 }
 
 function PlanCard({
-  plan,
-  currentPlan,
-  cycle,
-}: {
-  plan: PlanDef;
-  currentPlan: Plan;
-  cycle: BillingCycle;
-}) {
+  plan, currentPlan, cycle,
+}: { plan: PlanDef; currentPlan: Plan; cycle: BillingCycle }) {
   const isCurrent = plan.id === currentPlan;
   const Icon = plan.icon;
   const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
@@ -172,9 +497,7 @@ function PlanCard({
     <div
       className={cn(
         "rounded-card border p-6 flex flex-col gap-4 transition-colors",
-        isCurrent
-          ? "border-charcoal-950 bg-paper-warm"
-          : "border-charcoal-950/12 bg-paper hover:border-charcoal-400",
+        isCurrent ? "border-charcoal-950 bg-paper-warm" : "border-charcoal-950/12 bg-paper hover:border-charcoal-400",
       )}
     >
       <div className="flex items-center gap-2">
@@ -215,17 +538,6 @@ function PlanCard({
       >
         {isCurrent ? "Current plan" : `Upgrade to ${plan.label}`}
       </button>
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="px-5 py-4 flex items-center justify-between">
-      <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500">
-        {label}
-      </div>
-      <div className="text-sm font-medium text-charcoal-950">{value}</div>
     </div>
   );
 }
