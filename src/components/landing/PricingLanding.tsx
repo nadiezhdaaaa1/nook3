@@ -31,7 +31,7 @@ const PLANS = [
     annual: 124,
     tagline: "Real-time alerts, zero delay.",
     features: [
-      "Unlimited email + 1 SMS/day",
+      "Unlimited email alerts",
       "Real-time (median 47s)",
       "Rent-stabilized verification",
       "DOB / HPD violations",
