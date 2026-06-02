@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useOnboardingStore, getReferralCode } from "@/lib/onboarding/store";
 import { MoveOutModal } from "@/components/onboarding/MoveOutModal";
-import { useAppStore, selectQuota, syncOnboardingToUser, syncOnboardingToActiveSearch } from "@/lib/store";
+import { SEARCH_LIMITS, useAppStore, syncOnboardingToUser, syncOnboardingToActiveSearch } from "@/lib/store";
 import { Plus, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/onboarding/success")({
@@ -218,8 +218,19 @@ function Success() {
 
 function AddAnotherSearchCTA() {
   const navigate = useNavigate();
-  const quota = useAppStore(selectQuota);
   const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const searches = useAppStore((s) => s.searches);
+  const quota = useMemo(() => {
+    const max = SEARCH_LIMITS[plan];
+    const used = searches.filter((x) => x.status !== "archived").length;
+    const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
+    return {
+      used,
+      max,
+      remaining: max === Number.POSITIVE_INFINITY ? Number.POSITIVE_INFINITY : Math.max(0, max - used),
+      label: `${used} of ${maxLabel} used`,
+    };
+  }, [plan, searches]);
   const canAdd = quota.remaining > 0;
   const headline = canAdd
     ? "Looking in more than one area? Add another search."

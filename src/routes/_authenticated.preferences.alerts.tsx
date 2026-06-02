@@ -54,8 +54,12 @@ function rowToSavedAlert(r: AlertRow): SavedAlert {
 }
 
 function SavedAlertsPage() {
-  const searches = useAppStore((s) => s.searches.filter((x) => x.status !== "archived"));
+  const allSearches = useAppStore((s) => s.searches);
   const activeSearchId = useAppStore((s) => s.activeSearchId);
+  const searches = useMemo(
+    () => allSearches.filter((x) => x.status !== "archived"),
+    [allSearches],
+  );
 
   const [filter, setFilter] = useState<Filter>("all");
   const [scope, setScope] = useState<string>("all"); // "all" | searchId
