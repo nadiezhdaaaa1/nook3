@@ -238,10 +238,9 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ email, phone, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{ email, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
           setEmail(snap.email);
-          setPhone(snap.phone);
           setTimezone(snap.timezone);
           setCycle(snap.cycle);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
@@ -249,21 +248,20 @@ function AccountPage() {
         }}
       />
 
-      {/* Apply on save via effect inside StickySaveBar would be cleaner; for now commit on change too: */}
-      <SyncProfile email={email} phone={phone} timezone={timezone} cycle={cycle} update={updateProfile} />
+      <SyncProfile email={email} timezone={timezone} cycle={cycle} update={updateProfile} />
     </div>
   );
 }
 
 function SyncProfile({
-  email, phone, timezone, cycle, update,
+  email, timezone, cycle, update,
 }: {
-  email: string; phone: string; timezone: string; cycle: BillingCycle;
+  email: string; timezone: string; cycle: BillingCycle;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
   useEffect(() => {
-    update({ email, phone, timezone, billingCycle: cycle });
-  }, [email, phone, timezone, cycle, update]);
+    update({ email, timezone, billingCycle: cycle });
+  }, [email, timezone, cycle, update]);
   return null;
 }
 
