@@ -165,17 +165,6 @@ function AccountPage() {
             />
           </Field>
 
-          <Field id="acct-phone" label="Phone" icon={Phone}>
-            <input
-              id="acct-phone"
-              type="tel"
-              autoComplete="tel"
-              value={phone}
-              onChange={(e) => setPhone(formatPhone(e.target.value))}
-              placeholder="(555) 123-4567"
-              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
-            />
-          </Field>
 
           <Field id="acct-tz" label="Timezone" icon={Globe}>
             <select
