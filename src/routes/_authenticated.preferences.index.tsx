@@ -183,7 +183,7 @@ function NotificationsTab() {
         </div>
       </section>
 
-      <SaveBar signal={`${selectedPlan}|${alertChannel}|${frequency}|${email}|${phone}`} />
+      <SaveBar signal={`${plan}|${alertChannel}|${frequency}|${email}|${phone}`} />
     </div>
   );
 }
