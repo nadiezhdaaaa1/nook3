@@ -40,7 +40,7 @@ export function TiredOfSection() {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         <div className="max-w-3xl">
-          <Eyebrow color="cream">Built for active renters</Eyebrow>
+          <Eyebrow tone="ink">Built for active renters</Eyebrow>
           <h2 className="mt-4 font-display font-medium text-4xl lg:text-[52px] leading-[1.05] tracking-[-0.02em] text-[var(--color-brand-cream)]">
             You probably know this feeling.
           </h2>
