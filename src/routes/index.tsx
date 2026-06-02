@@ -39,8 +39,8 @@ function LandingPage() {
       <HowItWorksThreeSteps />
       <WhatYouGetGrid />
       <TiredOfSection />
-      <ReviewsMasonry />
       <PricingThreeTiers />
+      <ReviewsMasonry />
       <FaqFifteen />
       <BlogTeaser />
       <CtaStrip />
