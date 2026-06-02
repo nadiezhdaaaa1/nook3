@@ -52,13 +52,20 @@ function formatBudget(n: number) {
 
 export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCityLabel }: Props) {
   const [email, setEmail] = useState("");
-  const [city, setCity] = useState("");
-  const [budget, setBudget] = useState("");
+  const [cityTag, setCityTag] = useState<string>(""); // selected preset, "other", or ""
+  const [cityOther, setCityOther] = useState("");
+  const [budget, setBudget] = useState<number>(BUDGET_DEFAULT);
   const [timeframe, setTimeframe] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
 
   const targetCityLabel = requestedCityLabel ?? "your city";
   const askForCity = !requestedCity;
+
+  const resolvedCity = requestedCity
+    ? requestedCity
+    : cityTag === "other"
+      ? cityOther.trim() || null
+      : cityTag || null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,13 +73,17 @@ export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCit
       toast.error("Please enter your email");
       return;
     }
+    if (askForCity && !resolvedCity) {
+      toast.error("Pick a city or type yours");
+      return;
+    }
     setSubmitting(true);
     try {
       const { error } = await supabase.from("waitlist").insert({
         email: email.trim().toLowerCase(),
-        requested_city: requestedCity ?? (city.trim() || null),
-        city: requestedCity ?? (city.trim() || null),
-        budget_max: budget ? parseInt(budget, 10) || null : null,
+        requested_city: resolvedCity,
+        city: resolvedCity,
+        budget_max: budget,
         move_in_timeframe: timeframe || null,
         source: "landing",
         user_agent: typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
@@ -83,8 +94,9 @@ export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCit
       });
       onOpenChange(false);
       setEmail("");
-      setCity("");
-      setBudget("");
+      setCityTag("");
+      setCityOther("");
+      setBudget(BUDGET_DEFAULT);
       setTimeframe("");
     } catch (err) {
       console.error("waitlist insert failed", err);
@@ -96,7 +108,7 @@ export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCit
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Join the {targetCityLabel} waitlist</DialogTitle>
           <DialogDescription>
@@ -104,7 +116,7 @@ export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCit
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+        <form onSubmit={handleSubmit} className="space-y-5 pt-2">
           <div className="space-y-1.5">
             <Label htmlFor="wl-email">Email</Label>
             <Input
@@ -119,29 +131,70 @@ export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCit
           </div>
 
           {askForCity && (
-            <div className="space-y-1.5">
-              <Label htmlFor="wl-city">Which city?</Label>
-              <Input
-                id="wl-city"
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="e.g. Denver, Austin, Portland..."
-              />
+            <div className="space-y-2">
+              <Label>Which city?</Label>
+              <div className="flex flex-wrap gap-1.5">
+                {CITY_TAGS.map((c) => {
+                  const active = cityTag === c;
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setCityTag(active ? "" : c)}
+                      className={`h-8 px-3 rounded-pill border text-xs font-medium transition-colors ${
+                        active
+                          ? "bg-charcoal-950 text-paper border-charcoal-950"
+                          : "bg-transparent border-charcoal-200 text-charcoal-800 hover:border-charcoal-950"
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => setCityTag(cityTag === "other" ? "" : "other")}
+                  className={`h-8 px-3 rounded-pill border text-xs font-medium transition-colors ${
+                    cityTag === "other"
+                      ? "bg-charcoal-950 text-paper border-charcoal-950"
+                      : "bg-transparent border-dashed border-charcoal-300 text-charcoal-700 hover:border-charcoal-950"
+                  }`}
+                >
+                  Other
+                </button>
+              </div>
+              {cityTag === "other" && (
+                <Input
+                  autoFocus
+                  type="text"
+                  value={cityOther}
+                  onChange={(e) => setCityOther(e.target.value)}
+                  placeholder="Type your city..."
+                  className="mt-2"
+                />
+              )}
             </div>
           )}
 
-          <div className="space-y-1.5">
-            <Label htmlFor="wl-budget">Max monthly budget (USD)</Label>
-            <Input
+          <div className="space-y-3">
+            <div className="flex items-baseline justify-between">
+              <Label htmlFor="wl-budget">Max monthly budget</Label>
+              <span className="text-sm font-semibold text-charcoal-950 tabular-nums">
+                Up to {formatBudget(budget)}
+              </span>
+            </div>
+            <Slider
               id="wl-budget"
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              placeholder="3000"
+              min={BUDGET_MIN}
+              max={BUDGET_MAX}
+              step={BUDGET_STEP}
+              value={[budget]}
+              onValueChange={(v) => setBudget(v[0] ?? BUDGET_DEFAULT)}
             />
+            <div className="flex justify-between text-[11px] font-mono text-charcoal-400">
+              <span>${BUDGET_MIN.toLocaleString()}</span>
+              <span>${BUDGET_MAX.toLocaleString()}+</span>
+            </div>
           </div>
 
           <div className="space-y-1.5">
