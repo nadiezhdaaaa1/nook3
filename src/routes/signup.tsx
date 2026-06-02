@@ -5,6 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import {
+  buildConsents,
+  persistConsentsForCurrentUser,
+  stashPendingConsents,
+} from "@/lib/consents";
 
 type Search = { redirect?: string };
 
@@ -33,7 +38,14 @@ function SignupPage() {
   const { redirect: redirectTo } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [marketing, setMarketing] = useState(false);
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    terms?: string;
+    form?: string;
+  }>({});
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -44,6 +56,7 @@ function SignupPage() {
     const nextErrors: typeof errors = {};
     if (!emailRes.success) nextErrors.email = emailRes.error.issues[0]?.message;
     if (!pwRes.success) nextErrors.password = pwRes.error.issues[0]?.message;
+    if (!acceptTerms) nextErrors.terms = "Please accept the Terms and Privacy Policy to continue.";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
 
@@ -59,16 +72,24 @@ function SignupPage() {
       toast.error("Sign up failed", { description: error.message });
       return;
     }
+    const consents = buildConsents({ marketing, source: "signup_email" });
     if (data.session) {
+      await persistConsentsForCurrentUser(consents);
       toast.success("Account created");
       navigate({ to: redirectTo ?? "/preferences", replace: true });
     } else {
+      stashPendingConsents(consents);
       setSent(true);
       toast.success("Check your email", { description: "We sent a confirmation link." });
     }
   }
 
   async function onGoogle() {
+    if (!acceptTerms) {
+      setErrors({ terms: "Please accept the Terms and Privacy Policy to continue." });
+      return;
+    }
+    stashPendingConsents(buildConsents({ marketing, source: "signup_google" }));
     setSubmitting(true);
     const res = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin + (redirectTo ?? "/preferences"),
