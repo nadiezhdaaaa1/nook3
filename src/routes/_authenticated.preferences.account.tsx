@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { useUpdatePlanMutation } from "@/lib/queries/billing";
 
 export const Route = createFileRoute("/_authenticated/preferences/account")({
   component: AccountPage,
