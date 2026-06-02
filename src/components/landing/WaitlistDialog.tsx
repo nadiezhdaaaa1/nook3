@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -10,7 +11,7 @@ import { Loader2 } from "lucide-react";
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Pre-filled city the user is interested in. If null, user types it. */
+  /** Pre-filled city the user is interested in. If null, user picks one. */
   requestedCity?: string | null;
   requestedCityLabel?: string | null;
 }
@@ -21,6 +22,33 @@ const TIMEFRAMES = [
   { value: "3-6m", label: "3–6 months" },
   { value: "flex", label: "Just exploring" },
 ];
+
+// US cities with population > 1M (city-proper), plus Other → free input.
+const CITY_TAGS = [
+  "New York City",
+  "Los Angeles",
+  "Chicago",
+  "Houston",
+  "Phoenix",
+  "Philadelphia",
+  "San Antonio",
+  "San Diego",
+  "Dallas",
+  "Austin",
+  "Jacksonville",
+  "San Jose",
+  "Fort Worth",
+] as const;
+
+const BUDGET_MIN = 500;
+const BUDGET_MAX = 10000;
+const BUDGET_STEP = 100;
+const BUDGET_DEFAULT = 3000;
+
+function formatBudget(n: number) {
+  if (n >= BUDGET_MAX) return `$${BUDGET_MAX.toLocaleString()}+`;
+  return `$${n.toLocaleString()}`;
+}
 
 export function WaitlistDialog({ open, onOpenChange, requestedCity, requestedCityLabel }: Props) {
   const [email, setEmail] = useState("");
