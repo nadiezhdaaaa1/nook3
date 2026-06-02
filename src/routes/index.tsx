@@ -38,9 +38,9 @@ function LandingPage() {
       <HeroCityAware />
       <HowItWorksThreeSteps />
       <WhatYouGetGrid />
-      <TiredOfSection />
       <PricingThreeTiers />
       <ReviewsMasonry />
+      <TiredOfSection />
       <FaqFifteen />
       <BlogTeaser />
       <CtaStrip />
