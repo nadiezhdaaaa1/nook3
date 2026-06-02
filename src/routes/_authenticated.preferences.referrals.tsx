@@ -163,16 +163,16 @@ function ReferralsPage() {
 
         {/* Quick stats */}
         <div className="grid sm:grid-cols-3 gap-3">
-          <StatCard icon={Users} label="Friends invited" value={invited} />
-          <StatCard icon={Calendar} label="Signed up" value={signedUp} accent />
-          <StatCard icon={Gift} label="Rewards earned" value={earned} />
+          <StatCard icon={Users} label="Friends invited" value={stats.invited} />
+          <StatCard icon={Calendar} label="Signed up" value={stats.signedUp} accent />
+          <StatCard icon={Gift} label="Rewards earned" value={stats.rewarded} />
         </div>
       </section>
 
       {/* ===== Recent referrals ===== */}
       <section aria-labelledby="recent-heading" className="space-y-4">
         <SectionHeading id="recent-heading" eyebrow="03 — Activity" title="Recent referrals" />
-        <RecentList />
+        <RecentList items={stats.recent} isLoading={isLoading} />
       </section>
 
       {/* ===== How it works ===== */}
