@@ -52,7 +52,7 @@ export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes", 
     await new Promise((r) => setTimeout(r, 250));
     setBaseline(current);
     setSaving(false);
-    toast.success("Preferences saved");
+    toast.success(successMessage);
   };
 
   const handleDiscard = () => {
