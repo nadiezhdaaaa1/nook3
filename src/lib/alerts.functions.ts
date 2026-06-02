@@ -113,7 +113,7 @@ export const createAlert = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
       .object({
-        searchId: z.string().uuid().nullable().optional(),
+        searchId: z.string().uuid(),
         listing: listingSchema,
       })
       .parse(input),
@@ -123,8 +123,8 @@ export const createAlert = createServerFn({ method: "POST" })
       .from("saved_alerts")
       .insert({
         user_id: context.userId,
-        search_id: data.searchId ?? null,
-        listing: data.listing,
+        search_id: data.searchId,
+        listing: data.listing as never,
         status: "new",
       })
       .select("*")
