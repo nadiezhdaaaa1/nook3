@@ -14,16 +14,239 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          billing_cycle: Database["public"]["Enums"]["billing_cycle"]
+          completed_at: string | null
+          created_at: string
+          email: string
+          email_verified: boolean
+          id: string
+          is_affiliate: boolean
+          move_out: Json | null
+          phone: string
+          phone_verified: boolean
+          plan: Database["public"]["Enums"]["app_plan"]
+          referral_code: string
+          timezone: string
+          trial_active: boolean
+          trial_ends_at: string | null
+          trial_started_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          completed_at?: string | null
+          created_at?: string
+          email?: string
+          email_verified?: boolean
+          id: string
+          is_affiliate?: boolean
+          move_out?: Json | null
+          phone?: string
+          phone_verified?: boolean
+          plan?: Database["public"]["Enums"]["app_plan"]
+          referral_code?: string
+          timezone?: string
+          trial_active?: boolean
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          completed_at?: string | null
+          created_at?: string
+          email?: string
+          email_verified?: boolean
+          id?: string
+          is_affiliate?: boolean
+          move_out?: Json | null
+          phone?: string
+          phone_verified?: boolean
+          plan?: Database["public"]["Enums"]["app_plan"]
+          referral_code?: string
+          timezone?: string
+          trial_active?: boolean
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referred_user_id: string
+          referrer_user_id: string
+          reward_status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referred_user_id: string
+          referrer_user_id: string
+          reward_status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referred_user_id?: string
+          referrer_user_id?: string
+          reward_status?: string
+        }
+        Relationships: []
+      }
+      saved_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          listing: Json
+          search_id: string
+          snoozed_until: string | null
+          status: Database["public"]["Enums"]["alert_status"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing: Json
+          search_id: string
+          snoozed_until?: string | null
+          status?: Database["public"]["Enums"]["alert_status"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing?: Json
+          search_id?: string
+          snoozed_until?: string | null
+          status?: Database["public"]["Enums"]["alert_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_alerts_search_id_fkey"
+            columns: ["search_id"]
+            isOneToOne: false
+            referencedRelation: "searches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      searches: {
+        Row: {
+          alert_channel: Database["public"]["Enums"]["alert_channel"]
+          amenities: Json
+          archived_at: string | null
+          bathrooms: string
+          bedrooms: Json
+          budget_max: number | null
+          budget_min: number | null
+          city_id: string
+          commute: Json
+          created_at: string
+          frequency: Database["public"]["Enums"]["alert_freq"]
+          id: string
+          include_broker_fee: boolean
+          move_in: Json
+          name: string
+          neighborhoods: Json
+          rent_protection: string
+          status: Database["public"]["Enums"]["search_status"]
+          transit: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alert_channel?: Database["public"]["Enums"]["alert_channel"]
+          amenities?: Json
+          archived_at?: string | null
+          bathrooms?: string
+          bedrooms?: Json
+          budget_max?: number | null
+          budget_min?: number | null
+          city_id: string
+          commute?: Json
+          created_at?: string
+          frequency?: Database["public"]["Enums"]["alert_freq"]
+          id?: string
+          include_broker_fee?: boolean
+          move_in?: Json
+          name: string
+          neighborhoods?: Json
+          rent_protection?: string
+          status?: Database["public"]["Enums"]["search_status"]
+          transit?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alert_channel?: Database["public"]["Enums"]["alert_channel"]
+          amenities?: Json
+          archived_at?: string | null
+          bathrooms?: string
+          bedrooms?: Json
+          budget_max?: number | null
+          budget_min?: number | null
+          city_id?: string
+          commute?: Json
+          created_at?: string
+          frequency?: Database["public"]["Enums"]["alert_freq"]
+          id?: string
+          include_broker_fee?: boolean
+          move_in?: Json
+          name?: string
+          neighborhoods?: Json
+          rent_protection?: string
+          status?: Database["public"]["Enums"]["search_status"]
+          transit?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      alert_channel: "email" | "text" | "both"
+      alert_freq: "minimal" | "balanced" | "maximum" | "weekly"
+      alert_status: "new" | "saved" | "contacted" | "dismissed"
+      app_plan: "free" | "premium" | "max"
+      app_role: "admin" | "user"
+      billing_cycle: "monthly" | "annual"
+      search_status: "active" | "paused" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +373,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      alert_channel: ["email", "text", "both"],
+      alert_freq: ["minimal", "balanced", "maximum", "weekly"],
+      alert_status: ["new", "saved", "contacted", "dismissed"],
+      app_plan: ["free", "premium", "max"],
+      app_role: ["admin", "user"],
+      billing_cycle: ["monthly", "annual"],
+      search_status: ["active", "paused", "archived"],
+    },
   },
 } as const
