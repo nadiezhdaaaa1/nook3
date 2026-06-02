@@ -26,7 +26,7 @@ const steps = [
     icon: Send,
     title: "You hear about it first",
     body: "Email and text the second a listing matches your filters. No noise, no delay.",
-    bullets: ["Email + SMS", "Delivered in seconds", "One-tap to view"],
+    bullets: ["Email alerts", "Delivered in seconds", "One-tap to view"],
     tag: "Average lead: 18 minutes",
   },
 ];
