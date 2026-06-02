@@ -74,9 +74,24 @@ export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes", 
       )}
     >
       <div className="flex items-center gap-3 pl-5 pr-2 h-14 rounded-pill bg-charcoal-950 text-paper shadow-lg border border-charcoal-800">
-        <span className="inline-flex items-center gap-2 text-sm font-semibold">
-          <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-          {label}
+        <span className="inline-flex flex-col leading-tight">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold">
+            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+            {label}
+          </span>
+          {getChanges && dirty && (() => {
+            try {
+              const changes = getChanges(JSON.parse(baseline) as T, state);
+              if (changes.length === 0) return null;
+              return (
+                <span className="text-[11px] text-sage-200/90 mt-0.5 max-w-[260px] truncate">
+                  {changes.join(", ")}
+                </span>
+              );
+            } catch {
+              return null;
+            }
+          })()}
         </span>
         <button
           type="button"
