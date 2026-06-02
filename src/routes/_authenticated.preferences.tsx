@@ -98,16 +98,54 @@ function PreferencesShell() {
         <PageHeader sectionLabel={sectionLabel} />
 
         <div className="grid lg:grid-cols-[240px_1fr] gap-8 lg:gap-12 mt-12">
-          <aside className="lg:sticky lg:top-24 lg:self-start">
+          <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
             <SidebarNav pathname={pathname} />
           </aside>
 
           <main>
+            <MobileNavBar pathname={pathname} sectionLabel={sectionLabel} />
             <PausedSearchBanner />
             {isHydrating ? <HydrationSkeleton /> : <Outlet />}
           </main>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ---------- Mobile drawer ---------- */
+
+function MobileNavBar({ pathname, sectionLabel }: { pathname: string; sectionLabel: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="lg:hidden mb-6 -mt-4">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <button
+            type="button"
+            className="w-full inline-flex items-center justify-between gap-3 h-12 px-4 rounded-card border border-charcoal-200 bg-paper-warm text-left hover:border-charcoal-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30 transition-colors"
+            aria-label="Open navigation menu"
+          >
+            <span className="inline-flex items-center gap-2.5">
+              <Menu className="h-4 w-4 text-sage-700" aria-hidden />
+              <span className="text-sm font-semibold text-charcoal-900">{sectionLabel}</span>
+            </span>
+            <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-charcoal-500">
+              Menu
+            </span>
+          </button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-[320px] p-0 bg-paper">
+          <SheetHeader className="px-6 pt-6 pb-2 text-left">
+            <SheetTitle className="font-display text-lg font-semibold text-charcoal-950">
+              Preferences
+            </SheetTitle>
+          </SheetHeader>
+          <div className="px-4 pb-8 pt-2" onClick={() => setOpen(false)}>
+            <SidebarNav pathname={pathname} />
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
