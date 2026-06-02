@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Gift, Users, Calendar, Copy, Check, Mail, MessageSquare,
+  Gift, Users, Calendar, Copy, Check, Mail,
   Share2, Sparkles, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -117,11 +117,6 @@ function ReferralsPage() {
               icon={Mail}
               label="Email"
               href={`mailto:?subject=${encodeURIComponent("Found us an apartment hack")}&body=${encodeURIComponent(blurb)}`}
-            />
-            <ShareButton
-              icon={MessageSquare}
-              label="SMS"
-              href={`sms:?body=${encodeURIComponent(blurb)}`}
             />
             <ShareButton
               icon={copied === "blurb" ? Check : Copy}
@@ -373,7 +368,7 @@ function FaqRow({ q, a }: { q: string; a: string }) {
 /* ---------- Data ---------- */
 
 const HOW_STEPS = [
-  { title: "Share your link", body: "Copy and send it — email, SMS, anywhere. Each link is uniquely yours." },
+  { title: "Share your link", body: "Copy and send it — email, message, anywhere. Each link is uniquely yours." },
   { title: "Friend signs up", body: "They create a Nook account through your link and start their trial." },
   { title: "Both get rewarded", body: "7 days of Premium free, instantly. Hit 5 signups for a full month." },
 ];

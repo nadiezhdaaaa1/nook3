@@ -15,16 +15,9 @@ interface Row {
 const rows: Row[] = [
   {
     feature: "Real-time alerts",
-    detail: "Median 47s from posting to your phone",
+    detail: "Median 47s from posting to your inbox",
     nook: "yes",
     streetEasy: "partial",
-    zillow: "no",
-    apartmentsCom: "no",
-  },
-  {
-    feature: "SMS notifications",
-    nook: "yes",
-    streetEasy: "no",
     zillow: "no",
     apartmentsCom: "no",
   },

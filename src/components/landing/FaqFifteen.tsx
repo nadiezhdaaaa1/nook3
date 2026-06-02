@@ -41,7 +41,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What's the difference between Premium and Max?",
-    a: "Premium ($14.99/month) is built for someone searching in one general area — you get 3 parallel saved searches, real-time alerts, SMS, and Wren AI. Max ($29/month) is built for relocators or aggressive hunters — unlimited saved searches, unlimited SMS, roommate mode (share with 2 others), cross-search Wren comparison, and priority support. If you're moving cities or hunting across many neighborhoods at once, Max usually pays for itself in saved time.",
+    a: "Premium ($14.99/month) is built for someone searching in one general area — you get 3 parallel saved searches, real-time email alerts, and Wren AI. Max ($29/month) is built for relocators or aggressive hunters — unlimited saved searches, roommate mode (share with 2 others), cross-search Wren comparison, and priority support. If you're moving cities or hunting across many neighborhoods at once, Max usually pays for itself in saved time.",
   },
   {
     q: "Do you sell my data to landlords or brokers?",

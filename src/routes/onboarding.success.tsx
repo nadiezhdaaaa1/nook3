@@ -6,7 +6,7 @@ import {
   Home,
   Copy,
   Mail,
-  MessageCircle,
+  
   Share2,
   ArrowRight,
 } from "lucide-react";
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/onboarding/success")({
 
 function Success() {
   const navigate = useNavigate();
-  const { email, phone, alertChannel, selectedPlan, trialActive, moveOut, set } =
+  const { email, selectedPlan, trialActive, moveOut, set } =
     useOnboardingStore();
   const [moveOutOpen, setMoveOutOpen] = useState(false);
   const [referral, setReferral] = useState("");
@@ -53,7 +53,7 @@ function Success() {
   };
 
   const shareText = "I'm using Nook to track NYC rentals in real time — get an extra free week of Premium with my link:";
-  const smsHref = `sms:?&body=${encodeURIComponent(`${shareText} ${fullLink}`)}`;
+  
   const emailHref = `mailto:?subject=${encodeURIComponent("Try Nook with me")}&body=${encodeURIComponent(`${shareText}\n\n${fullLink}`)}`;
   const nativeShare = async () => {
     if (typeof navigator !== "undefined" && (navigator as any).share) {
@@ -86,11 +86,8 @@ function Success() {
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
             Alerts going to
           </div>
-          {email && (alertChannel === "email" || alertChannel === "both") && (
+          {email && (
             <div className="font-medium text-charcoal-950">📧 {email}</div>
-          )}
-          {phone && (alertChannel === "text" || alertChannel === "both") && (
-            <div className="font-medium text-charcoal-950">📱 {phone}</div>
           )}
           {selectedPlan && selectedPlan !== "free" && (
             <div className="text-xs text-sage-700 font-semibold pt-1">
@@ -175,12 +172,6 @@ function Success() {
 
             {/* Share buttons */}
             <div className="px-6 py-4 mt-2 flex flex-wrap gap-2">
-              <a
-                href={smsHref}
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-pill bg-paper border border-border text-xs font-semibold text-charcoal-800 hover:border-charcoal-950"
-              >
-                <MessageCircle className="h-3.5 w-3.5" /> Text
-              </a>
               <a
                 href={emailHref}
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-pill bg-paper border border-border text-xs font-semibold text-charcoal-800 hover:border-charcoal-950"

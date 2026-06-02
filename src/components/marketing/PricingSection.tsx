@@ -26,7 +26,7 @@ const plans = [
     blurb: "Real-time alerts and city records.",
     features: [
       "Unlimited saved searches",
-      "Instant email + SMS alerts",
+      "Instant email alerts",
       "Rent-stabilized verification",
       "Building violation history",
       "Price drop alerts",

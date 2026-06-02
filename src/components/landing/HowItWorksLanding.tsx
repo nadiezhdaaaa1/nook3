@@ -38,10 +38,10 @@ const steps = [
     n: "03",
     icon: BellRing,
     title: "You hear about it first — in seconds",
-    body: "Email and SMS the instant a listing matches your filters. One tap to view, message, or save. No daily digest. No noise.",
+    body: "Email the instant a listing matches your filters. One tap to view, message, or save. No daily digest. No noise.",
     bullets: [
       "Median delivery: 47 seconds",
-      "Email + SMS · one-tap actions",
+      "Email · one-tap actions",
       "Quiet hours + filter tuning anytime",
     ],
     quote: {

@@ -44,7 +44,6 @@ const TIERS: Tier[] = [
       { text: "Up to 2 emails per day", included: true },
       { text: "Verified regulated unit badges", included: true },
       { text: "Browse Nook web app", included: true },
-      { text: "SMS alerts", included: false },
       { text: "Real-time alerts", included: false },
       { text: "Wren AI assistant", included: false },
       { text: "Search pause/resume", included: false },
@@ -68,7 +67,6 @@ const TIERS: Tier[] = [
       { text: "3 saved searches (run parallel)", included: true },
       { text: "Real-time email alerts (within minutes)", included: true },
       { text: "Unlimited email frequency", included: true },
-      { text: "SMS alerts — 1 per day", included: true },
       { text: "Verified regulated unit badges", included: true },
       { text: "Wren AI assistant — chat about any listing", included: true },
       { text: "Pause/resume searches anytime", included: true },
@@ -91,7 +89,6 @@ const TIERS: Tier[] = [
     features: [
       { text: "Unlimited saved searches", included: true },
       { text: "Real-time email alerts", included: true },
-      { text: "Unlimited SMS alerts", included: true },
       { text: "Verified regulated unit badges", included: true },
       { text: "Wren AI assistant", included: true },
       { text: "Cross-search Wren comparison", included: true },

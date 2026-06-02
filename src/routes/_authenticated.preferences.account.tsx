@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2, Mail, Phone, Globe } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2, Mail, Globe } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -47,7 +47,7 @@ const PLANS: PlanDef[] = [
     monthly: 14.99,
     annual: 119,
     icon: Zap,
-    features: ["3 saved searches", "Real-time alerts", "Email + SMS", "All filters", "Wren AI Chat"],
+    features: ["3 saved searches", "Real-time alerts", "Email alerts", "All filters", "Wren AI Chat"],
   },
   {
     id: "max",
@@ -66,12 +66,6 @@ const TIMEZONES = [
   "America/Phoenix", "America/Anchorage", "Pacific/Honolulu", "UTC",
 ];
 
-function formatPhone(raw: string): string {
-  const d = raw.replace(/\D/g, "").slice(0, 10);
-  if (d.length < 4) return d;
-  if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
-  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
-}
 
 function AccountPage() {
   const onboarding = useOnboardingStore();
@@ -85,7 +79,7 @@ function AccountPage() {
 
   // Profile editable fields (sourced from onboarding store + user)
   const [email, setEmail] = useState(user?.email || onboarding.email);
-  const [phone, setPhone] = useState(user?.phone || onboarding.phone);
+  
   const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
 
   const prefs = usePreferencesStore();
@@ -165,17 +159,6 @@ function AccountPage() {
             />
           </Field>
 
-          <Field id="acct-phone" label="Phone" icon={Phone}>
-            <input
-              id="acct-phone"
-              type="tel"
-              autoComplete="tel"
-              value={phone}
-              onChange={(e) => setPhone(formatPhone(e.target.value))}
-              placeholder="(555) 123-4567"
-              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
-            />
-          </Field>
 
           <Field id="acct-tz" label="Timezone" icon={Globe}>
             <select
@@ -255,10 +238,9 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ email, phone, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{ email, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
           setEmail(snap.email);
-          setPhone(snap.phone);
           setTimezone(snap.timezone);
           setCycle(snap.cycle);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
@@ -266,21 +248,20 @@ function AccountPage() {
         }}
       />
 
-      {/* Apply on save via effect inside StickySaveBar would be cleaner; for now commit on change too: */}
-      <SyncProfile email={email} phone={phone} timezone={timezone} cycle={cycle} update={updateProfile} />
+      <SyncProfile email={email} timezone={timezone} cycle={cycle} update={updateProfile} />
     </div>
   );
 }
 
 function SyncProfile({
-  email, phone, timezone, cycle, update,
+  email, timezone, cycle, update,
 }: {
-  email: string; phone: string; timezone: string; cycle: BillingCycle;
+  email: string; timezone: string; cycle: BillingCycle;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
   useEffect(() => {
-    update({ email, phone, timezone, billingCycle: cycle });
-  }, [email, phone, timezone, cycle, update]);
+    update({ email, timezone, billingCycle: cycle });
+  }, [email, timezone, cycle, update]);
   return null;
 }
 
