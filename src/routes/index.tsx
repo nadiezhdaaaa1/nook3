@@ -4,7 +4,7 @@ import { HeroDemo } from "@/components/landing/HeroDemo";
 import { UrgencyStrip } from "@/components/landing/UrgencyStrip";
 import { WhyStillLooking } from "@/components/landing/WhyStillLooking";
 import { HowItWorksLanding } from "@/components/landing/HowItWorksLanding";
-import { ComparisonTable } from "@/components/landing/ComparisonTable";
+
 import { TimeLossCalculator } from "@/components/landing/TimeLossCalculator";
 import { PricingLanding } from "@/components/landing/PricingLanding";
 import { WrenAIBlock } from "@/components/landing/WrenAIBlock";
@@ -44,7 +44,7 @@ function LandingPage() {
       <UrgencyStrip />
       <WhyStillLooking />
       <HowItWorksLanding />
-      <ComparisonTable />
+      
       <TimeLossCalculator />
       <WrenAIBlock />
       <SourcesSection />
