@@ -406,26 +406,19 @@ function DeleteSearchButton() {
 
 function SidebarNav({ pathname }: { pathname: string }) {
   return (
-    <nav className="flex lg:flex-col gap-1 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 lg:overflow-visible">
-      <div className="lg:hidden flex gap-1">
-        {NAV_GROUPS.flatMap((g) => g.items).map((item) => (
-          <NavLinkItem key={item.label} item={item} pathname={pathname} mobile />
-        ))}
-      </div>
-      <div className="hidden lg:block">
-        {NAV_GROUPS.map((group) => (
-          <div key={group.label} className="first:mt-0 mt-6 first:[&>.label]:mt-0">
-            <div className="label mt-0 mb-2 px-3 text-[11px] font-mono uppercase tracking-[0.12em] text-sage-700">
-              {group.label}
-            </div>
-            <div className="flex flex-col gap-1">
-              {group.items.map((item) => (
-                <NavLinkItem key={item.label} item={item} pathname={pathname} />
-              ))}
-            </div>
+    <nav aria-label="Preferences sections" className="flex flex-col gap-1">
+      {NAV_GROUPS.map((group) => (
+        <div key={group.label} className="first:mt-0 mt-6">
+          <div className="mb-2 px-3 text-[11px] font-mono uppercase tracking-[0.12em] text-sage-700">
+            {group.label}
           </div>
-        ))}
-      </div>
+          <div className="flex flex-col gap-1">
+            {group.items.map((item) => (
+              <NavLinkItem key={item.label} item={item} pathname={pathname} />
+            ))}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }
@@ -433,11 +426,9 @@ function SidebarNav({ pathname }: { pathname: string }) {
 function NavLinkItem({
   item,
   pathname,
-  mobile,
 }: {
   item: NavItem;
   pathname: string;
-  mobile?: boolean;
 }) {
   const Icon = item.icon;
   const active =
@@ -445,21 +436,12 @@ function NavLinkItem({
     (item.exact ? pathname === item.to : pathname.startsWith(item.to));
 
   const classes = cn(
-    "inline-flex items-center gap-3 text-sm font-medium transition-colors whitespace-nowrap",
-    mobile
-      ? "shrink-0 h-10 px-3.5 rounded-pill border"
-      : "h-11 px-3 rounded-lg w-full",
+    "inline-flex items-center gap-3 text-sm font-medium transition-colors whitespace-nowrap h-11 px-3 rounded-lg w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30",
     active
-      ? mobile
-        ? "bg-charcoal-950 text-paper border-charcoal-950"
-        : "bg-charcoal-950 text-paper"
+      ? "bg-charcoal-950 text-paper"
       : item.locked
-        ? mobile
-          ? "text-charcoal-400 border-charcoal-200"
-          : "text-charcoal-400 cursor-not-allowed"
-        : mobile
-          ? "text-charcoal-700 border-charcoal-200 hover:border-charcoal-950"
-          : "text-charcoal-700 hover:bg-paper-warm",
+        ? "text-charcoal-400 cursor-not-allowed"
+        : "text-charcoal-700 hover:bg-paper-warm",
   );
 
   if (item.locked || !item.to) {
@@ -471,16 +453,16 @@ function NavLinkItem({
         title={item.lockedReason ?? "Upgrade required"}
         className={classes}
       >
-        <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} />
+        <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} aria-hidden />
         <span className="flex-1 text-left">{item.label}</span>
-        <Lock className="h-3.5 w-3.5 text-charcoal-400" />
+        <Lock className="h-3.5 w-3.5 text-charcoal-400" aria-label="Locked" />
       </button>
     );
   }
 
   return (
-    <Link to={item.to} className={classes}>
-      <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} />
+    <Link to={item.to} className={classes} aria-current={active ? "page" : undefined}>
+      <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} aria-hidden />
       <span className="flex-1 text-left">{item.label}</span>
     </Link>
   );
