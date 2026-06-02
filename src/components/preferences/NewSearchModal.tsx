@@ -42,7 +42,14 @@ export function NewSearchModal({ onClose }: { onClose: () => void }) {
           return;
         }
       } else {
-        const trimmed = name.trim() || `Search ${Date.now().toString().slice(-4)}`;
+        const fallback = `Search ${Date.now().toString().slice(-4)}`;
+        const candidate = name.trim() || fallback;
+        const parsed = searchNameSchema.safeParse(candidate);
+        if (!parsed.success) {
+          setError(parsed.error.issues[0]?.message ?? "Invalid name");
+          return;
+        }
+        const trimmed = parsed.data;
         await createMut.mutateAsync({
           name: trimmed,
           cityId,
