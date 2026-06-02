@@ -11,8 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
  * that's when the session is actually available.
  */
 export const Route = createFileRoute("/_authenticated")({
+  ssr: false,
   beforeLoad: async ({ location }) => {
-    if (typeof window === "undefined") return;
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Check,
   ChevronDown,
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import {
   useAppStore,
   selectActiveSearch,
-  selectQuota,
+  SEARCH_LIMITS,
   switchActiveSearch,
   hydrateActiveSearchIntoOnboarding,
   syncOnboardingToActiveSearch,
@@ -35,8 +35,19 @@ import { UpgradeModal } from "./UpgradeModal";
 export function SearchSwitcher() {
   const active = useAppStore(selectActiveSearch);
   const searches = useAppStore((s) => s.searches);
-  const quota = useAppStore(selectQuota);
   const user = useAppStore((s) => s.user);
+  const quota = useMemo(() => {
+    const plan = user?.plan ?? "free";
+    const max = SEARCH_LIMITS[plan];
+    const used = searches.filter((x) => x.status !== "archived").length;
+    const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
+    return {
+      used,
+      max,
+      remaining: max === Number.POSITIVE_INFINITY ? Number.POSITIVE_INFINITY : Math.max(0, max - used),
+      label: `${used} of ${maxLabel} used`,
+    };
+  }, [searches, user?.plan]);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
