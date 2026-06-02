@@ -44,7 +44,7 @@ const TIERS: Tier[] = [
       { text: "Up to 2 emails per day", included: true },
       { text: "Verified regulated unit badges", included: true },
       { text: "Browse Nook web app", included: true },
-      { text: "SMS alerts", included: false },
+      { text: "Real-time alerts", included: false },
       { text: "Real-time alerts", included: false },
       { text: "Wren AI assistant", included: false },
       { text: "Search pause/resume", included: false },
