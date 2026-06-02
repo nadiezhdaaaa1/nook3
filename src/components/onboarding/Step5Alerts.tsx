@@ -1,25 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Mail, MessageSquare, Bell, Clock, ShieldCheck } from "lucide-react";
+import { Mail, Clock, ShieldCheck } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
-import { useOnboardingStore, type AlertChannel } from "@/lib/onboarding/store";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
-import { emailSchema, phoneSchema } from "@/lib/validation/schemas";
-
-const CHANNELS: { id: AlertChannel; label: string; desc: string; icon: typeof Mail }[] = [
-  { id: "email", label: "Email only",   desc: "Daily digest in your inbox.",     icon: Mail },
-  { id: "text",  label: "Text only",    desc: "Instant SMS for hot listings.",   icon: MessageSquare },
-  { id: "both",  label: "Email + Text", desc: "Digest + instant pings.",         icon: Bell },
-];
-
-function formatPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, "").slice(0, 10);
-  if (digits.length < 4) return digits;
-  if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-}
+import { emailSchema } from "@/lib/validation/schemas";
 
 function velocityCopy(hours: number | undefined): string {
   if (!hours) return "Expect your first match within a few days.";
@@ -31,120 +18,54 @@ function velocityCopy(hours: number | undefined): string {
 
 export function Step5Alerts() {
   const navigate = useNavigate();
-  const { alertChannel, email, phone, city, set } = useOnboardingStore();
+  const { email, city, set } = useOnboardingStore();
   const cityConfig = city ? getCity(city) : null;
 
   const [emailTouched, setEmailTouched] = useState(false);
-  const [phoneTouched, setPhoneTouched] = useState(false);
 
-  const needsEmail = alertChannel === "email" || alertChannel === "both";
-  const needsPhone = alertChannel === "text" || alertChannel === "both";
+  const emailResult = emailSchema.safeParse(email);
+  const emailError = !emailResult.success ? emailResult.error.issues[0].message : null;
 
-  const emailResult = needsEmail ? emailSchema.safeParse(email) : null;
-  const phoneResult = needsPhone ? phoneSchema.safeParse(phone) : null;
-  const emailError = emailResult && !emailResult.success ? emailResult.error.issues[0].message : null;
-  const phoneError = phoneResult && !phoneResult.success ? phoneResult.error.issues[0].message : null;
-
-  const canContinue = (!needsEmail || !emailError) && (!needsPhone || !phoneError);
+  const canContinue = !emailError;
 
   return (
     <div className="space-y-12">
       <header>
         <Eyebrow>Step 5 · Alert setup</Eyebrow>
         <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
-          How should we <span className="accent-italic">reach you</span>?
+          Where should we <span className="accent-italic">email you</span>?
         </h1>
         <p className="mt-4 text-base text-charcoal-600">
           We'll only ping when a listing matches your filters.
         </p>
       </header>
 
-      <section className="grid sm:grid-cols-3 gap-3" role="radiogroup" aria-label="Alert channel">
-        {CHANNELS.map((c) => {
-          const selected = alertChannel === c.id;
-          const Icon = c.icon;
-          return (
-            <button
-              key={c.id}
-              type="button"
-              role="radio"
-              aria-checked={selected}
-              onClick={() => set("alertChannel", c.id)}
-              className={cn(
-                "p-5 rounded-card border-2 text-left transition-colors flex flex-col gap-2",
-                selected
-                  ? "border-charcoal-950 bg-surface-elevated"
-                  : "border-border bg-transparent hover:border-charcoal-400",
-              )}
-            >
-              <Icon className={cn("h-5 w-5", selected ? "text-sage-700" : "text-charcoal-400")} />
-              <div className="text-sm font-semibold text-charcoal-950">{c.label}</div>
-              <div className="text-xs text-charcoal-600">{c.desc}</div>
-            </button>
-          );
-        })}
+      <section className="space-y-2">
+        <label htmlFor="alert-email" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 inline-flex items-center gap-1.5">
+          <Mail className="h-3 w-3" /> Email address
+        </label>
+        <input
+          id="alert-email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => set("email", e.target.value)}
+          onBlur={() => setEmailTouched(true)}
+          placeholder="you@example.com"
+          aria-invalid={!!(emailTouched && emailError)}
+          aria-describedby={emailTouched && emailError ? "alert-email-error" : undefined}
+          className={cn(
+            "w-full h-12 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
+            emailTouched && emailError
+              ? "border-danger focus:border-danger"
+              : "border-border focus:border-charcoal-950",
+          )}
+        />
+        {emailTouched && emailError && (
+          <p id="alert-email-error" className="text-xs text-danger">{emailError}</p>
+        )}
       </section>
-
-      {needsEmail && (
-        <section className="space-y-2">
-          <label htmlFor="alert-email" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-            Email address
-          </label>
-          <input
-            id="alert-email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => set("email", e.target.value)}
-            onBlur={() => setEmailTouched(true)}
-            placeholder="you@example.com"
-            aria-invalid={!!(emailTouched && emailError)}
-            aria-describedby={emailTouched && emailError ? "alert-email-error" : undefined}
-            className={cn(
-              "w-full h-12 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
-              emailTouched && emailError
-                ? "border-danger focus:border-danger"
-                : "border-border focus:border-charcoal-950",
-            )}
-          />
-          {emailTouched && emailError && (
-            <p id="alert-email-error" className="text-xs text-danger">{emailError}</p>
-          )}
-        </section>
-      )}
-
-      {needsPhone && (
-        <section className="space-y-2">
-          <label htmlFor="alert-phone" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-            Phone number
-          </label>
-          <input
-            id="alert-phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            value={phone}
-            onChange={(e) => set("phone", formatPhone(e.target.value))}
-            onBlur={() => setPhoneTouched(true)}
-            placeholder="(555) 123-4567"
-            aria-invalid={!!(phoneTouched && phoneError)}
-            aria-describedby={phoneTouched && phoneError ? "alert-phone-error" : undefined}
-            className={cn(
-              "w-full h-12 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
-              phoneTouched && phoneError
-                ? "border-danger focus:border-danger"
-                : "border-border focus:border-charcoal-950",
-            )}
-          />
-          {phoneTouched && phoneError && (
-            <p id="alert-phone-error" className="text-xs text-danger">{phoneError}</p>
-          )}
-          <p className="text-xs text-charcoal-500">
-            Standard SMS rates may apply. Reply STOP to unsubscribe.
-          </p>
-        </section>
-      )}
 
       {cityConfig && (
         <section className="grid sm:grid-cols-2 gap-3">
@@ -177,7 +98,6 @@ export function Step5Alerts() {
         onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "4" } })}
         onNext={() => {
           setEmailTouched(true);
-          setPhoneTouched(true);
           if (canContinue) navigate({ to: "/onboarding/loading" });
         }}
       />
