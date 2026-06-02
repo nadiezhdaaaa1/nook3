@@ -514,7 +514,6 @@ function NotificationsTab() {
             setEmailOverrideOn(!!snap.override.emailOverride);
             setPhoneOverrideOn(!!snap.override.phoneOverride);
           }
-          toast("Changes discarded");
         }}
       />
     </div>
