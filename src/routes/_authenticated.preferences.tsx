@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Bell, DollarSign, Home as HomeIcon, MapPin, Inbox, Gift, UserCircle,
-  LogOut, Sparkles, Lock, Pause, Play, Trash2,
+  LogOut, Sparkles, Lock, Pause, Play, Trash2, Menu,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_authenticated/preferences")({
   head: () => ({
@@ -97,16 +98,54 @@ function PreferencesShell() {
         <PageHeader sectionLabel={sectionLabel} />
 
         <div className="grid lg:grid-cols-[240px_1fr] gap-8 lg:gap-12 mt-12">
-          <aside className="lg:sticky lg:top-24 lg:self-start">
+          <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
             <SidebarNav pathname={pathname} />
           </aside>
 
           <main>
+            <MobileNavBar pathname={pathname} sectionLabel={sectionLabel} />
             <PausedSearchBanner />
             {isHydrating ? <HydrationSkeleton /> : <Outlet />}
           </main>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ---------- Mobile drawer ---------- */
+
+function MobileNavBar({ pathname, sectionLabel }: { pathname: string; sectionLabel: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="lg:hidden mb-6 -mt-4">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <button
+            type="button"
+            className="w-full inline-flex items-center justify-between gap-3 h-12 px-4 rounded-card border border-charcoal-200 bg-paper-warm text-left hover:border-charcoal-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30 transition-colors"
+            aria-label="Open navigation menu"
+          >
+            <span className="inline-flex items-center gap-2.5">
+              <Menu className="h-4 w-4 text-sage-700" aria-hidden />
+              <span className="text-sm font-semibold text-charcoal-900">{sectionLabel}</span>
+            </span>
+            <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-charcoal-500">
+              Menu
+            </span>
+          </button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-[320px] p-0 bg-paper">
+          <SheetHeader className="px-6 pt-6 pb-2 text-left">
+            <SheetTitle className="font-display text-lg font-semibold text-charcoal-950">
+              Preferences
+            </SheetTitle>
+          </SheetHeader>
+          <div className="px-4 pb-8 pt-2" onClick={() => setOpen(false)}>
+            <SidebarNav pathname={pathname} />
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
@@ -367,26 +406,19 @@ function DeleteSearchButton() {
 
 function SidebarNav({ pathname }: { pathname: string }) {
   return (
-    <nav className="flex lg:flex-col gap-1 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 lg:overflow-visible">
-      <div className="lg:hidden flex gap-1">
-        {NAV_GROUPS.flatMap((g) => g.items).map((item) => (
-          <NavLinkItem key={item.label} item={item} pathname={pathname} mobile />
-        ))}
-      </div>
-      <div className="hidden lg:block">
-        {NAV_GROUPS.map((group) => (
-          <div key={group.label} className="first:mt-0 mt-6 first:[&>.label]:mt-0">
-            <div className="label mt-0 mb-2 px-3 text-[11px] font-mono uppercase tracking-[0.12em] text-sage-700">
-              {group.label}
-            </div>
-            <div className="flex flex-col gap-1">
-              {group.items.map((item) => (
-                <NavLinkItem key={item.label} item={item} pathname={pathname} />
-              ))}
-            </div>
+    <nav aria-label="Preferences sections" className="flex flex-col gap-1">
+      {NAV_GROUPS.map((group) => (
+        <div key={group.label} className="first:mt-0 mt-6">
+          <div className="mb-2 px-3 text-[11px] font-mono uppercase tracking-[0.12em] text-sage-700">
+            {group.label}
           </div>
-        ))}
-      </div>
+          <div className="flex flex-col gap-1">
+            {group.items.map((item) => (
+              <NavLinkItem key={item.label} item={item} pathname={pathname} />
+            ))}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }
@@ -394,11 +426,9 @@ function SidebarNav({ pathname }: { pathname: string }) {
 function NavLinkItem({
   item,
   pathname,
-  mobile,
 }: {
   item: NavItem;
   pathname: string;
-  mobile?: boolean;
 }) {
   const Icon = item.icon;
   const active =
@@ -406,21 +436,12 @@ function NavLinkItem({
     (item.exact ? pathname === item.to : pathname.startsWith(item.to));
 
   const classes = cn(
-    "inline-flex items-center gap-3 text-sm font-medium transition-colors whitespace-nowrap",
-    mobile
-      ? "shrink-0 h-10 px-3.5 rounded-pill border"
-      : "h-11 px-3 rounded-lg w-full",
+    "inline-flex items-center gap-3 text-sm font-medium transition-colors whitespace-nowrap h-11 px-3 rounded-lg w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30",
     active
-      ? mobile
-        ? "bg-charcoal-950 text-paper border-charcoal-950"
-        : "bg-charcoal-950 text-paper"
+      ? "bg-charcoal-950 text-paper"
       : item.locked
-        ? mobile
-          ? "text-charcoal-400 border-charcoal-200"
-          : "text-charcoal-400 cursor-not-allowed"
-        : mobile
-          ? "text-charcoal-700 border-charcoal-200 hover:border-charcoal-950"
-          : "text-charcoal-700 hover:bg-paper-warm",
+        ? "text-charcoal-400 cursor-not-allowed"
+        : "text-charcoal-700 hover:bg-paper-warm",
   );
 
   if (item.locked || !item.to) {
@@ -432,16 +453,16 @@ function NavLinkItem({
         title={item.lockedReason ?? "Upgrade required"}
         className={classes}
       >
-        <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} />
+        <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} aria-hidden />
         <span className="flex-1 text-left">{item.label}</span>
-        <Lock className="h-3.5 w-3.5 text-charcoal-400" />
+        <Lock className="h-3.5 w-3.5 text-charcoal-400" aria-label="Locked" />
       </button>
     );
   }
 
   return (
-    <Link to={item.to} className={classes}>
-      <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} />
+    <Link to={item.to} className={classes} aria-current={active ? "page" : undefined}>
+      <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} aria-hidden />
       <span className="flex-1 text-left">{item.label}</span>
     </Link>
   );
