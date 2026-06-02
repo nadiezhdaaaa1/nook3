@@ -140,7 +140,12 @@ function RootComponent() {
     void import("@/integrations/supabase/client").then(({ supabase }) => {
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange(() => {
+      } = supabase.auth.onAuthStateChange((event) => {
+        if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
+          void import("@/lib/consents").then(({ flushPendingConsents }) =>
+            flushPendingConsents(),
+          );
+        }
         if (isFirst) {
           isFirst = false;
           return;
