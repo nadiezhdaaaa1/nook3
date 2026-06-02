@@ -29,37 +29,41 @@ export function Step1Where() {
   return (
     <div className="space-y-12">
       <header>
-        <Eyebrow>Step 1 · Where & when</Eyebrow>
+        <Eyebrow>Step 1 · Budget & timing</Eyebrow>
         <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
-          Where are you looking <span className="accent-italic">to live</span>?
+          {cityConfig ? (
+            <>
+              Let's narrow down{" "}
+              <span className="accent-italic">{cityConfig.displayName}</span>
+            </>
+          ) : (
+            <>Let's set your budget</>
+          )}
         </h1>
         <p className="mt-4 text-base text-charcoal-600">
-          Pick your city and tell us your budget.
+          Tell us your rent range and when you need to move.
         </p>
       </header>
 
-      <section className="space-y-4">
-        <h2 className="font-display text-lg font-semibold text-charcoal-950">
-          1. Your city
-        </h2>
-        <CityPicker
-          value={city}
-          onChange={(id) => {
-            const c = getCity(id);
-            const d = c?.budget.default ?? null;
-            patch({
-              city: id,
-              budget: c && d !== null ? [Math.max(c.budget.min, Math.round(d * 0.5)), d] : null,
-              includeBrokerFee: c?.brokerFeeDefault ?? false,
-            });
-          }}
-        />
-      </section>
+      {cityConfig && (
+        <section className="flex items-center justify-between gap-4 px-5 h-14 rounded-card bg-paper-warm border border-charcoal-950/8">
+          <div className="text-sm">
+            <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500 mr-2">City</span>
+            <span className="font-semibold text-charcoal-950">{cityConfig.displayName}</span>
+          </div>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-sage-800 hover:text-sage-900"
+          >
+            <Pencil className="h-3 w-3" /> Change
+          </Link>
+        </section>
+      )}
 
       {cityConfig && budget !== null && (
         <section className="space-y-4">
           <h2 className="font-display text-lg font-semibold text-charcoal-950">
-            2. Monthly rent range
+            1. Monthly rent range
           </h2>
           <RentSlider
             city={cityConfig}
@@ -72,7 +76,7 @@ export function Step1Where() {
       {cityConfig && (
         <section className="space-y-4">
           <h2 className="font-display text-lg font-semibold text-charcoal-950">
-            3. Move-in date
+            2. Move-in date
           </h2>
           <MoveInPicker
             mode={moveIn.mode}
