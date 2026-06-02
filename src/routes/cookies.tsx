@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
+import { openCookiePreferences } from "@/lib/cookieConsent";
 
 export const Route = createFileRoute("/cookies")({
   head: () => ({
@@ -27,9 +28,16 @@ function CookiesPage() {
         <li><strong>Targeting &amp; advertising</strong> — used for personalized ads.</li>
       </ul>
       <h2>Manage your preferences</h2>
+      <p>You can change your choices at any time.</p>
       <p>
-        You can change your choices at any time using the{" "}
-        <strong>Manage cookie preferences</strong> button below (coming soon).
+        <button
+          type="button"
+          onClick={openCookiePreferences}
+          className="inline-flex items-center h-10 px-5 rounded-full text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "var(--color-brand-charcoal, #2B2521)" }}
+        >
+          Manage cookie preferences
+        </button>
       </p>
       <h2>Contact</h2>
       <p>privacy@thenook.rent</p>
