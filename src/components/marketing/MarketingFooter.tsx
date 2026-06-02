@@ -95,9 +95,21 @@ export function MarketingFooter() {
             <FooterAnchor href="mailto:hello@thenook.rent">Contact</FooterAnchor>
           </FooterCol>
           <FooterCol title="Legal">
-            <FooterAnchor href="#">Terms of Service</FooterAnchor>
-            <FooterAnchor href="#">Privacy Policy</FooterAnchor>
-            <FooterAnchor href="#">Cookie Policy</FooterAnchor>
+            <FooterLink to="/terms">Terms of Service</FooterLink>
+            <FooterLink to="/privacy">Privacy Policy</FooterLink>
+            <FooterLink to="/cookies">Cookie Policy</FooterLink>
+            <FooterLink to="/acceptable-use">Acceptable Use</FooterLink>
+            <FooterLink to="/fair-housing">Fair Housing</FooterLink>
+            <FooterLink to="/accessibility">Accessibility</FooterLink>
+            <li>
+              <Link
+                to="/do-not-sell"
+                className="inline-flex items-center gap-1 text-sm opacity-70 hover:opacity-100 transition-opacity"
+              >
+                Do Not Sell or Share <span aria-hidden>→</span>
+              </Link>
+            </li>
+            <FooterLink to="/dmca">DMCA</FooterLink>
           </FooterCol>
         </div>
 
