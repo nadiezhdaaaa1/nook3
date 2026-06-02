@@ -147,7 +147,7 @@ export const updateSearch = createServerFn({ method: "POST" })
 
     const { data: updated, error } = await context.supabase
       .from("searches")
-      .update(patch)
+      .update(patch as never)
       .eq("id", data.id)
       .eq("user_id", context.userId)
       .select("*")
