@@ -40,9 +40,6 @@ export function MarketingHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:block">
-            <CitySwitcher />
-          </div>
           <Link
             to="/login"
             className="hidden md:inline-flex h-10 items-center px-3 text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 transition-colors"
