@@ -15,16 +15,24 @@ export interface QuietHours {
 export interface PreferencesState {
   quietHours: QuietHours;
   perSearch: Record<string, PerSearchOverride>;
+  marketingEmails: boolean;
+  productUpdates: boolean;
 }
 
 interface PreferencesActions {
   setQuiet: <K extends keyof QuietHours>(key: K, val: QuietHours[K]) => void;
   setPerSearch: (searchId: string, patch: Partial<PerSearchOverride>) => void;
+  setPref: <K extends Exclude<keyof PreferencesState, "quietHours" | "perSearch">>(
+    key: K,
+    val: PreferencesState[K],
+  ) => void;
 }
 
 const initial: PreferencesState = {
   quietHours: { enabled: false, start: "22:00", end: "08:00" },
   perSearch: {},
+  marketingEmails: false,
+  productUpdates: true,
 };
 
 export const usePreferencesStore = create<PreferencesState & PreferencesActions>()(
