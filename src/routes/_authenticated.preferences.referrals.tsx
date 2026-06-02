@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Gift, Users, Calendar, Copy, Check, Mail, MessageSquare,
+  Gift, Users, Calendar, Copy, Check, Mail,
   Share2, Sparkles, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
