@@ -119,11 +119,6 @@ function ReferralsPage() {
               href={`mailto:?subject=${encodeURIComponent("Found us an apartment hack")}&body=${encodeURIComponent(blurb)}`}
             />
             <ShareButton
-              icon={MessageSquare}
-              label="SMS"
-              href={`sms:?body=${encodeURIComponent(blurb)}`}
-            />
-            <ShareButton
               icon={copied === "blurb" ? Check : Copy}
               label={copied === "blurb" ? "Copied message" : "Copy message"}
               onClick={() => copy(blurb, "blurb", "Message")}
