@@ -11,6 +11,7 @@ import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner"
 import { useActiveSearch } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { useDbSync } from "@/lib/queries/useDbSync";
+import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
 
 export const Route = createFileRoute("/preferences")({
   beforeLoad: async ({ location }) => {
@@ -40,7 +41,7 @@ const TABS = [
 
 function PreferencesShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  useDbSync();
+  const { isHydrating } = useDbSync();
 
   return (
     <div className="min-h-screen bg-paper">
@@ -99,7 +100,7 @@ function PreferencesShell() {
           <main>
             <PausedSearchBanner />
             <PlanLimitsBanner />
-            <Outlet />
+            {isHydrating ? <HydrationSkeleton /> : <Outlet />}
             <ReferralBlock />
           </main>
         </div>
