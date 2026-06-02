@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           billing_cycle: Database["public"]["Enums"]["billing_cycle"]
           completed_at: string | null
+          consents: Json
           created_at: string
           email: string
           email_verified: boolean
@@ -37,6 +38,7 @@ export type Database = {
         Insert: {
           billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
           completed_at?: string | null
+          consents?: Json
           created_at?: string
           email?: string
           email_verified?: boolean
@@ -56,6 +58,7 @@ export type Database = {
         Update: {
           billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
           completed_at?: string | null
+          consents?: Json
           created_at?: string
           email?: string
           email_verified?: boolean
