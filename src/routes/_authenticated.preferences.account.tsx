@@ -329,15 +329,10 @@ function SyncProfile({
   email: string; phone: string; timezone: string; cycle: BillingCycle;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
-  // Persist to app store on every change so refresh keeps values.
-  // The "Save" toast comes from StickySaveBar; this just mirrors local → store.
-  useMemoSync(() => update({ email, phone, timezone, billingCycle: cycle }), [email, phone, timezone, cycle]);
+  useEffect(() => {
+    update({ email, phone, timezone, billingCycle: cycle });
+  }, [email, phone, timezone, cycle, update]);
   return null;
-}
-
-// Tiny inline hook to avoid an extra import
-function useMemoSync(fn: () => void, deps: unknown[]) {
-  useMemo(fn, deps); // intentional: runs on dep changes
 }
 
 function StatCard({
