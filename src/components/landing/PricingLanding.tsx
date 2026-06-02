@@ -48,7 +48,7 @@ const PLANS = [
     annual: 239,
     tagline: "First to every listing.",
     features: [
-      "Unlimited email + SMS",
+      "Unlimited email alerts",
       "Upcoming-listings forecast",
       "Roommate mode (2 profiles)",
       "Direct landlord intros",
