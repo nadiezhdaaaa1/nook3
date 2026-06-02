@@ -89,7 +89,6 @@ const TIERS: Tier[] = [
     features: [
       { text: "Unlimited saved searches", included: true },
       { text: "Real-time email alerts", included: true },
-      { text: "Unlimited SMS alerts", included: true },
       { text: "Verified regulated unit badges", included: true },
       { text: "Wren AI assistant", included: true },
       { text: "Cross-search Wren comparison", included: true },
