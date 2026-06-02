@@ -58,7 +58,7 @@ export function HowItWorksThreeSteps() {
             n="03"
             title="You get pinged. You go see it."
             badge="Alerts within 30 minutes"
-            body="Email or text the second a match drops. Full address, real rent, one-tap to contact the landlord. You're usually first."
+            body="Email alert the second a match drops. Full address, real rent, one-tap to contact the landlord. You're usually first."
             reduce={reduce}
             mock={<NotificationMock />}
             delay={0.2}
@@ -79,7 +79,7 @@ export function HowItWorksThreeSteps() {
             <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
           <div className="mt-3 text-[11px] font-mono uppercase tracking-[0.14em] text-[var(--color-charcoal-500)]">
-            Email and text alerts included
+            Email alerts included
           </div>
         </div>
       </div>
