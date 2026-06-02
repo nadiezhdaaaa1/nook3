@@ -1,6 +1,6 @@
 import { Sparkles, Zap, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useAppStore, selectQuota } from "@/lib/store";
+import { useEffect, useMemo, useState } from "react";
+import { SEARCH_LIMITS, useAppStore } from "@/lib/store";
 import { UpgradeModal } from "./UpgradeModal";
 
 const DISMISS_KEY = "nook.banner.planlimits.dismissed.v1";
@@ -13,7 +13,18 @@ const DISMISS_KEY = "nook.banner.planlimits.dismissed.v1";
  */
 export function PlanLimitsBanner() {
   const plan = useAppStore((s) => s.user?.plan ?? "free");
-  const quota = useAppStore(selectQuota);
+  const searches = useAppStore((s) => s.searches);
+  const quota = useMemo(() => {
+    const max = SEARCH_LIMITS[plan];
+    const used = searches.filter((x) => x.status !== "archived").length;
+    const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
+    return {
+      used,
+      max,
+      remaining: max === Number.POSITIVE_INFINITY ? Number.POSITIVE_INFINITY : Math.max(0, max - used),
+      label: `${used} of ${maxLabel} used`,
+    };
+  }, [plan, searches]);
   const [dismissed, setDismissed] = useState(true);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
 
