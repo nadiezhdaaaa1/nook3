@@ -6,7 +6,7 @@ import {
   Home,
   Copy,
   Mail,
-  MessageCircle,
+  
   Share2,
   ArrowRight,
 } from "lucide-react";
