@@ -15,7 +15,7 @@ export function useUpdateProfileMutation() {
   const qc = useQueryClient();
   const fn = useServerFn(updateProfile);
   return useMutation({
-    mutationFn: (data: Parameters<typeof updateProfile>[0]["data"]) => fn({ data }),
+    mutationFn: (data: Record<string, unknown>) => fn({ data: data as any }),
     onSuccess: () => qc.invalidateQueries({ queryKey: profileQueryKey }),
   });
 }

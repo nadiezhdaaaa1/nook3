@@ -22,7 +22,7 @@ export function useCreateSearchMutation() {
   const qc = useQueryClient();
   const fn = useServerFn(createSearch);
   return useMutation({
-    mutationFn: (data: Parameters<typeof createSearch>[0]["data"]) => fn({ data }),
+    mutationFn: (data: Record<string, unknown>) => fn({ data: data as any }),
     onSuccess: () => qc.invalidateQueries({ queryKey: searchesQueryKey }),
   });
 }
