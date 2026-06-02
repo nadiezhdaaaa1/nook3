@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -119,6 +120,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
 
   useEffect(() => {
     // Hydrate persisted appStore + migrate legacy onboarding state (one-time).
@@ -130,10 +132,35 @@ function RootComponent() {
     })();
   }, []);
 
+  useEffect(() => {
+    // Single source of truth for auth-driven cache invalidation.
+    let isFirst = true;
+    void import("@/integrations/supabase/client").then(({ supabase }) => {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(() => {
+        if (isFirst) {
+          isFirst = false;
+          return;
+        }
+        router.invalidate();
+        queryClient.invalidateQueries();
+      });
+      (window as unknown as { __nookAuthSub?: { unsubscribe: () => void } }).__nookAuthSub =
+        subscription;
+    });
+    return () => {
+      const w = window as unknown as { __nookAuthSub?: { unsubscribe: () => void } };
+      w.__nookAuthSub?.unsubscribe();
+      w.__nookAuthSub = undefined;
+    };
+  }, [router, queryClient]);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster />
     </QueryClientProvider>
   );
 }

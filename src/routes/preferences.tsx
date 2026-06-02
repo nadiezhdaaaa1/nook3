@@ -1,6 +1,7 @@
-import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle } from "lucide-react";
+import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Bell, DollarSign, Home, MapPin, BellOff, Copy, Heart, Inbox, Gift, UserCircle, LogOut } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { getReferralCode, useOnboardingStore } from "@/lib/onboarding/store";
 import { cn } from "@/lib/utils";
@@ -8,8 +9,15 @@ import { SearchSwitcher } from "@/components/preferences/SearchSwitcher";
 import { PlanLimitsBanner } from "@/components/preferences/PlanLimitsBanner";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import { useActiveSearch } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/preferences")({
+  beforeLoad: async ({ location }) => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      throw redirect({ to: "/login", search: { redirect: location.href } });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Manage preferences — Nook" },
@@ -45,6 +53,7 @@ function PreferencesShell() {
             <Link to="/" className="hidden md:inline text-sm font-semibold text-charcoal-700 hover:text-charcoal-950">
               ← Home
             </Link>
+            <SignOutButton />
           </div>
         </div>
       </header>
@@ -111,6 +120,33 @@ function EditingLine() {
       Editing <span className="font-semibold text-charcoal-950">{active.name}</span>
       <span className="text-charcoal-400"> · changes apply to this search only.</span>
     </p>
+  );
+}
+
+function SignOutButton() {
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={async () => {
+        setBusy(true);
+        const { error } = await supabase.auth.signOut();
+        setBusy(false);
+        if (error) {
+          toast.error("Sign out failed", { description: error.message });
+          return;
+        }
+        toast.success("Signed out");
+        navigate({ to: "/login", replace: true });
+      }}
+      className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill border border-charcoal-200 text-xs font-semibold text-charcoal-700 hover:border-charcoal-950 disabled:opacity-60"
+      title="Sign out"
+    >
+      <LogOut className="h-3.5 w-3.5" />
+      <span className="hidden sm:inline">Sign out</span>
+    </button>
   );
 }
 
