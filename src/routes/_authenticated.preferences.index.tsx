@@ -5,7 +5,7 @@ import {
   ArrowRight, Lock, Moon, Info, Check, AlertCircle,
 } from "lucide-react";
 import { z } from "zod";
-import { toast } from "sonner";
+
 import { useOnboardingStore, type AlertChannel, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
 import { usePreferencesStore } from "@/lib/preferences/store";
