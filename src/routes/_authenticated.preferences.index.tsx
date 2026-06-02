@@ -353,8 +353,24 @@ function NotificationsTab() {
         </section>
       )}
 
-      <SaveBar
-        signal={`${plan}|${alertChannel}|${frequency}|${email}|${phone}|${quietHours.enabled}|${quietHours.start}|${quietHours.end}|${override.emailOverride}|${override.phoneOverride}`}
+      <StickySaveBar
+        state={{
+          alertChannel, frequency, email, phone,
+          quietHours,
+          override: activeSearchId ? override : null,
+        }}
+        onDiscard={(snap) => {
+          set("alertChannel", snap.alertChannel);
+          set("frequency", snap.frequency);
+          set("email", snap.email);
+          set("phone", snap.phone);
+          setQuiet("enabled", snap.quietHours.enabled);
+          setQuiet("start", snap.quietHours.start);
+          setQuiet("end", snap.quietHours.end);
+          if (activeSearchId && snap.override) {
+            setPerSearch(activeSearchId, snap.override);
+          }
+        }}
       />
     </div>
   );
