@@ -282,13 +282,22 @@ function StatCard({
   );
 }
 
-function RecentList() {
-  // Empty state for now; phase 6 will wire real data
-  const items: { email: string; status: "invited" | "signed_up" | "rewarded"; date: string }[] = [
-    { email: "j****@gmail.com", status: "rewarded", date: "Apr 12" },
-    { email: "m****@outlook.com", status: "invited", date: "Apr 10" },
-    { email: "s****@yahoo.com", status: "invited", date: "Apr 8" },
-  ];
+function RecentList({
+  items,
+  isLoading,
+}: {
+  items: ReferralStats["recent"];
+  isLoading: boolean;
+}) {
+  if (isLoading && items.length === 0) {
+    return (
+      <div className="rounded-card border border-charcoal-950/8 bg-paper-warm/50 p-6 space-y-3" aria-busy="true">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="h-8 rounded-md bg-charcoal-950/5 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -301,20 +310,26 @@ function RecentList() {
 
   return (
     <ul className="divide-y divide-charcoal-950/8 border border-charcoal-950/8 rounded-card overflow-hidden bg-paper">
-      {items.map((it) => (
-        <li key={it.email} className="flex items-center justify-between gap-4 px-4 py-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="h-8 w-8 rounded-pill bg-sage-100 text-sage-900 inline-flex items-center justify-center text-xs font-bold shrink-0">
-              {it.email.charAt(0).toUpperCase()}
+      {items.map((it) => {
+        const date = new Date(it.createdAt).toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+        });
+        return (
+          <li key={it.id} className="flex items-center justify-between gap-4 px-4 py-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="h-8 w-8 rounded-pill bg-sage-100 text-sage-900 inline-flex items-center justify-center text-xs font-bold shrink-0">
+                {it.email.charAt(0).toUpperCase()}
+              </div>
+              <div className="text-sm text-charcoal-800 font-mono truncate">{it.email}</div>
             </div>
-            <div className="text-sm text-charcoal-800 font-mono truncate">{it.email}</div>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <StatusPill status={it.status} />
-            <span className="text-xs text-charcoal-500 tabular-nums hidden sm:inline">{it.date}</span>
-          </div>
-        </li>
-      ))}
+            <div className="flex items-center gap-3 shrink-0">
+              <StatusPill status={it.status} />
+              <span className="text-xs text-charcoal-500 tabular-nums hidden sm:inline">{date}</span>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }
