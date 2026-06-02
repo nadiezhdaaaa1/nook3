@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
 
-export const Route = createFileRoute("/preferences")({
+export const Route = createFileRoute("/_authenticated/preferences")({
   beforeLoad: async ({ location }) => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) {
