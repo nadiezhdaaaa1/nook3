@@ -491,18 +491,22 @@ function PlanCard({
             </AlertDialogTitle>
             <AlertDialogDescription>
               {isDowngrade && plan.id === "free" ? (
-                <>You'll lose access to paid features and your saved searches will be capped at the Free plan limit.</>
+                <>
+                  Your subscription will stop auto-renewing. You keep paid features until the
+                  end of your current billing period, then your account moves to the Free plan
+                  (1 saved search, daily digest). No further charges will be made.
+                </>
               ) : (
                 <>
                   You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                  ({priceLabel}).{" "}
+                  ({priceLabel}). This will auto-renew at the same price until cancelled.{" "}
                   <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Keep my plan</AlertDialogCancel>
             <AlertDialogAction
               disabled={updatePlanMut.isPending}
               onClick={() => {
@@ -517,7 +521,11 @@ function PlanCard({
                   : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
               )}
             >
-              {updatePlanMut.isPending ? "Updating…" : "Confirm"}
+              {updatePlanMut.isPending
+                ? "Updating…"
+                : isDowngrade && plan.id === "free"
+                  ? "Confirm cancellation"
+                  : "Confirm"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
