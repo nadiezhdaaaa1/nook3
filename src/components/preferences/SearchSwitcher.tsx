@@ -174,7 +174,7 @@ export function SearchSwitcher() {
                   onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
                     if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
-                      deleteSearch(s.id);
+                      dbAwareDelete(s.id);
                       hydrateActiveSearchIntoOnboarding();
                     }
                   }}
@@ -205,7 +205,7 @@ export function SearchSwitcher() {
                         search={s}
                         onRestore={() => handleRestore(s.id)}
                         onDelete={() => {
-                          if (confirm(`Permanently delete "${s.name}"?`)) deleteSearch(s.id);
+                          if (confirm(`Permanently delete "${s.name}"?`)) dbAwareDelete(s.id);
                         }}
                       />
                     ))}
