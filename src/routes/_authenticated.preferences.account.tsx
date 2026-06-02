@@ -79,7 +79,7 @@ function AccountPage() {
 
   // Profile editable fields (sourced from onboarding store + user)
   const [email, setEmail] = useState(user?.email || onboarding.email);
-  const [phone, setPhone] = useState(user?.phone || onboarding.phone);
+  
   const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
 
   const prefs = usePreferencesStore();
