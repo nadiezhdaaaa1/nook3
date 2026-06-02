@@ -32,18 +32,27 @@ export function LegalPageLayout({
 
         {draft && (
           <div
-            className="mb-10 rounded-xl border px-5 py-4 text-sm"
+            role="alert"
+            className="mb-10 rounded-xl border-2 px-5 py-4 text-sm flex gap-3"
             style={{
-              borderColor: "color-mix(in oklab, var(--color-brand-terracotta) 30%, transparent)",
-              backgroundColor: "color-mix(in oklab, var(--color-brand-terracotta) 8%, white)",
-              color: "var(--color-brand-charcoal)",
+              borderColor: "#d4a017",
+              backgroundColor: "#fff8e1",
+              color: "#5c4a00",
             }}
           >
-            <strong className="font-semibold">Placeholder content.</strong>{" "}
-            This page will be replaced before public launch with text drafted
-            by legal counsel. Do not rely on it.
+            <span aria-hidden className="text-lg leading-none mt-0.5">⚠️</span>
+            <div className="space-y-1">
+              <p className="font-semibold">
+                This document is a draft pending legal review.
+              </p>
+              <p className="text-[13px] opacity-90">
+                Effective date will be set upon publication. Do not rely on
+                this language — it has not been reviewed by counsel.
+              </p>
+            </div>
           </div>
         )}
+
 
         <div className="legal-prose text-charcoal-800">{children}</div>
 
