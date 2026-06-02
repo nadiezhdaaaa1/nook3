@@ -1,32 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Mail, MessageSquare, Bell, Clock, ShieldCheck } from "lucide-react";
-import { z } from "zod";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { useOnboardingStore, type AlertChannel } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { cn } from "@/lib/utils";
+import { emailSchema, phoneSchema } from "@/lib/validation/schemas";
 
 const CHANNELS: { id: AlertChannel; label: string; desc: string; icon: typeof Mail }[] = [
   { id: "email", label: "Email only",   desc: "Daily digest in your inbox.",     icon: Mail },
   { id: "text",  label: "Text only",    desc: "Instant SMS for hot listings.",   icon: MessageSquare },
   { id: "both",  label: "Email + Text", desc: "Digest + instant pings.",         icon: Bell },
 ];
-
-const emailSchema = z
-  .string()
-  .trim()
-  .min(1, "Email is required.")
-  .max(255, "Email is too long.")
-  .email("Enter a valid email.");
-
-const phoneSchema = z
-  .string()
-  .trim()
-  .min(1, "Phone is required.")
-  .max(20, "Phone is too long.")
-  .refine((v) => v.replace(/\D/g, "").length >= 10, "Enter a valid 10-digit phone number.");
 
 function formatPhone(raw: string): string {
   const digits = raw.replace(/\D/g, "").slice(0, 10);
