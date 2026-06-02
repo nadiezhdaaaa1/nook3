@@ -47,7 +47,7 @@ const PLANS: PlanDef[] = [
     monthly: 14.99,
     annual: 119,
     icon: Zap,
-    features: ["3 saved searches", "Real-time alerts", "Email + SMS", "All filters", "Wren AI Chat"],
+    features: ["3 saved searches", "Real-time alerts", "Email alerts", "All filters", "Wren AI Chat"],
   },
   {
     id: "max",
