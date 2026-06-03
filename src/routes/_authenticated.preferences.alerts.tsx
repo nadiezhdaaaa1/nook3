@@ -417,6 +417,44 @@ function StatusDropdown({
   );
 }
 
+function ScopeChip({
+  label,
+  icon: Icon,
+  active,
+  count,
+  highlight,
+  onClick,
+}: {
+  label: string;
+  icon?: typeof Layers;
+  active: boolean;
+  count: number;
+  highlight?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "shrink-0 inline-flex items-center gap-2 h-9 px-3.5 rounded-pill text-xs font-semibold transition-colors",
+        active
+          ? "bg-sage-700 text-paper"
+          : "bg-paper border border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
+        !active && highlight && "border-charcoal-950",
+      )}
+    >
+      {Icon && <Icon className="h-3.5 w-3.5" />}
+      <span className="max-w-[140px] truncate">{label}</span>
+      <span className={cn("text-[10px] font-mono", active ? "text-paper/70" : "text-charcoal-500")}>
+        {count}
+      </span>
+    </button>
+  );
+}
+
+
+
 
 /* ---------- Empty ---------- */
 function EmptyState({ filter }: { filter: Filter }) {
