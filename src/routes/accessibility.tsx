@@ -102,8 +102,6 @@ function AccessibilityPage() {
       </p>
       <p>
         <strong>Email:</strong> <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>
-        <br />
-        <strong>Phone:</strong> [PHONE_NUMBER if established]
       </p>
       <p>We can assist with:</p>
       <ul>
