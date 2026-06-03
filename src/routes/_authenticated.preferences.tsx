@@ -30,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/preferences")({
     meta: [
       { title: "Manage preferences — Nook" },
       { name: "description", content: "Customize your apartment alerts and notification settings." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: PreferencesShell,
