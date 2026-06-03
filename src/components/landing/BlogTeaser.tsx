@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { Clock } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 
@@ -107,13 +108,13 @@ export function BlogTeaser() {
         </div>
 
         <div className="mt-10 text-center">
-          <span
-            className="inline-flex items-center gap-2 text-sm font-semibold opacity-60 cursor-not-allowed"
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-2 text-sm font-semibold"
             style={{ color: "var(--color-brand-terracotta)" }}
-            title="Blog launching soon"
           >
             See all articles →
-          </span>
+          </Link>
         </div>
       </div>
     </section>

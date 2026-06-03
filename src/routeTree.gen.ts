@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubprocessorsRouteImport } from './routes/subprocessors'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -20,6 +21,7 @@ import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
 import { Route as DmcaRouteImport } from './routes/dmca'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
@@ -28,6 +30,8 @@ import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.succe
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
+import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
 import { Route as AuthenticatedPreferencesIndexRouteImport } from './routes/_authenticated.preferences.index'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
@@ -46,6 +50,11 @@ const TermsRoute = TermsRouteImport.update({
 const SubprocessorsRoute = SubprocessorsRouteImport.update({
   id: '/subprocessors',
   path: '/subprocessors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -93,6 +102,11 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccessibilityRoute = AccessibilityRouteImport.update({
   id: '/accessibility',
   path: '/accessibility',
@@ -131,6 +145,16 @@ const OnboardingLoadingRoute = OnboardingLoadingRouteImport.update({
   id: '/loading',
   path: '/loading',
   getParentRoute: () => OnboardingRoute,
+} as any)
+const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AuthenticatedPreferencesRoute =
   AuthenticatedPreferencesRouteImport.update({
@@ -190,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
@@ -199,9 +224,12 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -219,6 +247,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
@@ -228,8 +257,11 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -249,6 +281,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
@@ -258,9 +291,12 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -280,6 +316,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
+    | '/blog'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
@@ -289,9 +326,12 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/refunds'
     | '/signup'
+    | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
     | '/preferences'
+    | '/blog/$slug'
+    | '/blog/rss.xml'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -309,6 +349,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
+    | '/blog'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
@@ -318,8 +359,11 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/refunds'
     | '/signup'
+    | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
+    | '/blog/$slug'
+    | '/blog/rss.xml'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -338,6 +382,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/acceptable-use'
     | '/accessibility'
+    | '/blog'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
@@ -347,9 +392,12 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/refunds'
     | '/signup'
+    | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
     | '/_authenticated/preferences'
+    | '/blog/$slug'
+    | '/blog/rss.xml'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -369,6 +417,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AcceptableUseRoute: typeof AcceptableUseRoute
   AccessibilityRoute: typeof AccessibilityRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   DmcaRoute: typeof DmcaRoute
   DoNotSellRoute: typeof DoNotSellRoute
@@ -378,6 +427,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubprocessorsRoute: typeof SubprocessorsRoute
   TermsRoute: typeof TermsRoute
 }
@@ -396,6 +446,13 @@ declare module '@tanstack/react-router' {
       path: '/subprocessors'
       fullPath: '/subprocessors'
       preLoaderRoute: typeof SubprocessorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -461,6 +518,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/accessibility': {
       id: '/accessibility'
       path: '/accessibility'
@@ -516,6 +580,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/onboarding/loading'
       preLoaderRoute: typeof OnboardingLoadingRouteImport
       parentRoute: typeof OnboardingRoute
+    }
+    '/blog/rss.xml': {
+      id: '/blog/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/blog/rss.xml'
+      preLoaderRoute: typeof BlogRssDotxmlRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/_authenticated/preferences': {
       id: '/_authenticated/preferences'
@@ -624,6 +702,18 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogRssDotxmlRoute: BlogRssDotxmlRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 interface OnboardingRouteChildren {
   OnboardingLoadingRoute: typeof OnboardingLoadingRoute
   OnboardingPreviewRoute: typeof OnboardingPreviewRoute
@@ -649,6 +739,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AcceptableUseRoute: AcceptableUseRoute,
   AccessibilityRoute: AccessibilityRoute,
+  BlogRoute: BlogRouteWithChildren,
   CookiesRoute: CookiesRoute,
   DmcaRoute: DmcaRoute,
   DoNotSellRoute: DoNotSellRoute,
@@ -658,19 +749,10 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubprocessorsRoute: SubprocessorsRoute,
   TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

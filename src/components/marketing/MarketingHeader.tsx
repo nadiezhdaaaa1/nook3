@@ -36,6 +36,7 @@ export function MarketingHeader() {
           <a href="#what" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">What you get</a>
           <a href="#pricing" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Pricing</a>
           <a href="#faq" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">FAQ</a>
+          <Link to="/blog" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Blog</Link>
         </nav>
 
         <div className="flex items-center gap-2">
