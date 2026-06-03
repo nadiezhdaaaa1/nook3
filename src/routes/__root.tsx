@@ -16,6 +16,45 @@ import { OfflineBanner } from "@/components/system/OfflineBanner";
 import { CookieBanner } from "@/components/legal/CookieBanner";
 
 function NotFoundComponent() {
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = "404 — Page not found · Nook";
+
+    const upsert = (selector: string, create: () => HTMLElement) => {
+      let el = document.head.querySelector(selector) as HTMLElement | null;
+      const wasPresent = !!el;
+      if (!el) {
+        el = create();
+        el.setAttribute("data-nook-404", "true");
+        document.head.appendChild(el);
+      }
+      return () => {
+        if (!wasPresent && el && el.getAttribute("data-nook-404") === "true") {
+          el.remove();
+        }
+      };
+    };
+
+    const cleanupRobots = upsert('meta[name="robots"][data-nook-404]', () => {
+      const m = document.createElement("meta");
+      m.setAttribute("name", "robots");
+      m.setAttribute("content", "noindex, follow");
+      return m;
+    });
+    const cleanupDesc = upsert('meta[name="description"][data-nook-404]', () => {
+      const m = document.createElement("meta");
+      m.setAttribute("name", "description");
+      m.setAttribute("content", "The page you're looking for doesn't exist. Head back to Nook to set up real-time apartment alerts.");
+      return m;
+    });
+
+    return () => {
+      document.title = prevTitle;
+      cleanupRobots();
+      cleanupDesc();
+    };
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -24,12 +63,24 @@ function NotFoundComponent() {
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Go home
+          </Link>
+          <Link
+            to="/blog"
+            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          >
+            Read the blog
+          </Link>
+          <Link
+            to="/contact"
+            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          >
+            Contact us
           </Link>
         </div>
       </div>
