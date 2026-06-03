@@ -1198,12 +1198,14 @@ function PlanCard({
   const isUpgrade = planRank[plan.id] > planRank[currentPlan];
   const isDowngrade = planRank[plan.id] < planRank[currentPlan];
 
+  const isCancelPath = isDowngrade && plan.id === "free";
+
   const ctaLabel = isCurrent
     ? "Current plan"
     : isUpgrade
       ? `Upgrade to ${plan.label}`
-      : isDowngrade && plan.id === "free"
-        ? "Cancel subscription"
+      : isCancelPath
+        ? "Cancel above to switch"
         : `Switch to ${plan.label}`;
 
   return (
@@ -1239,71 +1241,55 @@ function PlanCard({
         ))}
       </ul>
 
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogTrigger asChild>
-          <button
-            type="button"
-            disabled={isCurrent || updatePlanMut.isPending}
-            className={cn(
-              "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
-              isCurrent
-                ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
-                : isDowngrade
-                  ? "border border-danger/40 text-danger hover:bg-danger/10"
-                  : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
-            )}
-          >
-            {ctaLabel}
-          </button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {isDowngrade && plan.id === "free"
-                ? "Cancel your subscription?"
-                : `Switch to ${plan.label}?`}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {isDowngrade && plan.id === "free" ? (
-                <>
-                  Your subscription will stop auto-renewing. You keep paid features until the
-                  end of your current billing period, then your account moves to the Free plan
-                  (1 saved search, daily digest). No further charges will be made.
-                </>
-              ) : (
-                <>
-                  You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                  ({priceLabel}). This will auto-renew at the same price until cancelled.{" "}
-                  <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
-                </>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Keep my plan</AlertDialogCancel>
-            <AlertDialogAction
-              disabled={updatePlanMut.isPending}
-              onClick={() => {
-                updatePlanMut.mutate(
-                  { plan: plan.id, billingCycle: cycle },
-                  { onSuccess: () => setOpen(false) },
-                );
-              }}
+      {isCancelPath ? (
+        <div className="mt-auto h-10 inline-flex items-center justify-center rounded-pill bg-paper-warm text-charcoal-500 text-xs border border-charcoal-950/10">
+          Use “Cancel subscription” above
+        </div>
+      ) : (
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialogTrigger asChild>
+            <button
+              type="button"
+              disabled={isCurrent || updatePlanMut.isPending}
               className={cn(
-                isDowngrade && plan.id === "free"
-                  ? "bg-danger text-paper hover:bg-danger/90"
-                  : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
+                "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
+                isCurrent
+                  ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
+                  : isDowngrade
+                    ? "border border-charcoal-950/15 text-charcoal-950 hover:bg-paper"
+                    : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
               )}
             >
-              {updatePlanMut.isPending
-                ? "Updating…"
-                : isDowngrade && plan.id === "free"
-                  ? "Confirm cancellation"
-                  : "Confirm"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              {ctaLabel}
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Switch to {plan.label}?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                ({priceLabel}). This will auto-renew at the same price until cancelled.{" "}
+                <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep my plan</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={updatePlanMut.isPending}
+                onClick={() => {
+                  updatePlanMut.mutate(
+                    { plan: plan.id, billingCycle: cycle },
+                    { onSuccess: () => setOpen(false) },
+                  );
+                }}
+                className="bg-charcoal-950 text-paper hover:bg-charcoal-800"
+              >
+                {updatePlanMut.isPending ? "Updating…" : "Confirm"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 }
