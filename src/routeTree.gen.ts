@@ -38,6 +38,7 @@ import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
 import { Route as AuthenticatedPreferencesIndexRouteImport } from './routes/_authenticated.preferences.index'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
+import { Route as AuthenticatedPreferencesWrenRouteImport } from './routes/_authenticated.preferences.wren'
 import { Route as AuthenticatedPreferencesReferralsRouteImport } from './routes/_authenticated.preferences.referrals'
 import { Route as AuthenticatedPreferencesLocationRouteImport } from './routes/_authenticated.preferences.location'
 import { Route as AuthenticatedPreferencesBudgetRouteImport } from './routes/_authenticated.preferences.budget'
@@ -191,6 +192,12 @@ const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
   path: '/step/$step',
   getParentRoute: () => OnboardingRoute,
 } as any)
+const AuthenticatedPreferencesWrenRoute =
+  AuthenticatedPreferencesWrenRouteImport.update({
+    id: '/wren',
+    path: '/wren',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
 const AuthenticatedPreferencesReferralsRoute =
   AuthenticatedPreferencesReferralsRouteImport.update({
     id: '/referrals',
@@ -261,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
   '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
   '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
+  '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/preferences/': typeof AuthenticatedPreferencesIndexRoute
 }
@@ -296,6 +304,7 @@ export interface FileRoutesByTo {
   '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
   '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
   '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
+  '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/preferences': typeof AuthenticatedPreferencesIndexRoute
 }
@@ -334,6 +343,7 @@ export interface FileRoutesById {
   '/_authenticated/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
   '/_authenticated/preferences/location': typeof AuthenticatedPreferencesLocationRoute
   '/_authenticated/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
+  '/_authenticated/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/_authenticated/preferences/': typeof AuthenticatedPreferencesIndexRoute
 }
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/preferences/budget'
     | '/preferences/location'
     | '/preferences/referrals'
+    | '/preferences/wren'
     | '/onboarding/step/$step'
     | '/preferences/'
   fileRoutesByTo: FileRoutesByTo
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
     | '/preferences/budget'
     | '/preferences/location'
     | '/preferences/referrals'
+    | '/preferences/wren'
     | '/onboarding/step/$step'
     | '/preferences'
   id:
@@ -444,6 +456,7 @@ export interface FileRouteTypes {
     | '/_authenticated/preferences/budget'
     | '/_authenticated/preferences/location'
     | '/_authenticated/preferences/referrals'
+    | '/_authenticated/preferences/wren'
     | '/onboarding/step/$step'
     | '/_authenticated/preferences/'
   fileRoutesById: FileRoutesById
@@ -678,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingStepStepRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/_authenticated/preferences/wren': {
+      id: '/_authenticated/preferences/wren'
+      path: '/wren'
+      fullPath: '/preferences/wren'
+      preLoaderRoute: typeof AuthenticatedPreferencesWrenRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
+    }
     '/_authenticated/preferences/referrals': {
       id: '/_authenticated/preferences/referrals'
       path: '/referrals'
@@ -730,6 +750,7 @@ interface AuthenticatedPreferencesRouteChildren {
   AuthenticatedPreferencesBudgetRoute: typeof AuthenticatedPreferencesBudgetRoute
   AuthenticatedPreferencesLocationRoute: typeof AuthenticatedPreferencesLocationRoute
   AuthenticatedPreferencesReferralsRoute: typeof AuthenticatedPreferencesReferralsRoute
+  AuthenticatedPreferencesWrenRoute: typeof AuthenticatedPreferencesWrenRoute
   AuthenticatedPreferencesIndexRoute: typeof AuthenticatedPreferencesIndexRoute
 }
 
@@ -744,6 +765,7 @@ const AuthenticatedPreferencesRouteChildren: AuthenticatedPreferencesRouteChildr
       AuthenticatedPreferencesLocationRoute,
     AuthenticatedPreferencesReferralsRoute:
       AuthenticatedPreferencesReferralsRoute,
+    AuthenticatedPreferencesWrenRoute: AuthenticatedPreferencesWrenRoute,
     AuthenticatedPreferencesIndexRoute: AuthenticatedPreferencesIndexRoute,
   }
 
@@ -811,3 +833,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
