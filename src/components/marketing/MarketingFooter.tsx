@@ -63,11 +63,15 @@ export function MarketingFooter() {
         >
           <div className="space-y-1">
             <p>
-              Nook is a product of <span className="font-semibold" style={{ color: "var(--color-brand-cream)" }}>Zentaro Systems Ltd</span>, registered in England and Wales.
+              <span className="font-semibold" style={{ color: "var(--color-brand-cream)" }}>Zentaro Systems Ltd</span> · Trading as Nook
             </p>
-            <p>Company No. TBD</p>
-            <p>Registered address: TBD, United Kingdom</p>
-            <p>Operating in the US under the trade name "The Nook".</p>
+            <p>167-169 Great Portland Street, 5th Floor, London, W1W 5PF</p>
+            <p>
+              <a href="mailto:hello@thenook.rent" className="hover:underline" style={{ color: "var(--color-brand-cream)" }}>
+                hello@thenook.rent
+              </a>
+            </p>
+            <p>Registered in England and Wales. Operating in the US under the trade name "The Nook".</p>
           </div>
           <div className="lg:text-right">
             <p>

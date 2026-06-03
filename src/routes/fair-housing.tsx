@@ -90,7 +90,7 @@ function FairHousingPage() {
         <strong>Email:</strong>{" "}
         <a href="mailto:fairhousing@thenook.rent">fairhousing@thenook.rent</a>
         <br />
-        <strong>Mail:</strong> Fair Housing Reports, Zentaro Systems Ltd, [REGISTERED_ADDRESS],
+        <strong>Mail:</strong> Fair Housing Reports, Zentaro Systems Ltd, 167-169 Great Portland Street, 5th Floor, London, W1W 5PF,
         United Kingdom
       </p>
       <p>Please include:</p>
