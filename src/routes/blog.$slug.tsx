@@ -27,6 +27,9 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!a) return {};
     const url = `${SITE}/blog/${a.slug}`;
     const categoryName = CATEGORY_LABEL[a.category];
+    const absImage = a.coverImage?.startsWith("http")
+      ? a.coverImage
+      : `${SITE}${a.coverImage ?? ""}`;
     return {
       meta: [
         { title: `${a.title} — Nook Blog` },
@@ -35,6 +38,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:title", content: a.title },
         { property: "og:description", content: a.excerpt },
         { property: "og:url", content: url },
+        { property: "og:image", content: absImage },
         { property: "article:published_time", content: a.publishedAt },
         { property: "article:modified_time", content: a.updatedAt ?? a.publishedAt },
         { property: "article:author", content: "Nook Team" },
@@ -43,6 +47,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: a.title },
         { name: "twitter:description", content: a.excerpt },
+        { name: "twitter:image", content: absImage },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -50,9 +55,10 @@ export const Route = createFileRoute("/blog/$slug")({
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Article",
+            "@type": "BlogPosting",
             headline: a.title,
             description: a.excerpt,
+            image: [absImage],
             datePublished: a.publishedAt,
             dateModified: a.updatedAt ?? a.publishedAt,
             author: {
