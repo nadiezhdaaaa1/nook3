@@ -125,10 +125,10 @@ function AccountPage() {
             value={`${stats.used} / ${stats.maxLabel}`}
             footer={
               stats.max === Infinity
-                ? "No limit on your plan."
+                ? <>No limit on your plan.</>
                 : stats.used >= stats.max
-                  ? "Limit reached — upgrade to add more."
-                  : `${stats.max - stats.used} slot${stats.max - stats.used === 1 ? "" : "s"} left.`
+                  ? <>Limit reached — <a href="#plans" className="text-sage-700 font-semibold underline-offset-2 hover:underline">upgrade to add more</a>.</>
+                  : <>{stats.max - stats.used} slot{stats.max - stats.used === 1 ? "" : "s"} left.</>
             }
             progress={stats.pct}
           />
