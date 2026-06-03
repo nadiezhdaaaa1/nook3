@@ -168,16 +168,6 @@ function SamplePreview() {
                         </div>
                       </div>
 
-                      {/* External link */}
-                      <div className="pt-2">
-                        <button
-                          type="button"
-                          onClick={() => setModalOpen(true)}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-peach-700 hover:text-peach-900 transition-colors"
-                        >
-                          See listing preview <ExternalLink className="h-3 w-3" />
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </article>
