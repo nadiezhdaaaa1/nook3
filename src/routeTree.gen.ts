@@ -32,6 +32,7 @@ import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
@@ -164,6 +165,11 @@ const IndexRoute = IndexRouteImport.update({
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsSlugRoute = PostsSlugRouteImport.update({
+  id: '/posts/$slug',
+  path: '/posts/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -345,6 +352,7 @@ export interface FileRoutesByTo {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/blog': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -390,6 +398,7 @@ export interface FileRoutesById {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/_authenticated/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -435,6 +444,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/posts/$slug'
     | '/blog/'
     | '/preferences/account'
     | '/preferences/alerts'
@@ -477,6 +487,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/posts/$slug'
     | '/blog'
     | '/preferences/account'
     | '/preferences/alerts'
@@ -521,6 +532,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/posts/$slug'
     | '/blog/'
     | '/_authenticated/preferences/account'
     | '/_authenticated/preferences/alerts'
@@ -561,6 +573,7 @@ export interface RootRouteChildren {
   ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
+  PostsSlugRoute: typeof PostsSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -725,6 +738,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posts/$slug': {
+      id: '/posts/$slug'
+      path: '/posts/$slug'
+      fullPath: '/posts/$slug'
+      preLoaderRoute: typeof PostsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding/success': {
@@ -954,6 +974,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
+  PostsSlugRoute: PostsSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
