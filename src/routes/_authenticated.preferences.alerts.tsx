@@ -291,10 +291,18 @@ function AlertRowItem({
 
         {/* Thumb */}
         <div
-          className="shrink-0 h-16 w-16 rounded-xl"
+          className="shrink-0 h-20 w-28 rounded-lg overflow-hidden bg-charcoal-100"
           style={{ background: `hsl(${alert.imageHue} 40% 80%)` }}
-          aria-hidden
-        />
+        >
+          {alert.imageUrl && (
+            <img
+              src={alert.imageUrl}
+              alt={alert.title}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
 
         {/* Main */}
         <div className="flex-1 min-w-0 pr-28">
