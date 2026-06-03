@@ -43,16 +43,17 @@ function ReferralsPage() {
   };
 
   const handleNativeShare = async () => {
-    if (typeof navigator !== "undefined" && "share" in navigator) {
+    if (typeof navigator === "undefined") return;
+    if ("share" in navigator) {
       try {
         await navigator.share({ title: "Nook", text: blurb, url: fullUrl });
+        return;
       } catch {
-        /* user cancelled */
+        /* user cancelled — fall through to copy */
       }
-    } else {
-      navigator.clipboard?.writeText(blurb);
-      toast.success("Message copied");
     }
+    navigator.clipboard?.writeText(blurb);
+    toast.success("Message copied");
   };
 
   return (
