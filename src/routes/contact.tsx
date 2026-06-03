@@ -450,6 +450,7 @@ function ContactFormSection() {
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   className={inputCls(!!errors.name)}
                   maxLength={100}
+                  placeholder="Alex Johnson"
                 />
               </Field>
 
@@ -468,6 +469,7 @@ function ContactFormSection() {
                   onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                   className={inputCls(!!errors.email)}
                   maxLength={255}
+                  placeholder="you@email.com"
                 />
               </Field>
 
@@ -515,6 +517,7 @@ function ContactFormSection() {
                   className={inputCls(!!errors.message) + " min-h-[120px] resize-y"}
                   rows={5}
                   maxLength={5000}
+                  placeholder="Tell us what's going on — the more context, the faster we can help."
                 />
               </Field>
 

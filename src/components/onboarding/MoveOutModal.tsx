@@ -84,6 +84,7 @@ export function MoveOutModal({ onClose }: Props) {
                 type="text"
                 value={form.unit}
                 onChange={(e) => setForm({ ...form, unit: e.target.value })}
+                placeholder="4B"
                 className={inputCls}
               />
             </Field>

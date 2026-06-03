@@ -183,7 +183,7 @@ function DoNotSellPage() {
           <Label htmlFor="dnss-name">
             Your name <span aria-hidden className="text-brand-terracotta">*</span>
           </Label>
-          <Input id="dnss-name" name="name" maxLength={100} required />
+          <Input id="dnss-name" name="name" maxLength={100} required placeholder="Alex Johnson" />
           {errors.name && <p className="text-xs text-brand-terracotta">{errors.name}</p>}
         </div>
 
@@ -191,7 +191,7 @@ function DoNotSellPage() {
           <Label htmlFor="dnss-email">
             Email address <span aria-hidden className="text-brand-terracotta">*</span>
           </Label>
-          <Input id="dnss-email" name="email" type="email" maxLength={255} required />
+          <Input id="dnss-email" name="email" type="email" maxLength={255} required placeholder="you@email.com" />
           <p className="text-xs text-charcoal-500">
             We use this to verify your identity and respond.
           </p>

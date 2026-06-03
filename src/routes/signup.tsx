@@ -144,6 +144,7 @@ function SignupPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={!!errors.email}
+                    placeholder="you@email.com"
                     className="mt-1 w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:border-charcoal-950 outline-none"
                   />
                   {errors.email && <p className="mt-1 text-xs text-danger">{errors.email}</p>}
@@ -156,6 +157,7 @@ function SignupPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     aria-invalid={!!errors.password}
+                    placeholder="At least 8 characters"
                     className="mt-1 w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:border-charcoal-950 outline-none"
                   />
                   {errors.password ? (
