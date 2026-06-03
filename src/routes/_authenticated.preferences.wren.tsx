@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Send, Square, Plus, Loader2 } from "lucide-react";
+import { Sparkles, Send, Square, Plus, Loader2, Mic, MicOff } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAppStore } from "@/lib/store";

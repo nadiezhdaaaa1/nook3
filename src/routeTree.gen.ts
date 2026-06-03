@@ -33,6 +33,7 @@ import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.previ
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ApiWrenTranscribeRouteImport } from './routes/api/wren-transcribe'
 import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
@@ -165,6 +166,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWrenTranscribeRoute = ApiWrenTranscribeRouteImport.update({
+  id: '/api/wren-transcribe',
+  path: '/api/wren-transcribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWrenChatRoute = ApiWrenChatRouteImport.update({
   id: '/api/wren-chat',
   path: '/api/wren-chat',
@@ -255,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
+  '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
+  '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
+  '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -369,6 +378,7 @@ export interface FileRouteTypes {
     | '/preferences'
     | '/api/contact'
     | '/api/wren-chat'
+    | '/api/wren-transcribe'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -405,6 +415,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/contact'
     | '/api/wren-chat'
+    | '/api/wren-transcribe'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -443,6 +454,7 @@ export interface FileRouteTypes {
     | '/_authenticated/preferences'
     | '/api/contact'
     | '/api/wren-chat'
+    | '/api/wren-transcribe'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -481,6 +493,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiWrenChatRoute: typeof ApiWrenChatRoute
+  ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -656,6 +669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/wren-transcribe': {
+      id: '/api/wren-transcribe'
+      path: '/api/wren-transcribe'
+      fullPath: '/api/wren-transcribe'
+      preLoaderRoute: typeof ApiWrenTranscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/wren-chat': {
       id: '/api/wren-chat'
       path: '/api/wren-chat'
@@ -826,6 +846,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ApiContactRoute: ApiContactRoute,
   ApiWrenChatRoute: ApiWrenChatRoute,
+  ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   BlogIndexRoute: BlogIndexRoute,
