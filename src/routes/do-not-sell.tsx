@@ -29,8 +29,10 @@ export const Route = createFileRoute("/do-not-sell")({
       {
         property: "og:description",
         content: "Exercise your CCPA / state privacy rights with Nook.",
-      },
+      },,
+      { property: "og:url", content: "https://nook3.lovable.app/do-not-sell" }
     ],
+    links: [{ rel: "canonical", href: "https://nook3.lovable.app/do-not-sell" }],
   }),
   component: DoNotSellPage,
 });
