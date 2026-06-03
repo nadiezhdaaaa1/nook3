@@ -46,6 +46,18 @@ export function Step1Where() {
         </p>
       </header>
 
+      {!cityConfig && (
+        <section className="space-y-4">
+          <h2 className="font-display text-lg font-semibold text-charcoal-950">
+            Pick your city
+          </h2>
+          <CityPicker
+            value={city}
+            onChange={(id) => set("city", id)}
+          />
+        </section>
+      )}
+
       {cityConfig && (
         <section className="flex items-center justify-between gap-4 px-5 h-14 rounded-card bg-paper-warm border border-charcoal-950/8">
           <div className="text-sm">
