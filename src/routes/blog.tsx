@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
+
 import { z } from "zod";
 import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
