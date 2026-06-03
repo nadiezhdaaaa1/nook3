@@ -1,11 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Send, Square, Plus, Loader2, Mic, MicOff } from "lucide-react";
+import { Sparkles, Send, Square, Plus, Loader2, Mic } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAppStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { VoiceRecorder } from "@/components/VoiceRecorder";
+
 
 const searchSchema = z.object({
   c: z.string().uuid().optional(),
@@ -33,10 +34,9 @@ function WrenChatPage() {
   const [streaming, setStreaming] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const recorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [recording, setRecording] = useState(false);
-  const [transcribing, setTranscribing] = useState(false);
+
 
   const scope = useMemo(() => {
     if (search.scope === "listing" && search.listing) {
@@ -148,61 +148,32 @@ function WrenChatPage() {
     }
   };
 
-  const startRecording = async () => {
-    if (recording || transcribing) return;
-    if (!navigator.mediaDevices?.getUserMedia) {
-      toast.error("Microphone not supported in this browser");
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream);
-      audioChunksRef.current = [];
-      mr.ondataavailable = (e) => { if (e.data.size) audioChunksRef.current.push(e.data); };
-      mr.onstop = async () => {
-        stream.getTracks().forEach((t) => t.stop());
-        const blob = new Blob(audioChunksRef.current, { type: mr.mimeType || "audio/webm" });
-        if (blob.size < 500) { setTranscribing(false); return; }
-        setTranscribing(true);
-        try {
-          const { data: session } = await supabase.auth.getSession();
-          const token = session.session?.access_token;
-          if (!token) throw new Error("Not signed in");
-          const fd = new FormData();
-          fd.append("audio", blob, "voice.webm");
-          const res = await fetch("/api/wren-transcribe", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
-            body: fd,
-          });
-          if (!res.ok) {
-            const j = await res.json().catch(() => ({}));
-            throw new Error(j.error ?? `Transcription failed (${res.status})`);
-          }
-          const j = (await res.json()) as { text?: string };
-          const text = (j.text ?? "").trim();
-          if (text) setInput((prev) => (prev ? `${prev} ${text}` : text));
-          else toast.message("Didn't catch that. Try again.");
-        } catch (e) {
-          toast.error((e as Error).message ?? "Transcription failed");
-        } finally {
-          setTranscribing(false);
+  const handleTranscribed = (text: string) => {
+    setInput((prev) => {
+      const next = prev ? `${prev.trimEnd()} ${text}` : text;
+      // restore focus + caret-at-end on next tick
+      requestAnimationFrame(() => {
+        const el = textareaRef.current;
+        if (el) {
+          el.focus();
+          el.setSelectionRange(next.length, next.length);
         }
-      };
-      mr.start();
-      recorderRef.current = mr;
-      setRecording(true);
-    } catch {
-      toast.error("Microphone permission denied");
-    }
-  };
-
-  const stopRecording = () => {
-    if (!recording) return;
-    recorderRef.current?.stop();
-    recorderRef.current = null;
+      });
+      return next;
+    });
     setRecording(false);
   };
+
+  const startRecording = () => {
+    if (recording) return;
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      toast.error("Voice input isn't supported in this browser.");
+      return;
+    }
+    setRecording(true);
+  };
+
+
 
   if (locked) return <LockedState />;
 
@@ -246,58 +217,61 @@ function WrenChatPage() {
 
       {/* Composer */}
       <div className="border-t border-border px-4 py-3 max-w-[760px] w-full mx-auto">
-        <div className="flex items-end gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(); }
+        {recording ? (
+          <VoiceRecorder
+            onTranscribed={handleTranscribed}
+            onCancel={() => setRecording(false)}
+            onError={(msg) => { toast.message(msg); setRecording(false); }}
+            getAuthToken={async () => {
+              const { data: session } = await supabase.auth.getSession();
+              return session.session?.access_token ?? null;
             }}
-            placeholder={scope.type === "listing" ? "Ask about this place…" : "Ask Wren anything about your search…"}
-            rows={1}
-            className="flex-1 resize-none rounded-card border border-charcoal-200 bg-surface-elevated px-4 py-3 text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-charcoal-950 min-h-[44px] max-h-40"
           />
-          <button
-            type="button"
-            onClick={recording ? stopRecording : startRecording}
-            disabled={streaming || transcribing}
-            aria-label={recording ? "Stop recording" : "Record voice message"}
-            title={recording ? "Stop recording" : "Speak to Wren"}
-            className={cn(
-              "shrink-0 h-11 w-11 rounded-pill border inline-flex items-center justify-center transition-colors disabled:opacity-40",
-              recording
-                ? "bg-sage-200 border-sage-500 text-sage-900 animate-pulse"
-                : "bg-surface-elevated border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
-            )}
-          >
-            {transcribing ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : recording ? (
-              <MicOff className="h-4 w-4" />
-            ) : (
+        ) : (
+          <div className="flex items-end gap-2">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(); }
+              }}
+              placeholder={scope.type === "listing" ? "Ask about this place…" : "Ask Wren anything about your search…"}
+              rows={1}
+              className="flex-1 resize-none rounded-card border border-charcoal-200 bg-surface-elevated px-4 py-3 text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-charcoal-950 min-h-[44px] max-h-40"
+            />
+            <button
+              type="button"
+              onClick={startRecording}
+              disabled={streaming}
+              aria-label="Start voice input"
+              title="Speak to Wren"
+              className="shrink-0 h-11 w-11 rounded-pill border border-charcoal-200 bg-surface-elevated text-charcoal-700 inline-flex items-center justify-center transition-colors hover:border-charcoal-950 disabled:opacity-40"
+            >
               <Mic className="h-4 w-4" />
+            </button>
+            {streaming ? (
+              <button
+                type="button"
+                onClick={() => abortRef.current?.abort()}
+                className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold"
+              >
+                <Square className="h-3.5 w-3.5 fill-current" /> Stop
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void send()}
+                disabled={!input.trim()}
+                className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold disabled:opacity-40"
+              >
+                <Send className="h-3.5 w-3.5" /> Send
+              </button>
             )}
-          </button>
-          {streaming ? (
-            <button
-              type="button"
-              onClick={() => abortRef.current?.abort()}
-              className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold"
-            >
-              <Square className="h-3.5 w-3.5 fill-current" /> Stop
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => void send()}
-              disabled={!input.trim()}
-              className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold disabled:opacity-40"
-            >
-              <Send className="h-3.5 w-3.5" /> Send
-            </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }
