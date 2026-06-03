@@ -15,7 +15,7 @@ export const Route = createFileRoute("/fair-housing")({
 
 function FairHousingPage() {
   return (
-    <LegalPageLayout title="Fair Housing Statement" lastUpdated="[DATE]">
+    <LegalPageLayout title="Fair Housing Statement" lastUpdated="July 2, 2026">
       <h2>Our Commitment</h2>
       <p>
         Nook supports equal housing opportunity. We comply with the federal Fair Housing Act

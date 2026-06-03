@@ -51,7 +51,7 @@ function Table({ rows }: { rows: Row[] }) {
 
 function SubprocessorsPage() {
   return (
-    <LegalPageLayout title="Subprocessor List" lastUpdated="[DATE]">
+    <LegalPageLayout title="Subprocessor List" lastUpdated="July 2, 2026">
       <h2>What Are Subprocessors?</h2>
       <p>
         Subprocessors are third-party companies we use to deliver the Service. We share

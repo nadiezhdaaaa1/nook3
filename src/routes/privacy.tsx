@@ -15,7 +15,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <LegalPageLayout title="Privacy Policy" lastUpdated="[DATE]" effective="[DATE]">
+    <LegalPageLayout title="Privacy Policy" lastUpdated="July 2, 2026">
       <h2>Summary</h2>
       <p>
         This Privacy Policy describes how Nook collects, uses, shares, and protects your

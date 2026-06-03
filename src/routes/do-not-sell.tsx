@@ -130,7 +130,7 @@ function DoNotSellPage() {
   }
 
   return (
-    <LegalPageLayout title="Your Privacy Choices" lastUpdated="[DATE]">
+    <LegalPageLayout title="Your Privacy Choices" lastUpdated="July 2, 2026">
       <h2>Your Privacy Choices</h2>
       <p>
         You have choices about how Nook uses your personal information. This page explains

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/refunds")({
 
 function RefundsPage() {
   return (
-    <LegalPageLayout title="Refund Policy" lastUpdated="[DATE]">
+    <LegalPageLayout title="Refund Policy" lastUpdated="July 2, 2026">
       <h2>Overview</h2>
       <p>
         Nook, operated by Zentaro Systems Ltd, offers transparent, customer-friendly refund

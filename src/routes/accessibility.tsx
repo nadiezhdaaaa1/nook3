@@ -15,7 +15,7 @@ export const Route = createFileRoute("/accessibility")({
 
 function AccessibilityPage() {
   return (
-    <LegalPageLayout title="Accessibility Statement" lastUpdated="[DATE]">
+    <LegalPageLayout title="Accessibility Statement" lastUpdated="July 2, 2026">
       <h2>Our Commitment</h2>
       <p>
         Nook is committed to making our Service accessible to people with disabilities. We aim

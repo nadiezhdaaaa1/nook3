@@ -15,7 +15,7 @@ export const Route = createFileRoute("/terms")({
 
 function TermsPage() {
   return (
-    <LegalPageLayout title="Terms of Service" lastUpdated="[DATE]" effective="[DATE]">
+    <LegalPageLayout title="Terms of Service" lastUpdated="July 2, 2026">
       <h2>1. Acceptance of Terms</h2>
       <p>
         Welcome to Nook. These Terms of Service ("Terms") govern your access to and use of the

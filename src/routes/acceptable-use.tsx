@@ -15,7 +15,7 @@ export const Route = createFileRoute("/acceptable-use")({
 
 function AcceptableUsePage() {
   return (
-    <LegalPageLayout title="Acceptable Use Policy" lastUpdated="[DATE]">
+    <LegalPageLayout title="Acceptable Use Policy" lastUpdated="July 2, 2026">
       <p>
         This Acceptable Use Policy ("AUP") applies to all users of Nook, operated by Zentaro
         Systems Ltd. By using the Service, you agree to comply with this AUP. Violations may
