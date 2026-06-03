@@ -113,12 +113,12 @@ export function Step3Location() {
                 <button
                   key={p.id}
                   type="button"
-                  onClick={() => applyPreset(resolved)}
+                  onClick={() => (allSelected ? removePreset(resolved) : applyPreset(resolved))}
                   disabled={resolved.length === 0}
                   className={cn(
                     "group text-left p-3.5 rounded-card border transition-colors",
                     allSelected
-                      ? "bg-sage-100/60 border-sage-400/60"
+                      ? "bg-sage-100/60 border-sage-400/60 hover:border-sage-500"
                       : "bg-surface-elevated border-border hover:border-charcoal-950 disabled:opacity-40 disabled:hover:border-border",
                   )}
                 >
@@ -128,7 +128,7 @@ export function Step3Location() {
                   </div>
                   <div className="text-[11px] text-charcoal-500 leading-snug">{p.description}</div>
                   <div className="text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5 text-charcoal-400">
-                    +{resolved.length} areas{allSelected ? " · added" : ""}
+                    +{resolved.length} areas{allSelected ? " · added · tap to remove" : ""}
                   </div>
                 </button>
               );
