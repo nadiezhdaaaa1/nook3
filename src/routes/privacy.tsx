@@ -38,7 +38,7 @@ function PrivacyPage() {
       <h2>1. Who We Are</h2>
       <p>
         Nook is operated by Zentaro Systems Ltd, a company registered in England and Wales
-        under company number [COMPANY_NUMBER], with registered office at [REGISTERED_ADDRESS].
+        under company number [COMPANY_NUMBER], with registered office at 167-169 Great Portland Street, 5th Floor, London, W1W 5PF.
         We operate in the United States under the trade name "The Nook" via the website
         thenook.rent and related services (the "Service").
       </p>
@@ -478,7 +478,7 @@ function PrivacyPage() {
         <br />
         Zentaro Systems Ltd
         <br />
-        [REGISTERED_ADDRESS]
+        167-169 Great Portland Street, 5th Floor, London, W1W 5PF
         <br />
         United Kingdom
       </p>

@@ -165,7 +165,7 @@ function SubprocessorsPage() {
       <p>
         <strong>Email:</strong> <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>
         <br />
-        <strong>Mail:</strong> Privacy Officer, Zentaro Systems Ltd, [REGISTERED_ADDRESS],
+        <strong>Mail:</strong> Privacy Officer, Zentaro Systems Ltd, 167-169 Great Portland Street, 5th Floor, London, W1W 5PF,
         United Kingdom
       </p>
     </LegalPageLayout>

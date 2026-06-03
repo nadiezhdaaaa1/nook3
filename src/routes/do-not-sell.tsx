@@ -335,7 +335,7 @@ function DoNotSellPage() {
         <br />
         Zentaro Systems Ltd
         <br />
-        [REGISTERED_ADDRESS]
+        167-169 Great Portland Street, 5th Floor, London, W1W 5PF
         <br />
         United Kingdom
       </p>
