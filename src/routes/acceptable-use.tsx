@@ -8,7 +8,9 @@ export const Route = createFileRoute("/acceptable-use")({
       { name: "description", content: "Rules for using the Nook Service." },
       { property: "og:title", content: "Acceptable Use Policy — Nook" },
       { property: "og:description", content: "Rules for using the Nook Service." },
+      { property: "og:url", content: "https://nook3.lovable.app/acceptable-use" }
     ],
+    links: [{ rel: "canonical", href: "https://nook3.lovable.app/acceptable-use" }],
   }),
   component: AcceptableUsePage,
 });

@@ -80,23 +80,51 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Kindly Process streamlines user onboarding and preference management for the Nook platform." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Kindly Process streamlines user onboarding and preference management for the Nook platform." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Kindly Process streamlines user onboarding and preference management for the Nook platform." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a2abb470-b1c0-4def-a7b2-7886db3a0472/id-preview-2115148e--011526a7-9fef-46b3-8015-fbc52cea53aa.lovable.app-1780157518244.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a2abb470-b1c0-4def-a7b2-7886db3a0472/id-preview-2115148e--011526a7-9fef-46b3-8015-fbc52cea53aa.lovable.app-1780157518244.png" },
-    ],
-    links: [
+      { title: "Nook — Real-time apartment alerts" },
       {
-        rel: "stylesheet",
-        href: appCss,
+        name: "description",
+        content:
+          "Nook watches the rental market 24/7 and pings you the moment a verified match appears. Built for renters tired of refreshing listings.",
+      },
+      { name: "author", content: "Nook" },
+      { name: "robots", content: "index, follow" },
+      { property: "og:site_name", content: "Nook" },
+      { property: "og:type", content: "website" },
+      { property: "og:title", content: "Nook — Real-time apartment alerts" },
+      {
+        property: "og:description",
+        content:
+          "Verified rental matches the moment they hit the market. No spam, no stale listings.",
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Nook — Real-time apartment alerts" },
+      {
+        name: "twitter:description",
+        content:
+          "Verified rental matches the moment they hit the market. No spam, no stale listings.",
+      },
+    ],
+    links: [{ rel: "stylesheet", href: appCss }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Nook",
+          url: "https://nook3.lovable.app",
+          description:
+            "Real-time apartment alerts for renters. Verified listings, rent-regulated units flagged, no spam.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Nook",
+          url: "https://nook3.lovable.app",
+        }),
       },
     ],
   }),

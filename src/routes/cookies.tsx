@@ -8,7 +8,9 @@ export const Route = createFileRoute("/cookies")({
       { name: "description", content: "How Nook uses cookies and similar technologies." },
       { property: "og:title", content: "Cookie Policy — Nook" },
       { property: "og:description", content: "How Nook uses cookies and similar technologies." },
+      { property: "og:url", content: "https://nook3.lovable.app/cookies" }
     ],
+    links: [{ rel: "canonical", href: "https://nook3.lovable.app/cookies" }],
   }),
   component: CookiesPage,
 });

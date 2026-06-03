@@ -8,7 +8,9 @@ export const Route = createFileRoute("/terms")({
       { name: "description", content: "The Terms of Service that govern your use of Nook." },
       { property: "og:title", content: "Terms of Service — Nook" },
       { property: "og:description", content: "The Terms of Service that govern your use of Nook." },
+      { property: "og:url", content: "https://nook3.lovable.app/terms" }
     ],
+    links: [{ rel: "canonical", href: "https://nook3.lovable.app/terms" }],
   }),
   component: TermsPage,
 });
