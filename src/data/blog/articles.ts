@@ -1,6 +1,17 @@
 // Blog content store (Phase 1: file-based, no CMS yet).
 // Adding a new article = append an object to ARTICLES. Slugs must be unique.
 
+import coverBestApps from "@/assets/blog/best-apartment-search-apps-2026.jpg";
+import coverVerifyRS from "@/assets/blog/how-to-verify-rent-stabilized-apartment-nyc.jpg";
+import coverRSvsRC from "@/assets/blog/rent-stabilization-vs-rent-control.jpg";
+import coverSpotFake from "@/assets/blog/spot-fake-apartment-listing.jpg";
+import coverBrokerFees from "@/assets/blog/broker-fees-explained.jpg";
+import coverNycTimeline from "@/assets/blog/apartment-hunting-nyc-timeline-costs.jpg";
+import coverChecklist from "@/assets/blog/apartment-hunting-checklist-47-things.jpg";
+import coverAi from "@/assets/blog/ai-changing-apartment-hunting.jpg";
+import coverNycBudget from "@/assets/blog/rent-in-nyc-budget-neighborhoods.jpg";
+import coverMoveOut from "@/assets/blog/move-out-checklist-security-deposit.jpg";
+
 export type BlogCategory =
   | "renter-rights"
   | "guides"
