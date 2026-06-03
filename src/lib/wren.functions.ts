@@ -91,15 +91,16 @@ export const createConversation = createServerFn({ method: "POST" })
       .select("id, title, scope_type, scope_data, search_id, created_at, updated_at")
       .single();
     if (error || !row) throw new Error(error?.message ?? "Failed to create conversation");
-    return {
+    const out: WrenConversationRow = {
       id: row.id,
       title: row.title,
       scopeType: row.scope_type as WrenConversationRow["scopeType"],
-      scopeData: (row.scope_data as Record<string, unknown>) ?? {},
+      scopeData: ((row.scope_data as JsonObject | null) ?? {}),
       searchId: row.search_id,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };
+    return out;
   });
 
 /* ---------- get messages for conversation ---------- */
@@ -108,7 +109,7 @@ export const getMessages = createServerFn({ method: "GET" })
   .inputValidator((input: unknown) =>
     z.object({ conversationId: z.string().uuid() }).parse(input),
   )
-  .handler(async ({ data, context }): Promise<WrenMessageRow[]> => {
+  .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: rows, error } = await supabase
       .from("wren_messages")
@@ -116,14 +117,15 @@ export const getMessages = createServerFn({ method: "GET" })
       .eq("conversation_id", data.conversationId)
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
-    return (rows ?? []).map((r) => ({
+    const out: WrenMessageRow[] = (rows ?? []).map((r) => ({
       id: r.id,
       role: r.role as WrenMessageRow["role"],
       content: r.content,
-      toolCalls: r.tool_calls,
-      toolResults: r.tool_results,
+      toolCalls: (r.tool_calls as JsonValue | null) ?? null,
+      toolResults: (r.tool_results as JsonValue | null) ?? null,
       createdAt: r.created_at,
     }));
+    return out;
   });
 
 /* ---------- delete conversation ---------- */
