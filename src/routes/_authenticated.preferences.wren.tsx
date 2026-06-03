@@ -1,11 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Send, Square, Plus, Loader2, Mic, MicOff } from "lucide-react";
+import { Sparkles, Send, Square, Plus, Loader2, Mic } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAppStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { VoiceRecorder } from "@/components/VoiceRecorder";
+
 
 const searchSchema = z.object({
   c: z.string().uuid().optional(),
