@@ -10,7 +10,7 @@ import {
   getArticle,
   getRelated,
   type BlogArticle,
-  type BlogFaq,
+  
 } from "@/data/blog/articles";
 import { cn } from "@/lib/utils";
 
