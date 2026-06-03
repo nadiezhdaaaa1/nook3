@@ -20,5 +20,10 @@ export const Route = createFileRoute("/_authenticated")({
     }
     return { userId: data.user.id };
   },
-  component: () => <Outlet />,
+  component: () => (
+    <>
+      <Outlet />
+      <WrenFab />
+    </>
+  ),
 });
