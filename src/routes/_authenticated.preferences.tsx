@@ -36,7 +36,7 @@ export const Route = createFileRoute("/_authenticated/preferences")({
 });
 
 type NavItem = {
-  to?: "/preferences" | "/preferences/alerts" | "/preferences/budget" | "/preferences/apartment" | "/preferences/location" | "/preferences/referrals" | "/preferences/account";
+  to?: "/preferences" | "/preferences/alerts" | "/preferences/budget" | "/preferences/apartment" | "/preferences/location" | "/preferences/referrals" | "/preferences/account" | "/preferences/wren";
   label: string;
   icon: typeof Bell;
   exact?: boolean;
@@ -44,31 +44,37 @@ type NavItem = {
   lockedReason?: string;
 };
 
-const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
-  {
-    label: "Search settings",
-    items: [
-      { to: "/preferences", label: "Notifications", icon: Bell, exact: true },
-      { to: "/preferences/budget", label: "Budget & Criteria", icon: DollarSign },
-      { to: "/preferences/apartment", label: "Apartment Details", icon: HomeIcon },
-      { to: "/preferences/location", label: "Location", icon: MapPin },
-    ],
-  },
-  {
-    label: "Activity",
-    items: [
-      { to: "/preferences/alerts", label: "Saved Alerts", icon: Inbox },
-      { label: "Wren AI Chat", icon: Sparkles, locked: true, lockedReason: "Premium" },
-    ],
-  },
-  {
-    label: "Account",
-    items: [
-      { to: "/preferences/referrals", label: "Referrals", icon: Gift },
-      { to: "/preferences/account", label: "Account", icon: UserCircle },
-    ],
-  },
-];
+function useNavGroups(): { label: string; items: NavItem[] }[] {
+  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const wrenLocked = plan !== "premium" && plan !== "max";
+  return [
+    {
+      label: "Search settings",
+      items: [
+        { to: "/preferences", label: "Notifications", icon: Bell, exact: true },
+        { to: "/preferences/budget", label: "Budget & Criteria", icon: DollarSign },
+        { to: "/preferences/apartment", label: "Apartment Details", icon: HomeIcon },
+        { to: "/preferences/location", label: "Location", icon: MapPin },
+      ],
+    },
+    {
+      label: "Activity",
+      items: [
+        { to: "/preferences/alerts", label: "Saved Alerts", icon: Inbox },
+        wrenLocked
+          ? { label: "Wren AI Chat", icon: Sparkles, locked: true, lockedReason: "Premium" }
+          : { to: "/preferences/wren", label: "Wren AI Chat", icon: Sparkles },
+      ],
+    },
+    {
+      label: "Account",
+      items: [
+        { to: "/preferences/referrals", label: "Referrals", icon: Gift },
+        { to: "/preferences/account", label: "Account", icon: UserCircle },
+      ],
+    },
+  ];
+}
 
 const SECTION_LABELS: Record<string, string> = {
   "/preferences": "Notification settings",
