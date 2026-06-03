@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_submissions: {
+        Row: {
+          created_at: string
+          email: string
+          email_error: string | null
+          email_sent: boolean
+          id: string
+          ip_address: string | null
+          message: string
+          name: string
+          routed_to: string
+          time_to_fill_ms: number | null
+          topic: Database["public"]["Enums"]["contact_topic"]
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          email_error?: string | null
+          email_sent?: boolean
+          id?: string
+          ip_address?: string | null
+          message: string
+          name: string
+          routed_to: string
+          time_to_fill_ms?: number | null
+          topic: Database["public"]["Enums"]["contact_topic"]
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          email_error?: string | null
+          email_sent?: boolean
+          id?: string
+          ip_address?: string | null
+          message?: string
+          name?: string
+          routed_to?: string
+          time_to_fill_ms?: number | null
+          topic?: Database["public"]["Enums"]["contact_topic"]
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           billing_cycle: Database["public"]["Enums"]["billing_cycle"]
@@ -285,6 +330,14 @@ export type Database = {
       app_plan: "free" | "premium" | "max"
       app_role: "admin" | "user"
       billing_cycle: "monthly" | "annual"
+      contact_topic:
+        | "general"
+        | "support"
+        | "press"
+        | "partnership"
+        | "investor"
+        | "legal"
+        | "other"
       search_status: "active" | "paused" | "archived"
     }
     CompositeTypes: {
@@ -419,6 +472,15 @@ export const Constants = {
       app_plan: ["free", "premium", "max"],
       app_role: ["admin", "user"],
       billing_cycle: ["monthly", "annual"],
+      contact_topic: [
+        "general",
+        "support",
+        "press",
+        "partnership",
+        "investor",
+        "legal",
+        "other",
+      ],
       search_status: ["active", "paused", "archived"],
     },
   },
