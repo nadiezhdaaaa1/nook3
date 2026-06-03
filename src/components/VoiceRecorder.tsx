@@ -226,7 +226,7 @@ export function VoiceRecorder({ onTranscribed, onCancel, onError, getAuthToken }
         type="button"
         onClick={cancel}
         aria-label="Cancel voice input"
-        className="shrink-0 h-8 w-8 rounded-pill inline-flex items-center justify-center text-charcoal-600 hover:bg-charcoal-50 hover:text-charcoal-950"
+        className="shrink-0 h-8 w-8 rounded-pill inline-flex items-center justify-center text-charcoal-600 hover:bg-charcoal-100 hover:text-charcoal-950"
       >
         <X className="h-4 w-4" />
       </button>
@@ -260,7 +260,7 @@ export function VoiceRecorder({ onTranscribed, onCancel, onError, getAuthToken }
         aria-label="Stop voice input"
         className={cn(
           "shrink-0 h-8 w-8 rounded-pill inline-flex items-center justify-center text-paper transition-colors",
-          phase === "recording" ? "bg-sage-700 hover:bg-sage-800" : "bg-charcoal-300 cursor-not-allowed"
+          phase === "recording" ? "bg-sage-700 hover:bg-sage-900" : "bg-charcoal-300 cursor-not-allowed"
         )}
       >
         <Check className="h-4 w-4" />
