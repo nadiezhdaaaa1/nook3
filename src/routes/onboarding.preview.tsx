@@ -181,43 +181,6 @@ function SamplePreview() {
         </>
       )}
 
-      {/* External link explanation modal */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-950/60 backdrop-blur-sm p-4"
-          onClick={() => setModalOpen(false)}
-        >
-          <div
-            className="relative max-w-sm w-full rounded-card bg-paper border border-border shadow-xl p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              className="absolute top-3 right-3 h-8 w-8 inline-flex items-center justify-center rounded-pill hover:bg-charcoal-100"
-              aria-label="Close"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <div className="h-10 w-10 rounded-pill bg-peach-100 flex items-center justify-center mb-4">
-              <ExternalLink className="h-4 w-4 text-peach-700" />
-            </div>
-            <h3 className="font-display text-lg font-bold text-charcoal-950 mb-2">
-              This is a sample preview
-            </h3>
-            <p className="text-sm text-charcoal-700 leading-relaxed mb-5">
-              After signup, this would link directly to the original listing.
-            </p>
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              className="w-full h-11 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800"
-            >
-              Got it
-            </button>
-          </div>
-        </div>
-      )}
 
       {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
         <div className="rounded-card border border-border bg-surface-elevated p-4 flex gap-3">
