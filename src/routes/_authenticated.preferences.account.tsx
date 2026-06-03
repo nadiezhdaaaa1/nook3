@@ -362,18 +362,18 @@ function ToggleRow({
         aria-disabled={disabled}
         onClick={() => !disabled && onChange(!checked)}
         className={cn(
-          "relative h-6 w-11 rounded-full transition-colors shrink-0 mt-0.5",
+          "relative shrink-0 mt-0.5 rounded-full transition-colors",
           checked ? "bg-charcoal-950" : "bg-charcoal-300",
           disabled && "opacity-60 cursor-not-allowed",
         )}
+        style={{ width: 44, height: 24 }}
       >
         <span
-          className={cn(
-            "absolute top-0.5 h-5 w-5 rounded-full bg-paper transition-transform",
-            checked ? "translate-x-5" : "translate-x-0.5",
-          )}
+          className="absolute top-1/2 -translate-y-1/2 rounded-full bg-white shadow-sm transition-[left] duration-200"
+          style={{ width: 20, height: 20, left: checked ? 22 : 2 }}
         />
       </button>
+
     </div>
   );
 }
