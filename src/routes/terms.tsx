@@ -21,7 +21,7 @@ function TermsPage() {
         Welcome to Nook. These Terms of Service ("Terms") govern your access to and use of the
         Nook website at thenook.rent, our applications, and related services (collectively, the
         "Service") operated by Zentaro Systems Ltd, a company registered in England and Wales
-        under company number [COMPANY_NUMBER], with registered office at 167-169 Great Portland Street, 5th Floor, London, W1W 5PF
+        under company number 17178666, with registered office at 167-169 Great Portland Street, 5th Floor, London, W1W 5PF
         ("Nook," "we," "us," or "our"). Nook operates in the United States under the trade name
         "The Nook."
       </p>
