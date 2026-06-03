@@ -1070,6 +1070,25 @@ function DeleteAlternatives({
   );
 }
 
+function AltRow({
+  icon: Icon, label, desc, onClick,
+}: { icon: typeof Mail; label: string; desc: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left rounded-card border border-border bg-paper-warm hover:border-charcoal-400 transition-colors px-4 py-3 flex items-center gap-3 group"
+    >
+      <Icon className="h-4 w-4 text-sage-700 shrink-0" />
+      <div className="min-w-0 flex-1">
+        <div className="text-sm font-semibold text-charcoal-950">{label}</div>
+        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
+      </div>
+      <ChevronRight className="h-4 w-4 text-charcoal-400 group-hover:text-charcoal-950 shrink-0" />
+    </button>
+  );
+}
+
 /* =========================================================================
    Cancel-subscription retention flow
    ========================================================================= */
