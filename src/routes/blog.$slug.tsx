@@ -325,25 +325,6 @@ function ArticleDetailPage() {
               </div>
             </div>
 
-            {/* FAQ */}
-            {article.faq && article.faq.length > 0 && (
-              <div className="mt-16">
-                <h2 className="font-display text-3xl font-medium text-[var(--color-brand-charcoal)] mb-6">
-                  Frequently asked
-                </h2>
-                <div className="divide-y border-y" style={{ borderColor: "var(--color-brand-clay)" }}>
-                  {article.faq.map((f: BlogFaq, i: number) => (
-                    <details key={i} className="py-5 group">
-                      <summary className="cursor-pointer flex items-center justify-between gap-4 font-display text-lg font-medium text-[var(--color-brand-charcoal)]">
-                        {f.q}
-                        <ChevronDown className="h-4 w-4 shrink-0 group-open:rotate-180 transition-transform" />
-                      </summary>
-                      <p className="mt-3 text-[var(--color-charcoal-700)] leading-relaxed">{f.a}</p>
-                    </details>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sidebar right */}
