@@ -2,45 +2,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { Clock } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
+import { ARTICLES, CATEGORY_LABEL } from "@/data/blog/articles";
 
-interface Article {
-  category: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  readTime: string;
-  gradient: string;
-}
-
-const ARTICLES: Article[] = [
-  {
-    category: "Guides",
-    title: "How to spot a bait listing in 30 seconds",
-    excerpt:
-      "Bait pricing is the oldest trick in the rental playbook. Here's how to recognize one before you waste an afternoon driving across town.",
-    author: "Nook Team",
-    readTime: "4 min read",
-    gradient: "linear-gradient(135deg, var(--color-brand-terracotta) 0%, var(--color-brand-clay) 100%)",
-  },
-  {
-    category: "Renter rights",
-    title: "What rent-stabilization actually gets you (and what it doesn't)",
-    excerpt:
-      "Most renters know the term but not the mechanics. We break down what protections you actually have once you sign a stabilized lease.",
-    author: "Nook Team",
-    readTime: "7 min read",
-    gradient: "linear-gradient(135deg, var(--color-brand-sage) 0%, var(--color-brand-cream) 100%)",
-  },
-  {
-    category: "Move-out tips",
-    title: "The 6-week move-out timeline that actually works",
-    excerpt:
-      "Most people start packing too late and lose their security deposit on rushed cleaning. Here's the schedule we recommend.",
-    author: "Nook Team",
-    readTime: "5 min read",
-    gradient: "linear-gradient(135deg, var(--color-brand-charcoal) 0%, var(--color-brand-terracotta) 100%)",
-  },
-];
+const TEASER_ARTICLES = ARTICLES.slice(0, 3);
 
 export function BlogTeaser() {
   const reduce = useReducedMotion();
@@ -63,46 +27,54 @@ export function BlogTeaser() {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {ARTICLES.map((a, i) => (
+          {TEASER_ARTICLES.map((a, i) => (
             <motion.article
-              key={a.title}
+              key={a.slug}
               initial={reduce ? false : { opacity: 0, y: 16 }}
               whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              className="group rounded-card border overflow-hidden flex flex-col hover-lift cursor-pointer"
+              className="group rounded-card border overflow-hidden flex flex-col hover-lift"
               style={{
                 borderColor: "var(--color-brand-clay)",
                 backgroundColor: "var(--color-brand-soft)",
               }}
             >
-              <div
-                className="aspect-[16/9] relative"
-                style={{ background: a.gradient }}
-              >
-                <div className="absolute inset-0 pattern-dots opacity-20" />
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--color-brand-sage)] font-semibold">
-                  {a.category}
-                </div>
-                <h3 className="mt-2 font-display text-xl font-medium leading-snug text-[var(--color-brand-charcoal)]">
-                  {a.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--color-charcoal-700)] line-clamp-3">
-                  {a.excerpt}
-                </p>
-                <div className="mt-5 pt-4 border-t flex items-center gap-3 text-[12px] text-[var(--color-charcoal-500)]"
-                  style={{ borderColor: "var(--color-brand-clay)" }}
+              <Link to="/blog/$slug" params={{ slug: a.slug }} className="flex flex-col h-full">
+                <div
+                  className="aspect-[16/9] relative overflow-hidden"
+                  style={{ background: a.coverGradient }}
                 >
-                  <span>{a.author}</span>
-                  <span>·</span>
-                  <span className="inline-flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {a.readTime}
-                  </span>
+                  <img
+                    src={a.coverImage}
+                    alt={a.coverImageAlt}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
                 </div>
-              </div>
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--color-brand-sage)] font-semibold">
+                    {CATEGORY_LABEL[a.category]}
+                  </div>
+                  <h3 className="mt-2 font-display text-xl font-medium leading-snug text-[var(--color-brand-charcoal)]">
+                    {a.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-[var(--color-charcoal-700)] line-clamp-3">
+                    {a.excerpt}
+                  </p>
+                  <div
+                    className="mt-5 pt-4 border-t flex items-center gap-3 text-[12px] text-[var(--color-charcoal-500)]"
+                    style={{ borderColor: "var(--color-brand-clay)" }}
+                  >
+                    <span>Nook Team</span>
+                    <span>·</span>
+                    <span className="inline-flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {a.readingTimeMin} min read
+                    </span>
+                  </div>
+                </div>
+              </Link>
             </motion.article>
           ))}
         </div>
