@@ -169,8 +169,13 @@ function FeaturedCard({ article }: { article: BlogArticle }) {
         backgroundColor: "var(--color-brand-soft)",
       }}
     >
-      <div className="aspect-[4/3] md:aspect-auto relative" style={{ background: article.coverGradient }}>
-        <div className="absolute inset-0 pattern-dots opacity-20" />
+      <div className="aspect-[4/3] md:aspect-auto relative overflow-hidden" style={{ background: article.coverGradient }}>
+        <img
+          src={article.coverImage}
+          alt={article.coverImageAlt}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       </div>
       <div className="p-8 lg:p-10 flex flex-col justify-center">
         <div className="flex items-center gap-3">
@@ -219,8 +224,13 @@ function ArticleCard({ article }: { article: BlogArticle }) {
         backgroundColor: "var(--color-brand-soft)",
       }}
     >
-      <div className="aspect-[4/3] relative" style={{ background: article.coverGradient }}>
-        <div className="absolute inset-0 pattern-dots opacity-20" />
+      <div className="aspect-[4/3] relative overflow-hidden" style={{ background: article.coverGradient }}>
+        <img
+          src={article.coverImage}
+          alt={article.coverImageAlt}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       </div>
       <div className="p-6 flex-1 flex flex-col">
         <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">

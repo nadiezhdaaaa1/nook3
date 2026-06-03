@@ -243,10 +243,12 @@ function ArticleDetailPage() {
           <div
             className="mt-12 aspect-[16/9] relative rounded-card overflow-hidden"
             style={{ background: article.coverGradient }}
-            role="img"
-            aria-label={article.coverImageAlt}
           >
-            <div className="absolute inset-0 pattern-dots opacity-20" />
+            <img
+              src={article.coverImage}
+              alt={article.coverImageAlt}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </div>
         </div>
       </article>
