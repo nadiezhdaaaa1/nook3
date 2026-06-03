@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubprocessorsRouteImport } from './routes/subprocessors'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -68,6 +69,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RefundsRoute = RefundsRouteImport.update({
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -316,6 +323,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -358,6 +366,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -401,6 +410,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/sign-in'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -442,6 +452,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/sign-in'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/sign-in'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -526,6 +538,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
+  SignInRoute: typeof SignInRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubprocessorsRoute: typeof SubprocessorsRoute
@@ -566,6 +579,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/refunds': {
@@ -903,6 +923,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
+  SignInRoute: SignInRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubprocessorsRoute: SubprocessorsRoute,
