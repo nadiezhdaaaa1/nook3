@@ -386,51 +386,779 @@ function ToggleRow({
 }
 
 
-function DeleteAccountButton() {
-  const [text, setText] = useState("");
-  const reset = useAppStore((s) => s.reset);
+/* =========================================================================
+   Security section + Change-password flow
+   ========================================================================= */
+
+function SecuritySection() {
+  // Mock "last changed" — would come from auth metadata
+  const lastChanged = useMemo(() => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - 3);
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  }, []);
+  const [open, setOpen] = useState(false);
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-danger/40 text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
-        >
-          <Trash2 className="h-3.5 w-3.5" /> Delete
-        </button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This permanently removes your searches, alerts, and profile. Type{" "}
-            <span className="font-mono font-semibold text-charcoal-950">DELETE</span> to confirm.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <input
-          autoFocus
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="DELETE"
-          className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-danger focus:outline-none text-sm font-mono"
-        />
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setText("")}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            disabled={text !== "DELETE"}
-            onClick={() => {
-              reset();
-              toast.success("Account deleted");
-            }}
-            className="bg-danger text-paper hover:bg-danger/90"
+    <section>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
+      <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
+              <KeyRound className="h-3.5 w-3.5 text-sage-700" /> Password
+            </div>
+            <div className="text-xs text-charcoal-600 mt-0.5">Last changed {lastChanged}.</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
           >
-            Delete account
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+            Change password
+          </button>
+        </div>
+
+        <LockedRow
+          icon={ShieldCheck}
+          label="Two-factor authentication"
+          desc="Add a second step at sign-in. Coming soon."
+        />
+        <LockedRow
+          icon={Globe}
+          label="Active sessions"
+          desc="See where you're signed in and revoke devices. Coming soon."
+        />
+      </div>
+
+      <ChangePasswordDialog open={open} onOpenChange={setOpen} />
+    </section>
   );
 }
+
+function LockedRow({
+  icon: Icon, label, desc,
+}: { icon: typeof Mail; label: string; desc: string }) {
+  return (
+    <div className="px-5 py-4 flex items-center justify-between gap-4 opacity-70">
+      <div className="min-w-0">
+        <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
+          <Icon className="h-3.5 w-3.5 text-charcoal-500" />
+          {label}
+          <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
+            Coming soon
+          </span>
+        </div>
+        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
+      </div>
+      <Lock className="h-4 w-4 text-charcoal-400 shrink-0" />
+    </div>
+  );
+}
+
+function passwordStrength(p: string): { score: 0|1|2|3|4; label: string } {
+  let s = 0;
+  if (p.length >= 10) s++;
+  if (/[A-Z]/.test(p) && /[a-z]/.test(p)) s++;
+  if (/\d/.test(p)) s++;
+  if (/[^A-Za-z0-9]/.test(p)) s++;
+  const label = ["Too short", "Weak", "Okay", "Strong", "Excellent"][s];
+  return { score: s as 0|1|2|3|4, label };
+}
+
+function ChangePasswordDialog({
+  open, onOpenChange,
+}: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [cur, setCur] = useState("");
+  const [next, setNext] = useState("");
+  const [conf, setConf] = useState("");
+  const [showCur, setShowCur] = useState(false);
+  const [showNext, setShowNext] = useState(false);
+  const [signOutOthers, setSignOutOthers] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const strength = passwordStrength(next);
+  const minOk = next.length >= 10;
+  const matches = conf.length > 0 && conf === next;
+  const distinct = next.length === 0 || next !== cur;
+  const canSubmit = cur.length > 0 && minOk && matches && distinct && !busy;
+
+  const reset = () => {
+    setCur(""); setNext(""); setConf(""); setError(null);
+    setShowCur(false); setShowNext(false); setBusy(false);
+  };
+
+  const submit = async () => {
+    setError(null);
+    setBusy(true);
+    // Mock: treat "wrongpass" as a wrong current password for demo
+    await new Promise((r) => setTimeout(r, 450));
+    if (cur === "wrongpass") {
+      setBusy(false);
+      setError("That password doesn't match.");
+      return;
+    }
+    setBusy(false);
+    onOpenChange(false);
+    reset();
+    toast.success("Password updated", {
+      description: signOutOthers ? "Other sessions were signed out." : undefined,
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) reset(); onOpenChange(v); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Change password</DialogTitle>
+          <DialogDescription>
+            Use at least 10 characters. Mix letters, numbers, and a symbol for best results.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <PasswordField
+            id="cur-pw" label="Current password" value={cur} onChange={setCur}
+            show={showCur} onToggle={() => setShowCur((s) => !s)} error={error ?? undefined}
+            autoFocus autoComplete="current-password"
+          />
+          <PasswordField
+            id="new-pw" label="New password" value={next} onChange={setNext}
+            show={showNext} onToggle={() => setShowNext((s) => !s)}
+            error={!distinct ? "New password must differ from current." : undefined}
+            autoComplete="new-password"
+          />
+          {next.length > 0 && (
+            <div>
+              <div className="flex gap-1 mb-1">
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "h-1 flex-1 rounded-full transition-colors",
+                      i < strength.score ? "bg-sage-600" : "bg-charcoal-950/10",
+                    )}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-charcoal-600">
+                <span>{strength.label}</span>
+                <span className={cn(minOk ? "text-sage-700" : "text-charcoal-500")}>
+                  {minOk ? "✓ 10+ characters" : `${next.length}/10 characters`}
+                </span>
+              </div>
+            </div>
+          )}
+          <PasswordField
+            id="conf-pw" label="Confirm new password" value={conf} onChange={setConf}
+            show={showNext} onToggle={() => setShowNext((s) => !s)}
+            error={conf.length > 0 && !matches ? "Passwords don't match." : undefined}
+            autoComplete="new-password"
+          />
+
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={signOutOthers}
+              onChange={(e) => setSignOutOthers(e.target.checked)}
+              className="h-4 w-4 rounded border-charcoal-400 text-charcoal-950 focus:ring-charcoal-950"
+            />
+            <span className="text-xs text-charcoal-700">Sign out everywhere else</span>
+          </label>
+        </div>
+
+        <DialogFooter>
+          <button
+            type="button"
+            onClick={() => { reset(); onOpenChange(false); }}
+            className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={!canSubmit}
+            onClick={submit}
+            className={cn(
+              "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
+              canSubmit
+                ? "bg-sage-700 text-paper hover:bg-sage-800"
+                : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+            )}
+          >
+            {busy ? "Updating…" : "Update password"}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function PasswordField({
+  id, label, value, onChange, show, onToggle, error, autoFocus, autoComplete,
+}: {
+  id: string; label: string; value: string; onChange: (v: string) => void;
+  show: boolean; onToggle: () => void; error?: string;
+  autoFocus?: boolean; autoComplete?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label htmlFor={id} className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={id}
+          type={show ? "text" : "password"}
+          autoFocus={autoFocus}
+          autoComplete={autoComplete}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={cn(
+            "w-full h-11 pl-4 pr-11 rounded-md bg-surface-elevated border focus:outline-none text-sm",
+            error ? "border-danger/60 focus:border-danger" : "border-border focus:border-charcoal-950",
+          )}
+        />
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={show ? "Hide password" : "Show password"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-charcoal-500 hover:text-charcoal-950 hover:bg-paper"
+        >
+          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+      {error && <p className="text-xs text-danger">{error}</p>}
+    </div>
+  );
+}
+
+/* =========================================================================
+   Delete-account flow (5 steps + 30-day grace)
+   ========================================================================= */
+
+function DeleteAccountButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-danger/40 text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
+      >
+        <Trash2 className="h-3.5 w-3.5" /> Delete account
+      </button>
+      <DeleteAccountDialog open={open} onOpenChange={setOpen} />
+    </>
+  );
+}
+
+type DeleteStep = "alternatives" | "losses" | "reauth" | "confirm";
+
+function DeleteAccountDialog({
+  open, onOpenChange,
+}: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [step, setStep] = useState<DeleteStep>("alternatives");
+  const [pw, setPw] = useState("");
+  const [pwError, setPwError] = useState<string | null>(null);
+  const [confirmText, setConfirmText] = useState("");
+  const reset = useAppStore((s) => s.reset);
+  const updatePlanMut = useUpdatePlanMutation();
+  const prefs = usePreferencesStore();
+
+  const closeAll = () => {
+    onOpenChange(false);
+    setTimeout(() => {
+      setStep("alternatives");
+      setPw(""); setPwError(null); setConfirmText("");
+    }, 200);
+  };
+
+  const stepIndex = ["alternatives", "losses", "reauth", "confirm"].indexOf(step) + 1;
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <div className="flex items-center justify-between gap-3">
+            <DialogTitle className="flex items-center gap-2">
+              {step !== "alternatives" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (step === "losses") setStep("alternatives");
+                    if (step === "reauth") setStep("losses");
+                    if (step === "confirm") setStep("reauth");
+                  }}
+                  className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
+                  aria-label="Back"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+              )}
+              Delete account
+            </DialogTitle>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
+              Step {stepIndex} of 4
+            </span>
+          </div>
+        </DialogHeader>
+
+        {step === "alternatives" && (
+          <div className="space-y-3">
+            <p className="text-sm text-charcoal-700">
+              Deleting is permanent. Would one of these do instead?
+            </p>
+            <AltRow
+              icon={PauseCircle}
+              label="Pause subscription"
+              desc="Keep your searches; we won't bill you while paused."
+              onClick={() => {
+                toast.success("Subscription paused for 1 month");
+                closeAll();
+              }}
+            />
+            <AltRow
+              icon={Tag}
+              label="Downgrade to Free"
+              desc="Keep 1 saved search. No charges."
+              onClick={() => {
+                updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
+                toast.success("Moved to Free plan");
+                closeAll();
+              }}
+            />
+            <AltRow
+              icon={Bell}
+              label="Turn off optional emails"
+              desc="Stop product tips and partner offers. Keep your account."
+              onClick={() => {
+                prefs.setPref("productUpdates", false);
+                prefs.setPref("marketingEmails", false);
+                toast.success("Optional emails turned off");
+                closeAll();
+              }}
+            />
+            <DialogFooter className="!justify-between pt-2">
+              <button
+                type="button"
+                onClick={closeAll}
+                className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+              >
+                Keep my account
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("losses")}
+                className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+              >
+                No — delete my account <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "losses" && (
+          <div className="space-y-4">
+            <p className="text-sm text-charcoal-700">
+              When you delete, you'll lose:
+            </p>
+            <ul className="space-y-2 text-sm text-charcoal-800 rounded-card bg-paper-warm border border-border p-4">
+              {[
+                "All saved searches and filter settings",
+                "Alert history and saved listings",
+                "Your Wren AI chats",
+                "Referral credits and bonuses",
+                "Your profile and preferences",
+              ].map((t) => (
+                <li key={t} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1 w-1 rounded-full bg-charcoal-500 shrink-0" />
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-charcoal-600 leading-relaxed">
+              Some records required by law (tax and transaction history) are retained per our Privacy Policy.
+              After the 30-day grace period, deletion can't be undone.
+            </p>
+            <DialogFooter>
+              <button
+                type="button"
+                onClick={closeAll}
+                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+              >
+                Keep my account
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("reauth")}
+                className="h-10 px-5 rounded-pill text-sm font-semibold border border-danger/40 text-danger hover:bg-danger/10"
+              >
+                Continue
+              </button>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "reauth" && (
+          <div className="space-y-4">
+            <p className="text-sm text-charcoal-700">
+              For your security, please re-enter your password.
+            </p>
+            <PasswordField
+              id="del-pw"
+              label="Current password"
+              value={pw}
+              onChange={(v) => { setPw(v); setPwError(null); }}
+              show={false}
+              onToggle={() => {}}
+              error={pwError ?? undefined}
+              autoFocus
+              autoComplete="current-password"
+            />
+            <DialogFooter>
+              <button
+                type="button"
+                onClick={closeAll}
+                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={pw.length === 0}
+                onClick={() => {
+                  if (pw === "wrongpass") {
+                    setPwError("That password doesn't match.");
+                    return;
+                  }
+                  setStep("confirm");
+                }}
+                className={cn(
+                  "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
+                  pw.length > 0
+                    ? "border border-danger/40 text-danger hover:bg-danger/10"
+                    : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+                )}
+              >
+                Verify
+              </button>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "confirm" && (
+          <div className="space-y-4">
+            <p className="text-sm text-charcoal-700">
+              Type <span className="font-mono font-semibold text-charcoal-950">DELETE</span> to confirm.
+              Your account will be deactivated immediately and permanently removed after a 30-day grace period.
+            </p>
+            <input
+              autoFocus
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="DELETE"
+              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-danger focus:outline-none text-sm font-mono"
+            />
+            <DialogFooter>
+              <button
+                type="button"
+                onClick={closeAll}
+                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+              >
+                Keep my account
+              </button>
+              <button
+                type="button"
+                disabled={confirmText !== "DELETE"}
+                onClick={() => {
+                  reset();
+                  closeAll();
+                  toast.success("Account scheduled for deletion", {
+                    description: "You have 30 days to restore by signing back in.",
+                    duration: 6000,
+                  });
+                }}
+                className={cn(
+                  "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
+                  confirmText === "DELETE"
+                    ? "bg-danger text-paper hover:bg-danger/90"
+                    : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+                )}
+              >
+                Delete my account
+              </button>
+            </DialogFooter>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function AltRow({
+  icon: Icon, label, desc, onClick,
+}: { icon: typeof Mail; label: string; desc: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left rounded-card border border-border bg-paper-warm hover:border-charcoal-400 transition-colors px-4 py-3 flex items-center gap-3 group"
+    >
+      <Icon className="h-4 w-4 text-sage-700 shrink-0" />
+      <div className="min-w-0 flex-1">
+        <div className="text-sm font-semibold text-charcoal-950">{label}</div>
+        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
+      </div>
+      <ChevronRight className="h-4 w-4 text-charcoal-400 group-hover:text-charcoal-950 shrink-0" />
+    </button>
+  );
+}
+
+/* =========================================================================
+   Cancel-subscription retention flow
+   ========================================================================= */
+
+type CancelReason = "expensive" | "found" | "matches" | "break" | "other";
+type CancelStep = "reason" | "offer" | "confirm";
+
+function CancelSubscriptionDialog({
+  open, onOpenChange, periodEnd,
+}: { open: boolean; onOpenChange: (v: boolean) => void; periodEnd: string }) {
+  const [step, setStep] = useState<CancelStep>("reason");
+  const [reason, setReason] = useState<CancelReason | null>(null);
+  const updatePlanMut = useUpdatePlanMutation();
+
+  const close = () => {
+    onOpenChange(false);
+    setTimeout(() => { setStep("reason"); setReason(null); }, 200);
+  };
+
+  const reasons: { id: CancelReason; label: string }[] = [
+    { id: "expensive", label: "Too expensive" },
+    { id: "found", label: "I found a place" },
+    { id: "matches", label: "Not enough good matches" },
+    { id: "break", label: "Just taking a break" },
+    { id: "other", label: "Something else" },
+  ];
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Cancel subscription</DialogTitle>
+          {step === "reason" && (
+            <DialogDescription>
+              Before you go — what's prompting this? It helps us improve.
+            </DialogDescription>
+          )}
+        </DialogHeader>
+
+        {step === "reason" && (
+          <div className="space-y-2">
+            {reasons.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setReason(r.id)}
+                className={cn(
+                  "w-full text-left px-4 py-3 rounded-card border text-sm font-medium transition-colors",
+                  reason === r.id
+                    ? "border-charcoal-950 bg-paper-warm text-charcoal-950"
+                    : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+            <DialogFooter className="!justify-between pt-3">
+              <button
+                type="button"
+                onClick={() => { setReason("other"); setStep("confirm"); }}
+                className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+              >
+                Cancel anyway
+              </button>
+              <button
+                type="button"
+                disabled={!reason}
+                onClick={() => setStep("offer")}
+                className={cn(
+                  "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
+                  reason
+                    ? "bg-charcoal-950 text-paper hover:bg-charcoal-800"
+                    : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+                )}
+              >
+                Continue
+              </button>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "offer" && reason && (
+          <CancelOffer
+            reason={reason}
+            onAccept={(msg) => { toast.success(msg); close(); }}
+            onDecline={() => setStep("confirm")}
+            onDowngradeFree={() => {
+              updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
+              toast.success("Moved to Free plan — kept 1 search");
+              close();
+            }}
+          />
+        )}
+
+        {step === "confirm" && (
+          <div className="space-y-4">
+            <p className="text-sm text-charcoal-700 leading-relaxed">
+              You'll keep your paid features until <span className="font-semibold text-charcoal-950">{periodEnd}</span>,
+              then move to Free. Your searches pause; data is kept per our Privacy Policy.
+            </p>
+            <DialogFooter>
+              <button
+                type="button"
+                onClick={close}
+                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+              >
+                Keep my plan
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
+                  close();
+                  toast.success(`Subscription canceled — active until ${periodEnd}`);
+                }}
+                className="h-10 px-5 rounded-pill text-sm font-semibold border border-danger/40 text-danger hover:bg-danger/10"
+              >
+                Cancel subscription
+              </button>
+            </DialogFooter>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CancelOffer({
+  reason, onAccept, onDecline, onDowngradeFree,
+}: {
+  reason: CancelReason;
+  onAccept: (toastMsg: string) => void;
+  onDecline: () => void;
+  onDowngradeFree: () => void;
+}) {
+  type OfferAction =
+    | { kind: "accept"; label: string; toast: string }
+    | { kind: "downgrade-free"; label: string }
+    | { kind: "decline"; label: string };
+
+  const config: Record<CancelReason, {
+    icon: typeof Mail;
+    title: string;
+    desc: string;
+    actions: OfferAction[];
+  }> = {
+    expensive: {
+      icon: Tag,
+      title: "50% off for the next 2 months",
+      desc: "Stay on Premium at half price — automatic, no code needed.",
+      actions: [
+        { kind: "accept", label: "Apply 50% off", toast: "50% off applied for 2 months" },
+        { kind: "downgrade-free", label: "Switch to Free (keep 1 search)" },
+        { kind: "decline", label: "No thanks, cancel" },
+      ],
+    },
+    found: {
+      icon: Heart,
+      title: "Congrats! Pause instead of canceling",
+      desc: "Your searches wait quietly for your next move — no charges while paused. You can also list your move-out and earn $50.",
+      actions: [
+        { kind: "accept", label: "Pause for 1 month", toast: "Paused for 1 month" },
+        { kind: "accept", label: "List my move-out · earn $50", toast: "Move-out listing started" },
+        { kind: "decline", label: "No thanks, cancel" },
+      ],
+    },
+    matches: {
+      icon: MessageCircle,
+      title: "Let Wren retune your search",
+      desc: "A free Wren session to refine filters — plus 1 month free to give it another shot.",
+      actions: [
+        { kind: "accept", label: "Retune with Wren + 1 month free", toast: "1 month free added — open Wren to retune" },
+        { kind: "decline", label: "No thanks, cancel" },
+      ],
+    },
+    break: {
+      icon: PauseCircle,
+      title: "Pause — no charges while you're away",
+      desc: "Pick how long. We'll resume right where you left off.",
+      actions: [
+        { kind: "accept", label: "Pause 1 month", toast: "Paused for 1 month" },
+        { kind: "accept", label: "Pause 2 months", toast: "Paused for 2 months" },
+        { kind: "accept", label: "Pause 3 months", toast: "Paused for 3 months" },
+        { kind: "decline", label: "No thanks, cancel" },
+      ],
+    },
+    other: {
+      icon: MessageCircle,
+      title: "Talk to us — or pause instead",
+      desc: "Tell us what's off and we'll try to help. Or pause and decide later.",
+      actions: [
+        { kind: "accept", label: "Pause 1 month", toast: "Paused for 1 month" },
+        { kind: "accept", label: "Contact support", toast: "Support thread opened" },
+        { kind: "decline", label: "No thanks, cancel" },
+      ],
+    },
+  };
+
+  const c = config[reason];
+  const Icon = c.icon;
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-card border border-sage-300/60 bg-sage-100/40 p-4">
+        <div className="flex items-start gap-3">
+          <Icon className="h-5 w-5 text-sage-700 shrink-0 mt-0.5" />
+          <div>
+            <div className="font-display text-base font-semibold text-charcoal-950">{c.title}</div>
+            <p className="text-xs text-charcoal-700 mt-1 leading-relaxed">{c.desc}</p>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        {c.actions.map((a, i) => {
+          const primary = i === 0;
+          const handle = () => {
+            if (a.kind === "accept") onAccept(a.toast);
+            else if (a.kind === "downgrade-free") onDowngradeFree();
+            else onDecline();
+          };
+          return (
+            <button
+              key={a.label}
+              type="button"
+              onClick={handle}
+              className={cn(
+                "h-11 px-4 rounded-pill text-sm font-semibold transition-colors",
+                primary
+                  ? "bg-sage-700 text-paper hover:bg-sage-800"
+                  : a.kind === "decline"
+                    ? "border border-charcoal-950/15 text-charcoal-800 hover:bg-paper"
+                    : "border border-charcoal-950/15 text-charcoal-950 hover:bg-paper",
+              )}
+            >
+              {a.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 
 function BillingToggle({
   cycle, onChange,
