@@ -182,6 +182,9 @@ function AccountPage() {
         </div>
       </section>
 
+      {/* Security */}
+      <SecuritySection />
+
       {/* Subscription */}
       <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} />
 
