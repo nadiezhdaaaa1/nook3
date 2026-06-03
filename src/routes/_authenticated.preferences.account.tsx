@@ -308,7 +308,7 @@ function SyncProfile({
 function StatCard({
   icon: Icon, label, value, footer, progress,
 }: {
-  icon: typeof Sparkles; label: string; value: string; footer: string; progress?: number;
+  icon: typeof Sparkles; label: string; value: string; footer: React.ReactNode; progress?: number;
 }) {
   return (
     <div className="rounded-card border border-border bg-paper-warm p-5">
