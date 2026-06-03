@@ -11,7 +11,15 @@ import {
   Check,
   Layers,
   Loader2,
+  ChevronDown,
+  Sparkle,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { AlertStatus, SavedAlert } from "@/data/savedAlerts";
 import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
