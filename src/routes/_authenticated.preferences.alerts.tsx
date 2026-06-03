@@ -534,9 +534,18 @@ function WrenCompareModal({ items, onClose }: { items: SavedAlert[]; onClose: ()
             {items.map((a) => (
               <div key={a.id} className="rounded-card border border-border p-3 bg-surface-elevated">
                 <div
-                  className="h-20 w-full rounded-md mb-2"
+                  className="h-28 w-full rounded-md mb-2 overflow-hidden bg-charcoal-100"
                   style={{ background: `hsl(${a.imageHue} 40% 80%)` }}
-                />
+                >
+                  {a.imageUrl && (
+                    <img
+                      src={a.imageUrl}
+                      alt={a.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  )}
+                </div>
                 <div className="text-sm font-semibold text-charcoal-950 truncate">{a.title}</div>
                 <div className="text-xs text-charcoal-600">{a.neighborhood}</div>
                 <div className="text-sm font-bold text-charcoal-950 mt-1">
