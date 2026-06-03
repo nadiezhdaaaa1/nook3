@@ -372,7 +372,7 @@ function StatusDropdown({
   const Icon = current.icon;
 
   const variant: Record<AlertStatus, string> = {
-    new: "bg-sage-100 border-sage-300 text-sage-900",
+    "new": "bg-sage-100 border-sage-300 text-sage-900",
     saved: "bg-sage-900 border-sage-900 text-paper",
     contacted: "bg-surface-elevated border-sage-500 text-sage-900",
     dismissed: "bg-surface-elevated border-charcoal-200 text-charcoal-600",
