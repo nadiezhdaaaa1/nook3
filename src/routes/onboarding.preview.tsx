@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { MapPin, TrendingDown, Shield, Sparkles, ExternalLink, ShieldCheck, X } from "lucide-react";
+import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -17,7 +17,7 @@ function SamplePreview() {
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
@@ -168,16 +168,6 @@ function SamplePreview() {
                         </div>
                       </div>
 
-                      {/* External link */}
-                      <div className="pt-2">
-                        <button
-                          type="button"
-                          onClick={() => setModalOpen(true)}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-peach-700 hover:text-peach-900 transition-colors"
-                        >
-                          See listing preview <ExternalLink className="h-3 w-3" />
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </article>
@@ -191,43 +181,6 @@ function SamplePreview() {
         </>
       )}
 
-      {/* External link explanation modal */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-950/60 backdrop-blur-sm p-4"
-          onClick={() => setModalOpen(false)}
-        >
-          <div
-            className="relative max-w-sm w-full rounded-card bg-paper border border-border shadow-xl p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              className="absolute top-3 right-3 h-8 w-8 inline-flex items-center justify-center rounded-pill hover:bg-charcoal-100"
-              aria-label="Close"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <div className="h-10 w-10 rounded-pill bg-peach-100 flex items-center justify-center mb-4">
-              <ExternalLink className="h-4 w-4 text-peach-700" />
-            </div>
-            <h3 className="font-display text-lg font-bold text-charcoal-950 mb-2">
-              This is a sample preview
-            </h3>
-            <p className="text-sm text-charcoal-700 leading-relaxed mb-5">
-              After signup, this would link directly to the original listing.
-            </p>
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              className="w-full h-11 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800"
-            >
-              Got it
-            </button>
-          </div>
-        </div>
-      )}
 
       {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
         <div className="rounded-card border border-border bg-surface-elevated p-4 flex gap-3">
