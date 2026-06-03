@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Avoid indexing dynamic / utility URLs
+Disallow: /*?utm_*
+Disallow: /onboarding
+Disallow: /preferences
+
+Sitemap: https://nook3.lovable.app/sitemap.xml
