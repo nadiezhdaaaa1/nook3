@@ -308,7 +308,7 @@ function ArticleDetailPage() {
                 Tagged
               </div>
               <div className="flex flex-wrap gap-2">
-                {article.tags.map((t) => (
+                {article.tags.map((t: string) => (
                   <span
                     key={t}
                     className="text-[11px] font-mono uppercase tracking-[0.1em] font-semibold px-3 py-1.5 rounded-pill"
@@ -330,7 +330,7 @@ function ArticleDetailPage() {
                   Frequently asked
                 </h2>
                 <div className="divide-y border-y" style={{ borderColor: "var(--color-brand-clay)" }}>
-                  {article.faq.map((f, i) => (
+                  {article.faq.map((f: BlogFaq, i: number) => (
                     <details key={i} className="py-5 group">
                       <summary className="cursor-pointer flex items-center justify-between gap-4 font-display text-lg font-medium text-[var(--color-brand-charcoal)]">
                         {f.q}
