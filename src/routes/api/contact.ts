@@ -23,8 +23,25 @@ const TopicEnum = z.enum([
 ]);
 
 const ContactSchema = z.object({
-  name: z.string().trim().min(1).max(100),
-  email: z.string().trim().toLowerCase().email().max(255),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(100)
+    .regex(/^[\p{L}][\p{L}\s'’\-.]*$/u, "Invalid characters in name")
+    .refine((v) => !/\d/.test(v), "Name shouldn't contain numbers")
+    .refine((v) => !/https?:\/\/|www\./i.test(v), "Name shouldn't contain links"),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .max(255)
+    .regex(
+      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/,
+      "Invalid email format",
+    )
+    .refine((v) => !/\.\./.test(v), "Email can't contain consecutive dots")
+    .refine((v) => !/^\.|\.@|@\.|\.$/.test(v), "Invalid dot placement"),
   topic: TopicEnum,
   message: z.string().trim().min(10).max(5000),
   // Honeypot — must be empty. Bots auto-fill all visible fields.
