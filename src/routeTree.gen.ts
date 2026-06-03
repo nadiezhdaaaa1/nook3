@@ -24,6 +24,7 @@ import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
 import { Route as DmcaRouteImport } from './routes/dmca'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
@@ -122,6 +123,11 @@ const CookiesRoute = CookiesRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccessibilityRoute = AccessibilityRouteImport.update({
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
@@ -297,6 +304,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
@@ -338,6 +346,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
+    | '/app'
     | '/contact'
     | '/cookies'
     | '/dmca'
@@ -420,6 +430,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
+    | '/app'
     | '/contact'
     | '/cookies'
     | '/dmca'
@@ -460,6 +471,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/acceptable-use'
     | '/accessibility'
+    | '/app'
     | '/contact'
     | '/cookies'
     | '/dmca'
@@ -502,6 +514,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AcceptableUseRoute: typeof AcceptableUseRoute
   AccessibilityRoute: typeof AccessibilityRoute
+  AppRoute: typeof AppRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
   DmcaRoute: typeof DmcaRoute
@@ -630,6 +643,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/accessibility': {
@@ -871,6 +891,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AcceptableUseRoute: AcceptableUseRoute,
   AccessibilityRoute: AccessibilityRoute,
+  AppRoute: AppRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
   DmcaRoute: DmcaRoute,
