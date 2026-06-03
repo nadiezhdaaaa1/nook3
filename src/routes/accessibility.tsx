@@ -15,7 +15,7 @@ export const Route = createFileRoute("/accessibility")({
 
 function AccessibilityPage() {
   return (
-    <LegalPageLayout title="Accessibility Statement" lastUpdated="[DATE]">
+    <LegalPageLayout title="Accessibility Statement" lastUpdated="July 2, 2026">
       <h2>Our Commitment</h2>
       <p>
         Nook is committed to making our Service accessible to people with disabilities. We aim
@@ -68,8 +68,8 @@ function AccessibilityPage() {
 
       <h2>Last Audit</h2>
       <ul>
-        <li><strong>Internal review:</strong> [DATE]</li>
-        <li><strong>Third-party audit:</strong> Planned for [DATE]</li>
+        <li><strong>Internal review:</strong> July 2, 2026</li>
+        <li><strong>Third-party audit:</strong> Planned for Q4 2026</li>
       </ul>
 
       <h2>Feedback</h2>

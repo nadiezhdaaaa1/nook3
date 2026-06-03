@@ -4,18 +4,15 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 interface LegalPageLayoutProps {
   title: string;
   lastUpdated: string;
+  /** @deprecated kept for backwards compatibility, no longer rendered */
   effective?: string;
   children: ReactNode;
-  /** Show the "draft placeholder" banner. Defaults to true. */
-  draft?: boolean;
 }
 
 export function LegalPageLayout({
   title,
   lastUpdated,
-  effective,
   children,
-  draft = true,
 }: LegalPageLayoutProps) {
   return (
     <MarketingLayout>
@@ -26,33 +23,8 @@ export function LegalPageLayout({
           </h1>
           <p className="mt-4 text-sm text-charcoal-500 font-mono tracking-wide">
             Last updated: {lastUpdated}
-            {effective ? ` · Effective: ${effective}` : ""}
           </p>
         </header>
-
-        {draft && (
-          <div
-            role="alert"
-            className="mb-10 rounded-xl border-2 px-5 py-4 text-sm flex gap-3"
-            style={{
-              borderColor: "#d4a017",
-              backgroundColor: "#fff8e1",
-              color: "#5c4a00",
-            }}
-          >
-            <span aria-hidden className="text-lg leading-none mt-0.5">⚠️</span>
-            <div className="space-y-1">
-              <p className="font-semibold">
-                This document is a draft pending legal review.
-              </p>
-              <p className="text-[13px] opacity-90">
-                Effective date will be set upon publication. Do not rely on
-                this language — it has not been reviewed by counsel.
-              </p>
-            </div>
-          </div>
-        )}
-
 
         <div className="legal-prose text-charcoal-800">{children}</div>
 

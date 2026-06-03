@@ -15,7 +15,7 @@ export const Route = createFileRoute("/dmca")({
 
 function DmcaPage() {
   return (
-    <LegalPageLayout title="DMCA Copyright Policy" lastUpdated="[DATE]">
+    <LegalPageLayout title="DMCA Copyright Policy" lastUpdated="July 2, 2026">
       <h2>1. Our Policy</h2>
       <p>
         Nook, operated by Zentaro Systems Ltd, respects intellectual property rights and

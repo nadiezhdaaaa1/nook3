@@ -15,7 +15,7 @@ export const Route = createFileRoute("/cookies")({
 
 function CookiesPage() {
   return (
-    <LegalPageLayout title="Cookie Policy" lastUpdated="[DATE]">
+    <LegalPageLayout title="Cookie Policy" lastUpdated="July 2, 2026">
       <h2>1. Introduction</h2>
       <p>
         This Cookie Policy explains how Nook ("we," "us," "our"), operated by Zentaro Systems
