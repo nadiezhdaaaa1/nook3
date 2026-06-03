@@ -1623,6 +1623,256 @@ export const ARTICLES: BlogArticle[] = [
     ],
     relatedSlugs: ["how-to-verify-rent-stabilized-apartment-nyc", "broker-fees-explained", "apartment-hunting-nyc-timeline-costs"],
   },
+  {
+    slug: "move-out-checklist-security-deposit",
+    title: "Move-Out Checklist: Keep Your Security Deposit and Skip the Cleaning Company",
+    excerpt:
+      "The average NYC renter loses $400-1,200 of their security deposit. Most of it is preventable. Room-by-room move-out checklist plus your legal rights.",
+    category: "guides",
+    tags: ["Move-Out", "Security Deposit", "Tenant Rights", "Cleaning", "NYC"],
+    publishedAt: "2026-07-06",
+    updatedAt: "2026-07-06",
+    readingTimeMin: 9,
+    coverGradient: "linear-gradient(135deg, oklch(0.72 0.14 150) 0%, oklch(0.55 0.16 200) 100%)",
+    coverImageAlt: "Move-out checklist illustration",
+    body: [
+      { type: "p", text: "The average NYC renter loses $400–$1,200 of their security deposit at move-out. Most of that loss is preventable — and a lot of it is illegal under state law that tenants don't know they have on their side." },
+      { type: "p", text: "This guide covers the 60-30-7-day timeline that gives you the best shot at a full deposit return, the room-by-room cleaning checklist that addresses every common deduction, what landlords legally cannot charge you for, and what to do when a deposit isn't returned." },
+      { type: "p", text: "Save it. Use it. The amount on the line — sometimes $3,000–$5,000 — is worth the hour or two of preparation." },
+
+      { type: "h2", id: "state-law", text: "State-by-state security deposit law (the basics)" },
+      { type: "p", text: "Before getting into the checklist, understand your rights. Security deposit rules are set by state, and they're significantly more tenant-favorable than most renters realize." },
+
+      { type: "h3", id: "ny", text: "New York" },
+      { type: "ul", items: [
+        "Maximum deposit: one month's rent",
+        "Return timeline: 14 days after move-out (one of the strictest in the country)",
+        "Required disclosure: landlord must provide an itemized statement of any deductions",
+        "Tenant rights: can recover up to twice the deposit amount if landlord acts in bad faith",
+      ] },
+
+      { type: "h3", id: "nj", text: "New Jersey" },
+      { type: "ul", items: [
+        "Maximum deposit: 1.5 months' rent",
+        "Return timeline: 30 days after move-out",
+        "Required disclosure: itemized statement",
+        "Tenant rights: can recover double damages if not returned timely",
+      ] },
+
+      { type: "h3", id: "ca", text: "California" },
+      { type: "ul", items: [
+        "Maximum deposit: 2 months' rent (unfurnished), 3 months' rent (furnished). New law (2024) reducing this to 1 month for most landlords.",
+        "Return timeline: 21 days after move-out",
+        "Required disclosure: itemized statement; pre-move-out inspection on request",
+        "Tenant rights: can recover up to twice the deposit for bad faith",
+      ] },
+
+      { type: "h3", id: "ma", text: "Massachusetts" },
+      { type: "ul", items: [
+        "Maximum deposit: 1 month's rent (plus first/last and a key fee)",
+        "Return timeline: 30 days",
+        "Required disclosure: itemized statement",
+        "Tenant rights: can recover triple damages for bad faith",
+      ] },
+
+      { type: "h3", id: "il", text: "Illinois (Chicago specifically)" },
+      { type: "ul", items: [
+        "Maximum deposit: no state cap, Chicago caps at amounts varying by program",
+        "Return timeline: 45 days (Chicago: 30–45 days)",
+        "Required disclosure: detailed itemization",
+        "Tenant rights: can recover double damages plus attorney fees",
+      ] },
+
+      { type: "h3", id: "tx", text: "Texas" },
+      { type: "ul", items: [
+        "Maximum deposit: no state cap (typical: 1–2 months)",
+        "Return timeline: 30 days",
+        "Required disclosure: itemized statement",
+        "Tenant rights: can recover triple deposit plus attorney fees",
+      ] },
+
+      { type: "h3", id: "fl", text: "Florida" },
+      { type: "ul", items: [
+        "Maximum deposit: no state cap",
+        "Return timeline: 15–60 days depending on situation",
+        "Required disclosure: itemized statement",
+        "Tenant rights: limited compared to other states",
+      ] },
+
+      { type: "p", text: "Most states require landlords to itemize deductions in writing and to return undisputed portions within the legal timeline. Failures here often entitle tenants to enhanced damages." },
+      { type: "p", text: "If you don't see your state above, search \"[your state] security deposit law\" — every state has a similar framework." },
+
+      { type: "h2", id: "timeline", text: "The 60-30-7 day timeline" },
+      { type: "p", text: "The single biggest predictor of getting your full deposit back is starting early. Here's the timeline that actually works:" },
+
+      { type: "h3", id: "t-60", text: "60 days out: Notice letter" },
+      { type: "p", text: "Most leases require 30–60 days notice before move-out. Send notice in writing (email is fine; certified mail is safer for high-stakes situations). Your notice letter should state the move-out date, request a final walkthrough, ask for the forwarding-address process for deposit return, and ask about any specific move-out requirements." },
+      { type: "p", text: "This letter accomplishes several things: documents your notice (preventing landlord claims you gave inadequate notice), requests the walkthrough (which most tenants forget to request), and opens a paper trail you can reference if disputes arise." },
+
+      { type: "h3", id: "t-30", text: "30 days out: Pre-move-out walkthrough" },
+      { type: "p", text: "Many states allow tenants to request a pre-move-out walkthrough with the landlord. California's law explicitly requires it on request. Even where not legally required, most landlords agree to it." },
+      { type: "p", text: "The walkthrough goal: surface any concerns the landlord has about the unit's condition BEFORE move-out, so you can address them while you still have time. Things you want to identify:" },
+      { type: "ul", items: [
+        "Walls or floors that need patching/painting",
+        "Appliances that need cleaning",
+        "Pest issues",
+        "Damage that goes beyond normal wear-and-tear",
+      ] },
+      { type: "p", text: "Bring your own checklist (use the room-by-room sections below). Photograph everything. Get the landlord's verbal or written agreement on what's acceptable vs what needs to be addressed." },
+
+      { type: "h3", id: "t-7", text: "7 days out: Deep cleaning and repairs" },
+      { type: "p", text: "The week before move-out is when you actually do the work. Schedule it. Block off a Saturday and Sunday if possible." },
+      { type: "p", text: "Order of operations:" },
+      { type: "ol", items: [
+        "Remove all your belongings first (cleaning a half-furnished apartment is impossible)",
+        "Repair items that need patching (so paint can dry)",
+        "Deep clean room by room (top-down: ceiling fans first, floors last)",
+        "Final walkthrough with your own checklist",
+        "Take photos of every room before handing over keys",
+      ] },
+
+      { type: "h2", id: "cleaning", text: "The cleaning checklist by room" },
+      { type: "p", text: "This is the practical core. Each room gets a specific list of what landlords commonly cite as deduction reasons, and how to address each." },
+
+      { type: "h3", id: "kitchen", text: "Kitchen" },
+      { type: "ul", items: [
+        "Fridge interior: empty completely; wipe shelves, walls, ceiling, produce drawers, and door gasket; defrost the freezer if you can",
+        "Oven: the #1 deduction. Use oven cleaner per directions; scrub racks separately; clean the door glass interior",
+        "Range hood: pull and wash the filter; wipe the exterior and the greasy underside",
+        "Stove top: clean burner pans/grates; wipe the surface and the area around each burner",
+        "Cabinets: empty completely; wipe interior, exterior, inside doors, and on top",
+        "Sink and faucet: scrub basin; clean the base of the faucet; pour boiling water down the drain",
+        "Floor: sweep, mop, and check corners; pull out fridge and stove to clean underneath if possible",
+      ] },
+
+      { type: "h3", id: "bathroom", text: "Bathroom" },
+      { type: "ul", items: [
+        "Grout: the #2 deduction. Use a grout cleaner (or baking soda + bleach) and a stiff brush",
+        "Mirror: glass cleaner, no streaks",
+        "Exhaust fan: remove cover and clean the dust — most tenants never do this",
+        "Behind and around the toilet: floor, dust, hair, base where it meets the floor",
+        "Shower/tub: soap scum requires scrubbing, not spraying — Comet or specialty bathroom cleaner with a non-scratch sponge",
+        "Sink and counter: clear the drain (boiling water + baking soda + vinegar) and wipe down the counter",
+      ] },
+
+      { type: "h3", id: "living", text: "Living areas" },
+      { type: "ul", items: [
+        "Walls: Magic Eraser for scuffs; diluted dish soap for larger marks; spackle for holes",
+        "Baseboards: wipe along the entire perimeter — they collect dust invisible from standing height",
+        "Window tracks: clean with a damp cloth",
+        "Ceiling fans: dust the blades — landlords always check",
+        "Light fixtures: wipe down; replace burnt-out bulbs",
+        "Floors: sweep/mop hard floors; vacuum carpets; spot-clean stains",
+      ] },
+
+      { type: "h3", id: "bedroom", text: "Bedrooms" },
+      { type: "ul", items: [
+        "Closet rods and shelves: empty completely; wipe down",
+        "Light fixtures, walls, floors: same as living areas",
+      ] },
+
+      { type: "h3", id: "entry", text: "Entry" },
+      { type: "ul", items: [
+        "Coat closet: clean as any closet",
+        "Doormat area: clean the floor where the doormat sat — dirt builds up there",
+        "Door and frame: wipe down, including the door's edge",
+      ] },
+
+      { type: "h2", id: "repairs", text: "The repair checklist (do these yourself)" },
+      { type: "p", text: "Most \"damage\" deductions are for items you can repair in under 30 minutes:" },
+      { type: "ul", items: [
+        "Nail holes: small tub of spackle ($4–6), putty knife, sand lightly, touch-up paint if you can match — ~5 minutes per hole plus drying",
+        "Stained walls: Magic Eraser first; then diluted dish soap; repaint if stains won't lift",
+        "Carpet stains: OxiClean or carpet stain remover; pour, blot (don't rub), repeat",
+        "Door hardware: tighten loose handles, hinges, locks; replace anything you removed",
+        "Light bulbs: replace all burnt-out bulbs with matching wattages",
+        "Smoke detector batteries: replace — required in most jurisdictions",
+      ] },
+
+      { type: "h2", id: "cant-charge", text: "What landlords legally cannot charge you for" },
+      { type: "p", text: "This is where most renters lose money — agreeing to deductions that aren't legally allowable." },
+
+      { type: "h3", id: "wear-tear", text: "Normal wear-and-tear" },
+      { type: "p", text: "By law, landlords cannot deduct from your deposit for \"normal wear-and-tear.\" The definition varies by state, but generally includes:" },
+      { type: "ul", items: [
+        "Minor scuffs and marks on walls from normal living",
+        "Carpet wear from foot traffic in normal paths",
+        "Faded paint from sunlight",
+        "Small nail holes from hanging pictures",
+        "Minor stains in high-use areas (kitchen counter, bathroom)",
+        "Aging of caulk and grout",
+        "Worn finish on appliances from use",
+        "Wear of door hardware from normal use",
+      ] },
+      { type: "p", text: "What DOES count as damage (deductible):" },
+      { type: "ul", items: [
+        "Large holes in walls",
+        "Burn marks",
+        "Pet damage (chewing, scratching, urine)",
+        "Burns or significant stains on carpet",
+        "Broken appliances",
+        "Damage from unauthorized alterations",
+        "Damage from negligence (water damage from overflowing sink, etc.)",
+      ] },
+
+      { type: "h3", id: "pre-existing", text: "Pre-existing damage" },
+      { type: "p", text: "Damage that existed when you moved in cannot be charged to you. This is why move-in documentation matters so much: photos of every room at move-in (with timestamps), a written list of pre-existing issues ideally signed by landlord or maintenance, and saved copies of any move-in inspection forms." },
+      { type: "p", text: "If you didn't document at move-in, you have to argue from current-state photos and your testimony, which is harder." },
+
+      { type: "h3", id: "painting", text: "Painting (in some situations)" },
+      { type: "p", text: "In several states, landlords cannot charge tenants for painting between tenants — it's considered a cost of doing business, not tenant damage. Check your state's specific rule." },
+      { type: "p", text: "NYC specifically: landlords must paint apartments every 3 years for stabilized units, and cannot charge tenants for that painting. Even for market-rate units, painting charges for tenancies under 2–3 years are often disputed successfully." },
+
+      { type: "h3", id: "cleaning-excess", text: "Cleaning that exceeds normal" },
+      { type: "p", text: "Some states limit cleaning deductions to amounts that exceed reasonable cleaning costs. If a landlord charges $500 for \"cleaning\" a one-bedroom apartment, that's typically not defensible if you left it broom-clean." },
+      { type: "p", text: "The standard is usually: did you leave the unit in similar condition to how you received it, minus normal wear?" },
+
+      { type: "h3", id: "improvements", text: "Improvements rather than repairs" },
+      { type: "p", text: "Landlords sometimes try to charge tenants for improvements (upgrading appliances, repainting in a different color, replacing carpet with hardwood) and label these as \"tenant damage repairs.\" These charges are not legally supportable." },
+
+      { type: "h2", id: "walkthrough", text: "The walkthrough — what to document" },
+      { type: "p", text: "Before you hand over keys, walk through the apartment with the landlord (or property manager) and photograph everything. Specifically:" },
+      { type: "ul", items: [
+        "Every room from multiple angles",
+        "Every appliance interior",
+        "Every closet",
+        "Every fixture",
+        "Any item the landlord points out as a concern",
+      ] },
+      { type: "p", text: "If the landlord identifies concerns during the walkthrough: ask if you can address them on the spot (sometimes yes — wipe a counter, sweep a corner); get any acceptable repairs in writing; if the landlord wants to deduct for items you consider acceptable, document the disputed items specifically." },
+      { type: "p", text: "Take photos with date stamps enabled. Many phone cameras do this automatically. The photos are your evidence if a dispute arises." },
+
+      { type: "h2", id: "deposit-not-returned", text: "If your deposit isn't returned: the demand letter process" },
+      { type: "p", text: "If the legal timeline passes without your deposit return:" },
+      { type: "p", text: "Step 1: Send a written demand letter. Email or certified mail. State the address, move-out date, deposit amount, the legal deadline that has passed, and a 14-day demand for full return — and put the landlord on notice that you'll file in small claims for the deposit plus any enhanced damages your state allows. Include your forwarding address." },
+      { type: "p", text: "This letter sometimes resolves the issue without further action. It signals that you know your rights and will pursue them." },
+      { type: "p", text: "Step 2: File in small claims court. If the demand letter doesn't produce results within 2–3 weeks, file in small claims court. The process is designed to be navigable without an attorney:" },
+      { type: "ul", items: [
+        "Filing fee: typically $20–50",
+        "No attorney required (some states allow attorneys; others don't)",
+        "Standardized forms available online from your state court website",
+        "Hearings typically scheduled within 30–60 days",
+      ] },
+      { type: "p", text: "Bring to court: your move-in documentation, move-out photos, lease copy, demand letter copy, any communication with the landlord, and a clear calculation of damages claimed." },
+      { type: "p", text: "Most small claims cases settle before hearing. Landlords often offer to return deposits when faced with a court date, even if they were ignoring you previously." },
+      { type: "p", text: "Step 3: Pursue enhanced damages (where allowed). Many states allow tenants to recover double or triple the deposit amount when landlords act in bad faith. Specifically claim these in your small claims filing." },
+
+      { type: "h2", id: "list-on-nook", text: "Pro tip: List your apartment on Nook before you leave" },
+      { type: "p", text: "If you're moving out of an apartment you'd recommend to other renters, Nook's move-out feature lets you list it for the next tenant. When a Nook user signs a lease for your apartment, you earn $50 — money you can use to offset moving costs." },
+      { type: "p", text: "The process is simple: mark your search as \"moving out\" in your Nook account, add basic details (date available, rent, address), and other Nook users see the listing prioritized in their alerts. When someone signs a lease through your listing, you get $50 once their lease is verified." },
+      { type: "p", text: "This works best for apartments in popular neighborhoods or buildings where Nook users are actively searching." },
+    ],
+    faq: [
+      { q: "How clean is \"clean enough\" at move-out?", a: "The legal standard in most states is \"broom clean\" — meaning the unit is free of personal belongings, swept/vacuumed, and at least as clean as it was when you received it. Some leases specify higher standards (professional cleaning), but those standards may not be enforceable beyond reasonable charges." },
+      { q: "Should I hire a cleaning service?", a: "For typical 1–2 bedroom apartments, doing the cleaning yourself takes 6–12 hours and produces results equivalent to professional cleaning at $0 cost. For larger units or where you're time-constrained, professional cleaning ($150–400) is sometimes worth it. Either way, document thoroughly with photos." },
+      { q: "What if there's a dispute about whether something is wear-and-tear vs damage?", a: "State law sometimes provides specific guidance. Generally, the determining factors are: how recently was the item installed, how long did you live there, and what's the cost of replacement vs repair? A landlord trying to charge for replacing 5-year-old carpet after a 3-year tenancy is on weak legal ground." },
+      { q: "Can the landlord deduct for \"loss of rent\" if I leave early?", a: "If you break the lease early, landlords in most states can deduct for unpaid rent during the remaining lease term (mitigated by their duty to find a new tenant). Standard move-out at lease end carries no such liability." },
+      { q: "My landlord wants to take pictures during the walkthrough. Should I let them?", a: "Yes — but you should be taking your own photos too. Their photos are evidence in any dispute, and you want your own independent record." },
+      { q: "What if I gave the deposit in cash and have no receipt?", a: "This is a serious problem. Always insist on receipts for any deposit payment. If you have only cash and no receipt, your case becomes much harder to prove. Going forward, never pay deposits in cash." },
+      { q: "What about my pet deposit?", a: "Pet deposits are treated like security deposits in most states — they must be itemized at return, can only deduct for actual pet damage, and are subject to the same timelines." },
+    ],
+    relatedSlugs: ["apartment-hunting-checklist-47-things", "spot-fake-apartment-listing", "apartment-hunting-nyc-timeline-costs"],
+  },
 ];
 
 export function getArticle(slug: string): BlogArticle | undefined {
