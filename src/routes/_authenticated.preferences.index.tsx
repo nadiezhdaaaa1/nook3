@@ -363,16 +363,18 @@ function ToggleSwitch({ checked, onChange }: { checked: boolean; onChange: (v: b
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={cn(
-        "relative h-6 w-11 rounded-full transition-colors shrink-0",
+        "relative inline-flex shrink-0 rounded-full transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30 focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
         checked ? "bg-charcoal-950" : "bg-charcoal-300",
       )}
+      style={{ width: 44, height: 24, padding: 0 }}
     >
       <span
-        className={cn(
-          "absolute top-0.5 h-5 w-5 rounded-full bg-paper transition-transform",
-          checked ? "translate-x-5" : "translate-x-0.5",
-        )}
+        aria-hidden="true"
+        className="absolute top-1/2 -translate-y-1/2 rounded-full bg-paper-elevated shadow-sm transition-[left] duration-200 ease-out"
+        style={{ width: 20, height: 20, left: checked ? 22 : 2 }}
       />
     </button>
   );
 }
+
