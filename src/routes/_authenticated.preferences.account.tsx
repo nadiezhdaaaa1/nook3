@@ -314,10 +314,7 @@ function StatCard({
       {typeof progress === "number" && (
         <div className="mt-3 h-1.5 w-full rounded-full bg-charcoal-950/8 overflow-hidden">
           <div
-            className={cn(
-              "h-full transition-all",
-              progress >= 100 ? "bg-peach-700" : "bg-charcoal-950",
-            )}
+            className="h-full bg-charcoal-950 transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
