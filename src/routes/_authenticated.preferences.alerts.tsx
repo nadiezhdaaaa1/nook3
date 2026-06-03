@@ -188,7 +188,7 @@ function SavedAlertsPage() {
       ) : (
         <ul className="space-y-3">
           {filtered.map((a) => (
-            <AlertRow
+            <AlertRowItem
               key={a.id}
               alert={a}
               selected={selected.has(a.id)}
@@ -242,7 +242,7 @@ function fitScore(id: string): number {
   return 85 + (h % 14); // 85..98
 }
 
-function AlertRow({
+function AlertRowItem({
   alert,
   selected,
   onToggle,
