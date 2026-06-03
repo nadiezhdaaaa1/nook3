@@ -79,5 +79,6 @@ export const SAVED_ALERTS: SavedAlert[] = Array.from({ length: 25 }, (_, i) => {
     status,
     tags,
     imageHue: Math.floor(r(11) * 360),
+    imageUrl: apartmentPhotoUrl(`alert-${i + 1}`),
   };
 });
