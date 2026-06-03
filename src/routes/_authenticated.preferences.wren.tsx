@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Send, Square, Plus, Loader2 } from "lucide-react";
+import { Sparkles, Send, Square, Plus, Loader2, Mic, MicOff } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAppStore } from "@/lib/store";
@@ -33,6 +33,10 @@ function WrenChatPage() {
   const [streaming, setStreaming] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
 
   const scope = useMemo(() => {
     if (search.scope === "listing" && search.listing) {
@@ -144,6 +148,62 @@ function WrenChatPage() {
     }
   };
 
+  const startRecording = async () => {
+    if (recording || transcribing) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      toast.error("Microphone not supported in this browser");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mr = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      mr.ondataavailable = (e) => { if (e.data.size) audioChunksRef.current.push(e.data); };
+      mr.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(audioChunksRef.current, { type: mr.mimeType || "audio/webm" });
+        if (blob.size < 500) { setTranscribing(false); return; }
+        setTranscribing(true);
+        try {
+          const { data: session } = await supabase.auth.getSession();
+          const token = session.session?.access_token;
+          if (!token) throw new Error("Not signed in");
+          const fd = new FormData();
+          fd.append("audio", blob, "voice.webm");
+          const res = await fetch("/api/wren-transcribe", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: fd,
+          });
+          if (!res.ok) {
+            const j = await res.json().catch(() => ({}));
+            throw new Error(j.error ?? `Transcription failed (${res.status})`);
+          }
+          const j = (await res.json()) as { text?: string };
+          const text = (j.text ?? "").trim();
+          if (text) setInput((prev) => (prev ? `${prev} ${text}` : text));
+          else toast.message("Didn't catch that. Try again.");
+        } catch (e) {
+          toast.error((e as Error).message ?? "Transcription failed");
+        } finally {
+          setTranscribing(false);
+        }
+      };
+      mr.start();
+      recorderRef.current = mr;
+      setRecording(true);
+    } catch {
+      toast.error("Microphone permission denied");
+    }
+  };
+
+  const stopRecording = () => {
+    if (!recording) return;
+    recorderRef.current?.stop();
+    recorderRef.current = null;
+    setRecording(false);
+  };
+
   if (locked) return <LockedState />;
 
   const scopeChip = scope.type !== "general" && (
@@ -197,6 +257,27 @@ function WrenChatPage() {
             rows={1}
             className="flex-1 resize-none rounded-card border border-charcoal-200 bg-surface-elevated px-4 py-3 text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-charcoal-950 min-h-[44px] max-h-40"
           />
+          <button
+            type="button"
+            onClick={recording ? stopRecording : startRecording}
+            disabled={streaming || transcribing}
+            aria-label={recording ? "Stop recording" : "Record voice message"}
+            title={recording ? "Stop recording" : "Speak to Wren"}
+            className={cn(
+              "shrink-0 h-11 w-11 rounded-pill border inline-flex items-center justify-center transition-colors disabled:opacity-40",
+              recording
+                ? "bg-sage-200 border-sage-500 text-sage-900 animate-pulse"
+                : "bg-surface-elevated border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
+            )}
+          >
+            {transcribing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : recording ? (
+              <MicOff className="h-4 w-4" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
+          </button>
           {streaming ? (
             <button
               type="button"
