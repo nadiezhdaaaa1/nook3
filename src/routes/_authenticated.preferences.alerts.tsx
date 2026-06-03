@@ -58,6 +58,7 @@ function rowToSavedAlert(r: AlertRow): SavedAlert {
     status: r.status as AlertStatus,
     tags: l.tags ?? [],
     imageHue: l.imageHue ?? 200,
+    imageUrl: l.imageUrl,
   };
 }
 
