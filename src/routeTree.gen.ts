@@ -15,8 +15,10 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
 import { Route as DmcaRouteImport } from './routes/dmca'
@@ -77,6 +79,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -85,6 +92,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FairHousingRoute = FairHousingRouteImport.update({
@@ -250,8 +262,10 @@ export interface FileRoutesByFullPath {
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
@@ -288,8 +302,10 @@ export interface FileRoutesByTo {
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
@@ -327,8 +343,10 @@ export interface FileRoutesById {
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
   '/signup': typeof SignupRoute
@@ -367,8 +385,10 @@ export interface FileRouteTypes {
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/home'
     | '/login'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/refunds'
     | '/signup'
@@ -405,8 +425,10 @@ export interface FileRouteTypes {
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/home'
     | '/login'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/refunds'
     | '/signup'
@@ -443,8 +465,10 @@ export interface FileRouteTypes {
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/home'
     | '/login'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/refunds'
     | '/signup'
@@ -483,8 +507,10 @@ export interface RootRouteChildren {
   DmcaRoute: typeof DmcaRoute
   DoNotSellRoute: typeof DoNotSellRoute
   FairHousingRoute: typeof FairHousingRoute
+  HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
+  PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
   SignupRoute: typeof SignupRoute
@@ -543,6 +569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -555,6 +588,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fair-housing': {
@@ -836,8 +876,10 @@ const rootRouteChildren: RootRouteChildren = {
   DmcaRoute: DmcaRoute,
   DoNotSellRoute: DoNotSellRoute,
   FairHousingRoute: FairHousingRoute,
+  HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
+  PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
   SignupRoute: SignupRoute,
@@ -854,3 +896,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
