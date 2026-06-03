@@ -217,58 +217,61 @@ function WrenChatPage() {
 
       {/* Composer */}
       <div className="border-t border-border px-4 py-3 max-w-[760px] w-full mx-auto">
-        <div className="flex items-end gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(); }
+        {recording ? (
+          <VoiceRecorder
+            onTranscribed={handleTranscribed}
+            onCancel={() => setRecording(false)}
+            onError={(msg) => { toast.message(msg); setRecording(false); }}
+            getAuthToken={async () => {
+              const { data: session } = await supabase.auth.getSession();
+              return session.session?.access_token ?? null;
             }}
-            placeholder={scope.type === "listing" ? "Ask about this place…" : "Ask Wren anything about your search…"}
-            rows={1}
-            className="flex-1 resize-none rounded-card border border-charcoal-200 bg-surface-elevated px-4 py-3 text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-charcoal-950 min-h-[44px] max-h-40"
           />
-          <button
-            type="button"
-            onClick={recording ? stopRecording : startRecording}
-            disabled={streaming || transcribing}
-            aria-label={recording ? "Stop recording" : "Record voice message"}
-            title={recording ? "Stop recording" : "Speak to Wren"}
-            className={cn(
-              "shrink-0 h-11 w-11 rounded-pill border inline-flex items-center justify-center transition-colors disabled:opacity-40",
-              recording
-                ? "bg-sage-200 border-sage-500 text-sage-900 animate-pulse"
-                : "bg-surface-elevated border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
-            )}
-          >
-            {transcribing ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : recording ? (
-              <MicOff className="h-4 w-4" />
-            ) : (
+        ) : (
+          <div className="flex items-end gap-2">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(); }
+              }}
+              placeholder={scope.type === "listing" ? "Ask about this place…" : "Ask Wren anything about your search…"}
+              rows={1}
+              className="flex-1 resize-none rounded-card border border-charcoal-200 bg-surface-elevated px-4 py-3 text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-charcoal-950 min-h-[44px] max-h-40"
+            />
+            <button
+              type="button"
+              onClick={startRecording}
+              disabled={streaming}
+              aria-label="Start voice input"
+              title="Speak to Wren"
+              className="shrink-0 h-11 w-11 rounded-pill border border-charcoal-200 bg-surface-elevated text-charcoal-700 inline-flex items-center justify-center transition-colors hover:border-charcoal-950 disabled:opacity-40"
+            >
               <Mic className="h-4 w-4" />
+            </button>
+            {streaming ? (
+              <button
+                type="button"
+                onClick={() => abortRef.current?.abort()}
+                className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold"
+              >
+                <Square className="h-3.5 w-3.5 fill-current" /> Stop
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void send()}
+                disabled={!input.trim()}
+                className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold disabled:opacity-40"
+              >
+                <Send className="h-3.5 w-3.5" /> Send
+              </button>
             )}
-          </button>
-          {streaming ? (
-            <button
-              type="button"
-              onClick={() => abortRef.current?.abort()}
-              className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold"
-            >
-              <Square className="h-3.5 w-3.5 fill-current" /> Stop
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => void send()}
-              disabled={!input.trim()}
-              className="shrink-0 h-11 px-4 rounded-pill bg-charcoal-950 text-paper inline-flex items-center gap-1.5 text-sm font-semibold disabled:opacity-40"
-            >
-              <Send className="h-3.5 w-3.5" /> Send
-            </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }
