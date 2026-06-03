@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const FAQS: { q: string; a: string }[] = [
+export const FAQS: { q: string; a: string }[] = [
   {
     q: "How fast are the alerts, really?",
     a: "Most listings reach our system within minutes of going live. From there, the alert is sent to you almost immediately if you're on Premium or Max. Free tier alerts are batched and sent on a 3-hour delay. In practice, Premium users see new matches before the listing has been shared on Reddit or refreshed on the major sites.",

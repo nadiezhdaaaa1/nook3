@@ -168,7 +168,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Nook",
+          legalName: "Zentaro Systems Ltd",
           url: "https://nook3.lovable.app",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://nook3.lovable.app/favicon.ico",
+          },
+          email: "hello@thenook.rent",
           description:
             "Real-time apartment alerts for renters. Verified listings, rent-regulated units flagged, no spam.",
         }),
@@ -180,6 +186,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "WebSite",
           name: "Nook",
           url: "https://nook3.lovable.app",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: "https://nook3.lovable.app/blog?q={search_term_string}",
+            },
+            "query-input": "required name=search_term_string",
+          },
         }),
       },
     ],

@@ -6,6 +6,7 @@ export const Route = createFileRoute("/onboarding")({
     meta: [
       { title: "Set up your alerts — Nook" },
       { name: "description", content: "Tell us what you're looking for in 5 quick steps." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   beforeLoad: ({ location }) => {
