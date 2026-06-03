@@ -11,7 +11,15 @@ import {
   Check,
   Layers,
   Loader2,
+  ChevronDown,
+  Sparkle,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { AlertStatus, SavedAlert } from "@/data/savedAlerts";
 import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -228,6 +236,12 @@ function SavedAlertsPage() {
 }
 
 /* ---------- Row ---------- */
+function fitScore(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return 85 + (h % 14); // 85..98
+}
+
 function AlertRow({
   alert,
   selected,
@@ -243,88 +257,163 @@ function AlertRow({
 }) {
   const days = Math.floor((Date.now() - new Date(alert.receivedAt).getTime()) / 86400000);
   const ago = days === 0 ? "today" : days === 1 ? "1d ago" : `${days}d ago`;
+  const fit = fitScore(alert.id);
+  const isDismissed = alert.status === "dismissed";
+
   return (
     <li
       className={cn(
-        "rounded-card border bg-surface-elevated p-4 flex gap-4 items-start transition-colors",
+        "rounded-card border bg-surface-elevated px-5 py-4 transition-colors relative",
         selected ? "border-charcoal-950 ring-1 ring-charcoal-950" : "border-border hover:border-charcoal-300",
+        isDismissed && "opacity-60",
       )}
     >
-      <button
-        type="button"
-        onClick={onToggle}
-        disabled={compareDisabled}
-        aria-pressed={selected}
-        className={cn(
-          "shrink-0 mt-1 h-5 w-5 rounded-md border flex items-center justify-center transition-colors",
-          selected ? "bg-charcoal-950 border-charcoal-950 text-paper" : "border-charcoal-300 hover:border-charcoal-950",
-          compareDisabled && "opacity-40 cursor-not-allowed",
-        )}
-      >
-        {selected && <Check className="h-3 w-3" />}
-      </button>
+      {/* Source · ago — top right */}
+      <div className="absolute top-4 right-5 text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
+        {alert.source} · {ago}
+      </div>
 
-      <div
-        className="shrink-0 h-14 w-14 rounded-md"
-        style={{ background: `hsl(${alert.imageHue} 40% 80%)` }}
-        aria-hidden
-      />
+      <div className="flex items-start gap-4">
+        {/* Checkbox */}
+        <button
+          type="button"
+          onClick={onToggle}
+          disabled={compareDisabled}
+          aria-pressed={selected}
+          className={cn(
+            "shrink-0 mt-1 h-5 w-5 rounded-md border flex items-center justify-center transition-colors",
+            selected ? "bg-charcoal-950 border-charcoal-950 text-paper" : "border-charcoal-300 hover:border-charcoal-950",
+            compareDisabled && "opacity-40 cursor-not-allowed",
+          )}
+        >
+          {selected && <Check className="h-3 w-3" />}
+        </button>
 
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2 flex-wrap">
-          <div className="min-w-0">
-            <div className="text-sm font-semibold text-charcoal-950 truncate">{alert.title}</div>
-            <div className="text-xs text-charcoal-600 mt-0.5">
-              {alert.neighborhood} · {alert.beds === 0 ? "Studio" : `${alert.beds}BR`}/{alert.baths}BA ·{" "}
-              <span className="font-medium text-charcoal-800">${alert.price.toLocaleString()}/mo</span>
+        {/* Thumb */}
+        <div
+          className="shrink-0 h-16 w-16 rounded-xl"
+          style={{ background: `hsl(${alert.imageHue} 40% 80%)` }}
+          aria-hidden
+        />
+
+        {/* Main */}
+        <div className="flex-1 min-w-0 pr-28">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h3 className={cn(
+              "font-display text-lg font-semibold text-charcoal-950 leading-tight",
+              isDismissed && "line-through",
+            )}>
+              {alert.title}
+            </h3>
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider bg-sage-100 text-sage-900 rounded-pill px-2 py-0.5">
+              <Sparkle className="h-2.5 w-2.5 fill-current" /> {fit}% match
+            </span>
+          </div>
+          <div className="text-sm text-charcoal-600 mt-1">
+            {alert.neighborhood} · {alert.beds === 0 ? "Studio" : `${alert.beds}BR`}/{alert.baths}BA ·{" "}
+            <span className="font-semibold text-charcoal-800">${alert.price.toLocaleString()}/mo</span>
+          </div>
+
+          {alert.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2.5">
+              {alert.tags.map((t) => (
+                <span
+                  key={t}
+                  className="text-[11px] font-medium px-2.5 py-0.5 rounded-pill bg-sage-100 text-sage-900"
+                >
+                  {t}
+                </span>
+              ))}
             </div>
-          </div>
-          <div className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 shrink-0">
-            {alert.source} · {ago}
-          </div>
+          )}
         </div>
 
-        {alert.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {alert.tags.map((t) => (
-              <span
-                key={t}
-                className="text-[10px] font-medium px-2 py-0.5 rounded-pill bg-sage-100 text-sage-800"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-          <StatusBadge status={alert.status} />
-          <span className="flex-1" />
-          {alert.status !== "saved" && (
-            <RowAction icon={Heart} label="Save" onClick={() => onAction("saved")} />
+        {/* Actions — single status control + View */}
+        <div className="shrink-0 self-end flex items-center gap-2">
+          {isDismissed ? (
+            <button
+              type="button"
+              onClick={() => onAction("new")}
+              className="text-sm font-semibold text-sage-800 hover:text-sage-900"
+            >
+              Undo dismiss
+            </button>
+          ) : (
+            <StatusDropdown status={alert.status} onChange={onAction} />
           )}
-          {alert.status !== "contacted" && (
-            <RowAction icon={Mail} label="Contacted" onClick={() => onAction("contacted")} />
-          )}
-          {alert.status !== "dismissed" && (
-            <RowAction icon={X} label="Dismiss" onClick={() => onAction("dismissed")} />
-          )}
-          <RowAction icon={ExternalLink} label="View" onClick={() => {}} />
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 transition-colors"
+          >
+            View <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
     </li>
   );
 }
 
-function RowAction({ icon: Icon, label, onClick }: { icon: any; label: string; onClick: () => void }) {
+const STATUS_OPTIONS: { value: AlertStatus; label: string; icon: any }[] = [
+  { value: "new", label: "New", icon: Bell },
+  { value: "saved", label: "Saved", icon: Heart },
+  { value: "contacted", label: "Contacted", icon: Mail },
+  { value: "dismissed", label: "Dismiss", icon: X },
+];
+
+function StatusDropdown({
+  status,
+  onChange,
+}: {
+  status: AlertStatus;
+  onChange: (s: AlertStatus) => void;
+}) {
+  const current = STATUS_OPTIONS.find((o) => o.value === status) ?? STATUS_OPTIONS[0];
+  const Icon = current.icon;
+
+  const variant: Record<AlertStatus, string> = {
+    new: "bg-sage-100 border-sage-300 text-sage-900",
+    saved: "bg-sage-900 border-sage-900 text-paper",
+    contacted: "bg-surface-elevated border-sage-500 text-sage-900",
+    dismissed: "bg-surface-elevated border-charcoal-200 text-charcoal-600",
+  };
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex items-center gap-1 h-8 px-2.5 rounded-pill border border-charcoal-200 text-[11px] font-semibold text-charcoal-700 hover:border-charcoal-950 hover:text-charcoal-950"
-    >
-      <Icon className="h-3 w-3" /> {label}
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "inline-flex items-center gap-1.5 h-9 pl-3 pr-2.5 rounded-pill text-sm font-semibold border transition-colors",
+            variant[status],
+          )}
+        >
+          <Icon className={cn("h-3.5 w-3.5", status === "saved" && "fill-current")} />
+          {current.label}
+          <ChevronDown className="h-3 w-3 opacity-70" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        {STATUS_OPTIONS.map((o) => {
+          const OIcon = o.icon;
+          const active = o.value === status;
+          return (
+            <DropdownMenuItem
+              key={o.value}
+              onSelect={() => onChange(o.value)}
+              className={cn(
+                "gap-2.5 text-sm",
+                active && "text-sage-900 font-semibold bg-sage-100/60",
+              )}
+            >
+              <OIcon className={cn("h-4 w-4", active ? "text-sage-900" : "text-charcoal-500")} />
+              {o.label}
+              {active && <Check className="h-3.5 w-3.5 ml-auto text-sage-900" />}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -365,20 +454,7 @@ function ScopeChip({
 }
 
 
-function StatusBadge({ status }: { status: AlertStatus }) {
-  const map: Record<AlertStatus, { label: string; cls: string }> = {
-    new: { label: "New", cls: "bg-peach-100 text-peach-900" },
-    saved: { label: "Saved", cls: "bg-sage-200 text-sage-900" },
-    contacted: { label: "Contacted", cls: "bg-charcoal-200 text-charcoal-800" },
-    dismissed: { label: "Dismissed", cls: "bg-charcoal-100 text-charcoal-600" },
-  };
-  const m = map[status];
-  return (
-    <span className={cn("text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-pill", m.cls)}>
-      {m.label}
-    </span>
-  );
-}
+
 
 /* ---------- Empty ---------- */
 function EmptyState({ filter }: { filter: Filter }) {
