@@ -175,7 +175,7 @@ function SamplePreview() {
                           onClick={() => setModalOpen(true)}
                           className="inline-flex items-center gap-1.5 text-xs font-semibold text-peach-700 hover:text-peach-900 transition-colors"
                         >
-                          View on listing site <ExternalLink className="h-3 w-3" />
+                          See listing preview <ExternalLink className="h-3 w-3" />
                         </button>
                       </div>
                     </div>
@@ -216,8 +216,7 @@ function SamplePreview() {
               This is a sample preview
             </h3>
             <p className="text-sm text-charcoal-700 leading-relaxed mb-5">
-              After signup, this would link to the listing on StreetEasy,
-              Zillow, or whichever source posted it.
+              After signup, this would link directly to the original listing.
             </p>
             <button
               type="button"
