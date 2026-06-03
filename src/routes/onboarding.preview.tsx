@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { MapPin, TrendingDown, Shield, Sparkles, ExternalLink, ShieldCheck, X } from "lucide-react";
+import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -17,7 +17,7 @@ function SamplePreview() {
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
