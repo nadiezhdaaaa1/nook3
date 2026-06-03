@@ -28,6 +28,7 @@ export const Route = createFileRoute("/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://nook3.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://nook3.lovable.app/" }],
   }),
   component: LandingPage,
 });
