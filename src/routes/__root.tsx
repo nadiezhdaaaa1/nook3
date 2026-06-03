@@ -155,7 +155,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Verified rental matches the moment they hit the market. No spam, no stale listings.",
       },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "alternate", hrefLang: "en", href: "https://nook3.lovable.app/" },
+      { rel: "alternate", hrefLang: "en-US", href: "https://nook3.lovable.app/" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://nook3.lovable.app/" },
+    ],
     scripts: [
       {
         type: "application/ld+json",
