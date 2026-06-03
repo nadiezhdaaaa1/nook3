@@ -124,7 +124,7 @@ function Success() {
 
         {/* Referral — redesigned */}
         {referral && (
-          <div className="rounded-card bg-gradient-to-br from-peach-100/70 via-paper to-sage-100/40 border border-peach-300/50 overflow-hidden">
+          <div className="rounded-card bg-gradient-to-br from-peach-100/70 via-paper to-sage-100/40 border border-peach-300/50 overflow-hidden lg:max-w-5xl lg:w-[64rem] lg:relative lg:left-1/2 lg:-translate-x-1/2">
             <div className="grid md:grid-cols-[1fr_auto] gap-4 p-6 items-center">
               <div>
                 <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-peach-900 mb-2">
