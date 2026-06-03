@@ -56,7 +56,8 @@ export interface BlogArticle {
   publishedAt: string; // ISO
   updatedAt?: string; // ISO
   readingTimeMin: number;
-  coverGradient: string; // CSS gradient as cover placeholder
+  coverGradient: string; // CSS gradient fallback while image loads
+  coverImage: string; // URL/imported asset for cover illustration
   coverImageAlt: string;
   featured?: boolean;
   body: BlogBlock[];
