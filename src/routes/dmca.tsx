@@ -7,7 +7,7 @@ export const Route = createFileRoute("/dmca")({
       { title: "DMCA Copyright Policy — Nook" },
       { name: "description", content: "How to report copyright infringement to Nook under the DMCA." },
       { property: "og:title", content: "DMCA Copyright Policy — Nook" },
-      { property: "og:description", content: "How to report copyright infringement to Nook under the DMCA." },,
+      { property: "og:description", content: "How to report copyright infringement to Nook under the DMCA." },
       { property: "og:url", content: "https://nook3.lovable.app/dmca" }
     ],
     links: [{ rel: "canonical", href: "https://nook3.lovable.app/dmca" }],

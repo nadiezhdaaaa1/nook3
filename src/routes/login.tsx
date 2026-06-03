@@ -22,7 +22,7 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Sign in — Nook" },
-      { name: "description", content: "Sign in to manage your apartment alerts." },,
+      { name: "description", content: "Sign in to manage your apartment alerts." },
       { property: "og:url", content: "https://nook3.lovable.app/login" }
     ],
     links: [{ rel: "canonical", href: "https://nook3.lovable.app/login" }],
