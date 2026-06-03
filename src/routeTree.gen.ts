@@ -33,10 +33,12 @@ import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.previ
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
 import { Route as AuthenticatedPreferencesIndexRouteImport } from './routes/_authenticated.preferences.index'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
+import { Route as AuthenticatedPreferencesWrenRouteImport } from './routes/_authenticated.preferences.wren'
 import { Route as AuthenticatedPreferencesReferralsRouteImport } from './routes/_authenticated.preferences.referrals'
 import { Route as AuthenticatedPreferencesLocationRouteImport } from './routes/_authenticated.preferences.location'
 import { Route as AuthenticatedPreferencesBudgetRouteImport } from './routes/_authenticated.preferences.budget'
@@ -163,6 +165,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWrenChatRoute = ApiWrenChatRouteImport.update({
+  id: '/api/wren-chat',
+  path: '/api/wren-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
@@ -185,6 +192,12 @@ const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
   path: '/step/$step',
   getParentRoute: () => OnboardingRoute,
 } as any)
+const AuthenticatedPreferencesWrenRoute =
+  AuthenticatedPreferencesWrenRouteImport.update({
+    id: '/wren',
+    path: '/wren',
+    getParentRoute: () => AuthenticatedPreferencesRoute,
+  } as any)
 const AuthenticatedPreferencesReferralsRoute =
   AuthenticatedPreferencesReferralsRouteImport.update({
     id: '/referrals',
@@ -241,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/api/contact': typeof ApiContactRoute
+  '/api/wren-chat': typeof ApiWrenChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -254,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
   '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
   '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
+  '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/preferences/': typeof AuthenticatedPreferencesIndexRoute
 }
@@ -275,6 +290,7 @@ export interface FileRoutesByTo {
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/wren-chat': typeof ApiWrenChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -288,6 +304,7 @@ export interface FileRoutesByTo {
   '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
   '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
   '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
+  '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/preferences': typeof AuthenticatedPreferencesIndexRoute
 }
@@ -312,6 +329,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/api/contact': typeof ApiContactRoute
+  '/api/wren-chat': typeof ApiWrenChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -325,6 +343,7 @@ export interface FileRoutesById {
   '/_authenticated/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
   '/_authenticated/preferences/location': typeof AuthenticatedPreferencesLocationRoute
   '/_authenticated/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
+  '/_authenticated/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/_authenticated/preferences/': typeof AuthenticatedPreferencesIndexRoute
 }
@@ -349,6 +368,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/preferences'
     | '/api/contact'
+    | '/api/wren-chat'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -362,6 +382,7 @@ export interface FileRouteTypes {
     | '/preferences/budget'
     | '/preferences/location'
     | '/preferences/referrals'
+    | '/preferences/wren'
     | '/onboarding/step/$step'
     | '/preferences/'
   fileRoutesByTo: FileRoutesByTo
@@ -383,6 +404,7 @@ export interface FileRouteTypes {
     | '/subprocessors'
     | '/terms'
     | '/api/contact'
+    | '/api/wren-chat'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -396,6 +418,7 @@ export interface FileRouteTypes {
     | '/preferences/budget'
     | '/preferences/location'
     | '/preferences/referrals'
+    | '/preferences/wren'
     | '/onboarding/step/$step'
     | '/preferences'
   id:
@@ -419,6 +442,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/preferences'
     | '/api/contact'
+    | '/api/wren-chat'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -432,6 +456,7 @@ export interface FileRouteTypes {
     | '/_authenticated/preferences/budget'
     | '/_authenticated/preferences/location'
     | '/_authenticated/preferences/referrals'
+    | '/_authenticated/preferences/wren'
     | '/onboarding/step/$step'
     | '/_authenticated/preferences/'
   fileRoutesById: FileRoutesById
@@ -455,6 +480,7 @@ export interface RootRouteChildren {
   SubprocessorsRoute: typeof SubprocessorsRoute
   TermsRoute: typeof TermsRoute
   ApiContactRoute: typeof ApiContactRoute
+  ApiWrenChatRoute: typeof ApiWrenChatRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -630,6 +656,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/wren-chat': {
+      id: '/api/wren-chat'
+      path: '/api/wren-chat'
+      fullPath: '/api/wren-chat'
+      preLoaderRoute: typeof ApiWrenChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/contact': {
       id: '/api/contact'
       path: '/api/contact'
@@ -657,6 +690,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/onboarding/step/$step'
       preLoaderRoute: typeof OnboardingStepStepRouteImport
       parentRoute: typeof OnboardingRoute
+    }
+    '/_authenticated/preferences/wren': {
+      id: '/_authenticated/preferences/wren'
+      path: '/wren'
+      fullPath: '/preferences/wren'
+      preLoaderRoute: typeof AuthenticatedPreferencesWrenRouteImport
+      parentRoute: typeof AuthenticatedPreferencesRoute
     }
     '/_authenticated/preferences/referrals': {
       id: '/_authenticated/preferences/referrals'
@@ -710,6 +750,7 @@ interface AuthenticatedPreferencesRouteChildren {
   AuthenticatedPreferencesBudgetRoute: typeof AuthenticatedPreferencesBudgetRoute
   AuthenticatedPreferencesLocationRoute: typeof AuthenticatedPreferencesLocationRoute
   AuthenticatedPreferencesReferralsRoute: typeof AuthenticatedPreferencesReferralsRoute
+  AuthenticatedPreferencesWrenRoute: typeof AuthenticatedPreferencesWrenRoute
   AuthenticatedPreferencesIndexRoute: typeof AuthenticatedPreferencesIndexRoute
 }
 
@@ -724,6 +765,7 @@ const AuthenticatedPreferencesRouteChildren: AuthenticatedPreferencesRouteChildr
       AuthenticatedPreferencesLocationRoute,
     AuthenticatedPreferencesReferralsRoute:
       AuthenticatedPreferencesReferralsRoute,
+    AuthenticatedPreferencesWrenRoute: AuthenticatedPreferencesWrenRoute,
     AuthenticatedPreferencesIndexRoute: AuthenticatedPreferencesIndexRoute,
   }
 
@@ -783,6 +825,7 @@ const rootRouteChildren: RootRouteChildren = {
   SubprocessorsRoute: SubprocessorsRoute,
   TermsRoute: TermsRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiWrenChatRoute: ApiWrenChatRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   BlogIndexRoute: BlogIndexRoute,
