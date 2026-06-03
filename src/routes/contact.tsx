@@ -246,10 +246,26 @@ function ContactFormSection() {
 
   const validate = (): FieldErrors => {
     const e: FieldErrors = {};
-    if (!form.name.trim()) e.name = "Please tell us your name";
-    if (!form.email.trim()) e.email = "We need your email to reply";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+    const name = form.name.trim();
+    const email = form.email.trim();
+
+    if (!name) e.name = "Please tell us your name";
+    else if (name.length < 2) e.name = "Name must be at least 2 characters";
+    else if (name.length > 100) e.name = "Name must be 100 characters or less";
+    else if (/\d/.test(name)) e.name = "Name shouldn't contain numbers";
+    else if (/https?:\/\/|www\./i.test(name)) e.name = "Name shouldn't contain links";
+    else if (!/^[\p{L}][\p{L}\s'’\-.]*$/u.test(name))
+      e.name = "Use letters, spaces, hyphens or apostrophes only";
+
+    if (!email) e.email = "We need your email to reply";
+    else if (email.length > 255) e.email = "Email is too long";
+    else if (/\s/.test(email)) e.email = "Email can't contain spaces";
+    else if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email))
       e.email = "That doesn't look like a valid email";
+    else if (/\.\./.test(email)) e.email = "Email can't contain consecutive dots";
+    else if (/^\.|\.@|@\.|\.$/.test(email))
+      e.email = "Check the dots around the @ sign";
+
     if (!form.topic) e.topic = "Pick a topic so we can route your message";
     if (!form.message.trim()) e.message = "Tell us what's up";
     else if (form.message.trim().length < 10)
