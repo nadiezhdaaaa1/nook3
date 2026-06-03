@@ -6,7 +6,7 @@ import { WhatYouGetGrid } from "@/components/landing/WhatYouGetGrid";
 import { TiredOfSection } from "@/components/landing/TiredOfSection";
 import { ReviewsMasonry } from "@/components/landing/ReviewsMasonry";
 import { PricingThreeTiers } from "@/components/landing/PricingThreeTiers";
-import { FaqFifteen } from "@/components/landing/FaqFifteen";
+import { FaqFifteen, FAQS } from "@/components/landing/FaqFifteen";
 import { BlogTeaser } from "@/components/landing/BlogTeaser";
 import { CtaStrip } from "@/components/marketing/CtaStrip";
 
@@ -29,6 +29,20 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: "https://nook3.lovable.app/" },
     ],
     links: [{ rel: "canonical", href: "https://nook3.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+    ],
   }),
   component: LandingPage,
 });
