@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { WrenFab } from "@/components/WrenFab";
 
 /**
  * Pathless layout route that gates every child under `_authenticated`.
@@ -19,5 +20,10 @@ export const Route = createFileRoute("/_authenticated")({
     }
     return { userId: data.user.id };
   },
-  component: () => <Outlet />,
+  component: () => (
+    <>
+      <Outlet />
+      <WrenFab />
+    </>
+  ),
 });
