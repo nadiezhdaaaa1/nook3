@@ -15,6 +15,7 @@ const listingSchema = z.object({
   source: z.string().max(60),
   tags: z.array(z.string().max(40)).max(20),
   imageHue: z.number().int().min(0).max(360),
+  imageUrl: z.string().url().max(500).optional(),
 });
 
 export type AlertListing = z.infer<typeof listingSchema>;

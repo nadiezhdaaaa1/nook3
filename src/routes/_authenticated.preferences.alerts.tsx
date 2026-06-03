@@ -58,6 +58,7 @@ function rowToSavedAlert(r: AlertRow): SavedAlert {
     status: r.status as AlertStatus,
     tags: l.tags ?? [],
     imageHue: l.imageHue ?? 200,
+    imageUrl: l.imageUrl,
   };
 }
 
@@ -291,10 +292,18 @@ function AlertRowItem({
 
         {/* Thumb */}
         <div
-          className="shrink-0 h-16 w-16 rounded-xl"
+          className="shrink-0 h-20 w-28 rounded-lg overflow-hidden bg-charcoal-100"
           style={{ background: `hsl(${alert.imageHue} 40% 80%)` }}
-          aria-hidden
-        />
+        >
+          {alert.imageUrl && (
+            <img
+              src={alert.imageUrl}
+              alt={alert.title}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
 
         {/* Main */}
         <div className="flex-1 min-w-0 pr-28">
@@ -526,9 +535,18 @@ function WrenCompareModal({ items, onClose }: { items: SavedAlert[]; onClose: ()
             {items.map((a) => (
               <div key={a.id} className="rounded-card border border-border p-3 bg-surface-elevated">
                 <div
-                  className="h-20 w-full rounded-md mb-2"
+                  className="h-28 w-full rounded-md mb-2 overflow-hidden bg-charcoal-100"
                   style={{ background: `hsl(${a.imageHue} 40% 80%)` }}
-                />
+                >
+                  {a.imageUrl && (
+                    <img
+                      src={a.imageUrl}
+                      alt={a.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                  )}
+                </div>
                 <div className="text-sm font-semibold text-charcoal-950 truncate">{a.title}</div>
                 <div className="text-xs text-charcoal-600">{a.neighborhood}</div>
                 <div className="text-sm font-bold text-charcoal-950 mt-1">
