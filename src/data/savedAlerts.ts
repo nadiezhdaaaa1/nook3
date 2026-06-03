@@ -14,7 +14,31 @@ export interface SavedAlert {
   source: AlertSource;
   status: AlertStatus;
   tags: string[]; // e.g. ["rent-stabilized", "no-fee", "dog-friendly", "laundry"]
-  imageHue: number; // 0-360 for placeholder swatch
+  imageHue: number; // 0-360 for placeholder swatch (fallback)
+  imageUrl?: string; // real photo preview
+}
+
+/** Stable pool of apartment interior photos (Unsplash). */
+const APARTMENT_PHOTOS = [
+  "photo-1502672260266-1c1ef2d93688",
+  "photo-1493809842364-78817add7ffb",
+  "photo-1560448204-e02f11c3d0e2",
+  "photo-1554995207-c18c203602cb",
+  "photo-1522708323590-d24dbb6b0267",
+  "photo-1484154218962-a197022b5858",
+  "photo-1505691938895-1758d7feb511",
+  "photo-1567767292278-a4f21aa2d36e",
+  "photo-1513694203232-719a280e022f",
+  "photo-1556909114-f6e7ad7d3136",
+  "photo-1502005229762-cf1b2da7c5d6",
+  "photo-1583847268964-b28dc8f51f92",
+];
+
+export function apartmentPhotoUrl(seed: string, w = 240): string {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  const id = APARTMENT_PHOTOS[Math.abs(h) % APARTMENT_PHOTOS.length];
+  return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
 }
 
 const NEIGHBORHOODS = [
