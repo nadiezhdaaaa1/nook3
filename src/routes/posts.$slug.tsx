@@ -5,4 +5,5 @@ export const Route = createFileRoute("/posts/$slug")({
   beforeLoad: ({ params }) => {
     throw redirect({ to: "/blog/$slug", params: { slug: params.slug }, statusCode: 301 });
   },
+  component: () => null,
 });

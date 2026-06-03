@@ -5,4 +5,5 @@ export const Route = createFileRoute("/pricing")({
   beforeLoad: () => {
     throw redirect({ to: "/onboarding/pricing", statusCode: 301 });
   },
+  component: () => null,
 });

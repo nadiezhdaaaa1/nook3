@@ -5,4 +5,5 @@ export const Route = createFileRoute("/sign-in")({
   beforeLoad: () => {
     throw redirect({ to: "/login", statusCode: 301 });
   },
+  component: () => null,
 });

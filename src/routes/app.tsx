@@ -5,4 +5,5 @@ export const Route = createFileRoute("/app")({
   beforeLoad: () => {
     throw redirect({ to: "/preferences/alerts", statusCode: 301 });
   },
+  component: () => null,
 });
