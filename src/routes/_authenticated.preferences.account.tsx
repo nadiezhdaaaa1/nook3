@@ -1581,9 +1581,27 @@ function SubscriptionSection({
 
         <div className="grid md:grid-cols-3 gap-3">
           {PLANS.map((p) => (
-            <PlanCard key={p.id} plan={p} currentPlan={plan} cycle={cycle} />
+            <PlanCard
+              key={p.id}
+              plan={p}
+              currentPlan={plan}
+              cycle={cycle}
+              onCancelRequest={() => setCancelOpen(true)}
+            />
           ))}
         </div>
+
+        {plan !== "free" && (
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => setCancelOpen(true)}
+              className="text-sm text-charcoal-600 hover:text-charcoal-950 underline underline-offset-4"
+            >
+              Cancel subscription
+            </button>
+          </div>
+        )}
       </section>
     </>
   );
