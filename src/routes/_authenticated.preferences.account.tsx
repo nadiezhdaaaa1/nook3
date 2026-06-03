@@ -267,7 +267,9 @@ function AccountPage() {
             <div className="min-w-0">
               <div className="text-sm font-semibold text-danger">Delete account</div>
               <div className="text-xs text-charcoal-600 mt-0.5">
-                Permanently remove your account, searches, and alerts.
+                Removes your <span className="font-semibold text-charcoal-800">entire account</span>,
+                including all searches, alerts, and profile data. Different from “Delete search” on
+                an individual search.
               </div>
             </div>
             <DeleteAccountButton />
