@@ -257,6 +257,27 @@ function WrenChatPage() {
             rows={1}
             className="flex-1 resize-none rounded-card border border-charcoal-200 bg-surface-elevated px-4 py-3 text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:outline-none focus:border-charcoal-950 min-h-[44px] max-h-40"
           />
+          <button
+            type="button"
+            onClick={recording ? stopRecording : startRecording}
+            disabled={streaming || transcribing}
+            aria-label={recording ? "Stop recording" : "Record voice message"}
+            title={recording ? "Stop recording" : "Speak to Wren"}
+            className={cn(
+              "shrink-0 h-11 w-11 rounded-pill border inline-flex items-center justify-center transition-colors disabled:opacity-40",
+              recording
+                ? "bg-sage-200 border-sage-500 text-sage-900 animate-pulse"
+                : "bg-surface-elevated border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
+            )}
+          >
+            {transcribing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : recording ? (
+              <MicOff className="h-4 w-4" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
+          </button>
           {streaming ? (
             <button
               type="button"
