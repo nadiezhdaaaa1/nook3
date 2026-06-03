@@ -1,10 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Gift, Users, Calendar, Copy, Check, Mail,
-  Share2, Sparkles, ChevronDown,
-} from "lucide-react";
+import { Gift, Copy, Check, Mail, MessageCircle, Share2, Star } from "lucide-react";
 import { toast } from "sonner";
 import { getReferralCode } from "@/lib/onboarding/store";
 import { referralStatsQueryOptions } from "@/lib/queries/referrals";
@@ -15,16 +12,18 @@ export const Route = createFileRoute("/_authenticated/preferences/referrals")({
   component: ReferralsPage,
 });
 
-const REWARD_THRESHOLD = 5;
+// 4-week milestone — each signup unlocks +1 week, 4 = 1 free month.
+const REWARD_THRESHOLD = 4;
 
 function ReferralsPage() {
-  const [copied, setCopied] = useState<"link" | "blurb" | null>(null);
-  const { data, isLoading } = useQuery(referralStatsQueryOptions());
+  const [copied, setCopied] = useState(false);
+  const { data } = useQuery(referralStatsQueryOptions());
 
   const fallbackCode = typeof window === "undefined" ? "RB000000" : getReferralCode();
   const code = data?.code || fallbackCode;
-  const url = `https://thenook.rent/r/${code}`;
-  const blurb = `I'm using Nook to find my next apartment — they ping me the moment a real match shows up. Use my link and we both get 7 days of Premium free: ${url}`;
+  const fullUrl = `https://thenook.rent/r/${code}`;
+  const displayUrl = `nook.app/r/${code}`;
+  const blurb = `I'm using Nook to find my next apartment — they ping me the moment a real match shows up. Use my link and we both get 7 days of Premium free: ${fullUrl}`;
 
   const stats: ReferralStats = data ?? {
     code,
@@ -33,349 +32,223 @@ function ReferralsPage() {
     rewarded: 0,
     recent: [],
   };
-  const progress = Math.min(stats.signedUp / REWARD_THRESHOLD, 1);
-  const remaining = Math.max(REWARD_THRESHOLD - stats.signedUp, 0);
+  const earned = Math.min(stats.signedUp, REWARD_THRESHOLD);
+  const remaining = Math.max(REWARD_THRESHOLD - earned, 0);
 
-
-
-  const copy = (text: string, what: "link" | "blurb", label: string) => {
-    navigator.clipboard?.writeText(text);
-    setCopied(what);
-    setTimeout(() => setCopied(null), 1500);
-    toast.success(`${label} copied`);
+  const copyLink = () => {
+    navigator.clipboard?.writeText(fullUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+    toast.success("Link copied");
   };
 
   const handleNativeShare = async () => {
-    if (typeof navigator !== "undefined" && "share" in navigator) {
+    if (typeof navigator === "undefined") return;
+    if ("share" in navigator) {
       try {
-        await navigator.share({ title: "Nook", text: blurb, url });
+        await navigator.share({ title: "Nook", text: blurb, url: fullUrl });
+        return;
       } catch {
-        // user cancelled — no-op
+        /* user cancelled — fall through to copy */
       }
-    } else {
-      copy(blurb, "blurb", "Message");
     }
+    navigator.clipboard?.writeText(blurb);
+    toast.success("Message copied");
   };
 
   return (
-    <div className="space-y-12">
-      {/* ===== Hero ===== */}
-      <section className="rounded-card bg-gradient-to-br from-sage-50 via-paper-warm to-paper border border-sage-200/60 p-6 lg:p-8 relative overflow-hidden">
-        <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-sage-200/30 blur-3xl pointer-events-none" />
-        <div className="relative">
-          <div className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-pill bg-sage-100 text-sage-800 text-[11px] font-mono uppercase tracking-[0.14em]">
-            <Sparkles className="h-3 w-3" /> Referral program
-          </div>
-          <h2 className="mt-4 font-display text-2xl lg:text-3xl font-bold text-charcoal-950 leading-tight max-w-2xl">
-            Invite friends, both get{" "}
-            <span className="accent-italic">free Premium</span>.
-          </h2>
-          <p className="mt-3 text-sm text-charcoal-700 max-w-xl leading-relaxed">
-            When a friend signs up through your link and starts a trial, you both get 7 days of Premium — free. Hit {REWARD_THRESHOLD} signups and we unlock a full month.
-          </p>
+    <div className="max-w-[760px]">
+      <div className="relative overflow-hidden rounded-[24px] bg-paper-elevated border border-charcoal-200/60 p-7 sm:p-10 shadow-[0_1px_2px_rgba(26,26,24,.03),0_8px_24px_rgba(26,26,24,.04)]">
+        {/* Sage glow */}
+        <div
+          className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(122,143,110,.16), rgba(122,143,110,0) 70%)",
+          }}
+        />
+
+        {/* Eyebrow */}
+        <div className="relative flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.14em] text-sage-900 mb-3.5">
+          <Gift className="h-[15px] w-[15px]" strokeWidth={1.75} />
+          Refer a friend · Give a week, get a week
         </div>
-      </section>
 
-      {/* ===== Share ===== */}
-      <section aria-labelledby="share-heading" className="space-y-6">
-        <SectionHeading id="share-heading" eyebrow="01 — Share" title="Your link" />
+        {/* Heading */}
+        <h1 className="relative font-display text-[27px] sm:text-[34px] leading-[1.15] tracking-[-0.01em] font-semibold text-charcoal-950 mb-6 max-w-[90%]">
+          You both get{" "}
+          <em className="italic font-medium text-sage-500 not-italic-fallback">
+            +1 free week
+          </em>{" "}
+          of Premium.
+        </h1>
 
-        <div className="space-y-3">
-          <label htmlFor="ref-link" className="sr-only">Referral link</label>
-          <div className="flex gap-2">
-            <input
-              id="ref-link"
-              readOnly
-              value={url}
-              onFocus={(e) => e.currentTarget.select()}
-              className="flex-1 h-11 px-3 rounded-md bg-paper-warm border border-charcoal-950/12 text-sm font-mono text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-charcoal-950/20 focus:border-charcoal-950"
-            />
+        {/* Reward tracker */}
+        <RewardTracker earned={earned} threshold={REWARD_THRESHOLD} remaining={remaining} />
+
+        {/* Stepper */}
+        <Stepper />
+
+        {/* Invite link */}
+        <div className="relative">
+          <div className="text-[11px] font-mono uppercase tracking-[0.1em] text-charcoal-500 mb-2">
+            Your invite link
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2.5 mb-3.5">
+            <div className="flex-1 flex items-center min-h-14 px-4.5 rounded-[14px] bg-paper border border-charcoal-200/70 font-mono text-base text-charcoal-950 truncate">
+              {displayUrl}
+            </div>
             <button
               type="button"
-              onClick={() => copy(url, "link", "Link")}
-              className="h-11 px-4 inline-flex items-center gap-2 rounded-md bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 focus:outline-none focus:ring-2 focus:ring-charcoal-950/40 focus:ring-offset-2 focus:ring-offset-paper transition-colors"
+              onClick={copyLink}
+              className={cn(
+                "inline-flex items-center justify-center gap-2 min-h-14 px-6 rounded-[14px] text-[15px] font-semibold transition-colors",
+                copied
+                  ? "bg-sage-700 text-paper"
+                  : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
+              )}
             >
-              {copied === "link" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied === "link" ? "Copied" : "Copy"}
+              {copied ? <Check className="h-[18px] w-[18px]" /> : <Copy className="h-[18px] w-[18px]" />}
+              {copied ? "Copied" : "Copy link"}
             </button>
           </div>
-          <div className="text-[11px] font-mono uppercase tracking-[0.12em] text-charcoal-500">
-            Code: <span className="text-charcoal-800">{code}</span>
-          </div>
-        </div>
 
-        <div>
-          <div className="text-xs text-charcoal-600 mb-2">Or share directly</div>
-          <div className="flex flex-wrap gap-2">
-            <ShareButton
-              icon={Share2}
-              label="Share"
-              onClick={handleNativeShare}
-              primary
-            />
-            <ShareButton
+          {/* Share chips */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Chip
               icon={Mail}
               label="Email"
               href={`mailto:?subject=${encodeURIComponent("Found us an apartment hack")}&body=${encodeURIComponent(blurb)}`}
             />
-            <ShareButton
-              icon={copied === "blurb" ? Check : Copy}
-              label={copied === "blurb" ? "Copied message" : "Copy message"}
-              onClick={() => copy(blurb, "blurb", "Message")}
-            />
+            <Chip icon={MessageCircle} label="Message" onClick={handleNativeShare} />
+            <Chip icon={Share2} label="Share…" onClick={handleNativeShare} />
+            <p className="sm:ml-auto w-full sm:w-auto text-[13px] text-charcoal-500">
+              No credit card required ·{" "}
+              <span className="font-semibold text-sage-900">They get +7 days too</span>
+            </p>
           </div>
         </div>
-      </section>
-
-      {/* ===== Progress + Stats ===== */}
-      <section aria-labelledby="stats-heading" className="space-y-6">
-        <SectionHeading id="stats-heading" eyebrow="02 — Progress" title="Your impact" />
-
-        {/* Progress to next reward */}
-        <div className="rounded-card bg-paper-warm border border-charcoal-950/8 p-5 lg:p-6">
-          <div className="flex items-end justify-between gap-4 flex-wrap">
-            <div>
-              <div className="text-xs text-charcoal-600">Signups toward next reward</div>
-              <div className="font-display text-3xl font-bold text-charcoal-950 tabular-nums mt-1">
-                {stats.signedUp} <span className="text-charcoal-400 text-xl font-medium">/ {REWARD_THRESHOLD}</span>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-xs text-charcoal-600">Next reward</div>
-              <div className="text-sm font-semibold text-sage-800 mt-1 inline-flex items-center gap-1.5">
-                <Gift className="h-4 w-4" />
-                {remaining === 0 ? "Unlocked!" : `${remaining} to go — 1 month free`}
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 h-2 rounded-pill bg-charcoal-950/8 overflow-hidden" role="progressbar" aria-valuenow={stats.signedUp} aria-valuemin={0} aria-valuemax={REWARD_THRESHOLD}>
-            <div
-              className="h-full bg-gradient-to-r from-sage-500 to-sage-700 rounded-pill transition-all duration-500"
-              style={{ width: `${progress * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Quick stats */}
-        <div className="grid sm:grid-cols-3 gap-3">
-          <StatCard icon={Users} label="Friends invited" value={stats.invited} />
-          <StatCard icon={Calendar} label="Signed up" value={stats.signedUp} accent />
-          <StatCard icon={Gift} label="Rewards earned" value={stats.rewarded} />
-        </div>
-      </section>
-
-      {/* ===== Recent referrals ===== */}
-      <section aria-labelledby="recent-heading" className="space-y-4">
-        <SectionHeading id="recent-heading" eyebrow="03 — Activity" title="Recent referrals" />
-        <RecentList items={stats.recent} isLoading={isLoading} />
-      </section>
-
-      {/* ===== How it works ===== */}
-      <section aria-labelledby="how-heading" className="space-y-4">
-        <SectionHeading id="how-heading" eyebrow="04 — How it works" title="Three steps" />
-        <ol className="grid sm:grid-cols-3 gap-3">
-          {HOW_STEPS.map((step, i) => (
-            <li
-              key={step.title}
-              className="rounded-card bg-paper-warm border border-charcoal-950/8 p-5"
-            >
-              <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-sage-700">
-                Step 0{i + 1}
-              </div>
-              <div className="mt-2 font-display text-base font-semibold text-charcoal-950">
-                {step.title}
-              </div>
-              <div className="mt-1.5 text-sm text-charcoal-600 leading-relaxed">
-                {step.body}
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* ===== FAQ ===== */}
-      <section aria-labelledby="faq-heading" className="space-y-3">
-        <SectionHeading id="faq-heading" eyebrow="05 — FAQ" title="Common questions" />
-        <div className="divide-y divide-charcoal-950/8 border border-charcoal-950/8 rounded-card overflow-hidden bg-paper">
-          {FAQ.map((q) => (
-            <FaqRow key={q.q} q={q.q} a={q.a} />
-          ))}
-        </div>
-        <p className="text-xs text-charcoal-500 pt-2">
-          One reward per signup. Self-referrals and disposable emails don't count. We may adjust rewards with notice.
-        </p>
-      </section>
-    </div>
-  );
-}
-
-/* ---------- Subcomponents ---------- */
-
-function SectionHeading({ id, eyebrow, title }: { id: string; eyebrow: string; title: string }) {
-  return (
-    <div>
-      <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-sage-700">
-        {eyebrow}
       </div>
-      <h3 id={id} className="mt-1 font-display text-lg lg:text-xl font-semibold text-charcoal-950">
-        {title}
-      </h3>
     </div>
   );
 }
 
-function ShareButton({
-  icon: Icon, label, href, onClick, primary,
+/* ---------- Reward tracker ---------- */
+
+function RewardTracker({
+  earned,
+  threshold,
+  remaining,
+}: {
+  earned: number;
+  threshold: number;
+  remaining: number;
+}) {
+  const friendsCopy =
+    earned === 0
+      ? "No invites yet — start with one"
+      : `${earned} friend${earned === 1 ? "" : "s"} joined — you've earned +${earned} week${earned === 1 ? "" : "s"}`;
+  const subCopy =
+    remaining === 0
+      ? "You've unlocked a full month of Premium 🎉"
+      : earned === 0
+        ? `Invite ${threshold} friends and your next month of Premium is on us.`
+        : `Invite ${remaining} more and your next month of Premium is on us.`;
+
+  return (
+    <div className="flex items-center gap-4 sm:gap-5 mb-6 sm:mb-7 px-5 py-4 sm:py-[18px] rounded-2xl bg-sage-100/60 border border-sage-300/50">
+      <div className="flex-none flex h-11 w-11 items-center justify-center rounded-xl bg-paper-elevated border border-sage-300/60">
+        <Star className="h-[22px] w-[22px] text-sage-900" strokeWidth={1.75} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-bold text-charcoal-950 mb-0.5 truncate">
+          {friendsCopy}
+        </p>
+        <p className="text-[13px] text-charcoal-500 leading-snug">
+          {earned === 0 ? null : <strong className="text-sage-900 font-semibold">Invite {remaining > 0 ? `${remaining} more` : ""} </strong>}
+          {earned === 0 ? subCopy : subCopy.replace(/^Invite \d+ more /, "")}
+        </p>
+      </div>
+      <div className="hidden sm:flex items-center gap-1.5 flex-none">
+        {Array.from({ length: threshold }).map((_, i) => (
+          <span
+            key={i}
+            className={cn(
+              "h-2 w-[22px] rounded-md",
+              i < earned ? "bg-sage-900" : "bg-sage-300/70",
+            )}
+          />
+        ))}
+        <span className="ml-1.5 font-mono text-[11px] text-charcoal-500 tabular-nums">
+          {earned}/{threshold} wks
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Stepper ---------- */
+
+function Stepper() {
+  const items = [
+    { n: 1, title: "Share your link", body: "Text, email, or social." },
+    { n: 2, title: "Friend signs up", body: "They get +7 days free." },
+    { n: 3, title: "You both win", body: "+7 days land on your plan." },
+  ];
+  return (
+    <ol className="mb-7 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-0">
+      {items.map((s, i) => (
+        <li
+          key={s.n}
+          className="relative flex sm:block flex-1 gap-3 sm:gap-0 sm:text-center sm:px-1.5"
+        >
+          {/* connector line — desktop only, between nodes */}
+          {i < items.length - 1 && (
+            <span
+              aria-hidden="true"
+              className="hidden sm:block absolute top-[15px] left-1/2 w-full h-[1.5px] bg-sage-300/70 z-0"
+            />
+          )}
+          <div className="relative z-10 flex-none flex items-center justify-center h-[30px] w-[30px] rounded-full bg-paper-elevated border-[1.5px] border-sage-500 text-sage-900 font-mono text-[12px] font-bold sm:mx-auto sm:mb-2.5">
+            {s.n}
+          </div>
+          <div className="flex-1">
+            <h4 className="text-sm font-semibold text-charcoal-950 mb-0.5">
+              {s.title}
+            </h4>
+            <p className="text-[13px] text-charcoal-500 leading-snug">{s.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/* ---------- Chip ---------- */
+
+function Chip({
+  icon: Icon,
+  label,
+  onClick,
+  href,
 }: {
   icon: typeof Mail;
   label: string;
-  href?: string;
   onClick?: () => void;
-  primary?: boolean;
+  href?: string;
 }) {
-  const className = cn(
-    "inline-flex items-center gap-2 h-10 px-4 rounded-pill text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-paper",
-    primary
-      ? "bg-charcoal-950 text-paper hover:bg-charcoal-800 focus:ring-charcoal-950/40"
-      : "border border-charcoal-200 text-charcoal-800 hover:border-charcoal-950 focus:ring-charcoal-950/20",
-  );
+  const cls =
+    "inline-flex items-center gap-2 rounded-full bg-paper-elevated border border-charcoal-200/70 px-[18px] py-2.5 text-sm font-semibold text-charcoal-800 hover:border-charcoal-400 transition-colors";
   if (href) {
     return (
-      <a href={href} className={className}>
-        <Icon className="h-4 w-4" /> {label}
+      <a href={href} className={cls}>
+        <Icon className="h-4 w-4" strokeWidth={1.75} /> {label}
       </a>
     );
   }
   return (
-    <button type="button" onClick={onClick} className={className}>
-      <Icon className="h-4 w-4" /> {label}
+    <button type="button" onClick={onClick} className={cls}>
+      <Icon className="h-4 w-4" strokeWidth={1.75} /> {label}
     </button>
   );
 }
-
-function StatCard({
-  icon: Icon, label, value, accent,
-}: {
-  icon: typeof Users;
-  label: string;
-  value: number;
-  accent?: boolean;
-}) {
-  return (
-    <div className={cn(
-      "rounded-card border p-5 transition-colors",
-      accent
-        ? "bg-sage-50 border-sage-200"
-        : "bg-paper-warm border-charcoal-950/8",
-    )}>
-      <Icon className={cn("h-4 w-4", accent ? "text-sage-800" : "text-sage-700")} />
-      <div className="font-display text-3xl font-bold text-charcoal-950 mt-2 tabular-nums leading-none">
-        {value}
-      </div>
-      <div className="text-xs text-charcoal-600 mt-1.5">{label}</div>
-    </div>
-  );
-}
-
-function RecentList({
-  items,
-  isLoading,
-}: {
-  items: ReferralStats["recent"];
-  isLoading: boolean;
-}) {
-  if (isLoading && items.length === 0) {
-    return (
-      <div className="rounded-card border border-charcoal-950/8 bg-paper-warm/50 p-6 space-y-3" aria-busy="true">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="h-8 rounded-md bg-charcoal-950/5 animate-pulse" />
-        ))}
-      </div>
-    );
-  }
-
-  if (items.length === 0) {
-    return (
-      <div className="rounded-card border border-dashed border-charcoal-950/15 p-8 text-center bg-paper-warm/50">
-        <div className="text-sm text-charcoal-600">No referrals yet.</div>
-        <div className="text-xs text-charcoal-500 mt-1">Share your link above to get started.</div>
-      </div>
-    );
-  }
-
-  return (
-    <ul className="divide-y divide-charcoal-950/8 border border-charcoal-950/8 rounded-card overflow-hidden bg-paper">
-      {items.map((it) => {
-        const date = new Date(it.createdAt).toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-        });
-        return (
-          <li key={it.id} className="flex items-center justify-between gap-4 px-4 py-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="h-8 w-8 rounded-pill bg-sage-100 text-sage-900 inline-flex items-center justify-center text-xs font-bold shrink-0">
-                {it.email.charAt(0).toUpperCase()}
-              </div>
-              <div className="text-sm text-charcoal-800 font-mono truncate">{it.email}</div>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <StatusPill status={it.status} />
-              <span className="text-xs text-charcoal-500 tabular-nums hidden sm:inline">{date}</span>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function StatusPill({ status }: { status: "invited" | "signed_up" | "rewarded" }) {
-  const map = {
-    invited: { label: "Invited", cls: "bg-charcoal-100 text-charcoal-700" },
-    signed_up: { label: "Signed up", cls: "bg-peach-100 text-peach-800" },
-    rewarded: { label: "Rewarded", cls: "bg-sage-100 text-sage-800" },
-  } as const;
-  const v = map[status];
-  return (
-    <span className={cn("inline-flex h-6 px-2.5 items-center rounded-pill text-[11px] font-semibold", v.cls)}>
-      {v.label}
-    </span>
-  );
-}
-
-function FaqRow({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="w-full flex items-center justify-between gap-4 px-4 py-3.5 text-left hover:bg-paper-warm/60 transition-colors focus:outline-none focus-visible:bg-paper-warm"
-      >
-        <span className="text-sm font-medium text-charcoal-900">{q}</span>
-        <ChevronDown className={cn("h-4 w-4 text-charcoal-500 shrink-0 transition-transform", open && "rotate-180")} />
-      </button>
-      {open && (
-        <div className="px-4 pb-4 -mt-1 text-sm text-charcoal-600 leading-relaxed">
-          {a}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ---------- Data ---------- */
-
-const HOW_STEPS = [
-  { title: "Share your link", body: "Copy and send it — email, message, anywhere. Each link is uniquely yours." },
-  { title: "Friend signs up", body: "They create a Nook account through your link and start their trial." },
-  { title: "Both get rewarded", body: "7 days of Premium free, instantly. Hit 5 signups for a full month." },
-];
-
-const FAQ = [
-  { q: "When do I get my reward?", a: "Within minutes of your friend completing signup. We'll email you when it lands." },
-  { q: "Is there a limit?", a: "Invite as many as you like. Every signup counts toward your next milestone." },
-  { q: "What if I'm already on Premium?", a: "Your reward extends your current subscription by 7 days — never wasted." },
-  { q: "Can I see who signed up?", a: "Yes — partial emails appear in Recent referrals above. We never share full addresses." },
-];
