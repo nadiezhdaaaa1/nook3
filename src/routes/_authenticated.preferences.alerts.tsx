@@ -188,7 +188,7 @@ function SavedAlertsPage() {
       ) : (
         <ul className="space-y-3">
           {filtered.map((a) => (
-            <AlertRow
+            <AlertRowItem
               key={a.id}
               alert={a}
               selected={selected.has(a.id)}
@@ -242,7 +242,7 @@ function fitScore(id: string): number {
   return 85 + (h % 14); // 85..98
 }
 
-function AlertRow({
+function AlertRowItem({
   alert,
   selected,
   onToggle,
@@ -372,7 +372,7 @@ function StatusDropdown({
   const Icon = current.icon;
 
   const variant: Record<AlertStatus, string> = {
-    new: "bg-sage-100 border-sage-300 text-sage-900",
+    "new": "bg-sage-100 border-sage-300 text-sage-900",
     saved: "bg-sage-900 border-sage-900 text-paper",
     contacted: "bg-surface-elevated border-sage-500 text-sage-900",
     dismissed: "bg-surface-elevated border-charcoal-200 text-charcoal-600",
