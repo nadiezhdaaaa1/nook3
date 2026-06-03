@@ -1303,6 +1303,12 @@ function SubscriptionSection({
   trialActive: boolean;
   currentPlan: PlanDef;
 }) {
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const periodEnd = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 18);
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  }, []);
   return (
     <>
       <section>
@@ -1333,10 +1339,29 @@ function SubscriptionSection({
             </div>
             <div className="text-xs text-charcoal-600">
               Next billing:{" "}
-              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : "—"}</span>
+              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : periodEnd}</span>
             </div>
           </div>
+          {plan !== "free" && (
+            <div className="mt-5 pt-4 border-t border-charcoal-950/8 flex items-center justify-between gap-3 flex-wrap">
+              <p className="text-xs text-charcoal-600 max-w-md">
+                Cancel anytime. You'll keep paid features until the end of your billing period.
+              </p>
+              <button
+                type="button"
+                onClick={() => setCancelOpen(true)}
+                className="text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 underline-offset-4 hover:underline"
+              >
+                Cancel subscription
+              </button>
+            </div>
+          )}
         </div>
+        <CancelSubscriptionDialog
+          open={cancelOpen}
+          onOpenChange={setCancelOpen}
+          periodEnd={periodEnd}
+        />
       </section>
 
       <section>
