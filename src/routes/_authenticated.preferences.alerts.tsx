@@ -236,13 +236,6 @@ function SavedAlertsPage() {
 }
 
 /* ---------- Row ---------- */
-function AlertRow({
-  alert,
-  selected,
-  onToggle,
-  onAction,
-  compareDisabled,
-/* ---------- Row ---------- */
 function fitScore(id: string): number {
   let h = 0;
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
