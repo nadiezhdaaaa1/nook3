@@ -54,6 +54,12 @@ export function Step3Location() {
     set("neighborhoods", merged);
   };
 
+  const removePreset = (names: string[]) => {
+    const removed = new Set(names);
+    set("neighborhoods", neighborhoods.filter((n) => !removed.has(n)));
+  };
+
+
   const canContinue = neighborhoods.length > 0;
   const tooMany = neighborhoods.length >= 15;
 
