@@ -1357,8 +1357,11 @@ function BillingToggle({
 }
 
 function PlanCard({
-  plan, currentPlan, cycle,
-}: { plan: PlanDef; currentPlan: Plan; cycle: BillingCycle }) {
+  plan, currentPlan, cycle, onCancelRequest,
+}: {
+  plan: PlanDef; currentPlan: Plan; cycle: BillingCycle;
+  onCancelRequest: () => void;
+}) {
   const isCurrent = plan.id === currentPlan;
   const Icon = plan.icon;
   const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
@@ -1371,15 +1374,33 @@ function PlanCard({
   const isUpgrade = planRank[plan.id] > planRank[currentPlan];
   const isDowngrade = planRank[plan.id] < planRank[currentPlan];
 
+  // Downgrade to Free from a paid plan = cancel-via-retention flow.
   const isCancelPath = isDowngrade && plan.id === "free";
 
   const ctaLabel = isCurrent
     ? "Current plan"
     : isUpgrade
       ? `Upgrade to ${plan.label}`
-      : isCancelPath
-        ? "Cancel above to switch"
+      : isDowngrade
+        ? plan.id === "free"
+          ? "Switch to Free"
+          : `Downgrade to ${plan.label}`
         : `Switch to ${plan.label}`;
+
+  // Switch-to-Free skips the confirm AlertDialog and opens retention flow directly.
+  const handleClick = () => {
+    if (isCancelPath) onCancelRequest();
+    else setOpen(true);
+  };
+
+  const buttonClasses = cn(
+    "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
+    isCurrent
+      ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
+      : isDowngrade
+        ? "border border-charcoal-950/15 text-charcoal-950 hover:bg-paper"
+        : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
+  );
 
   return (
     <div
@@ -1415,33 +1436,41 @@ function PlanCard({
       </ul>
 
       {isCancelPath ? (
-        <div className="mt-auto h-10 inline-flex items-center justify-center rounded-pill bg-paper-warm text-charcoal-500 text-xs border border-charcoal-950/10">
-          Use “Cancel subscription” above
-        </div>
+        <button
+          type="button"
+          onClick={handleClick}
+          className={buttonClasses}
+        >
+          {ctaLabel}
+        </button>
       ) : (
         <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
             <button
               type="button"
               disabled={isCurrent || updatePlanMut.isPending}
-              className={cn(
-                "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
-                isCurrent
-                  ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
-                  : isDowngrade
-                    ? "border border-charcoal-950/15 text-charcoal-950 hover:bg-paper"
-                    : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
-              )}
+              className={buttonClasses}
             >
               {ctaLabel}
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Switch to {plan.label}?</AlertDialogTitle>
+              <AlertDialogTitle>
+                {isDowngrade ? `Downgrade to ${plan.label}?` : `Switch to ${plan.label}?`}
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                ({priceLabel}). This will auto-renew at the same price until cancelled.{" "}
+                {isDowngrade ? (
+                  <>
+                    Your plan will change to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                    ({priceLabel}) at the end of your current billing period.
+                  </>
+                ) : (
+                  <>
+                    You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                    ({priceLabel}). This will auto-renew at the same price until cancelled.
+                  </>
+                )}{" "}
                 <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
               </AlertDialogDescription>
             </AlertDialogHeader>
