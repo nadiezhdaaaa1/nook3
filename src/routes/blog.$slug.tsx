@@ -243,10 +243,12 @@ function ArticleDetailPage() {
           <div
             className="mt-12 aspect-[16/9] relative rounded-card overflow-hidden"
             style={{ background: article.coverGradient }}
-            role="img"
-            aria-label={article.coverImageAlt}
           >
-            <div className="absolute inset-0 pattern-dots opacity-20" />
+            <img
+              src={article.coverImage}
+              alt={article.coverImageAlt}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </div>
         </div>
       </article>
@@ -419,7 +421,14 @@ function ArticleDetailPage() {
                     backgroundColor: "var(--color-brand-soft)",
                   }}
                 >
-                  <div className="aspect-[4/3]" style={{ background: r.coverGradient }} />
+                  <div className="aspect-[4/3] relative overflow-hidden" style={{ background: r.coverGradient }}>
+                    <img
+                      src={r.coverImage}
+                      alt={r.coverImageAlt}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="p-5 flex-1 flex flex-col">
                     <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">
                       {CATEGORY_LABEL[r.category]}
