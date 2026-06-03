@@ -33,6 +33,7 @@ import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.previ
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
 import { Route as AuthenticatedPreferencesIndexRouteImport } from './routes/_authenticated.preferences.index'
@@ -163,6 +164,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWrenChatRoute = ApiWrenChatRouteImport.update({
+  id: '/api/wren-chat',
+  path: '/api/wren-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
@@ -241,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/api/contact': typeof ApiContactRoute
+  '/api/wren-chat': typeof ApiWrenChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -275,6 +282,7 @@ export interface FileRoutesByTo {
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/wren-chat': typeof ApiWrenChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
   '/api/contact': typeof ApiContactRoute
+  '/api/wren-chat': typeof ApiWrenChatRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/preferences'
     | '/api/contact'
+    | '/api/wren-chat'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -383,6 +393,7 @@ export interface FileRouteTypes {
     | '/subprocessors'
     | '/terms'
     | '/api/contact'
+    | '/api/wren-chat'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -419,6 +430,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/preferences'
     | '/api/contact'
+    | '/api/wren-chat'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -455,6 +467,7 @@ export interface RootRouteChildren {
   SubprocessorsRoute: typeof SubprocessorsRoute
   TermsRoute: typeof TermsRoute
   ApiContactRoute: typeof ApiContactRoute
+  ApiWrenChatRoute: typeof ApiWrenChatRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -630,6 +643,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/wren-chat': {
+      id: '/api/wren-chat'
+      path: '/api/wren-chat'
+      fullPath: '/api/wren-chat'
+      preLoaderRoute: typeof ApiWrenChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/contact': {
       id: '/api/contact'
       path: '/api/contact'
@@ -783,6 +803,7 @@ const rootRouteChildren: RootRouteChildren = {
   SubprocessorsRoute: SubprocessorsRoute,
   TermsRoute: TermsRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiWrenChatRoute: ApiWrenChatRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   BlogIndexRoute: BlogIndexRoute,

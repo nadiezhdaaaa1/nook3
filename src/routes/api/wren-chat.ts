@@ -197,8 +197,8 @@ export const Route = createFileRoute("/api/wren-chat")({
                   const payload = line.slice(6).trim();
                   if (payload === "[DONE]") continue;
                   try {
-                    const parsed = JSON.parse(payload);
-                    const delta = parsed.choices?.[0]?.delta?.content as string | undefined;
+                    const evt = JSON.parse(payload);
+                    const delta = evt.choices?.[0]?.delta?.content as string | undefined;
                     if (delta) {
                       assistant += delta;
                       send({ type: "delta", text: delta });
