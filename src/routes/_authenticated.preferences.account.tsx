@@ -125,10 +125,10 @@ function AccountPage() {
             value={`${stats.used} / ${stats.maxLabel}`}
             footer={
               stats.max === Infinity
-                ? "No limit on your plan."
+                ? <>No limit on your plan.</>
                 : stats.used >= stats.max
-                  ? "Limit reached — upgrade to add more."
-                  : `${stats.max - stats.used} slot${stats.max - stats.used === 1 ? "" : "s"} left.`
+                  ? <>Limit reached — <a href="#plans" className="text-sage-700 font-semibold underline-offset-2 hover:underline">upgrade to add more</a>.</>
+                  : <>{stats.max - stats.used} slot{stats.max - stats.used === 1 ? "" : "s"} left.</>
             }
             progress={stats.pct}
           />
@@ -308,7 +308,7 @@ function SyncProfile({
 function StatCard({
   icon: Icon, label, value, footer, progress,
 }: {
-  icon: typeof Sparkles; label: string; value: string; footer: string; progress?: number;
+  icon: typeof Sparkles; label: string; value: string; footer: React.ReactNode; progress?: number;
 }) {
   return (
     <div className="rounded-card border border-border bg-paper-warm p-5">
@@ -656,28 +656,53 @@ function DeleteAccountButton() {
   );
 }
 
-type DeleteStep = "alternatives" | "losses" | "reauth" | "confirm";
+type DeleteStep = "reason" | "alternatives" | "losses" | "reauth" | "confirm";
+type DeleteReason = "found" | "expensive" | "matches" | "privacy" | "unused" | "other";
+
+const DELETE_REASONS: { id: DeleteReason; label: string }[] = [
+  { id: "found", label: "I found a place / done renting" },
+  { id: "expensive", label: "Too expensive" },
+  { id: "matches", label: "Didn't find enough good matches" },
+  { id: "privacy", label: "Privacy concerns" },
+  { id: "unused", label: "Just not using it" },
+  { id: "other", label: "Something else" },
+];
 
 function DeleteAccountDialog({
   open, onOpenChange,
 }: { open: boolean; onOpenChange: (v: boolean) => void }) {
-  const [step, setStep] = useState<DeleteStep>("alternatives");
+  const [step, setStep] = useState<DeleteStep>("reason");
+  const [reason, setReason] = useState<DeleteReason | null>(null);
+  const [feedback, setFeedback] = useState("");
   const [pw, setPw] = useState("");
   const [pwError, setPwError] = useState<string | null>(null);
   const [confirmText, setConfirmText] = useState("");
-  const reset = useAppStore((s) => s.reset);
+  const resetApp = useAppStore((s) => s.reset);
+  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const isPaid = plan !== "free";
   const updatePlanMut = useUpdatePlanMutation();
   const prefs = usePreferencesStore();
 
   const closeAll = () => {
     onOpenChange(false);
     setTimeout(() => {
-      setStep("alternatives");
+      setStep("reason");
+      setReason(null); setFeedback("");
       setPw(""); setPwError(null); setConfirmText("");
     }, 200);
   };
 
-  const stepIndex = ["alternatives", "losses", "reauth", "confirm"].indexOf(step) + 1;
+  const goToOffer = () => {
+    // Log feedback (analytics stub)
+    if (reason || feedback) {
+      // eslint-disable-next-line no-console
+      console.log("[deletion_feedback]", { reason, feedback, plan });
+    }
+    setStep("alternatives");
+  };
+
+  const stepLabels: DeleteStep[] = ["reason", "alternatives", "losses", "reauth", "confirm"];
+  const stepIndex = stepLabels.indexOf(step) + 1;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
@@ -685,13 +710,12 @@ function DeleteAccountDialog({
         <DialogHeader>
           <div className="flex items-center justify-between gap-3">
             <DialogTitle className="flex items-center gap-2">
-              {step !== "alternatives" && (
+              {step !== "reason" && (
                 <button
                   type="button"
                   onClick={() => {
-                    if (step === "losses") setStep("alternatives");
-                    if (step === "reauth") setStep("losses");
-                    if (step === "confirm") setStep("reauth");
+                    const i = stepLabels.indexOf(step);
+                    if (i > 0) setStep(stepLabels[i - 1]);
                   }}
                   className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
                   aria-label="Back"
@@ -702,63 +726,78 @@ function DeleteAccountDialog({
               Delete account
             </DialogTitle>
             <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-              Step {stepIndex} of 4
+              Step {stepIndex} of 5
             </span>
           </div>
         </DialogHeader>
 
-        {step === "alternatives" && (
+        {step === "reason" && (
           <div className="space-y-3">
             <p className="text-sm text-charcoal-700">
-              Deleting is permanent. Would one of these do instead?
+              Sorry to see you go — what's driving this? <span className="text-charcoal-500">(optional)</span>
             </p>
-            <AltRow
-              icon={PauseCircle}
-              label="Pause subscription"
-              desc="Keep your searches; we won't bill you while paused."
-              onClick={() => {
-                toast.success("Subscription paused for 1 month");
-                closeAll();
-              }}
-            />
-            <AltRow
-              icon={Tag}
-              label="Downgrade to Free"
-              desc="Keep 1 saved search. No charges."
-              onClick={() => {
-                updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
-                toast.success("Moved to Free plan");
-                closeAll();
-              }}
-            />
-            <AltRow
-              icon={Bell}
-              label="Turn off optional emails"
-              desc="Stop product tips and partner offers. Keep your account."
-              onClick={() => {
-                prefs.setPref("productUpdates", false);
-                prefs.setPref("marketingEmails", false);
-                toast.success("Optional emails turned off");
-                closeAll();
-              }}
+            <div className="flex flex-wrap gap-2">
+              {DELETE_REASONS.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => setReason(reason === r.id ? null : r.id)}
+                  className={cn(
+                    "px-3 py-2 rounded-pill text-xs font-medium border transition-colors",
+                    reason === r.id
+                      ? "border-charcoal-950 bg-charcoal-950 text-paper"
+                      : "border-charcoal-950/15 bg-paper-warm text-charcoal-800 hover:border-charcoal-400",
+                  )}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value.slice(0, 1000))}
+              placeholder="Anything we could've done better?"
+              rows={3}
+              className="w-full px-4 py-3 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm resize-none"
             />
             <DialogFooter className="!justify-between pt-2">
               <button
                 type="button"
-                onClick={closeAll}
+                onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
                 className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
               >
-                Keep my account
+                Skip
               </button>
               <button
                 type="button"
-                onClick={() => setStep("losses")}
-                className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+                onClick={goToOffer}
+                className="h-10 px-5 rounded-pill text-sm font-semibold bg-charcoal-950 text-paper hover:bg-charcoal-800"
               >
-                No — delete my account <ChevronRight className="h-3.5 w-3.5" />
+                Continue
               </button>
             </DialogFooter>
           </div>
+        )}
+
+        {step === "alternatives" && (
+          <DeleteAlternatives
+            reason={reason}
+            isPaid={isPaid}
+            onAccept={(msg) => { toast.success(msg); closeAll(); }}
+            onDowngradeFree={() => {
+              updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
+              toast.success("Moved to Free plan");
+              closeAll();
+            }}
+            onTurnOffEmails={() => {
+              prefs.setPref("productUpdates", false);
+              prefs.setPref("marketingEmails", false);
+              toast.success("Optional emails turned off");
+              closeAll();
+            }}
+            onContinue={() => setStep("losses")}
+            onKeep={closeAll}
+          />
         )}
 
         {step === "losses" && (
@@ -780,6 +819,12 @@ function DeleteAccountDialog({
                 </li>
               ))}
             </ul>
+            {isPaid && (
+              <div className="rounded-card border border-charcoal-950/12 bg-paper-warm p-3 text-xs text-charcoal-700 leading-relaxed">
+                This also cancels your <span className="font-semibold text-charcoal-950">{plan}</span> subscription.
+                No refund for the current period (see Refund Policy).
+              </div>
+            )}
             <p className="text-xs text-charcoal-600 leading-relaxed">
               Some records required by law (tax and transaction history) are retained per our Privacy Policy.
               After the 30-day grace period, deletion can't be undone.
@@ -875,7 +920,7 @@ function DeleteAccountDialog({
                 type="button"
                 disabled={confirmText !== "DELETE"}
                 onClick={() => {
-                  reset();
+                  resetApp();
                   closeAll();
                   toast.success("Account scheduled for deletion", {
                     description: "You have 30 days to restore by signing back in.",
@@ -896,6 +941,132 @@ function DeleteAccountDialog({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function DeleteAlternatives({
+  reason, isPaid, onAccept, onDowngradeFree, onTurnOffEmails, onContinue, onKeep,
+}: {
+  reason: DeleteReason | null;
+  isPaid: boolean;
+  onAccept: (msg: string) => void;
+  onDowngradeFree: () => void;
+  onTurnOffEmails: () => void;
+  onContinue: () => void;
+  onKeep: () => void;
+}) {
+  // Privacy reason: no retention offer. Show data-control alternatives.
+  if (reason === "privacy") {
+    return (
+      <div className="space-y-3">
+        <p className="text-sm text-charcoal-700">
+          Before you delete — you may also want to:
+        </p>
+        <AltRow
+          icon={Download}
+          label="Export your data first"
+          desc="Download a JSON copy of your searches, alerts, and profile."
+          onClick={() => {
+            toast.success("Export downloaded");
+          }}
+        />
+        <AltRow
+          icon={Bell}
+          label="Turn off all tracking & emails"
+          desc="Stop all optional emails and analytics. Keep your account inactive."
+          onClick={onTurnOffEmails}
+        />
+        <p className="text-xs text-charcoal-600">
+          See our <a href="/privacy" className="text-sage-700 underline-offset-2 hover:underline">Privacy Policy</a> for what's retained.
+        </p>
+        <DialogFooter className="!justify-between pt-2">
+          <button
+            type="button"
+            onClick={onKeep}
+            className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+          >
+            Keep my account
+          </button>
+          <button
+            type="button"
+            onClick={onContinue}
+            className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+          >
+            Continue to delete <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </DialogFooter>
+      </div>
+    );
+  }
+
+  type Alt =
+    | { kind: "accept"; icon: typeof Mail; label: string; desc: string; toast: string }
+    | { kind: "downgrade"; icon: typeof Mail; label: string; desc: string }
+    | { kind: "emails-off"; icon: typeof Mail; label: string; desc: string };
+
+  const alts: Alt[] = [];
+
+  if (reason === "expensive") {
+    if (isPaid) {
+      alts.push({ kind: "accept", icon: Tag, label: "50% off for 3 months", desc: "Stay on your plan at half price.", toast: "50% off applied for 3 months" });
+      alts.push({ kind: "accept", icon: PauseCircle, label: "Pause billing", desc: "Keep your data; no charges while paused.", toast: "Billing paused" });
+      alts.push({ kind: "downgrade", icon: Sparkles, label: "Downgrade to Free", desc: "Keep 1 saved search. No charges." });
+    } else {
+      alts.push({ kind: "emails-off", icon: Bell, label: "Turn off all emails", desc: "Quiet the inbox. Keep your account dormant." });
+    }
+  } else if (reason === "found") {
+    if (isPaid) {
+      alts.push({ kind: "accept", icon: PauseCircle, label: "Pause — your data waits for next move", desc: "No charges while paused.", toast: "Subscription paused" });
+    }
+    alts.push({ kind: "accept", icon: Heart, label: "List your move-out · earn $50", desc: "Help someone else find your spot.", toast: "Move-out listing started" });
+    alts.push({ kind: "accept", icon: Sparkles, label: "Refer a friend", desc: "Both get a free week of Premium.", toast: "Referral link copied" });
+  } else if (reason === "matches") {
+    alts.push({ kind: "accept", icon: MessageCircle, label: "Let Wren retune your search", desc: "Free session — refine filters with AI.", toast: "Open Wren to retune your search" });
+    if (isPaid) {
+      alts.push({ kind: "accept", icon: Tag, label: "1 month free to retry", desc: "Give it another shot on us.", toast: "1 month free added" });
+    }
+  } else if (reason === "unused" || reason === "other" || reason === null) {
+    if (isPaid) {
+      alts.push({ kind: "accept", icon: PauseCircle, label: "Pause billing", desc: "Keep your account and data. No charges.", toast: "Billing paused" });
+    }
+    alts.push({ kind: "emails-off", icon: Bell, label: "Keep account dormant", desc: "Turn off optional emails. We'll be here when you're ready." });
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-charcoal-700">
+        Deleting is permanent. Would one of these work instead?
+      </p>
+      {alts.map((a) => (
+        <AltRow
+          key={a.label}
+          icon={a.icon}
+          label={a.label}
+          desc={a.desc}
+          onClick={() => {
+            if (a.kind === "accept") onAccept(a.toast);
+            else if (a.kind === "downgrade") onDowngradeFree();
+            else onTurnOffEmails();
+          }}
+        />
+      ))}
+      <DialogFooter className="!justify-between pt-2">
+        <button
+          type="button"
+          onClick={onKeep}
+          className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+        >
+          Keep my account
+        </button>
+        <button
+          type="button"
+          onClick={onContinue}
+          className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+        >
+          No — delete my account <ChevronRight className="h-3.5 w-3.5" />
+        </button>
+      </DialogFooter>
+    </div>
   );
 }
 
