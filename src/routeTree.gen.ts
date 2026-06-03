@@ -21,11 +21,11 @@ import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
 import { Route as DmcaRouteImport } from './routes/dmca'
 import { Route as CookiesRouteImport } from './routes/cookies'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
@@ -102,11 +102,6 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AccessibilityRoute = AccessibilityRouteImport.update({
   id: '/accessibility',
   path: '/accessibility',
@@ -124,6 +119,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
@@ -152,9 +152,9 @@ const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
   getParentRoute: () => BlogRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedPreferencesRoute =
   AuthenticatedPreferencesRouteImport.update({
@@ -214,7 +214,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
-  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
@@ -234,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/blog/': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
   '/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
@@ -247,7 +247,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
-  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
@@ -266,6 +265,7 @@ export interface FileRoutesByTo {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/blog': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
   '/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
@@ -281,7 +281,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
-  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
@@ -301,6 +300,7 @@ export interface FileRoutesById {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/blog/': typeof BlogIndexRoute
   '/_authenticated/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/_authenticated/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
   '/_authenticated/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
@@ -316,7 +316,6 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
-    | '/blog'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
@@ -336,6 +335,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/blog/'
     | '/preferences/account'
     | '/preferences/alerts'
     | '/preferences/apartment'
@@ -349,7 +349,6 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
-    | '/blog'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
@@ -368,6 +367,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/blog'
     | '/preferences/account'
     | '/preferences/alerts'
     | '/preferences/apartment'
@@ -382,7 +382,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/acceptable-use'
     | '/accessibility'
-    | '/blog'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
@@ -402,6 +401,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/blog/'
     | '/_authenticated/preferences/account'
     | '/_authenticated/preferences/alerts'
     | '/_authenticated/preferences/apartment'
@@ -417,7 +417,6 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AcceptableUseRoute: typeof AcceptableUseRoute
   AccessibilityRoute: typeof AccessibilityRoute
-  BlogRoute: typeof BlogRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   DmcaRoute: typeof DmcaRoute
   DoNotSellRoute: typeof DoNotSellRoute
@@ -430,6 +429,8 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubprocessorsRoute: typeof SubprocessorsRoute
   TermsRoute: typeof TermsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -518,13 +519,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/accessibility': {
       id: '/accessibility'
       path: '/accessibility'
@@ -551,6 +545,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding/success': {
@@ -590,10 +591,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/preferences': {
       id: '/_authenticated/preferences'
@@ -702,18 +703,6 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-  BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-  BlogRssDotxmlRoute: BlogRssDotxmlRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
 interface OnboardingRouteChildren {
   OnboardingLoadingRoute: typeof OnboardingLoadingRoute
   OnboardingPreviewRoute: typeof OnboardingPreviewRoute
@@ -739,7 +728,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AcceptableUseRoute: AcceptableUseRoute,
   AccessibilityRoute: AccessibilityRoute,
-  BlogRoute: BlogRouteWithChildren,
   CookiesRoute: CookiesRoute,
   DmcaRoute: DmcaRoute,
   DoNotSellRoute: DoNotSellRoute,
@@ -752,7 +740,19 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubprocessorsRoute: SubprocessorsRoute,
   TermsRoute: TermsRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
