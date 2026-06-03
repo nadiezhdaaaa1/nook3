@@ -78,6 +78,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 11,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-terracotta) 0%, var(--color-brand-clay) 100%)",
+    coverImage: coverBestApps,
     coverImageAlt: "Abstract gradient cover representing apartment search apps",
     featured: true,
     body: [
@@ -258,6 +259,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 9,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-sage) 0%, var(--color-brand-cream) 100%)",
+    coverImage: coverVerifyRS,
     coverImageAlt: "Abstract gradient cover representing rent regulation verification",
     body: [
       { type: "p", text: "Your landlord says it's rent-stabilized. The listing has the badge. The lease mentions it. Everything seems fine." },
@@ -378,6 +380,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 8,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-clay) 0%, var(--color-brand-sage) 100%)",
+    coverImage: coverRSvsRC,
     coverImageAlt: "Abstract gradient cover comparing rent control and rent stabilization",
     body: [
       { type: "p", text: "People use these terms interchangeably. They're not the same thing." },
@@ -557,6 +560,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 7,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-terracotta) 0%, var(--color-brand-sage) 100%)",
+    coverImage: coverSpotFake,
     coverImageAlt: "Abstract gradient cover representing apartment listing scam detection",
     body: [
       { type: "p", text: "Most apartment scams follow the same five-step playbook. Once you recognize the pattern, you can spot a fake listing in under a minute — usually under fifteen seconds." },
@@ -660,6 +664,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 9,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-cream) 0%, var(--color-brand-terracotta) 100%)",
+    coverImage: coverBrokerFees,
     coverImageAlt: "Abstract gradient cover representing broker fees and no-fee apartments",
     body: [
       { type: "p", text: "Broker fees are one of the most expensive line items in apartment hunting — and one of the most misunderstood. A New York City renter signing a $3,000/mo apartment with a 15% broker fee writes a check for $5,400 just for the broker, on top of first month's rent, security deposit, and other fees. Walk-in cost: easily $13,000+ before they even unpack a box." },
@@ -840,6 +845,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 11,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-sage) 0%, var(--color-brand-terracotta) 100%)",
+    coverImage: coverNycTimeline,
     coverImageAlt: "Abstract gradient cover representing NYC apartment hunting timeline",
     body: [
       { type: "p", text: "Most NYC apartment-hunting guides read like they were written by people who haven't apartment-hunted in NYC since 2015. They describe a process that doesn't match reality: too-relaxed timelines, missing cost line items, and breezy advice about \"negotiating with your landlord\" that ignores how the market actually works." },
@@ -1049,6 +1055,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 12,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-terracotta) 0%, var(--color-brand-sage) 100%)",
+    coverImage: coverChecklist,
     coverImageAlt: "Abstract gradient cover representing an apartment hunting checklist",
     body: [
       { type: "p", text: "Most apartment-tour checklists are useless. They tell you to \"check the water pressure\" and \"look at the windows,\" which everyone already knows. They don't tell you what to actually verify, what to test, or what landlords don't volunteer." },
@@ -1198,6 +1205,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 9,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-clay) 0%, var(--color-brand-sage) 100%)",
+    coverImage: coverAi,
     coverImageAlt: "Abstract gradient cover representing AI-assisted apartment hunting",
     body: [
       { type: "p", text: "A few years ago, AI-assisted apartment hunting was theoretical. Today, ChatGPT and Claude are getting used by renters in every major US market — for everything from drafting emails to landlords to comparing neighborhoods to evaluating lease terms." },
@@ -1370,6 +1378,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 10,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-sage) 0%, var(--color-brand-clay) 100%)",
+    coverImage: coverNycBudget,
     coverImageAlt: "Abstract gradient cover representing NYC rent prices by neighborhood",
     body: [
       { type: "p", text: "NYC rent ranges are confusing for two reasons. First, headline averages (\"median rent in Manhattan is X\") hide enormous neighborhood variation — a $4,000 median across Manhattan averages a $7,000 West Village 1BR with a $2,800 Inwood 1BR. Second, listing prices systematically lie. \"Starting from $2,400\" usually means \"the worst unit in the building is $2,400 and the one you'll actually rent is $3,200.\"" },
@@ -1646,6 +1655,7 @@ export const ARTICLES: BlogArticle[] = [
     updatedAt: "2026-07-06",
     readingTimeMin: 9,
     coverGradient: "linear-gradient(135deg, oklch(0.72 0.14 150) 0%, oklch(0.55 0.16 200) 100%)",
+    coverImage: coverMoveOut,
     coverImageAlt: "Move-out checklist illustration",
     body: [
       { type: "p", text: "The average NYC renter loses $400–$1,200 of their security deposit at move-out. Most of that loss is preventable — and a lot of it is illegal under state law that tenants don't know they have on their side." },
