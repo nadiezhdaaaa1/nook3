@@ -17,14 +17,14 @@ import { cn } from "@/lib/utils";
 const SITE = "https://nook3.lovable.app";
 
 const searchSchema = z.object({
-  category: fallback(
-    z.enum(["all", "renter-rights", "guides", "tools-comparisons", "market-intelligence"]),
-    "all",
-  ).default("all"),
+  category: z
+    .enum(["all", "renter-rights", "guides", "tools-comparisons", "market-intelligence"])
+    .catch("all")
+    .default("all"),
 });
 
 export const Route = createFileRoute("/blog")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>) => searchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "Nook Blog — Honest guides to US apartment hunting" },
