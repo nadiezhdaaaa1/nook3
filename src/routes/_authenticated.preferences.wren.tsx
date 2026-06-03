@@ -148,6 +148,62 @@ function WrenChatPage() {
     }
   };
 
+  const startRecording = async () => {
+    if (recording || transcribing) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      toast.error("Microphone not supported in this browser");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mr = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      mr.ondataavailable = (e) => { if (e.data.size) audioChunksRef.current.push(e.data); };
+      mr.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(audioChunksRef.current, { type: mr.mimeType || "audio/webm" });
+        if (blob.size < 500) { setTranscribing(false); return; }
+        setTranscribing(true);
+        try {
+          const { data: session } = await supabase.auth.getSession();
+          const token = session.session?.access_token;
+          if (!token) throw new Error("Not signed in");
+          const fd = new FormData();
+          fd.append("audio", blob, "voice.webm");
+          const res = await fetch("/api/wren-transcribe", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: fd,
+          });
+          if (!res.ok) {
+            const j = await res.json().catch(() => ({}));
+            throw new Error(j.error ?? `Transcription failed (${res.status})`);
+          }
+          const j = (await res.json()) as { text?: string };
+          const text = (j.text ?? "").trim();
+          if (text) setInput((prev) => (prev ? `${prev} ${text}` : text));
+          else toast.message("Didn't catch that. Try again.");
+        } catch (e) {
+          toast.error((e as Error).message ?? "Transcription failed");
+        } finally {
+          setTranscribing(false);
+        }
+      };
+      mr.start();
+      recorderRef.current = mr;
+      setRecording(true);
+    } catch {
+      toast.error("Microphone permission denied");
+    }
+  };
+
+  const stopRecording = () => {
+    if (!recording) return;
+    recorderRef.current?.stop();
+    recorderRef.current = null;
+    setRecording(false);
+  };
+
   if (locked) return <LockedState />;
 
   const scopeChip = scope.type !== "general" && (
