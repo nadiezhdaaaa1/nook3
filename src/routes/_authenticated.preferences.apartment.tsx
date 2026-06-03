@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { Heart, Star } from "lucide-react";
 import { PillGroup } from "@/components/onboarding/PillGroup";
-import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/preferences/apartment")({
   component: ApartmentTab,
