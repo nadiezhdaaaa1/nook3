@@ -53,40 +53,6 @@ export function MarketingFooter() {
           </div>
         </div>
 
-        {/* Company info */}
-        <div
-          className="mt-12 grid lg:grid-cols-[1.4fr_1fr] gap-8 pb-12 border-b text-sm leading-relaxed"
-          style={{
-            borderColor: "color-mix(in oklab, var(--color-brand-cream) 12%, transparent)",
-            color: "color-mix(in oklab, var(--color-brand-cream) 70%, transparent)",
-          }}
-        >
-          <div className="space-y-1">
-            <p>
-              <span className="font-semibold" style={{ color: "var(--color-brand-cream)" }}>Zentaro Systems Ltd</span> · Trading as Nook
-            </p>
-            <p>167-169 Great Portland Street, 5th Floor, London, W1W 5PF</p>
-            <p>
-              <a href="mailto:hello@thenook.rent" className="hover:underline" style={{ color: "var(--color-brand-cream)" }}>
-                hello@thenook.rent
-              </a>
-            </p>
-            <p>Registered in England and Wales. Operating in the US under the trade name "The Nook".</p>
-          </div>
-          <div className="lg:text-right">
-            <p>
-              Support:{" "}
-              <a
-                href="mailto:hello@thenook.rent"
-                className="hover:underline"
-                style={{ color: "var(--color-brand-cream)" }}
-              >
-                hello@thenook.rent
-              </a>
-            </p>
-          </div>
-        </div>
-
         <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mt-12">
           <FooterCol title="Product">
             <FooterAnchor href="#how">How it works</FooterAnchor>
@@ -118,16 +84,40 @@ export function MarketingFooter() {
         </div>
 
         <div
-          className="mt-16 pt-6 border-t"
+          className="mt-8 pt-8 pb-6 border-t"
           style={{ borderColor: "color-mix(in oklab, var(--color-brand-cream) 12%, transparent)" }}
         >
-          <span
-            className="text-[11px] font-mono uppercase tracking-[0.15em]"
-            style={{ color: "color-mix(in oklab, var(--color-brand-cream) 45%, transparent)" }}
+          <p
+            className="text-[12px] font-semibold uppercase tracking-[0.08em]"
+            style={{ color: "var(--color-brand-cream)" }}
+          >
+            Zentaro Systems Ltd · Trading as Nook
+          </p>
+          <div
+            className="mt-2 text-[12px] leading-[1.6]"
+            style={{ color: "color-mix(in oklab, var(--color-brand-cream) 65%, transparent)" }}
+          >
+            <p>167-169 Great Portland Street, 5th Floor</p>
+            <p>London, W1W 5PF</p>
+            <p>Company No. 17178666</p>
+          </div>
+          <p className="mt-3 text-[12px]">
+            <a
+              href="mailto:hello@thenook.rent"
+              className="hover:underline"
+              style={{ color: "var(--color-brand-terracotta)" }}
+            >
+              hello@thenook.rent
+            </a>
+          </p>
+          <p
+            className="mt-2 text-[12px]"
+            style={{ color: "color-mix(in oklab, var(--color-brand-cream) 65%, transparent)" }}
           >
             © {new Date().getFullYear()} Zentaro Systems Ltd. All rights reserved.
-          </span>
+          </p>
         </div>
+
       </div>
     </footer>
   );
