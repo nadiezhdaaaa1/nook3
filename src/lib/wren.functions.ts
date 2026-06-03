@@ -2,9 +2,23 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+type JsonValue = string | number | boolean | null | JsonValue[] | { [k: string]: JsonValue };
+type JsonObject = { [k: string]: JsonValue };
+
+const jsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.null(),
+    z.array(jsonValueSchema),
+    z.record(z.string(), jsonValueSchema),
+  ]),
+);
+
 const scopeSchema = z.object({
   type: z.enum(["general", "search", "listing", "compare"]).default("general"),
-  data: z.record(z.string(), z.unknown()).default({}),
+  data: z.record(z.string(), jsonValueSchema).default({}),
   searchId: z.string().uuid().optional().nullable(),
 });
 
@@ -14,7 +28,7 @@ export type WrenConversationRow = {
   id: string;
   title: string;
   scopeType: "general" | "search" | "listing" | "compare";
-  scopeData: Record<string, unknown>;
+  scopeData: JsonObject;
   searchId: string | null;
   createdAt: string;
   updatedAt: string;
@@ -24,15 +38,15 @@ export type WrenMessageRow = {
   id: string;
   role: "user" | "assistant" | "tool" | "system";
   content: string;
-  toolCalls: unknown;
-  toolResults: unknown;
+  toolCalls: JsonValue | null;
+  toolResults: JsonValue | null;
   createdAt: string;
 };
 
 /* ---------- list conversations ---------- */
 export const listConversations = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<WrenConversationRow[]> => {
+  .handler(async ({ context }) => {
     const { supabase } = context;
     const { data, error } = await supabase
       .from("wren_conversations")
@@ -40,15 +54,16 @@ export const listConversations = createServerFn({ method: "GET" })
       .order("updated_at", { ascending: false })
       .limit(50);
     if (error) throw new Error(error.message);
-    return (data ?? []).map((r) => ({
+    const rows: WrenConversationRow[] = (data ?? []).map((r) => ({
       id: r.id,
       title: r.title,
       scopeType: r.scope_type as WrenConversationRow["scopeType"],
-      scopeData: (r.scope_data as Record<string, unknown>) ?? {},
+      scopeData: (r.scope_data as JsonObject | null) ?? {},
       searchId: r.search_id,
       createdAt: r.created_at,
       updatedAt: r.updated_at,
     }));
+    return rows;
   });
 
 /* ---------- create conversation ---------- */
