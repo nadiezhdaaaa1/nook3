@@ -93,7 +93,7 @@ export function MarketingFooter() {
             <FooterAnchor href="#what">What you get</FooterAnchor>
             <FooterAnchor href="#pricing">Pricing</FooterAnchor>
             <FooterAnchor href="#faq">FAQ</FooterAnchor>
-            <FooterAnchor href="#blog">Blog</FooterAnchor>
+            <FooterAnchor href="/blog">Blog</FooterAnchor>
           </FooterCol>
           <FooterCol title="Company">
             <FooterAnchor href="mailto:hello@thenook.rent">Contact</FooterAnchor>
