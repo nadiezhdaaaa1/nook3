@@ -89,7 +89,7 @@ function PricingScreen() {
         </div>
       </header>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-6 lg:gap-8 lg:max-w-5xl lg:w-[64rem] lg:relative lg:left-1/2 lg:-translate-x-1/2">
         {PLANS.map((p) => {
           const price =
             billingCycle === "annual" && p.annual > 0
