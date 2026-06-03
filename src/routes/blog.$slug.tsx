@@ -131,7 +131,8 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function ArticleDetailPage() {
-  const { article } = Route.useLoaderData();
+  const data = Route.useLoaderData() as { article: BlogArticle };
+  const article = data.article;
   const toc = extractToc(article.body);
   const related = getRelated(article.slug);
   const [progress, setProgress] = useState(0);
