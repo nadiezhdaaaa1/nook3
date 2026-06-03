@@ -1077,7 +1077,7 @@ export const ARTICLES: BlogArticle[] = [
       { type: "p", text: "For these, talk to current tenants if you can find any. Knocking on a neighbor's door and asking honest questions (\"What should I know before signing?\") often surfaces useful information that no checklist could capture." },
 
       { type: "h2", id: "printable", text: "Printable version" },
-      { type: "info", variant: "tip", text: "Download the printable checklist (PDF, 2 pages) to bring to viewings." },
+      { type: "info", text: "Download the printable checklist (PDF, 2 pages) to bring to viewings." },
     ],
     faq: [
       { q: "How long does a thorough apartment tour take?", a: "For a serious candidate, plan 20–30 minutes inside the unit plus 10–15 minutes walking the building. Quick \"drive-by\" tours (5–10 minutes) miss most of what matters." },
