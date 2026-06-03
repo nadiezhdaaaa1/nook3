@@ -13,20 +13,26 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubprocessorsRouteImport } from './routes/subprocessors'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SignUpRouteImport } from './routes/sign-up'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
 import { Route as DmcaRouteImport } from './routes/dmca'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
@@ -67,6 +73,16 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RefundsRoute = RefundsRouteImport.update({
   id: '/refunds',
   path: '/refunds',
@@ -77,6 +93,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -85,6 +106,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FairHousingRoute = FairHousingRouteImport.update({
@@ -112,6 +138,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccessibilityRoute = AccessibilityRouteImport.update({
   id: '/accessibility',
   path: '/accessibility',
@@ -134,6 +165,11 @@ const IndexRoute = IndexRouteImport.update({
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsSlugRoute = PostsSlugRouteImport.update({
+  id: '/posts/$slug',
+  path: '/posts/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
@@ -245,15 +281,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -268,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -283,15 +325,20 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -305,6 +352,7 @@ export interface FileRoutesByTo {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/blog': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -322,15 +370,20 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/acceptable-use': typeof AcceptableUseRoute
   '/accessibility': typeof AccessibilityRoute
+  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -345,6 +398,7 @@ export interface FileRoutesById {
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
+  '/posts/$slug': typeof PostsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/_authenticated/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -362,15 +416,20 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
+    | '/app'
     | '/contact'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/home'
     | '/login'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/sign-in'
+    | '/sign-up'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -385,6 +444,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/posts/$slug'
     | '/blog/'
     | '/preferences/account'
     | '/preferences/alerts'
@@ -400,15 +460,20 @@ export interface FileRouteTypes {
     | '/'
     | '/acceptable-use'
     | '/accessibility'
+    | '/app'
     | '/contact'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/home'
     | '/login'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/sign-in'
+    | '/sign-up'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -422,6 +487,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/posts/$slug'
     | '/blog'
     | '/preferences/account'
     | '/preferences/alerts'
@@ -438,15 +504,20 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/acceptable-use'
     | '/accessibility'
+    | '/app'
     | '/contact'
     | '/cookies'
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/home'
     | '/login'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/sign-in'
+    | '/sign-up'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -461,6 +532,7 @@ export interface FileRouteTypes {
     | '/onboarding/preview'
     | '/onboarding/pricing'
     | '/onboarding/success'
+    | '/posts/$slug'
     | '/blog/'
     | '/_authenticated/preferences/account'
     | '/_authenticated/preferences/alerts'
@@ -478,15 +550,20 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AcceptableUseRoute: typeof AcceptableUseRoute
   AccessibilityRoute: typeof AccessibilityRoute
+  AppRoute: typeof AppRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
   DmcaRoute: typeof DmcaRoute
   DoNotSellRoute: typeof DoNotSellRoute
   FairHousingRoute: typeof FairHousingRoute
+  HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
+  PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
+  SignInRoute: typeof SignInRoute
+  SignUpRoute: typeof SignUpRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubprocessorsRoute: typeof SubprocessorsRoute
@@ -496,6 +573,7 @@ export interface RootRouteChildren {
   ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
+  PostsSlugRoute: typeof PostsSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -529,6 +607,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/refunds': {
       id: '/refunds'
       path: '/refunds'
@@ -543,6 +635,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -555,6 +654,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fair-housing': {
@@ -592,6 +698,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/accessibility': {
       id: '/accessibility'
       path: '/accessibility'
@@ -625,6 +738,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posts/$slug': {
+      id: '/posts/$slug'
+      path: '/posts/$slug'
+      fullPath: '/posts/$slug'
+      preLoaderRoute: typeof PostsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding/success': {
@@ -831,15 +951,20 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AcceptableUseRoute: AcceptableUseRoute,
   AccessibilityRoute: AccessibilityRoute,
+  AppRoute: AppRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
   DmcaRoute: DmcaRoute,
   DoNotSellRoute: DoNotSellRoute,
   FairHousingRoute: FairHousingRoute,
+  HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
+  PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
+  SignInRoute: SignInRoute,
+  SignUpRoute: SignUpRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubprocessorsRoute: SubprocessorsRoute,
@@ -849,6 +974,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
+  PostsSlugRoute: PostsSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
