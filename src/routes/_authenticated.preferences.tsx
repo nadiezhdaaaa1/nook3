@@ -411,9 +411,10 @@ function DeleteSearchButton() {
 /* ---------- Sidebar ---------- */
 
 function SidebarNav({ pathname }: { pathname: string }) {
+  const navGroups = useNavGroups();
   return (
     <nav aria-label="Preferences sections" className="flex flex-col gap-1">
-      {NAV_GROUPS.map((group) => (
+      {navGroups.map((group) => (
         <div key={group.label} className="first:mt-0 mt-6">
           <div className="mb-2 px-3 text-[11px] font-mono uppercase tracking-[0.12em] text-sage-700">
             {group.label}

@@ -355,13 +355,6 @@ export function ReviewsMasonry() {
           </div>
         </div>
 
-        {/* Disclaimer */}
-        <p
-          className="mt-8 text-[11px] font-mono uppercase tracking-[0.16em] text-center"
-          style={{ color: "color-mix(in oklab, var(--color-brand-charcoal) 45%, transparent)" }}
-        >
-          Beta tester program · names shortened for privacy
-        </p>
       </div>
     </section>
   );
