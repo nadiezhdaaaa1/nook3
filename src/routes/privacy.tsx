@@ -485,13 +485,6 @@ function PrivacyPage() {
         United Kingdom
       </p>
       <p>
-        <strong>For US legal process or formal privacy requests:</strong>
-        <br />
-        [US_AGENT_NAME]
-        <br />
-        [US_AGENT_ADDRESS]
-      </p>
-      <p>
         You also have the right to contact your state attorney general or other regulator if
         you believe we have violated applicable law.
       </p>
