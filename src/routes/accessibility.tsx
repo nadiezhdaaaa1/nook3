@@ -50,7 +50,6 @@ function AccessibilityPage() {
         areas where we are working to improve:
       </p>
       <ul>
-        <li>[To be completed after accessibility audit]</li>
         <li>Listing photos uploaded by users may lack alt text</li>
         <li>Older Wren AI conversations may use formatting that screen readers handle imperfectly</li>
         <li>Some PDF documents (e.g., billing receipts) may not be fully tagged</li>
