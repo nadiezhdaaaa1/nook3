@@ -405,14 +405,16 @@ function PrivacyPage() {
 
       <h2>11. Children's Privacy</h2>
       <p>
-        The Service is not directed to children under 13. We do not knowingly collect personal
-        information from children under 13. If you believe we have collected information from
-        a child under 13, contact{" "}
-        <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a> and we will delete it.
+        The Service is not directed to children under 18. We do not knowingly collect personal
+        information from individuals under 18. If you believe we have collected personal
+        information from a person under 18, please contact{" "}
+        <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a> and we will take
+        appropriate steps to delete such information.
       </p>
       <p>
-        For users between 13 and 16 in jurisdictions with age-of-consent requirements, we
-        require parental consent before collecting information.
+        In addition, the Service is intended only for users who are at least 18 years old, as
+        described in our Terms of Service. We do not knowingly permit individuals under 18 to
+        create accounts or use the Service.
       </p>
 
       <h2>12. Security</h2>
