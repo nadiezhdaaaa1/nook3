@@ -349,15 +349,6 @@ function ArticleDetailPage() {
               </div>
             </div>
 
-            {/* Share */}
-            <div className="mt-10">
-              <ShareRow
-                url={`${SITE}/blog/${article.slug}`}
-                title={article.title}
-                excerpt={article.excerpt}
-              />
-            </div>
-
           </div>
 
           {/* Sidebar right */}
