@@ -288,7 +288,6 @@ function PrivacyPage() {
       <ul>
         <li>Web form: <Link to="/do-not-sell">thenook.rent/do-not-sell</Link></li>
         <li>Email: <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a></li>
-        <li>Mail: [US_AGENT_ADDRESS]</li>
       </ul>
       <p>
         We will verify your identity (typically by email confirmation) before processing
