@@ -8,9 +8,9 @@ export const Route = createFileRoute("/accessibility")({
       { name: "description", content: "Nook's commitment to accessible design and WCAG 2.1 AA." },
       { property: "og:title", content: "Accessibility Statement — Nook" },
       { property: "og:description", content: "Nook's commitment to accessible design and WCAG 2.1 AA." },
-      { property: "og:url", content: "https://nook3.lovable.app/accessibility" }
+      { property: "og:url", content: "https://thenook.rent/accessibility" }
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/accessibility" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/accessibility" }],
   }),
   component: AccessibilityPage,
 });

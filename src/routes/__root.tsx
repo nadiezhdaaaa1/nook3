@@ -157,9 +157,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "alternate", hrefLang: "en", href: "https://nook3.lovable.app/" },
-      { rel: "alternate", hrefLang: "en-US", href: "https://nook3.lovable.app/" },
-      { rel: "alternate", hrefLang: "x-default", href: "https://nook3.lovable.app/" },
+      { rel: "alternate", hrefLang: "en", href: "https://thenook.rent/" },
+      { rel: "alternate", hrefLang: "en-US", href: "https://thenook.rent/" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://thenook.rent/" },
     ],
     scripts: [
       {
@@ -169,10 +169,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "Nook",
           legalName: "Zentaro Systems Ltd",
-          url: "https://nook3.lovable.app",
+          url: "https://thenook.rent",
           logo: {
             "@type": "ImageObject",
-            url: "https://nook3.lovable.app/favicon.ico",
+            url: "https://thenook.rent/favicon.ico",
           },
           email: "hello@thenook.rent",
           description:
@@ -185,12 +185,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Nook",
-          url: "https://nook3.lovable.app",
+          url: "https://thenook.rent",
           potentialAction: {
             "@type": "SearchAction",
             target: {
               "@type": "EntryPoint",
-              urlTemplate: "https://nook3.lovable.app/blog?q={search_term_string}",
+              urlTemplate: "https://thenook.rent/blog?q={search_term_string}",
             },
             "query-input": "required name=search_term_string",
           },

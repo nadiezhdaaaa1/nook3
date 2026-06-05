@@ -28,9 +28,9 @@ export const Route = createFileRoute("/signup")({
     meta: [
       { title: "Create account — Nook" },
       { name: "description", content: "Create your Nook account to save apartment alerts." },
-      { property: "og:url", content: "https://nook3.lovable.app/signup" }
+      { property: "og:url", content: "https://thenook.rent/signup" }
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/signup" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/signup" }],
   }),
   component: SignupPage,
 });

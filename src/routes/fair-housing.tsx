@@ -8,9 +8,9 @@ export const Route = createFileRoute("/fair-housing")({
       { name: "description", content: "Nook's commitment to equal housing opportunity and non-discrimination." },
       { property: "og:title", content: "Fair Housing Statement — Nook" },
       { property: "og:description", content: "Nook's commitment to equal housing opportunity and non-discrimination." },
-      { property: "og:url", content: "https://nook3.lovable.app/fair-housing" }
+      { property: "og:url", content: "https://thenook.rent/fair-housing" }
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/fair-housing" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/fair-housing" }],
   }),
   component: FairHousingPage,
 });

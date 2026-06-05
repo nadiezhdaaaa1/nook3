@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { ARTICLES } from "@/data/blog/articles";
 
-const BASE_URL = "https://nook3.lovable.app";
+const BASE_URL = "https://thenook.rent";
 
 interface SitemapEntry {
   path: string;

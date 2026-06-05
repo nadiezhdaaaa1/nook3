@@ -14,7 +14,7 @@ import {
 } from "@/data/blog/articles";
 import { cn } from "@/lib/utils";
 
-const SITE = "https://nook3.lovable.app";
+const SITE = "https://thenook.rent";
 
 const searchSchema = z.object({
   category: z

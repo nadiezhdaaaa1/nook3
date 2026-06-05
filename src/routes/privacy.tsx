@@ -8,9 +8,9 @@ export const Route = createFileRoute("/privacy")({
       { name: "description", content: "How Nook collects, uses, shares, and protects your personal information." },
       { property: "og:title", content: "Privacy Policy — Nook" },
       { property: "og:description", content: "How Nook collects, uses, shares, and protects your personal information." },
-      { property: "og:url", content: "https://nook3.lovable.app/privacy" }
+      { property: "og:url", content: "https://thenook.rent/privacy" }
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/privacy" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/privacy" }],
   }),
   component: PrivacyPage,
 });

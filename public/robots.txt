@@ -10,4 +10,4 @@ Disallow: /preferences
 Disallow: /preferences/
 Disallow: /lovable/
 
-Sitemap: https://nook3.lovable.app/sitemap.xml
+Sitemap: https://thenook.rent/sitemap.xml
