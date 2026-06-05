@@ -8,6 +8,7 @@ Disallow: /onboarding
 Disallow: /onboarding/
 Disallow: /preferences
 Disallow: /preferences/
+Disallow: /r/
 Disallow: /lovable/
 
 Sitemap: https://thenook.rent/sitemap.xml

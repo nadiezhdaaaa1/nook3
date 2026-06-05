@@ -22,7 +22,7 @@ function ReferralsPage() {
   const fallbackCode = typeof window === "undefined" ? "RB000000" : getReferralCode();
   const code = data?.code || fallbackCode;
   const fullUrl = `https://thenook.rent/r/${code}`;
-  const displayUrl = `nook.app/r/${code}`;
+  const displayUrl = `thenook.rent/r/${code}`;
   const blurb = `I'm using Nook to find my next apartment — they ping me the moment a real match shows up. Use my link and we both get 7 days of Premium free: ${fullUrl}`;
 
   const stats: ReferralStats = data ?? {

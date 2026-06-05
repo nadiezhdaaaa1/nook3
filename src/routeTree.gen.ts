@@ -34,6 +34,7 @@ import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as RCodeRouteImport } from './routes/r.$code'
 import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
@@ -177,6 +178,11 @@ const IndexRoute = IndexRouteImport.update({
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RCodeRoute = RCodeRouteImport.update({
+  id: '/r/$code',
+  path: '/r/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostsSlugRoute = PostsSlugRouteImport.update({
@@ -324,6 +330,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -369,6 +376,7 @@ export interface FileRoutesByTo {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/r/$code': typeof RCodeRoute
   '/blog': typeof BlogIndexRoute
   '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -417,6 +425,7 @@ export interface FileRoutesById {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
   '/_authenticated/preferences/account': typeof AuthenticatedPreferencesAccountRoute
   '/_authenticated/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
@@ -465,6 +474,7 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
+    | '/r/$code'
     | '/blog/'
     | '/preferences/account'
     | '/preferences/alerts'
@@ -510,6 +520,7 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
+    | '/r/$code'
     | '/blog'
     | '/preferences/account'
     | '/preferences/alerts'
@@ -557,6 +568,7 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
+    | '/r/$code'
     | '/blog/'
     | '/_authenticated/preferences/account'
     | '/_authenticated/preferences/alerts'
@@ -600,6 +612,7 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   PostsSlugRoute: typeof PostsSlugRoute
+  RCodeRoute: typeof RCodeRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -778,6 +791,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog/'
       preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/r/$code': {
+      id: '/r/$code'
+      path: '/r/$code'
+      fullPath: '/r/$code'
+      preLoaderRoute: typeof RCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/posts/$slug': {
@@ -1017,6 +1037,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   PostsSlugRoute: PostsSlugRoute,
+  RCodeRoute: RCodeRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
