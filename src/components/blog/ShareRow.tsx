@@ -13,7 +13,6 @@ export function ShareRow({ url, title, excerpt }: Props) {
 
   useEffect(() => {
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      // Use native share sheet only on coarse-pointer (mobile/tablet) devices
       const isCoarse =
         typeof window !== "undefined" &&
         window.matchMedia?.("(pointer: coarse)").matches;
@@ -25,7 +24,7 @@ export function ShareRow({ url, title, excerpt }: Props) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       // ignore
     }
@@ -39,33 +38,55 @@ export function ShareRow({ url, title, excerpt }: Props) {
     }
   };
 
+  const openShare = (href: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const w = 600;
+    const h = 500;
+    const left = window.screenX + Math.max(0, (window.outerWidth - w) / 2);
+    const top = window.screenY + Math.max(0, (window.outerHeight - h) / 2);
+    window.open(
+      href,
+      "share",
+      `popup=yes,width=${w},height=${h},left=${left},top=${top},noopener,noreferrer`,
+    );
+  };
+
   const enc = encodeURIComponent;
   const shareLinks = {
     x: `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(title)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
     reddit: `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(title)}`,
-    email: `mailto:?subject=${enc(title)}&body=${enc((excerpt ? excerpt + "\n\n" : "") + url)}`,
+    email: `mailto:?subject=${enc(title)}&body=${enc(url)}`,
   };
+
+  const label = (
+    <span className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-charcoal-500)]">
+      Share
+    </span>
+  );
+
+  const liveRegion = (
+    <span aria-live="polite" className="sr-only">
+      {copied ? "Link copied to clipboard" : ""}
+    </span>
+  );
 
   if (canNativeShare) {
     return (
-      <div
-        className="flex items-center gap-3 py-4 border-y"
-        style={{ borderColor: "var(--color-brand-clay)" }}
-      >
-        <span className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-charcoal-500)]">
-          Share
-        </span>
+      <div className="flex items-center gap-3 py-4 border-y" style={{ borderColor: "var(--color-brand-clay)" }}>
+        {label}
         <button
           type="button"
           onClick={handleNativeShare}
-          className="ml-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border bg-white text-sm font-semibold text-[var(--color-brand-charcoal)]"
+          aria-label="Share this article"
+          className="ml-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border bg-white text-sm font-semibold text-[var(--color-brand-charcoal)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-sage)]"
           style={{ borderColor: "var(--color-brand-clay)" }}
         >
-          <Share2 className="h-4 w-4" style={{ color: "var(--color-brand-sage-deep, var(--color-brand-sage))" }} />
+          <Share2 className="h-4 w-4" style={{ color: "var(--color-brand-sage)" }} />
           Share…
         </button>
+        {liveRegion}
       </div>
     );
   }
@@ -81,11 +102,12 @@ export function ShareRow({ url, title, excerpt }: Props) {
   }) => (
     <a
       href={href}
+      onClick={openShare(href)}
       target="_blank"
       rel="noopener noreferrer"
-      title={label}
       aria-label={label}
-      className="w-10 h-10 rounded-full border bg-white flex items-center justify-center text-[var(--color-brand-charcoal)] hover:bg-[var(--color-sage-100,#E8EEE3)] transition-colors"
+      title={label}
+      className="w-10 h-10 rounded-full border bg-white flex items-center justify-center text-[var(--color-brand-charcoal)] hover:bg-[var(--color-sage-100,#ECF1E6)] hover:border-[var(--color-brand-sage)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-sage)]"
       style={{ borderColor: "var(--color-brand-clay)" }}
     >
       {children}
@@ -97,13 +119,12 @@ export function ShareRow({ url, title, excerpt }: Props) {
       className="flex flex-wrap items-center gap-3 py-4 border-y"
       style={{ borderColor: "var(--color-brand-clay)" }}
     >
-      <span className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-charcoal-500)]">
-        Share
-      </span>
+      {label}
       <button
         type="button"
         onClick={handleCopy}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border bg-white text-sm font-semibold text-[var(--color-brand-charcoal)] hover:border-[var(--color-brand-sage)] transition-colors"
+        aria-label="Copy link to this article"
+        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border bg-white text-sm font-semibold text-[var(--color-brand-charcoal)] hover:border-[var(--color-brand-sage)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-sage)]"
         style={{ borderColor: "var(--color-brand-clay)" }}
       >
         {copied ? (
@@ -111,20 +132,20 @@ export function ShareRow({ url, title, excerpt }: Props) {
         ) : (
           <Link2 className="h-[15px] w-[15px]" style={{ color: "var(--color-brand-sage)" }} />
         )}
-        {copied ? "Copied" : "Copy link"}
+        {copied ? "Copied ✓" : "Copy link"}
       </button>
 
-      <div className="flex gap-2 sm:ml-auto">
+      <div className="flex flex-wrap gap-2 w-full sm:w-auto sm:ml-auto">
         <IconBtn href={shareLinks.x} label="Share on X">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-[17px] h-[17px]">
             <path d="M4 4l16 16M20 4L4 20" />
           </svg>
         </IconBtn>
         <IconBtn href={shareLinks.facebook} label="Share on Facebook">
-          <span className="font-bold text-[15px]">f</span>
+          <span className="font-bold text-[15px] leading-none">f</span>
         </IconBtn>
         <IconBtn href={shareLinks.linkedin} label="Share on LinkedIn">
-          <span className="font-bold text-[12px]">in</span>
+          <span className="font-bold text-[12px] leading-none">in</span>
         </IconBtn>
         <IconBtn href={shareLinks.reddit} label="Share on Reddit">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-[17px] h-[17px]">
@@ -138,6 +159,7 @@ export function ShareRow({ url, title, excerpt }: Props) {
           <Mail className="w-[17px] h-[17px]" />
         </IconBtn>
       </div>
+      {liveRegion}
     </div>
   );
 }
