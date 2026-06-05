@@ -73,7 +73,10 @@ function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email: emailRes.data!,
       password: pwRes.data!,
-      options: { emailRedirectTo: `${window.location.origin}/preferences` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/preferences`,
+        data: referralCode ? { referral_code: referralCode } : undefined,
+      },
     });
     setSubmitting(false);
     if (error) {
