@@ -5,6 +5,7 @@ import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { AuthorByline } from "@/components/blog/AuthorByline";
+import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
 import {
   ARTICLES,
   CATEGORIES,
