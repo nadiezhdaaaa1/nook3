@@ -372,8 +372,8 @@ function TermsPage() {
       <h3>16.1 Agreement to Arbitrate</h3>
       <p>
         Any dispute arising from these Terms or the Service will be resolved by binding
-        arbitration administered by [ARBITRATION_PROVIDER] under its [Consumer/Commercial]
-        Arbitration Rules, except as set forth below.
+        arbitration administered by the American Arbitration Association ("AAA") under its
+        Consumer Arbitration Rules, except as set forth below.
       </p>
       <h3>16.2 Class Action Waiver</h3>
       <p>
@@ -382,9 +382,11 @@ function TermsPage() {
       </p>
       <h3>16.3 Opt-Out</h3>
       <p>
-        You may opt out of this arbitration agreement by sending written notice to
-        [US_AGENT_ADDRESS] within 30 days of accepting these Terms. The opt-out must include
-        your name, account email, and a clear statement that you opt out of arbitration.
+        You may opt out of this arbitration agreement within 30 days of accepting these Terms
+        by sending written notice to{" "}
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>. The notice must include
+        your name, account email address, and a clear statement that you wish to opt out of
+        arbitration.
       </p>
       <h3>16.4 Exceptions</h3>
       <p>
@@ -400,10 +402,10 @@ function TermsPage() {
 
       <h2>17. Governing Law</h2>
       <p>
-        These Terms are governed by the laws of [GOVERNING_STATE], without regard to conflict
-        of laws principles. For any matter not subject to arbitration, you and Nook submit to
-        the exclusive jurisdiction of the state and federal courts located in
-        [GOVERNING_STATE].
+        These Terms are governed by the laws of the State of Delaware, without regard to its
+        conflict of laws principles. For any matter not subject to arbitration, you and Nook
+        submit to the exclusive jurisdiction of the state and federal courts located in
+        Delaware.
       </p>
 
       <h2>18. Changes to These Terms</h2>
