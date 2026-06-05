@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      blocked_email_domains: {
+        Row: {
+          created_at: string
+          domain: string
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          domain: string
+          reason?: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string
+          reason?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -109,6 +127,7 @@ export type Database = {
           created_at: string
           email: string
           email_verified: boolean
+          email_verified_at: string | null
           id: string
           is_affiliate: boolean
           move_out: Json | null
@@ -116,6 +135,7 @@ export type Database = {
           phone_verified: boolean
           plan: Database["public"]["Enums"]["app_plan"]
           referral_code: string
+          referred_by: string | null
           timezone: string
           trial_active: boolean
           trial_ends_at: string | null
@@ -129,6 +149,7 @@ export type Database = {
           created_at?: string
           email?: string
           email_verified?: boolean
+          email_verified_at?: string | null
           id: string
           is_affiliate?: boolean
           move_out?: Json | null
@@ -136,6 +157,7 @@ export type Database = {
           phone_verified?: boolean
           plan?: Database["public"]["Enums"]["app_plan"]
           referral_code?: string
+          referred_by?: string | null
           timezone?: string
           trial_active?: boolean
           trial_ends_at?: string | null
@@ -149,6 +171,7 @@ export type Database = {
           created_at?: string
           email?: string
           email_verified?: boolean
+          email_verified_at?: string | null
           id?: string
           is_affiliate?: boolean
           move_out?: Json | null
@@ -156,32 +179,148 @@ export type Database = {
           phone_verified?: boolean
           plan?: Database["public"]["Enums"]["app_plan"]
           referral_code?: string
+          referred_by?: string | null
           timezone?: string
           trial_active?: boolean
           trial_ends_at?: string | null
           trial_started_at?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_referred_by_fkey"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_events: {
+        Row: {
+          code: string | null
+          created_at: string
+          event_type: string
+          id: string
+          ip_hash: string | null
+          metadata: Json
+          referred_user_id: string | null
+          referrer_user_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_hash?: string | null
+          metadata?: Json
+          referred_user_id?: string | null
+          referrer_user_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_hash?: string | null
+          metadata?: Json
+          referred_user_id?: string | null
+          referrer_user_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_events_referred_user_id_fkey"
+            columns: ["referred_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_events_referrer_user_id_fkey"
+            columns: ["referrer_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_notifications: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: string
+          kind: string
+          last_error: string | null
+          payload: Json
+          sent_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          kind: string
+          last_error?: string | null
+          payload?: Json
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          last_error?: string | null
+          payload?: Json
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referrals: {
         Row: {
           created_at: string
+          credited_at: string | null
+          friend_credited_at: string | null
           id: string
+          ip_hash: string | null
           referred_user_id: string
           referrer_user_id: string
           reward_status: string
         }
         Insert: {
           created_at?: string
+          credited_at?: string | null
+          friend_credited_at?: string | null
           id?: string
+          ip_hash?: string | null
           referred_user_id: string
           referrer_user_id: string
           reward_status?: string
         }
         Update: {
           created_at?: string
+          credited_at?: string | null
+          friend_credited_at?: string | null
           id?: string
+          ip_hash?: string | null
           referred_user_id?: string
           referrer_user_id?: string
           reward_status?: string
@@ -439,6 +578,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      grant_trial_extension: {
+        Args: { _days: number; _source: string; _user_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
