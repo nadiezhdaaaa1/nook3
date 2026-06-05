@@ -117,7 +117,7 @@ function DmcaPage() {
         </li>
         <li><strong>Your physical or electronic signature</strong></li>
       </ol>
-      <p>Send counter-notices to our designated agent at the address above.</p>
+      <p>Send counter-notices to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.</p>
       <p>
         ⚠️ <strong>Important:</strong> Under 17 U.S.C. § 512(f), you may be liable for damages
         if you knowingly make material misrepresentations in a counter-notice.
