@@ -286,21 +286,18 @@ function TermsPage() {
 
       <h2>10. DMCA / Copyright Infringement</h2>
       <p>
-        If you believe content on the Service infringes your copyright, send a notice to our
-        designated agent containing the information required by 17 U.S.C. § 512(c)(3):
+        If you believe content on the Service infringes your copyright, please send a notice
+        to:
       </p>
       <p>
-        <strong>Designated Agent:</strong>
-        <br />
-        [DMCA_AGENT_NAME]
-        <br />
-        [DMCA_AGENT_ADDRESS]
-        <br />
         Email: <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
       </p>
       <p>
+        Your notice should include the information required by 17 U.S.C. § 512(c)(3).
+      </p>
+      <p>
         We may terminate accounts of repeat infringers. See our{" "}
-        <Link to="/dmca">DMCA Policy</Link> for the full procedure.
+        <Link to="/dmca">DMCA Copyright Policy</Link> for the full procedure.
       </p>
 
       <h2>11. Third-Party Services</h2>
@@ -375,8 +372,8 @@ function TermsPage() {
       <h3>16.1 Agreement to Arbitrate</h3>
       <p>
         Any dispute arising from these Terms or the Service will be resolved by binding
-        arbitration administered by [ARBITRATION_PROVIDER] under its [Consumer/Commercial]
-        Arbitration Rules, except as set forth below.
+        arbitration administered by the American Arbitration Association ("AAA") under its
+        Consumer Arbitration Rules, except as set forth below.
       </p>
       <h3>16.2 Class Action Waiver</h3>
       <p>
@@ -385,9 +382,11 @@ function TermsPage() {
       </p>
       <h3>16.3 Opt-Out</h3>
       <p>
-        You may opt out of this arbitration agreement by sending written notice to
-        [US_AGENT_ADDRESS] within 30 days of accepting these Terms. The opt-out must include
-        your name, account email, and a clear statement that you opt out of arbitration.
+        You may opt out of this arbitration agreement within 30 days of accepting these Terms
+        by sending written notice to{" "}
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>. The notice must include
+        your name, account email address, and a clear statement that you wish to opt out of
+        arbitration.
       </p>
       <h3>16.4 Exceptions</h3>
       <p>
@@ -403,10 +402,10 @@ function TermsPage() {
 
       <h2>17. Governing Law</h2>
       <p>
-        These Terms are governed by the laws of [GOVERNING_STATE], without regard to conflict
-        of laws principles. For any matter not subject to arbitration, you and Nook submit to
-        the exclusive jurisdiction of the state and federal courts located in
-        [GOVERNING_STATE].
+        These Terms are governed by the laws of the State of Delaware, without regard to its
+        conflict of laws principles. For any matter not subject to arbitration, you and Nook
+        submit to the exclusive jurisdiction of the state and federal courts located in
+        Delaware.
       </p>
 
       <h2>18. Changes to These Terms</h2>
@@ -457,8 +456,7 @@ function TermsPage() {
       <h3>20.6 Notices</h3>
       <p>
         We may give you notice by email, in-product notification, or posting on the Service.
-        You may give us notice at <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>{" "}
-        or [US_AGENT_ADDRESS].
+        You may give us notice at <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>.
       </p>
 
       <h2>21. Contact</h2>
@@ -476,13 +474,6 @@ function TermsPage() {
         167-169 Great Portland Street, 5th Floor, London, W1W 5PF
         <br />
         United Kingdom
-      </p>
-      <p>
-        For US legal process:
-        <br />
-        [US_AGENT_NAME]
-        <br />
-        [US_AGENT_ADDRESS]
       </p>
 
       <p style={{ marginTop: "2.5em" }}>
