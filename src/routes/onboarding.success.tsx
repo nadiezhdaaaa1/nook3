@@ -37,8 +37,6 @@ function Success() {
     syncOnboardingToUser();
   }, [set]);
 
-  const origin =
-    typeof window !== "undefined" ? window.location.origin : "https://thenook.rent";
   const shortLink = useMemo(
     () => (referral ? `thenook.rent/r/${referral}` : ""),
     [referral],
