@@ -456,8 +456,7 @@ function TermsPage() {
       <h3>20.6 Notices</h3>
       <p>
         We may give you notice by email, in-product notification, or posting on the Service.
-        You may give us notice at <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>{" "}
-        or [US_AGENT_ADDRESS].
+        You may give us notice at <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>.
       </p>
 
       <h2>21. Contact</h2>
@@ -475,13 +474,6 @@ function TermsPage() {
         167-169 Great Portland Street, 5th Floor, London, W1W 5PF
         <br />
         United Kingdom
-      </p>
-      <p>
-        For US legal process:
-        <br />
-        [US_AGENT_NAME]
-        <br />
-        [US_AGENT_ADDRESS]
       </p>
 
       <p style={{ marginTop: "2.5em" }}>
