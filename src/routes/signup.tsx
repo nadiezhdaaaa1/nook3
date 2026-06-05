@@ -125,6 +125,13 @@ function SignupPage() {
           <h1 className="font-display text-3xl font-bold text-charcoal-950">Create your account</h1>
           <p className="mt-2 text-sm text-charcoal-600">Save searches and get alerts.</p>
 
+          {referralCode && !sent && (
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-sage-100/60 border border-sage-300/50 px-3 py-1.5 text-[13px] text-sage-900">
+              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} />
+              Invite applied · +7 days of Premium on us
+            </div>
+          )}
+
           {sent ? (
             <div className="mt-6 p-4 rounded-md border border-charcoal-200 bg-charcoal-950/5">
               <p className="text-sm text-charcoal-700">
