@@ -99,6 +99,38 @@ export const Route = createFileRoute("/blog/$slug")({
     };
   },
   component: ArticleDetailPage,
+  errorComponent: ({ error, reset }) => {
+    if (typeof console !== "undefined") console.error(error);
+    return (
+      <MarketingLayout>
+        <div className="max-w-2xl mx-auto px-6 py-32 text-center">
+          <h1 className="font-display text-4xl text-[var(--color-brand-charcoal)]">
+            This article didn't load
+          </h1>
+          <p className="mt-4 text-[var(--color-charcoal-600)]">
+            Something went wrong on our end. Try again, or head back to the blog.
+          </p>
+          <div className="mt-6 flex justify-center gap-3">
+            <button
+              type="button"
+              onClick={reset}
+              className="inline-flex items-center justify-center rounded-pill h-11 px-5 text-sm font-semibold text-white"
+              style={{ backgroundColor: "var(--color-brand-terracotta)" }}
+            >
+              Try again
+            </button>
+            <Link
+              to="/blog"
+              className="inline-flex items-center justify-center rounded-pill h-11 px-5 text-sm font-semibold border"
+              style={{ borderColor: "var(--color-brand-clay)", color: "var(--color-brand-charcoal)" }}
+            >
+              Back to blog
+            </Link>
+          </div>
+        </div>
+      </MarketingLayout>
+    );
+  },
   notFoundComponent: () => (
     <MarketingLayout>
       <div className="max-w-2xl mx-auto px-6 py-32 text-center">
