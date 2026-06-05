@@ -286,21 +286,18 @@ function TermsPage() {
 
       <h2>10. DMCA / Copyright Infringement</h2>
       <p>
-        If you believe content on the Service infringes your copyright, send a notice to our
-        designated agent containing the information required by 17 U.S.C. § 512(c)(3):
+        If you believe content on the Service infringes your copyright, please send a notice
+        to:
       </p>
       <p>
-        <strong>Designated Agent:</strong>
-        <br />
-        [DMCA_AGENT_NAME]
-        <br />
-        [DMCA_AGENT_ADDRESS]
-        <br />
         Email: <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
       </p>
       <p>
+        Your notice should include the information required by 17 U.S.C. § 512(c)(3).
+      </p>
+      <p>
         We may terminate accounts of repeat infringers. See our{" "}
-        <Link to="/dmca">DMCA Policy</Link> for the full procedure.
+        <Link to="/dmca">DMCA Copyright Policy</Link> for the full procedure.
       </p>
 
       <h2>11. Third-Party Services</h2>
