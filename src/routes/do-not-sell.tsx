@@ -147,7 +147,6 @@ function DoNotSellPage() {
       </p>
       <ul>
         <li><strong>Opt out</strong> of sale or sharing of personal information for cross-context behavioral advertising</li>
-        <li><strong>Limit</strong> use and disclosure of sensitive personal information</li>
         <li><strong>Access</strong> information we have about you</li>
         <li><strong>Delete</strong> your personal information</li>
         <li><strong>Correct</strong> inaccurate information about you</li>
