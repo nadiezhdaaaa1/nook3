@@ -4,6 +4,7 @@ import { ChevronDown, Clock, Printer } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { AuthorByline } from "@/components/blog/AuthorByline";
+import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
 import {
   ARTICLES,
   CATEGORY_LABEL,
@@ -402,6 +403,13 @@ function ArticleDetailPage() {
               <Printer className="h-4 w-4" /> Print this article
             </button>
           </aside>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-14 border-t" style={{ borderColor: "var(--color-brand-clay)" }}>
+        <div className="max-w-2xl mx-auto px-6 lg:px-10">
+          <NewsletterSignup source={`blog-article:${article.slug}`} variant="inline" />
         </div>
       </section>
 

@@ -59,6 +59,48 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscribers: {
+        Row: {
+          confirmed_at: string | null
+          created_at: string
+          email: string
+          email_normalized: string
+          id: string
+          ip_hash: string | null
+          source: string | null
+          status: string
+          unsubscribed_at: string | null
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          confirmed_at?: string | null
+          created_at?: string
+          email: string
+          email_normalized: string
+          id?: string
+          ip_hash?: string | null
+          source?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          confirmed_at?: string | null
+          created_at?: string
+          email?: string
+          email_normalized?: string
+          id?: string
+          ip_hash?: string | null
+          source?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           billing_cycle: Database["public"]["Enums"]["billing_cycle"]

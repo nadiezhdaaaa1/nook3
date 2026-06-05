@@ -5,6 +5,7 @@ import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { AuthorByline } from "@/components/blog/AuthorByline";
+import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
 import {
   ARTICLES,
   CATEGORIES,
@@ -256,46 +257,7 @@ function ArticleCard({ article }: { article: BlogArticle }) {
 }
 
 function NewsletterCard() {
-  return (
-    <div
-      className="rounded-card p-6 border"
-      style={{
-        backgroundColor: "var(--color-sage-100, #E8EEE3)",
-        borderColor: "var(--color-brand-sage)",
-      }}
-    >
-      <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">
-        Newsletter
-      </div>
-      <div className="mt-2 font-display text-xl font-medium text-[var(--color-brand-charcoal)]">
-        Get a monthly digest
-      </div>
-      <p className="mt-2 text-sm text-[var(--color-charcoal-700)]">
-        Best of the Nook blog plus product updates. No spam.
-      </p>
-      <form className="mt-4 space-y-2" onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="email"
-          placeholder="you@email.com"
-          className="w-full h-10 px-3 rounded-pill border bg-white text-sm"
-          style={{ borderColor: "var(--color-brand-clay)" }}
-        />
-        <button
-          type="submit"
-          className="w-full h-10 rounded-pill text-sm font-semibold"
-          style={{
-            backgroundColor: "var(--color-brand-terracotta)",
-            color: "var(--color-brand-cream)",
-          }}
-        >
-          Subscribe
-        </button>
-      </form>
-      <p className="mt-3 text-[11px] text-[var(--color-charcoal-500)]">
-        Unsubscribe anytime.
-      </p>
-    </div>
-  );
+  return <NewsletterSignup source="blog-index" />;
 }
 
 function AboutNookCard() {
