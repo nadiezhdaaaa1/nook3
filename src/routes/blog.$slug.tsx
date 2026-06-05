@@ -5,6 +5,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { AuthorByline } from "@/components/blog/AuthorByline";
 import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
+import { ShareRow } from "@/components/blog/ShareRow";
 import {
   ARTICLES,
   CATEGORY_LABEL,
