@@ -31,20 +31,14 @@ function DmcaPage() {
 
       <h2>2. Designated Agent</h2>
       <p>
-        If you believe content on the Service infringes your copyright, send a notice to our
-        designated agent:
+        If you believe content on the Service infringes your copyright, please send a notice
+        to:
       </p>
       <p>
-        <strong>[DMCA_AGENT_NAME]</strong>
-        <br />
-        [DMCA_AGENT_ADDRESS]
-        <br />
         Email: <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
-        <br />
-        Phone: [DMCA_AGENT_PHONE]
       </p>
       <p>
-        Registered with U.S. Copyright Office: Registration No. [REGISTRATION_NUMBER]
+        Your notice must contain the information required by 17 U.S.C. § 512(c)(3).
       </p>
 
       <h2>3. Filing a Notice of Infringement</h2>
