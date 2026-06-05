@@ -48,10 +48,6 @@ function PrivacyPage() {
         <strong>Contact for privacy matters:</strong>
         <br />
         Email: <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>
-        <br />
-        Mail: [US_AGENT_ADDRESS]
-        <br />
-        Data Protection: [DPO_EMAIL]
       </p>
 
       <h2 id="collect">2. Information We Collect</h2>
@@ -186,7 +182,10 @@ function PrivacyPage() {
       </p>
 
       <h2 id="share">4. How We Share Information</h2>
-      <p>We do not sell your personal information. We share it only as described below.</p>
+      <p>
+        We do not sell personal information for monetary consideration. We share it only as
+        described below.
+      </p>
       <h3>4.1 Service Providers</h3>
       <p>We share information with vendors who help us operate the Service, including:</p>
       <ul>
@@ -289,7 +288,6 @@ function PrivacyPage() {
       <ul>
         <li>Web form: <Link to="/do-not-sell">thenook.rent/do-not-sell</Link></li>
         <li>Email: <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a></li>
-        <li>Mail: [US_AGENT_ADDRESS]</li>
       </ul>
       <p>
         We will verify your identity (typically by email confirmation) before processing
@@ -407,14 +405,16 @@ function PrivacyPage() {
 
       <h2>11. Children's Privacy</h2>
       <p>
-        The Service is not directed to children under 13. We do not knowingly collect personal
-        information from children under 13. If you believe we have collected information from
-        a child under 13, contact{" "}
-        <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a> and we will delete it.
+        The Service is not directed to children under 18. We do not knowingly collect personal
+        information from individuals under 18. If you believe we have collected personal
+        information from a person under 18, please contact{" "}
+        <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a> and we will take
+        appropriate steps to delete such information.
       </p>
       <p>
-        For users between 13 and 16 in jurisdictions with age-of-consent requirements, we
-        require parental consent before collecting information.
+        In addition, the Service is intended only for users who are at least 18 years old, as
+        described in our Terms of Service. We do not knowingly permit individuals under 18 to
+        create accounts or use the Service.
       </p>
 
       <h2>12. Security</h2>
@@ -483,13 +483,6 @@ function PrivacyPage() {
         167-169 Great Portland Street, 5th Floor, London, W1W 5PF
         <br />
         United Kingdom
-      </p>
-      <p>
-        <strong>For US legal process or formal privacy requests:</strong>
-        <br />
-        [US_AGENT_NAME]
-        <br />
-        [US_AGENT_ADDRESS]
       </p>
       <p>
         You also have the right to contact your state attorney general or other regulator if
