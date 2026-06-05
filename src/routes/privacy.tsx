@@ -182,7 +182,10 @@ function PrivacyPage() {
       </p>
 
       <h2 id="share">4. How We Share Information</h2>
-      <p>We do not sell your personal information. We share it only as described below.</p>
+      <p>
+        We do not sell personal information for monetary consideration. We share it only as
+        described below.
+      </p>
       <h3>4.1 Service Providers</h3>
       <p>We share information with vendors who help us operate the Service, including:</p>
       <ul>
