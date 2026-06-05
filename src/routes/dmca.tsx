@@ -176,8 +176,7 @@ function DmcaPage() {
       <h2>11. Contact</h2>
       <p>
         <strong>DMCA notices:</strong>{" "}
-        <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a> and [DMCA_AGENT_NAME] at
-        [DMCA_AGENT_ADDRESS]
+        <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
         <br />
         <strong>Other IP matters:</strong>{" "}
         <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
