@@ -50,9 +50,22 @@ function ReferralLandingPage() {
   const valid = !!data?.valid;
   const referrerName = data?.referrerName ?? null;
 
-  // Persist attribution as soon as the page loads (cookie + storage).
+  // Persist attribution + log link_opened (server returns ip_hash for per-IP cap).
   useEffect(() => {
-    if (valid) setReferralAttribution(code);
+    if (!valid) return;
+    setReferralAttribution(code);
+    fetch("/api/public/r/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((res: { ipHash?: string } | null) => {
+        if (res?.ipHash) setReferralAttribution(code, res.ipHash);
+      })
+      .catch(() => {
+        /* analytics best-effort */
+      });
   }, [valid, code]);
 
   // Detect logged-in user to prevent self-referral framing.

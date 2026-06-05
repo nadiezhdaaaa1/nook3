@@ -55,6 +55,7 @@ import { Route as AuthenticatedPreferencesBudgetRouteImport } from './routes/_au
 import { Route as AuthenticatedPreferencesApartmentRouteImport } from './routes/_authenticated.preferences.apartment'
 import { Route as AuthenticatedPreferencesAlertsRouteImport } from './routes/_authenticated.preferences.alerts'
 import { Route as AuthenticatedPreferencesAccountRouteImport } from './routes/_authenticated.preferences.account'
+import { Route as ApiPublicRTrackRouteImport } from './routes/api/public/r/track'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -294,6 +295,11 @@ const AuthenticatedPreferencesAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedPreferencesRoute,
   } as any)
+const ApiPublicRTrackRoute = ApiPublicRTrackRouteImport.update({
+  id: '/api/public/r/track',
+  path: '/api/public/r/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -341,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/preferences/': typeof AuthenticatedPreferencesIndexRoute
+  '/api/public/r/track': typeof ApiPublicRTrackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -387,6 +394,7 @@ export interface FileRoutesByTo {
   '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/preferences': typeof AuthenticatedPreferencesIndexRoute
+  '/api/public/r/track': typeof ApiPublicRTrackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -436,6 +444,7 @@ export interface FileRoutesById {
   '/_authenticated/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/_authenticated/preferences/': typeof AuthenticatedPreferencesIndexRoute
+  '/api/public/r/track': typeof ApiPublicRTrackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -485,6 +494,7 @@ export interface FileRouteTypes {
     | '/preferences/wren'
     | '/onboarding/step/$step'
     | '/preferences/'
+    | '/api/public/r/track'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -531,6 +541,7 @@ export interface FileRouteTypes {
     | '/preferences/wren'
     | '/onboarding/step/$step'
     | '/preferences'
+    | '/api/public/r/track'
   id:
     | '__root__'
     | '/'
@@ -579,6 +590,7 @@ export interface FileRouteTypes {
     | '/_authenticated/preferences/wren'
     | '/onboarding/step/$step'
     | '/_authenticated/preferences/'
+    | '/api/public/r/track'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -614,6 +626,7 @@ export interface RootRouteChildren {
   PostsSlugRoute: typeof PostsSlugRoute
   RCodeRoute: typeof RCodeRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiPublicRTrackRoute: typeof ApiPublicRTrackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -940,6 +953,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPreferencesAccountRouteImport
       parentRoute: typeof AuthenticatedPreferencesRoute
     }
+    '/api/public/r/track': {
+      id: '/api/public/r/track'
+      path: '/api/public/r/track'
+      fullPath: '/api/public/r/track'
+      preLoaderRoute: typeof ApiPublicRTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1039,6 +1059,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostsSlugRoute: PostsSlugRoute,
   RCodeRoute: RCodeRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiPublicRTrackRoute: ApiPublicRTrackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

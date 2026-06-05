@@ -11,7 +11,7 @@ import {
   persistConsentsForCurrentUser,
   stashPendingConsents,
 } from "@/lib/consents";
-import { getReferralAttribution } from "@/lib/referral/attribution";
+import { getReferralAttribution, getReferralIpHash } from "@/lib/referral/attribution";
 
 type Search = { redirect?: string };
 
@@ -70,12 +70,16 @@ function SignupPage() {
     if (Object.keys(nextErrors).length) return;
 
     setSubmitting(true);
+    const ipHash = getReferralIpHash();
+    const metadata = referralCode
+      ? { referral_code: referralCode, ...(ipHash ? { referral_ip_hash: ipHash } : {}) }
+      : undefined;
     const { data, error } = await supabase.auth.signUp({
       email: emailRes.data!,
       password: pwRes.data!,
       options: {
         emailRedirectTo: `${window.location.origin}/preferences`,
-        data: referralCode ? { referral_code: referralCode } : undefined,
+        data: metadata,
       },
     });
     setSubmitting(false);
