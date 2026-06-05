@@ -346,3 +346,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
   to   { opacity: 1; transform: translateY(0); }
 }
 .row-pop-in { animation: row-pop-in 0.55s cubic-bezier(.2,.7,.2,1) both; }
+
+/* Newsletter input — kill yellow autofill tint */
+.newsletter-input:-webkit-autofill,
+.newsletter-input:-webkit-autofill:hover,
+.newsletter-input:-webkit-autofill:focus,
+.newsletter-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--color-brand-charcoal) !important;
+  caret-color: var(--color-brand-charcoal);
+  transition: background-color 5000s ease-in-out 0s;
+}
