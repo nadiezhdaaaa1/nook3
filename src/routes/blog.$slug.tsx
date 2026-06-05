@@ -261,6 +261,13 @@ function ArticleDetailPage() {
             <div className="mt-6">
               <AuthorByline />
             </div>
+            <div className="mt-6">
+              <ShareRow
+                url={`${SITE}/blog/${article.slug}`}
+                title={article.title}
+                excerpt={article.excerpt}
+              />
+            </div>
           </header>
 
           {/* Cover */}
