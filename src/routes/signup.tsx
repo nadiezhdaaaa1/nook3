@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
@@ -10,6 +11,7 @@ import {
   persistConsentsForCurrentUser,
   stashPendingConsents,
 } from "@/lib/consents";
+import { getReferralAttribution } from "@/lib/referral/attribution";
 
 type Search = { redirect?: string };
 
@@ -50,6 +52,11 @@ function SignupPage() {
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    setReferralCode(getReferralAttribution());
+  }, []);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
