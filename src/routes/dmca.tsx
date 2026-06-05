@@ -31,20 +31,14 @@ function DmcaPage() {
 
       <h2>2. Designated Agent</h2>
       <p>
-        If you believe content on the Service infringes your copyright, send a notice to our
-        designated agent:
+        If you believe content on the Service infringes your copyright, please send a notice
+        to:
       </p>
       <p>
-        <strong>[DMCA_AGENT_NAME]</strong>
-        <br />
-        [DMCA_AGENT_ADDRESS]
-        <br />
         Email: <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
-        <br />
-        Phone: [DMCA_AGENT_PHONE]
       </p>
       <p>
-        Registered with U.S. Copyright Office: Registration No. [REGISTRATION_NUMBER]
+        Your notice must contain the information required by 17 U.S.C. § 512(c)(3).
       </p>
 
       <h2>3. Filing a Notice of Infringement</h2>
@@ -75,7 +69,7 @@ function DmcaPage() {
         </li>
         <li><strong>Your physical or electronic signature</strong></li>
       </ol>
-      <p>Send the notice to our designated agent at the address above.</p>
+      <p>Send the notice to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.</p>
       <p>
         ⚠️ <strong>Important:</strong> Under 17 U.S.C. § 512(f), you may be liable for damages
         — including costs and attorneys' fees — if you knowingly make material
@@ -123,7 +117,7 @@ function DmcaPage() {
         </li>
         <li><strong>Your physical or electronic signature</strong></li>
       </ol>
-      <p>Send counter-notices to our designated agent at the address above.</p>
+      <p>Send counter-notices to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.</p>
       <p>
         ⚠️ <strong>Important:</strong> Under 17 U.S.C. § 512(f), you may be liable for damages
         if you knowingly make material misrepresentations in a counter-notice.
@@ -182,8 +176,7 @@ function DmcaPage() {
       <h2>11. Contact</h2>
       <p>
         <strong>DMCA notices:</strong>{" "}
-        <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a> and [DMCA_AGENT_NAME] at
-        [DMCA_AGENT_ADDRESS]
+        <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
         <br />
         <strong>Other IP matters:</strong>{" "}
         <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
