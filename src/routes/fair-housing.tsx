@@ -90,7 +90,7 @@ function FairHousingPage() {
       </p>
       <p>
         <strong>Email:</strong>{" "}
-        <a href="mailto:fairhousing@thenook.rent">fairhousing@thenook.rent</a>
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
         <br />
         <strong>Mail:</strong> Fair Housing Reports, Zentaro Systems Ltd, 167-169 Great Portland Street, 5th Floor, London, W1W 5PF,
         United Kingdom
@@ -145,7 +145,7 @@ function FairHousingPage() {
       </p>
       <p>
         If you need assistance using Nook because of a disability, contact{" "}
-        <a href="mailto:accessibility@thenook.rent">accessibility@thenook.rent</a>.
+        <a href="mailto:support@thenook.rent">support@thenook.rent</a>.
       </p>
 
       <h2>Equal Housing Opportunity Logo</h2>
@@ -157,7 +157,7 @@ function FairHousingPage() {
       <h2>Questions</h2>
       <p>
         <strong>Email:</strong>{" "}
-        <a href="mailto:fairhousing@thenook.rent">fairhousing@thenook.rent</a>
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
         <br />
         <strong>General:</strong> <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>
       </p>

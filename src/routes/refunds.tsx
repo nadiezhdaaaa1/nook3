@@ -48,7 +48,7 @@ function RefundsPage() {
       <ol>
         <li>Cancel your subscription in Account → Subscription</li>
         <li>
-          Email <a href="mailto:refunds@thenook.rent">refunds@thenook.rent</a> within 7 days
+          Email <a href="mailto:support@thenook.rent">support@thenook.rent</a> within 7 days
           of the charge
         </li>
         <li>We will process the refund within 5-10 business days</li>
@@ -124,13 +124,13 @@ function RefundsPage() {
       <ul>
         <li>Cancel your subscription in Account → Subscription</li>
         <li>
-          Email <a href="mailto:refunds@thenook.rent">refunds@thenook.rent</a> with subject
+          Email <a href="mailto:support@thenook.rent">support@thenook.rent</a> with subject
           "Refund Request"
         </li>
       </ul>
       <p><strong>Manual review (outside 7-day window):</strong></p>
       <ul>
-        <li>Email <a href="mailto:refunds@thenook.rent">refunds@thenook.rent</a></li>
+        <li>Email <a href="mailto:support@thenook.rent">support@thenook.rent</a></li>
         <li>Include: subscription email, charge date, reason for refund</li>
         <li>We respond within 3 business days</li>
       </ul>
@@ -144,7 +144,7 @@ function RefundsPage() {
       <h2>9. Disputes and Chargebacks</h2>
       <p>
         If you have a concern about a charge, please contact us first at{" "}
-        <a href="mailto:refunds@thenook.rent">refunds@thenook.rent</a>. We aim to resolve
+        <a href="mailto:support@thenook.rent">support@thenook.rent</a>. We aim to resolve
         issues fairly.
       </p>
       <p>
@@ -178,7 +178,7 @@ function RefundsPage() {
       <h2>12. Contact</h2>
       <p>
         <strong>Refund requests:</strong>{" "}
-        <a href="mailto:refunds@thenook.rent">refunds@thenook.rent</a>
+        <a href="mailto:support@thenook.rent">support@thenook.rent</a>
         <br />
         <strong>General questions:</strong>{" "}
         <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>

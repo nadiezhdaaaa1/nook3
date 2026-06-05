@@ -99,7 +99,7 @@ function AcceptableUsePage() {
       <h2>3. Reporting Violations</h2>
       <p>
         If you believe a user is violating this AUP, report it to{" "}
-        <a href="mailto:abuse@thenook.rent">abuse@thenook.rent</a>. Include:
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>. Include:
       </p>
       <ul>
         <li>The user's identifier (if known)</li>
@@ -132,7 +132,7 @@ function AcceptableUsePage() {
       </p>
       <p>
         You may appeal enforcement decisions by emailing{" "}
-        <a href="mailto:appeals@thenook.rent">appeals@thenook.rent</a> within 30 days. Appeals
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a> within 30 days. Appeals
         are reviewed by someone not involved in the original decision.
       </p>
 
@@ -149,10 +149,10 @@ function AcceptableUsePage() {
         <strong>General:</strong> <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>
         <br />
         <strong>Report abuse:</strong>{" "}
-        <a href="mailto:abuse@thenook.rent">abuse@thenook.rent</a>
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
         <br />
         <strong>Appeals:</strong>{" "}
-        <a href="mailto:appeals@thenook.rent">appeals@thenook.rent</a>
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
       </p>
     </LegalPageLayout>
   );

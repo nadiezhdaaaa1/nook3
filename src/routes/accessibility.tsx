@@ -80,7 +80,7 @@ function AccessibilityPage() {
       </p>
       <p>
         <strong>Email:</strong>{" "}
-        <a href="mailto:accessibility@thenook.rent">accessibility@thenook.rent</a>
+        <a href="mailto:support@thenook.rent">support@thenook.rent</a>
         <br />
         <strong>Subject line:</strong> Accessibility feedback
       </p>
@@ -127,7 +127,7 @@ function AccessibilityPage() {
       <h2>Contact</h2>
       <p>
         <strong>Accessibility:</strong>{" "}
-        <a href="mailto:accessibility@thenook.rent">accessibility@thenook.rent</a>
+        <a href="mailto:support@thenook.rent">support@thenook.rent</a>
         <br />
         <strong>General:</strong> <a href="mailto:hello@thenook.rent">hello@thenook.rent</a>
       </p>
