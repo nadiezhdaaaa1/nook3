@@ -5,6 +5,7 @@ import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { AuthorByline } from "@/components/blog/AuthorByline";
 import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
+import { ShareRow } from "@/components/blog/ShareRow";
 import {
   ARTICLES,
   CATEGORY_LABEL,
@@ -260,6 +261,13 @@ function ArticleDetailPage() {
             <div className="mt-6">
               <AuthorByline />
             </div>
+            <div className="mt-6">
+              <ShareRow
+                url={`${SITE}/blog/${article.slug}`}
+                title={article.title}
+                excerpt={article.excerpt}
+              />
+            </div>
           </header>
 
           {/* Cover */}
@@ -346,6 +354,15 @@ function ArticleDetailPage() {
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Share */}
+            <div className="mt-10">
+              <ShareRow
+                url={`${SITE}/blog/${article.slug}`}
+                title={article.title}
+                excerpt={article.excerpt}
+              />
             </div>
 
           </div>
