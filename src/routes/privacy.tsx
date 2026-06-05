@@ -48,10 +48,6 @@ function PrivacyPage() {
         <strong>Contact for privacy matters:</strong>
         <br />
         Email: <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>
-        <br />
-        Mail: [US_AGENT_ADDRESS]
-        <br />
-        Data Protection: [DPO_EMAIL]
       </p>
 
       <h2 id="collect">2. Information We Collect</h2>
