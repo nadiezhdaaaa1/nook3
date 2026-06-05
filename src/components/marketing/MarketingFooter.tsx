@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import { openCookiePreferences } from "@/lib/cookieConsent";
 
 export function MarketingFooter() {
   return (
@@ -68,6 +69,15 @@ export function MarketingFooter() {
             <FooterLink to="/terms">Terms of Service</FooterLink>
             <FooterLink to="/privacy">Privacy Policy</FooterLink>
             <FooterLink to="/cookies">Cookie Policy</FooterLink>
+            <li>
+              <button
+                type="button"
+                onClick={openCookiePreferences}
+                className="inline-flex items-center gap-1 text-sm opacity-70 hover:opacity-100 transition-opacity text-left"
+              >
+                Manage Cookie Preferences
+              </button>
+            </li>
             <FooterLink to="/acceptable-use">Acceptable Use</FooterLink>
             <FooterLink to="/fair-housing">Fair Housing</FooterLink>
             <FooterLink to="/accessibility">Accessibility</FooterLink>
