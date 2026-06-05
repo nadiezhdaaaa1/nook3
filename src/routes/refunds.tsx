@@ -8,9 +8,9 @@ export const Route = createFileRoute("/refunds")({
       { name: "description", content: "Nook's refund terms for subscriptions, trials, and renewals." },
       { property: "og:title", content: "Refund Policy — Nook" },
       { property: "og:description", content: "Nook's refund terms for subscriptions, trials, and renewals." },
-      { property: "og:url", content: "https://nook3.lovable.app/refunds" }
+      { property: "og:url", content: "https://thenook.rent/refunds" }
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/refunds" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/refunds" }],
   }),
   component: RefundsPage,
 });

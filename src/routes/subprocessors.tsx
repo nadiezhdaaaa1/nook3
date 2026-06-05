@@ -8,9 +8,9 @@ export const Route = createFileRoute("/subprocessors")({
       { name: "description", content: "Third-party companies Nook uses to deliver the Service." },
       { property: "og:title", content: "Subprocessor List — Nook" },
       { property: "og:description", content: "Third-party companies Nook uses to deliver the Service." },
-      { property: "og:url", content: "https://nook3.lovable.app/subprocessors" }
+      { property: "og:url", content: "https://thenook.rent/subprocessors" }
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/subprocessors" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/subprocessors" }],
   }),
   component: SubprocessorsPage,
 });

@@ -26,9 +26,9 @@ export const Route = createFileRoute("/")({
           "Real-time alerts the moment a verified rental match appears in your city. Built for renters who are tired of refreshing.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://nook3.lovable.app/" },
+      { property: "og:url", content: "https://thenook.rent/" },
     ],
-    links: [{ rel: "canonical", href: "https://nook3.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://thenook.rent/" }],
     scripts: [
       {
         type: "application/ld+json",
