@@ -135,6 +135,14 @@ function LoginPage() {
             >
               {submitting ? "Signing in…" : "Sign in"}
             </button>
+            <div className="text-right">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-charcoal-600 hover:text-charcoal-950 underline"
+              >
+                Forgot your password?
+              </Link>
+            </div>
           </form>
 
           <p className="mt-6 text-sm text-charcoal-600">
