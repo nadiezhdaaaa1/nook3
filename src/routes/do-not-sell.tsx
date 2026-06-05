@@ -59,7 +59,6 @@ const STATES = [
 
 const RIGHTS = [
   { id: "opt_out", label: "Opt out of sale/sharing of my personal information" },
-  { id: "limit_sensitive", label: "Limit use of my sensitive personal information" },
   { id: "know", label: "Right to know what information you have about me" },
   { id: "delete", label: "Right to delete my personal information" },
   { id: "correct", label: "Right to correct my personal information" },
