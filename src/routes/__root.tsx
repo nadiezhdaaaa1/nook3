@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { OfflineBanner } from "@/components/system/OfflineBanner";
 import { CookieBanner } from "@/components/legal/CookieBanner";
+import { ConsentScripts } from "@/components/legal/ConsentScripts";
 
 function NotFoundComponent() {
   useEffect(() => {
@@ -268,6 +269,7 @@ function RootComponent() {
       <Outlet />
       <Toaster />
       <CookieBanner />
+      <ConsentScripts />
     </QueryClientProvider>
   );
 }
