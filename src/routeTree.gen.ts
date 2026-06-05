@@ -15,12 +15,14 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
 import { Route as DmcaRouteImport } from './routes/dmca'
@@ -83,6 +85,11 @@ const SignInRoute = SignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RefundsRoute = RefundsRouteImport.update({
   id: '/refunds',
   path: '/refunds',
@@ -111,6 +118,11 @@ const LoginRoute = LoginRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FairHousingRoute = FairHousingRouteImport.update({
@@ -287,12 +299,14 @@ export interface FileRoutesByFullPath {
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
@@ -331,12 +345,14 @@ export interface FileRoutesByTo {
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
@@ -376,12 +392,14 @@ export interface FileRoutesById {
   '/dmca': typeof DmcaRoute
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
@@ -422,12 +440,14 @@ export interface FileRouteTypes {
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/forgot-password'
     | '/home'
     | '/login'
     | '/onboarding'
     | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-up'
     | '/signup'
@@ -466,12 +486,14 @@ export interface FileRouteTypes {
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/forgot-password'
     | '/home'
     | '/login'
     | '/onboarding'
     | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-up'
     | '/signup'
@@ -510,12 +532,14 @@ export interface FileRouteTypes {
     | '/dmca'
     | '/do-not-sell'
     | '/fair-housing'
+    | '/forgot-password'
     | '/home'
     | '/login'
     | '/onboarding'
     | '/pricing'
     | '/privacy'
     | '/refunds'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-up'
     | '/signup'
@@ -556,12 +580,14 @@ export interface RootRouteChildren {
   DmcaRoute: typeof DmcaRoute
   DoNotSellRoute: typeof DoNotSellRoute
   FairHousingRoute: typeof FairHousingRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   SignupRoute: typeof SignupRoute
@@ -621,6 +647,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/refunds': {
       id: '/refunds'
       path: '/refunds'
@@ -661,6 +694,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fair-housing': {
@@ -957,12 +997,14 @@ const rootRouteChildren: RootRouteChildren = {
   DmcaRoute: DmcaRoute,
   DoNotSellRoute: DoNotSellRoute,
   FairHousingRoute: FairHousingRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   SignupRoute: SignupRoute,
