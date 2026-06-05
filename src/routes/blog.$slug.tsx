@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ChevronDown, Clock, Printer } from "lucide-react";
+import { ChevronDown, Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { AuthorByline } from "@/components/blog/AuthorByline";
@@ -261,13 +261,6 @@ function ArticleDetailPage() {
             <div className="mt-6">
               <AuthorByline />
             </div>
-            <div className="mt-6">
-              <ShareRow
-                url={`${SITE}/blog/${article.slug}`}
-                title={article.title}
-                excerpt={article.excerpt}
-              />
-            </div>
           </header>
 
           {/* Cover */}
@@ -356,15 +349,6 @@ function ArticleDetailPage() {
               </div>
             </div>
 
-            {/* Share */}
-            <div className="mt-10">
-              <ShareRow
-                url={`${SITE}/blog/${article.slug}`}
-                title={article.title}
-                excerpt={article.excerpt}
-              />
-            </div>
-
           </div>
 
           {/* Sidebar right */}
@@ -412,13 +396,11 @@ function ArticleDetailPage() {
               </Link>
             </div>
 
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="inline-flex items-center gap-2 text-sm text-[var(--color-charcoal-600)] hover:text-[var(--color-brand-sage)]"
-            >
-              <Printer className="h-4 w-4" /> Print this article
-            </button>
+            <ShareRow
+              url={`${SITE}/blog/${article.slug}`}
+              title={article.title}
+              excerpt={article.excerpt}
+            />
           </aside>
         </div>
       </section>
