@@ -37,13 +37,11 @@ function Success() {
     syncOnboardingToUser();
   }, [set]);
 
-  const origin =
-    typeof window !== "undefined" ? window.location.origin : "https://nook.app";
   const shortLink = useMemo(
-    () => (referral ? `nook.app/r/${referral}` : ""),
+    () => (referral ? `thenook.rent/r/${referral}` : ""),
     [referral],
   );
-  const fullLink = referral ? `${origin}/?ref=${referral}` : "";
+  const fullLink = referral ? `https://thenook.rent/r/${referral}` : "";
 
   const copyRef = () => {
     if (!fullLink) return;

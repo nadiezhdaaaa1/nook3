@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
@@ -10,6 +11,7 @@ import {
   persistConsentsForCurrentUser,
   stashPendingConsents,
 } from "@/lib/consents";
+import { getReferralAttribution } from "@/lib/referral/attribution";
 
 type Search = { redirect?: string };
 
@@ -50,6 +52,11 @@ function SignupPage() {
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    setReferralCode(getReferralAttribution());
+  }, []);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -66,7 +73,10 @@ function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email: emailRes.data!,
       password: pwRes.data!,
-      options: { emailRedirectTo: `${window.location.origin}/preferences` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/preferences`,
+        data: referralCode ? { referral_code: referralCode } : undefined,
+      },
     });
     setSubmitting(false);
     if (error) {
@@ -114,6 +124,13 @@ function SignupPage() {
         <div className="w-full max-w-md">
           <h1 className="font-display text-3xl font-bold text-charcoal-950">Create your account</h1>
           <p className="mt-2 text-sm text-charcoal-600">Save searches and get alerts.</p>
+
+          {referralCode && !sent && (
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-sage-100/60 border border-sage-300/50 px-3 py-1.5 text-[13px] text-sage-900">
+              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} />
+              Invite applied · +7 days of Premium on us
+            </div>
+          )}
 
           {sent ? (
             <div className="mt-6 p-4 rounded-md border border-charcoal-200 bg-charcoal-950/5">
