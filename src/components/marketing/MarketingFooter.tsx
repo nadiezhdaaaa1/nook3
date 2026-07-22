@@ -44,6 +44,28 @@ export function MarketingFooter() {
               Where home{" "}
               <span className="italic font-normal" style={{ color: "var(--color-brand-sage)" }}>finds you.</span>
             </h3>
+            <div className="mt-6">
+              <div className="flex items-center gap-1" style={{ color: "var(--color-brand-cream)" }}>
+                <SocialIcon href="https://www.instagram.com/thenookrent" label="Instagram">
+                  <InstagramIcon />
+                </SocialIcon>
+                <SocialIcon href="https://www.reddit.com/user/thenookrent/" label="Reddit">
+                  <RedditIcon />
+                </SocialIcon>
+                <SocialIcon href="https://www.tiktok.com/@thenook.rent" label="TikTok">
+                  <TikTokIcon />
+                </SocialIcon>
+                <SocialIcon href="https://www.pinterest.com/01thenookrent01/" label="Pinterest">
+                  <PinterestIcon />
+                </SocialIcon>
+                <SocialIcon label="Facebook" disabled>
+                  <FacebookIcon />
+                </SocialIcon>
+                <SocialIcon label="YouTube" disabled>
+                  <YouTubeIcon />
+                </SocialIcon>
+              </div>
+            </div>
           </div>
           <div className="flex flex-col items-start lg:items-end gap-4">
             <Link
