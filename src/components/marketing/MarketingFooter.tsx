@@ -2,6 +2,15 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { openCookiePreferences } from "@/lib/cookieConsent";
+import {
+  SocialIcon,
+  FacebookIcon,
+  InstagramIcon,
+  PinterestIcon,
+  RedditIcon,
+  TikTokIcon,
+  YouTubeIcon,
+} from "@/components/brand/SocialIcons";
 
 export function MarketingFooter() {
   return (
