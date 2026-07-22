@@ -110,17 +110,17 @@ export function MarketingFooter() {
             <SocialIcon href="https://www.instagram.com/thenookrent" label="Instagram">
               <InstagramIcon />
             </SocialIcon>
-            <SocialIcon label="Facebook" disabled>
-              <FacebookIcon />
-            </SocialIcon>
             <SocialIcon href="https://www.reddit.com/user/thenookrent/" label="Reddit">
               <RedditIcon />
             </SocialIcon>
+            <SocialIcon href="https://www.tiktok.com/@thenook.rent" label="TikTok">
+              <TikTokIcon />
+            </SocialIcon>
+            <SocialIcon label="Facebook" disabled>
+              <FacebookIcon />
+            </SocialIcon>
             <SocialIcon label="Pinterest" disabled>
               <PinterestIcon />
-            </SocialIcon>
-            <SocialIcon label="TikTok" disabled>
-              <TikTokIcon />
             </SocialIcon>
             <SocialIcon label="YouTube" disabled>
               <YouTubeIcon />
