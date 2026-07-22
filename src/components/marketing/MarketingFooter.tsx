@@ -61,7 +61,7 @@ export function MarketingFooter() {
                 <SocialIcon href="https://www.youtube.com/@TheNookRent" label="YouTube">
                   <YouTubeIcon />
                 </SocialIcon>
-                <SocialIcon label="Facebook" disabled>
+                <SocialIcon href="https://www.facebook.com/people/Thenookrent/61592003651488/" label="Facebook">
                   <FacebookIcon />
                 </SocialIcon>
               </div>
