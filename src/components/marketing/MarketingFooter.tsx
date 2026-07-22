@@ -2,6 +2,15 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
 import { openCookiePreferences } from "@/lib/cookieConsent";
+import {
+  SocialIcon,
+  FacebookIcon,
+  InstagramIcon,
+  PinterestIcon,
+  RedditIcon,
+  TikTokIcon,
+  YouTubeIcon,
+} from "@/components/brand/SocialIcons";
 
 export function MarketingFooter() {
   return (
@@ -91,6 +100,32 @@ export function MarketingFooter() {
             </li>
             <FooterLink to="/dmca">DMCA</FooterLink>
           </FooterCol>
+        </div>
+
+        <div className="mt-12 pt-10 border-t flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ borderColor: "color-mix(in oklab, var(--color-brand-cream) 12%, transparent)" }}>
+          <span className="text-[11px] font-mono uppercase tracking-[0.2em] font-semibold" style={{ color: "color-mix(in oklab, var(--color-brand-cream) 40%, transparent)" }}>
+            Follow us
+          </span>
+          <div className="flex items-center gap-1" style={{ color: "var(--color-brand-cream)" }}>
+            <SocialIcon href="https://www.instagram.com/thenookrent" label="Instagram">
+              <InstagramIcon />
+            </SocialIcon>
+            <SocialIcon label="Facebook" disabled>
+              <FacebookIcon />
+            </SocialIcon>
+            <SocialIcon href="https://www.reddit.com/user/thenookrent/" label="Reddit">
+              <RedditIcon />
+            </SocialIcon>
+            <SocialIcon label="Pinterest" disabled>
+              <PinterestIcon />
+            </SocialIcon>
+            <SocialIcon label="TikTok" disabled>
+              <TikTokIcon />
+            </SocialIcon>
+            <SocialIcon label="YouTube" disabled>
+              <YouTubeIcon />
+            </SocialIcon>
+          </div>
         </div>
 
         <div
