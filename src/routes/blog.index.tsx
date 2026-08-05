@@ -84,13 +84,15 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndexPage() {
-  const { category } = Route.useSearch();
+  const { category: rawCategory } = Route.useSearch();
+  const category = rawCategory ?? "all";
   const navigate = useNavigate({ from: "/blog/" });
   const featured = getFeatured();
   const filtered =
     category === "all"
       ? ARTICLES.filter((a) => !a.featured)
       : ARTICLES.filter((a) => a.category === category && a.slug !== featured.slug);
+
 
   return (
     <MarketingLayout>
