@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import logoSvg from "@/assets/Nook_Green.svg.asset.json";
 
 type LogoProps = {
   className?: string;
@@ -6,18 +7,14 @@ type LogoProps = {
 };
 
 export function Logo({ className, accentClassName }: LogoProps) {
+  // The SVG is a fixed-color wordmark; accentClassName is kept for API compatibility.
+  void accentClassName;
   return (
-    <span
-      className={cn(
-        "font-display font-bold tracking-[-0.03em] leading-none",
-        className,
-      )}
-      style={{ fontVariationSettings: '"opsz" 144' }}
-    >
-      No
-      <span className={cn("italic font-normal", accentClassName ?? "text-primary")}>o</span>
-      k
-    </span>
+    <img
+      src={logoSvg.url}
+      alt="Nook"
+      className={cn("h-[1em] w-auto", className)}
+    />
   );
 }
 
@@ -31,14 +28,15 @@ export function LogoMark({
   return (
     <div
       className={cn(
-        "rounded-pill bg-primary text-primary-foreground inline-flex items-center justify-center font-display italic font-normal",
+        "rounded-pill inline-flex items-center justify-center font-display italic font-normal",
         className,
       )}
       style={{
         width: size,
         height: size,
         fontSize: Math.round(size * 0.6),
-        fontVariationSettings: '"opsz" 144',
+        backgroundColor: "#6A820A",
+        color: "#f4f1ea",
       }}
       aria-hidden
     >
@@ -46,3 +44,4 @@ export function LogoMark({
     </div>
   );
 }
+
