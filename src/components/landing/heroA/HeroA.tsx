@@ -68,7 +68,14 @@ export function HeroA() {
   const cycle = (direction: -1 | 1) => goTo(index + 1, direction);
 
 
-  const startSignup = () => navigate({ to: "/onboarding" });
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const startSignup = () => {
+    if (city.comingSoon) {
+      setWaitlistOpen(true);
+      return;
+    }
+    navigate({ to: "/onboarding" });
+  };
 
   return (
     <section
