@@ -269,14 +269,14 @@ function HeroBBackground({
           pointer-events: none;
         }
         @media (max-width: 1100px) {
-          .hero-b-map-slot { opacity: 0.6; }
+          .hero-b-map-slot { opacity: 1; }
         }
         @media (max-width: 680px) {
           .hero-b-map-slot {
             top: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.45;
+            opacity: 1;
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
             mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
           }
