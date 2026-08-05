@@ -2,10 +2,10 @@ import nycCard from "@/assets/B_NYC.png.asset.json";
 import laCard from "@/assets/B_LA.png.asset.json";
 import sfCard from "@/assets/B_SF.png.asset.json";
 import chiCard from "@/assets/B_CHI.png.asset.json";
-import nycMap from "@/assets/B_Hero_NYC.png.asset.json";
-import laMap from "@/assets/B_Hero_LA.png.asset.json";
-import sfMap from "@/assets/B_Hero_SF.png.asset.json";
-import chiMap from "@/assets/B_Hero_CHI.png.asset.json";
+import nycMap from "@/assets/B2_Hero_NYC.png.asset.json";
+import laMap from "@/assets/B2_Hero_LA.png.asset.json";
+import sfMap from "@/assets/B2_Hero_SF.png.asset.json";
+import chiMap from "@/assets/B2_Hero_CHI.png.asset.json";
 
 export interface HeroBCity {
   key: "nyc" | "la" | "sf" | "chi";
