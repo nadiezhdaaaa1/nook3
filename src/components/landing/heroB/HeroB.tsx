@@ -155,7 +155,6 @@ export function HeroB() {
 
           <div className="hero-b-card-col">
             <div className="hero-b-card-stage">
-              <MapPins shown={cardShown} reduced={reduced} cityKey={cardCity.key} />
               <AnimatePresence initial={false}>
                 {cardShown && <ListingCard key={cardCity.key} city={cardCity} reduced={reduced} />}
               </AnimatePresence>
