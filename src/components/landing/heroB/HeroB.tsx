@@ -163,17 +163,17 @@ export function HeroB() {
       <style>{`
         .hero-b-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, auto);
-          gap: 48px;
+          grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+          gap: 40px;
           align-items: center;
           margin-top: 64px;
           padding-bottom: 112px;
         }
         .hero-b-card-col {
-          justify-self: end;
+          justify-self: center;
           max-width: 100%;
           display: flex;
-          justify-content: flex-end;
+          justify-content: center;
           align-items: center;
           min-height: 288px;
         }
