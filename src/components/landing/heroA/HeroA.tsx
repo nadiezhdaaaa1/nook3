@@ -694,7 +694,18 @@ function CardDeck({
           border-radius: 24px;
         }
         .hero-a-deck:focus-visible { outline: 2px solid ${COLORS.pillCity}; outline-offset: 2px; }
+        .hero-a-card-back-photo {
+          position: absolute;
+          inset: 12px;
+          display: block;
+          border-radius: 10px;
+          background-size: cover;
+          background-position: center;
+          opacity: 0.5;
+          pointer-events: none;
+        }
         .hero-a-card-back-1, .hero-a-card-back-2 {
+
           position: absolute;
           left: 50%;
           top: 0;
