@@ -386,12 +386,12 @@ function H1Reveal({ reduced }: { reduced: boolean }) {
           letter-spacing: -1.7px;
           font-optical-sizing: auto;
         }
-        .hero-a-h1-line { display: block; overflow: hidden; padding: 0.15em 0; margin: -0.15em 0; white-space: nowrap; }
+        .hero-a-h1-line { display: block; width: max-content; overflow: hidden; padding: 0.15em 0; margin: -0.15em 0; white-space: nowrap; }
         .hero-a-h1-mask { display: block; }
         .hero-a-h1-word { display: inline-block; white-space: pre; }
         .hero-a-h1-char { display: inline-block; will-change: transform; }
         @media (max-width: 1100px) {
-          .hero-a-h1-line { white-space: normal; }
+          .hero-a-h1-line { white-space: normal; width: auto; }
           .hero-a-h1 {
             width: auto;
             max-width: 100%;
