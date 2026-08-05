@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
+  animate,
   AnimatePresence,
+
   motion,
   useMotionValue,
   useReducedMotion,
