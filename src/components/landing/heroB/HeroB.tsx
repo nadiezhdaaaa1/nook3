@@ -358,6 +358,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         }
         .hero-b-card-text { padding: 4px; display: flex; flex-direction: column; gap: 12px; }
         .hero-b-card-title {
+          font-family: ${FONT_UI};
+          font-variation-settings: ${UI_VAR};
           font-size: 16px;
           font-weight: 600;
           line-height: 1.3;
@@ -365,6 +367,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           color: #000000;
         }
         .hero-b-card-hood {
+          font-family: ${FONT_UI};
           font-size: 14px;
           font-weight: 400;
           line-height: 1.4;
@@ -372,6 +375,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           color: rgba(0,0,0,0.7);
         }
         .hero-b-card-price {
+          font-family: ${FONT_UI};
           font-size: 24px;
           font-weight: 500;
           line-height: 1.2;
