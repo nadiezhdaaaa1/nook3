@@ -185,7 +185,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           url: "https://thenook.rent",
           logo: {
             "@type": "ImageObject",
-            url: "https://thenook.rent/favicon.ico",
+            url: "https://thenook.rent/favicon.svg",
           },
           email: "hello@thenook.rent",
           description:
