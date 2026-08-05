@@ -867,7 +867,6 @@ function TopCard({
                     delay: reduced ? 0 : 0.15 + i * 0.05,
                   }}
                   style={{ ...displayFont, fontWeight: 700 }}
-
                 >
                   {s.value}
                 </motion.span>
