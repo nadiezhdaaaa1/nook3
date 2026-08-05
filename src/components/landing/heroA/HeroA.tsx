@@ -866,7 +866,8 @@ function TopCard({
                     ease: EASE_REVEAL,
                     delay: reduced ? 0 : 0.15 + i * 0.05,
                   }}
-                  style={uiFont}
+                  style={{ ...displayFont, fontWeight: 700 }}
+
                 >
                   {s.value}
                 </motion.span>
