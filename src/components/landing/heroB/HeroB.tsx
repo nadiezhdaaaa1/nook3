@@ -406,50 +406,49 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
 
 /* ---------------- map pins around the card ---------------- */
 
-const PIN_SPOTS_BY_CITY: Record<string, { x: number; y: number }[]> = {
-  nyc: [
-    { x: -34, y: -18 },
-    { x: 40, y: -34 },
-    { x: 118, y: -12 },
-    { x: -30, y: 46 },
-    { x: 126, y: 40 },
-    { x: 62, y: 74 },
-    { x: 8, y: 108 },
-    { x: 108, y: 104 },
+// Imaginary zones around the listing card (diagonals from the card corners):
+// 1 = left, 2 = top, 3 = right, 4 = bottom. Coordinates are % of the card stage.
+const PIN_ZONES: Record<1 | 2 | 3 | 4, { x: number; y: number }[]> = {
+  1: [
+    { x: -34, y: 24 },
+    { x: -54, y: 56 },
+    { x: -22, y: 74 },
   ],
-  la: [
-    { x: -42, y: 6 },
-    { x: 18, y: -30 },
-    { x: 96, y: -28 },
-    { x: 134, y: 18 },
-    { x: -22, y: 72 },
-    { x: 46, y: 96 },
-    { x: 116, y: 82 },
-    { x: 80, y: 116 },
+  2: [
+    { x: 20, y: -32 },
+    { x: 56, y: -44 },
+    { x: 86, y: -24 },
   ],
-  sf: [
-    { x: -28, y: -30 },
-    { x: 62, y: -22 },
-    { x: 128, y: 4 },
-    { x: -38, y: 34 },
-    { x: 104, y: 58 },
-    { x: 24, y: 82 },
-    { x: 132, y: 96 },
-    { x: -14, y: 112 },
+  3: [
+    { x: 126, y: 26 },
+    { x: 148, y: 56 },
+    { x: 118, y: 76 },
   ],
-  chi: [
-    { x: -30, y: 10 },
-    { x: 34, y: -32 },
-    { x: 110, y: -20 },
-    { x: 138, y: 48 },
-    { x: -36, y: 66 },
-    { x: 70, y: 88 },
-    { x: 14, y: 118 },
-    { x: 120, y: 112 },
+  4: [
+    { x: 22, y: 118 },
+    { x: 58, y: 134 },
+    { x: 90, y: 114 },
   ],
 };
 
+const CITY_ZONES: Record<string, (1 | 2 | 3 | 4)[]> = {
+  nyc: [1, 2, 3],
+  la: [2, 3, 4],
+  sf: [1, 4],
+  chi: [1, 2, 4],
+};
+
+function zonePins(zones: (1 | 2 | 3 | 4)[]) {
+  return zones.flatMap((z) => PIN_ZONES[z]);
+}
+
+const PIN_SPOTS_BY_CITY: Record<string, { x: number; y: number }[]> =
+  Object.fromEntries(
+    Object.entries(CITY_ZONES).map(([city, zones]) => [city, zonePins(zones)]),
+  );
+
 const PIN_SPOTS_FALLBACK = PIN_SPOTS_BY_CITY.nyc;
+
 
 function MapPins({
   shown,
