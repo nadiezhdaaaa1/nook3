@@ -777,8 +777,10 @@ function CardDeck({
         }
         .hero-a-stat-value {
           display: block;
+          font-family: ${FONT_DISPLAY};
+          font-variation-settings: ${DISPLAY_VAR};
           font-size: 28px;
-          font-weight: 600;
+          font-weight: 700;
           line-height: 34px;
           color: #000;
           font-variant-numeric: tabular-nums;
