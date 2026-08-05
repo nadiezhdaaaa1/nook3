@@ -54,9 +54,9 @@ export function HeroB() {
     });
   }, []);
 
-  // Moment 1 — the card pin-drops after the map has settled.
+  // Moment 1 — the card pops up from the bottom edge shortly after load.
   useEffect(() => {
-    const t = setTimeout(() => setCardShown(true), reduced ? 300 : 1100);
+    const t = setTimeout(() => setCardShown(true), reduced ? 300 : 700);
     return () => clearTimeout(t);
   }, [reduced]);
 
@@ -79,7 +79,7 @@ export function HeroB() {
         setCardIndex(next);
         setCardShown(true);
       },
-      reduced ? 320 : 1000,
+      reduced ? 320 : 700,
     );
   };
 
@@ -312,7 +312,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           ? { duration: 0.3 }
           : { type: "spring", stiffness: 180, damping: 11, opacity: { duration: 0.3 } }
       }
-      style={{ ...uiFont, boxShadow: "0 0 0 rgba(12,12,13,0)" }}
+      style={{ ...uiFont, boxShadow: "0 0 0 rgba(12,12,13,0)", transformOrigin: "bottom center" }}
     >
       <div className="hero-b-card-photo">
         <img src={city.cardImg} alt={city.listingTitle} className="hero-b-card-img" />
