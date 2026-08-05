@@ -725,15 +725,26 @@ function CardDeck({
           flex-wrap: wrap;
           justify-content: center;
           gap: 16px;
-          padding: 8px;
+          padding: 8px 0;
+        }
+        .hero-a-stats-caption {
+          flex: 0 0 100%;
+          width: 100%;
+          text-align: center;
+          font-size: 13px;
+          font-weight: 300;
+          line-height: 1;
+          letter-spacing: -0.31px;
+          color: rgba(0,0,0,0.7);
         }
         .hero-a-stat {
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 2px;
-          min-width: 104px;
+          min-width: 110px;
         }
+        .hero-a-stat:last-child { min-width: 0; }
         .hero-a-stat-roll {
           position: relative;
           display: block;
@@ -742,6 +753,7 @@ function CardDeck({
         }
         .hero-a-stat-value {
           display: block;
+          white-space: nowrap;
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
           font-size: 28px;
@@ -750,7 +762,12 @@ function CardDeck({
           color: #000;
           font-variant-numeric: tabular-nums;
         }
-        .hero-a-stat-label { font-size: 12px; color: ${COLORS.body}; }
+        .hero-a-stat-suffix {
+          font-size: 22px;
+          font-weight: 600;
+        }
+        .hero-a-stat-label { font-size: 12px; color: #000; }
+
         @media (max-width: 680px) {
           .hero-a-deck { transform: scale(0.86); transform-origin: top center; }
         }
@@ -816,12 +833,15 @@ function TopCard({
         </span>
       </div>
       <div className="hero-a-stats">
+        <span className="hero-a-stats-caption" style={uiFont}>
+          Right now across all platforms
+        </span>
         {city.stats.map((s, i) => (
           <div key={s.label} className="hero-a-stat">
             <span className="hero-a-stat-roll">
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.span
-                  key={s.value}
+                  key={`${s.value}-${s.suffix ?? ""}`}
                   className="hero-a-stat-value"
                   initial={reduced ? { opacity: 0 } : { y: "100%", opacity: 0 }}
                   animate={{ y: "0%", opacity: 1 }}
@@ -834,6 +854,9 @@ function TopCard({
                   style={{ ...displayFont, fontWeight: 700 }}
                 >
                   {s.value}
+                  {s.suffix ? (
+                    <span className="hero-a-stat-suffix"> {s.suffix}</span>
+                  ) : null}
                 </motion.span>
               </AnimatePresence>
             </span>
