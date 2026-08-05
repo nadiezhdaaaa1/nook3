@@ -257,7 +257,7 @@ function HeroBackground({
           pointer-events: none;
         }
         @media (max-width: 1100px) {
-          .hero-a-photo-slot { opacity: 0.7; }
+          .hero-a-photo-slot { opacity: 1; }
         }
       `}</style>
     </div>
