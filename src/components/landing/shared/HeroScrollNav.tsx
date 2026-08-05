@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
 
@@ -40,6 +41,21 @@ export function HeroScrollNav() {
   const navigate = useNavigate();
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   useEffect(() => {
     let state = window.scrollY > 64;
@@ -68,7 +84,7 @@ export function HeroScrollNav() {
             <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
           </Link>
 
-          <div className="hidden items-center gap-7 md:flex">
+          <div className="hidden items-center gap-7 lg:flex">
             {NAV_LINKS.map((l) => (
               <RollText
                 key={l.href}
@@ -95,7 +111,7 @@ export function HeroScrollNav() {
             <RollText
               as={Link}
               to="/login"
-              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring md:inline-flex"
+              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring lg:inline-flex"
               style={{ ...uiFont, color: NAV_TEXT }}
             >
               Sign in
@@ -109,9 +125,81 @@ export function HeroScrollNav() {
             >
               Get free alerts
             </RollText>
+
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={open}
+              className="hero-nav-burger hero-nav-ring lg:hidden"
+            >
+              <Menu className="h-5 w-5" strokeWidth={2} />
+            </button>
           </div>
         </nav>
       </div>
+
+      {open && (
+        <div className="hero-nav-sheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+          <div className="hero-nav-sheet-top">
+            <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
+              <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="hero-nav-burger hero-nav-ring"
+            >
+              <X className="h-5 w-5" strokeWidth={2} />
+            </button>
+          </div>
+
+          <div className="hero-nav-sheet-links">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="hero-nav-sheet-link hero-nav-ring"
+                style={{ ...uiFont, color: INK }}
+              >
+                {l.label}
+              </a>
+            ))}
+            <Link
+              to="/blog"
+              search={{ category: "all" }}
+              onClick={() => setOpen(false)}
+              className="hero-nav-sheet-link hero-nav-ring"
+              style={{ ...uiFont, color: INK }}
+            >
+              Blog
+            </Link>
+
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="hero-nav-sheet-signin hero-nav-ring"
+              style={{ ...uiFont, color: INK }}
+            >
+              Sign in
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onSignup();
+              }}
+              className="hero-nav-sheet-cta hero-nav-ring"
+              style={{ ...uiFont }}
+            >
+              Get free alerts
+            </button>
+          </div>
+        </div>
+      )}
+
 
       <style>{`
         .hero-nav-root {
@@ -195,6 +283,92 @@ export function HeroScrollNav() {
           outline: 2px solid ${INK};
           outline-offset: 2px;
         }
+
+        .hero-nav-burger {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 40px;
+          width: 40px;
+          border-radius: 12px;
+          border: 1px solid ${BORDER};
+          background: ${SURFACE};
+          color: ${INK};
+          backdrop-filter: blur(6px);
+          transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .hero-nav-burger:hover {
+          background: ${SURFACE_HOVER};
+          border-color: ${BORDER_HOVER};
+        }
+
+        .hero-nav-sheet {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          pointer-events: auto;
+          display: flex;
+          flex-direction: column;
+          background: #f4f1ea;
+          animation: hero-nav-sheet-in 0.28s ${EASE_REVEAL} both;
+        }
+        @keyframes hero-nav-sheet-in {
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-nav-sheet-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 16px 20px;
+          border-bottom: 1px solid rgba(36,28,18,0.08);
+        }
+        .hero-nav-sheet-links {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 20px;
+        }
+        .hero-nav-sheet-link {
+          display: inline-flex;
+          align-items: center;
+          height: 52px;
+          padding: 0 8px;
+          border-radius: 10px;
+          font-size: 17px;
+          font-weight: 500;
+        }
+        .hero-nav-sheet-link:hover { background: rgba(36,28,18,0.05); }
+        .hero-nav-sheet-signin {
+          margin-top: 16px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 48px;
+          border-radius: 12px;
+          border: 1px solid ${BORDER};
+          background: ${SURFACE};
+          font-size: 15px;
+          font-weight: 500;
+        }
+        .hero-nav-sheet-cta {
+          margin-top: 8px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 48px;
+          border-radius: 12px;
+          background: ${INK};
+          color: #f4f1ea;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-nav-sheet { animation: none; }
+        }
+
 
         @media (max-width: 680px) {
           .hero-nav-shell { padding: 0 20px; }
