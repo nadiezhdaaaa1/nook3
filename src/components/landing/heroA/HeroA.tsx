@@ -499,7 +499,7 @@ function RollCta({ onClick, label = "Get free alerts" }: { onClick: () => void; 
           transform: hover ? "translateY(-1px)" : "translateY(0)",
         }}
       >
-        Get free alerts
+        {label}
       </RollText>
       <style>{`
         .hero-a-cta {
