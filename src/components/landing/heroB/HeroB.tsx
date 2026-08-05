@@ -153,12 +153,17 @@ export function HeroB() {
           </div>
 
           <div className="hero-b-card-col">
-            <AnimatePresence initial={false}>
-              {cardShown && <ListingCard key={cardCity.key} city={cardCity} reduced={reduced} />}
-            </AnimatePresence>
+            <div className="hero-b-card-stage">
+              <MapPins shown={cardShown} reduced={reduced} cityKey={cardCity.key} />
+              <AnimatePresence initial={false}>
+                {cardShown && <ListingCard key={cardCity.key} city={cardCity} reduced={reduced} />}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
+
+      <CityDotRail index={index} onPick={pick} reduced={reduced} />
 
       <style>{`
         .hero-b-grid {
@@ -177,6 +182,7 @@ export function HeroB() {
           align-items: center;
           min-height: 288px;
         }
+        .hero-b-card-stage { position: relative; display: flex; align-items: center; justify-content: center; }
         .hero-b-cta-row { display: flex; align-items: center; gap: 20px; }
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
@@ -189,6 +195,7 @@ export function HeroB() {
           .hero-b-cta-row { flex-direction: column; align-items: flex-start; gap: 12px; }
         }
       `}</style>
+
     </section>
   );
 }
@@ -396,7 +403,169 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
   );
 }
 
+/* ---------------- map pins around the card ---------------- */
+
+const PIN_SPOTS = [
+  { x: -34, y: -18 },
+  { x: 40, y: -34 },
+  { x: 118, y: -12 },
+  { x: -30, y: 46 },
+  { x: 126, y: 40 },
+  { x: 62, y: 74 },
+  { x: 8, y: 108 },
+  { x: 108, y: 104 },
+];
+
+function MapPins({
+  shown,
+  reduced,
+  cityKey,
+}: {
+  shown: boolean;
+  reduced: boolean;
+  cityKey: string;
+}) {
+  const step = 1.5 / PIN_SPOTS.length;
+  return (
+    <div className="hero-b-pins" aria-hidden="true">
+      <AnimatePresence initial={false}>
+        {shown &&
+          PIN_SPOTS.map((p, i) => (
+            <motion.span
+              key={`${cityKey}-${i}`}
+              className="hero-b-pin"
+              style={{ left: `${p.x}%`, top: `${p.y}%` }}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.2 } }}
+              transition={
+                reduced
+                  ? { duration: 0.3, delay: i * step }
+                  : {
+                      type: "spring",
+                      stiffness: 320,
+                      damping: 18,
+                      delay: 0.35 + i * step,
+                    }
+              }
+            />
+          ))}
+      </AnimatePresence>
+
+      <style>{`
+        .hero-b-pins { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+        .hero-b-pin {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          margin: -6px 0 0 -6px;
+          border-radius: 999px;
+          background: ${BADGE_GREEN};
+          box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 2px 6px rgba(12,12,13,0.18);
+          will-change: transform, opacity;
+        }
+        @media (max-width: 680px) {
+          .hero-b-pins { display: none; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ---------------- right-side city dot rail ---------------- */
+
+function CityDotRail({
+  index,
+  onPick,
+  reduced,
+}: {
+  index: number;
+  onPick: (i: number) => void;
+  reduced: boolean;
+}) {
+  return (
+    <div className="hero-b-rail z-20" role="tablist" aria-label="Switch city">
+      {HERO_B_CITIES.map((c, i) => (
+        <button
+          key={c.key}
+          type="button"
+          role="tab"
+          aria-selected={i === index}
+          aria-label={c.pillLabel}
+          className="hero-b-rail-btn hero-b-ring"
+          onClick={() => onPick(i)}
+        >
+          <span className={`hero-b-rail-dot${i === index ? " is-active" : ""}`} />
+          <span className="hero-b-rail-tip" style={uiFont}>
+            {c.pillLabel}
+          </span>
+        </button>
+      ))}
+
+      <style>{`
+        .hero-b-rail {
+          position: absolute;
+          right: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 14px;
+        }
+        .hero-b-rail-btn {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          border-radius: 999px;
+          background: none;
+          border: 0;
+          cursor: pointer;
+        }
+        .hero-b-rail-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: rgba(43,37,33,0.28);
+          transition: ${reduced ? "none" : "transform 0.25s ease, background-color 0.25s ease"};
+        }
+        .hero-b-rail-dot.is-active { background: ${COLORS.ink}; transform: scale(1.6); }
+        .hero-b-rail-btn:hover .hero-b-rail-dot { background: ${COLORS.ink}; }
+        .hero-b-rail-tip {
+          position: absolute;
+          right: calc(100% + 10px);
+          top: 50%;
+          transform: translateY(-50%) translateX(4px);
+          white-space: nowrap;
+          padding: 4px 10px;
+          border-radius: 80px;
+          font-size: 12px;
+          font-weight: 500;
+          color: ${COLORS.pillCity};
+          background: rgba(255,255,255,0.9);
+          box-shadow: 0 2px 8px rgba(12,12,13,0.1);
+          opacity: 0;
+          pointer-events: none;
+          transition: ${reduced ? "opacity 0.15s linear" : "opacity 0.2s ease, transform 0.2s ease"};
+        }
+        .hero-b-rail-btn:hover .hero-b-rail-tip,
+        .hero-b-rail-btn:focus-visible .hero-b-rail-tip {
+          opacity: 1;
+          transform: translateY(-50%) translateX(0);
+        }
+        @media (max-width: 680px) {
+          .hero-b-rail { display: none; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 /* ---------------- nav ---------------- */
+
 
 function HeroBNav({ onSignup }: { onSignup: () => void }) {
   return (
