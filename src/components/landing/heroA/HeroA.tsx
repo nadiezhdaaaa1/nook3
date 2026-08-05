@@ -833,12 +833,15 @@ function TopCard({
         </span>
       </div>
       <div className="hero-a-stats">
+        <span className="hero-a-stats-caption" style={uiFont}>
+          Right now across all platforms
+        </span>
         {city.stats.map((s, i) => (
           <div key={s.label} className="hero-a-stat">
             <span className="hero-a-stat-roll">
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.span
-                  key={s.value}
+                  key={`${s.value}-${s.suffix ?? ""}`}
                   className="hero-a-stat-value"
                   initial={reduced ? { opacity: 0 } : { y: "100%", opacity: 0 }}
                   animate={{ y: "0%", opacity: 1 }}
@@ -851,6 +854,9 @@ function TopCard({
                   style={{ ...displayFont, fontWeight: 700 }}
                 >
                   {s.value}
+                  {s.suffix ? (
+                    <span className="hero-a-stat-suffix"> {s.suffix}</span>
+                  ) : null}
                 </motion.span>
               </AnimatePresence>
             </span>
