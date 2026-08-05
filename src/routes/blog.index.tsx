@@ -21,8 +21,9 @@ const searchSchema = z.object({
   category: z
     .enum(["all", "renter-rights", "guides", "tools-comparisons", "market-intelligence"])
     .catch("all")
-    .default("all"),
+    .optional(),
 });
+
 
 type BlogSearch = z.infer<typeof searchSchema>;
 
