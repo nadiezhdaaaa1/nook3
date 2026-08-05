@@ -92,17 +92,25 @@ export function MarketingHeader() {
             </button>
           </div>
           <div className="p-6 flex flex-col gap-2">
-            <a href="#how" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">How it works</a>
-            <a href="#what" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">What you get</a>
-            <a href="#pricing" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">Pricing</a>
-            <a href="#faq" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">FAQ</a>
+            <RollText as="a" href="#how" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              How it works
+            </RollText>
+            <RollText as="a" href="#what" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              What you get
+            </RollText>
+            <RollText as="a" href="#pricing" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              Pricing
+            </RollText>
+            <RollText as="a" href="#faq" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              FAQ
+            </RollText>
             
-            <Link to="/login" onClick={() => setOpen(false)} className="mt-4 h-12 inline-flex items-center justify-center px-5 rounded-pill border-2 border-charcoal-950 text-sm font-semibold">
+            <RollText as={Link} to="/login" onClick={() => setOpen(false)} className="mt-4 h-12 inline-flex items-center justify-center px-5 rounded-pill border-2 border-charcoal-950 text-sm font-semibold">
               Sign in
-            </Link>
-            <Link to="/signup" onClick={() => setOpen(false)} className="h-12 inline-flex items-center justify-center px-5 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold">
+            </RollText>
+            <RollText as={Link} to="/signup" onClick={() => setOpen(false)} className="h-12 inline-flex items-center justify-center px-5 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold">
               Get alerts
-            </Link>
+            </RollText>
           </div>
         </div>
       )}
