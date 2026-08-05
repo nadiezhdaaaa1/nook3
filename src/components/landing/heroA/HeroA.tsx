@@ -559,21 +559,37 @@ function RollCta({ onClick, reduced }: { onClick: () => void; reduced: boolean }
   const [hover, setHover] = useState(false);
 
   return (
-    <RollText
-      as="button"
-      type="button"
-      onClick={onClick}
-      onHoverChange={setHover}
-      className="hero-a-cta focus-visible-ring"
-      style={{
-        ...uiFont,
-        backgroundColor: hover ? COLORS.clayHover : COLORS.clay,
-        boxShadow: hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
-        transform: hover ? "translateY(-1px)" : "translateY(0)",
-      }}
-    >
-      Get free alerts
-    </RollText>
+    <>
+      <RollText
+        as="button"
+        type="button"
+        onClick={onClick}
+        onHoverChange={setHover}
+        className="hero-a-cta focus-visible-ring"
+        style={{
+          ...uiFont,
+          backgroundColor: hover ? COLORS.clayHover : COLORS.clay,
+          boxShadow: hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
+          transform: hover ? "translateY(-1px)" : "translateY(0)",
+        }}
+      >
+        Get free alerts
+      </RollText>
+      <style>{`
+        .hero-a-cta {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px 24px;
+          border-radius: 12px;
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 500;
+          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+      `}</style>
+    </>
   );
 }
 
