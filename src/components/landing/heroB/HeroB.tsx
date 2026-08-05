@@ -408,38 +408,55 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
 
 // Imaginary zones around the listing card (diagonals from the card corners):
 // 1 = left, 2 = top, 3 = right, 4 = bottom. Coordinates are % of the card stage.
+// Kept tight to the card and irregularly scattered (no symmetry).
 const PIN_ZONES: Record<1 | 2 | 3 | 4, { x: number; y: number }[]> = {
   1: [
-    { x: -34, y: 24 },
-    { x: -54, y: 56 },
-    { x: -22, y: 74 },
+    { x: -13, y: 31 },
+    { x: -22, y: 63 },
+    { x: -8, y: 82 },
   ],
   2: [
-    { x: 20, y: -32 },
-    { x: 56, y: -44 },
-    { x: 86, y: -24 },
+    { x: 27, y: -16 },
+    { x: 63, y: -24 },
+    { x: 88, y: -9 },
   ],
   3: [
-    { x: 126, y: 26 },
-    { x: 148, y: 56 },
-    { x: 118, y: 76 },
+    { x: 111, y: 22 },
+    { x: 122, y: 51 },
+    { x: 108, y: 71 },
   ],
   4: [
-    { x: 22, y: 118 },
-    { x: 58, y: 134 },
-    { x: 90, y: 114 },
+    { x: 19, y: 108 },
+    { x: 51, y: 121 },
+    { x: 83, y: 106 },
   ],
 };
 
-const CITY_ZONES: Record<string, (1 | 2 | 3 | 4)[]> = {
-  nyc: [1, 2, 3],
-  la: [2, 3, 4],
-  sf: [1, 4],
-  chi: [1, 2, 4],
+// Per city: which zones hold pins, and how many in each (3 / 2 / 1).
+const CITY_ZONES: Record<string, [1 | 2 | 3 | 4, number][]> = {
+  nyc: [
+    [2, 3],
+    [3, 2],
+    [1, 1],
+  ],
+  la: [
+    [3, 3],
+    [4, 2],
+    [2, 1],
+  ],
+  sf: [
+    [1, 3],
+    [4, 2],
+  ],
+  chi: [
+    [4, 3],
+    [1, 2],
+    [2, 1],
+  ],
 };
 
-function zonePins(zones: (1 | 2 | 3 | 4)[]) {
-  return zones.flatMap((z) => PIN_ZONES[z]);
+function zonePins(zones: [1 | 2 | 3 | 4, number][]) {
+  return zones.flatMap(([z, n]) => PIN_ZONES[z].slice(0, n));
 }
 
 const PIN_SPOTS_BY_CITY: Record<string, { x: number; y: number }[]> =
@@ -448,6 +465,7 @@ const PIN_SPOTS_BY_CITY: Record<string, { x: number; y: number }[]> =
   );
 
 const PIN_SPOTS_FALLBACK = PIN_SPOTS_BY_CITY.nyc;
+
 
 
 function MapPins({
