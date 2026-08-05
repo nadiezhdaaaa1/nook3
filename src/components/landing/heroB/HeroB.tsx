@@ -86,7 +86,7 @@ export function HeroB() {
 
   return (
     <section
-      id="hero"
+      id="hero-b"
       className="relative isolate w-full overflow-hidden"
       style={{ backgroundColor: HERO_B_BASE, ...uiFont }}
     >
@@ -175,13 +175,13 @@ export function HeroB() {
           min-height: 288px;
         }
         .hero-b-cta-row { display: flex; align-items: center; gap: 20px; }
-        #hero { min-height: 800px; }
+        #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-b-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
           .hero-b-card-col { justify-content: center; }
         }
         @media (max-width: 680px) {
-          #hero { min-height: 0; }
+          #hero-b { min-height: 0; }
           .hero-b-grid { margin-top: 40px; padding-bottom: 64px; }
           .hero-b-cta-row { flex-direction: column; align-items: flex-start; gap: 12px; }
         }
