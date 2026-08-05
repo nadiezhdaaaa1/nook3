@@ -284,6 +284,92 @@ export function HeroScrollNav() {
           outline-offset: 2px;
         }
 
+        .hero-nav-burger {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 40px;
+          width: 40px;
+          border-radius: 12px;
+          border: 1px solid ${BORDER};
+          background: ${SURFACE};
+          color: ${INK};
+          backdrop-filter: blur(6px);
+          transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .hero-nav-burger:hover {
+          background: ${SURFACE_HOVER};
+          border-color: ${BORDER_HOVER};
+        }
+
+        .hero-nav-sheet {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          pointer-events: auto;
+          display: flex;
+          flex-direction: column;
+          background: #f4f1ea;
+          animation: hero-nav-sheet-in 0.28s ${EASE_REVEAL} both;
+        }
+        @keyframes hero-nav-sheet-in {
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-nav-sheet-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 16px 20px;
+          border-bottom: 1px solid rgba(36,28,18,0.08);
+        }
+        .hero-nav-sheet-links {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 20px;
+        }
+        .hero-nav-sheet-link {
+          display: inline-flex;
+          align-items: center;
+          height: 52px;
+          padding: 0 8px;
+          border-radius: 10px;
+          font-size: 17px;
+          font-weight: 500;
+        }
+        .hero-nav-sheet-link:hover { background: rgba(36,28,18,0.05); }
+        .hero-nav-sheet-signin {
+          margin-top: 16px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 48px;
+          border-radius: 12px;
+          border: 1px solid ${BORDER};
+          background: ${SURFACE};
+          font-size: 15px;
+          font-weight: 500;
+        }
+        .hero-nav-sheet-cta {
+          margin-top: 8px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 48px;
+          border-radius: 12px;
+          background: ${INK};
+          color: #f4f1ea;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-nav-sheet { animation: none; }
+        }
+
+
         @media (max-width: 680px) {
           .hero-nav-shell { padding: 0 20px; }
           .hero-nav-root[data-scrolled="true"] { padding-top: 12px; }
