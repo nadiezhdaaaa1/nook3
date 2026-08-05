@@ -234,10 +234,9 @@ function HeroBackground({
           position: absolute;
           right: 0;
           bottom: 0;
-          width: 1114px;
-          height: 743px;
+          width: 668px;
+          height: 446px;
           max-width: 100%;
-          opacity: 0.8;
           -webkit-mask-image:
             linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 14%, #000 28%),
             linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 9%, #000 20%);
@@ -258,7 +257,7 @@ function HeroBackground({
           pointer-events: none;
         }
         @media (max-width: 1100px) {
-          .hero-a-photo-slot { opacity: 0.5; }
+          .hero-a-photo-slot { opacity: 0.7; }
         }
       `}</style>
     </div>
