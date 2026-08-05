@@ -481,7 +481,7 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
 
 /* ---------------- hero CTA with character roll ---------------- */
 
-function RollCta({ onClick }: { onClick: () => void }) {
+function RollCta({ onClick, label = "Get free alerts" }: { onClick: () => void; label?: string }) {
   const [hover, setHover] = useState(false);
 
   return (
