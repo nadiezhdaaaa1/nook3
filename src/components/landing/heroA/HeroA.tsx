@@ -60,7 +60,9 @@ export function HeroA() {
     setIndex(((next % HERO_CITIES.length) + HERO_CITIES.length) % HERO_CITIES.length);
   };
 
-  const cycle = (direction: -1 | 1) => goTo(index + (direction === 1 ? -1 : 1), direction);
+  // Looped stack: any swipe (or arrow key) advances one city forward and wraps.
+  const cycle = (direction: -1 | 1) => goTo(index + 1, direction);
+
 
   const startSignup = () => navigate({ to: "/onboarding" });
 
