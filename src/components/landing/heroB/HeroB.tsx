@@ -547,28 +547,28 @@ function CityDotRail({
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 14px;
+          gap: 8px;
         }
         .hero-b-rail-btn {
           position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           border-radius: 999px;
           background: none;
           border: 0;
           cursor: pointer;
         }
         .hero-b-rail-dot {
-          width: 6px;
-          height: 6px;
+          width: 9px;
+          height: 9px;
           border-radius: 999px;
           background: rgba(43,37,33,0.28);
           transition: ${reduced ? "none" : "transform 0.25s ease, background-color 0.25s ease"};
         }
-        .hero-b-rail-dot.is-active { background: ${COLORS.ink}; transform: scale(1.6); }
+        .hero-b-rail-dot.is-active { background: ${COLORS.ink}; transform: scale(1.5); }
         .hero-b-rail-btn:hover .hero-b-rail-dot { background: ${COLORS.ink}; }
         .hero-b-rail-tip {
           position: absolute;
