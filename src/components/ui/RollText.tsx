@@ -4,25 +4,26 @@ import { cn } from "@/lib/utils";
 
 const EASE_REVEAL = [0.22, 1, 0.36, 1] as const;
 
-export interface RollTextProps<T extends React.ElementType = "span"> {
-  as?: T;
+export interface RollTextProps {
+  as?: React.ElementType;
   children: React.ReactNode;
   className?: string;
   onHoverChange?: (hover: boolean) => void;
+  [key: string]: any;
 }
 
-export function RollText<T extends React.ElementType = "span">({
-  as,
+export function RollText({
+  as = "span",
   children,
   className,
   onHoverChange,
   ...rest
-}: RollTextProps<T> & React.ComponentPropsWithoutRef<T>) {
+}: RollTextProps) {
   const [hover, setHover] = React.useState(false);
   const reduced = useReducedMotion();
   const label = typeof children === "string" ? children : "";
   const chars = label.split("");
-  const Comp = as || "span";
+  const Comp = as;
 
   const setHoverState = React.useCallback(
     (value: boolean) => {
