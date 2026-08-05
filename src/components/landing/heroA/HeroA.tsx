@@ -13,6 +13,7 @@ import {
 import { ChevronDown, MapPin } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
+import { HeroScrollNav, HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import {
   COLORS,
   DISPLAY_VAR,
@@ -78,7 +79,8 @@ export function HeroA() {
       <HeroBackground city={city} prevCity={prevIndex !== null ? HERO_CITIES[prevIndex] : null} reduced={!!reduced} />
 
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-10">
-        <HeroNav onSignup={startSignup} />
+        <HeroScrollNav onSignup={startSignup} />
+        <HeroNavSpacer />
 
         <div className="hero-a-grid">
           <div className="hero-a-copy">
@@ -266,81 +268,6 @@ function HeroBackground({
 }
 
 /* ---------------- nav ---------------- */
-
-function HeroNav({ onSignup }: { onSignup: () => void }) {
-  return (
-    <nav
-      className="relative z-20 flex h-[72px] items-center justify-between gap-6 bg-transparent py-5"
-      style={uiFont}
-    >
-      <Link to="/" className="shrink-0 rounded-sm focus-visible-ring" aria-label="Nook home">
-        <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28 }} />
-      </Link>
-
-      <div className="hidden items-center gap-7 md:flex">
-        {NAV_LINKS.map((l) => (
-          <RollText
-            key={l.href}
-            as="a"
-            href={l.href}
-            className="rounded-sm text-sm font-medium transition-colors focus-visible-ring"
-            style={{ ...uiFont, color: COLORS.body }}
-          >
-            {l.label}
-          </RollText>
-        ))}
-        <RollText
-          as={Link}
-          to="/blog"
-          search={{ category: "all" }}
-          className="rounded-sm text-sm font-medium transition-colors focus-visible-ring"
-          style={{ ...uiFont, color: COLORS.body }}
-        >
-          Blog
-        </RollText>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <RollText
-          as={Link}
-          to="/login"
-          className="hidden rounded-sm px-3 text-sm font-medium focus-visible-ring md:inline-flex"
-          style={{ ...uiFont, color: COLORS.navText }}
-        >
-          Sign in
-        </RollText>
-        <RollText
-          as="button"
-          type="button"
-          onClick={onSignup}
-          className="hero-a-nav-cta text-sm font-medium focus-visible-ring"
-          style={{ ...uiFont, color: COLORS.navText }}
-        >
-          Get free alerts
-        </RollText>
-      </div>
-
-      <style>{`
-        .hero-a-nav-cta {
-          background: ${COLORS.surface};
-          border: 1px solid ${COLORS.border};
-          border-radius: 12px;
-          padding: 10px 14px;
-          backdrop-filter: blur(6px);
-          transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-        .hero-a-nav-cta:hover {
-          background: ${COLORS.surfaceHover};
-          border-color: ${COLORS.borderHover};
-        }
-        .focus-visible-ring:focus-visible {
-          outline: 2px solid ${COLORS.pillCity};
-          outline-offset: 2px;
-        }
-      `}</style>
-    </nav>
-  );
-}
 
 /* ---------------- H1 ---------------- */
 
