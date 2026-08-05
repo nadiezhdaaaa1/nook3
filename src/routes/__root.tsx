@@ -158,6 +158,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -184,7 +185,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           url: "https://thenook.rent",
           logo: {
             "@type": "ImageObject",
-            url: "https://thenook.rent/favicon.ico",
+            url: "https://thenook.rent/favicon.svg",
           },
           email: "hello@thenook.rent",
           description:
