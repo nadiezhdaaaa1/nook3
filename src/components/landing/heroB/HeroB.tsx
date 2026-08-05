@@ -267,8 +267,8 @@ function HeroBBackground({
         }
         .hero-b-map {
           position: absolute;
-          left: -8%;
-          top: -8%;
+          right: 0;
+          bottom: 0;
           width: 116%;
           height: 116%;
           object-fit: cover;
