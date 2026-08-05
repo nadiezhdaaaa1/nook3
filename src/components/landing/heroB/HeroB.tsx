@@ -648,7 +648,7 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
           left: 0;
           top: calc(100% + 8px);
           z-index: 30;
-          min-width: 260px;
+          width: 280px;
           padding: 6px;
           border-radius: 12px;
           background: ${COLORS.surface};
