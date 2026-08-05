@@ -59,7 +59,12 @@ export function HeroB() {
     return () => clearTimeout(t);
   }, [reduced]);
 
-  useEffect(() => () => timer.current && clearTimeout(timer.current), []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
 
   // Moment 2 — card dismisses, map flies to the new city, new card drops in.
   const pick = (next: number) => {
