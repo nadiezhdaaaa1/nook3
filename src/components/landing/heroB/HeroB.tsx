@@ -162,13 +162,15 @@ export function HeroB() {
       <style>{`
         .hero-b-grid {
           display: grid;
-          grid-template-columns: 582px 554px;
+          grid-template-columns: minmax(0, 1fr) minmax(0, auto);
           gap: 48px;
           align-items: center;
           margin-top: 64px;
           padding-bottom: 112px;
         }
         .hero-b-card-col {
+          justify-self: end;
+          max-width: 100%;
           display: flex;
           justify-content: flex-end;
           align-items: center;
