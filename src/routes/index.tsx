@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
-import { HeroCityAware } from "@/components/landing/HeroCityAware";
+import { HeroAB } from "@/components/landing/HeroAB";
 import { HowItWorksThreeSteps } from "@/components/landing/HowItWorksThreeSteps";
 import { WhatYouGetGrid } from "@/components/landing/WhatYouGetGrid";
 import { TiredOfSection } from "@/components/landing/TiredOfSection";
@@ -49,8 +49,9 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   return (
-    <MarketingLayout>
-      <HeroCityAware />
+    <MarketingLayout hideHeader>
+      <HeroAB />
+
       <HowItWorksThreeSteps />
       <WhatYouGetGrid />
       <PricingThreeTiers />

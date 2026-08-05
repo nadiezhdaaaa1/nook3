@@ -4,7 +4,13 @@ import { MarketingHeader } from "./MarketingHeader";
 import { MarketingFooter } from "./MarketingFooter";
 import { ScrollProgress } from "./anim/ScrollProgress";
 
-export function MarketingLayout({ children }: { children: ReactNode }) {
+export function MarketingLayout({
+  children,
+  hideHeader = false,
+}: {
+  children: ReactNode;
+  hideHeader?: boolean;
+}) {
   useEffect(() => {
     const html = document.documentElement;
     const had = html.classList.contains("dark");
@@ -18,10 +24,11 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <ScrollProgress />
-        <MarketingHeader />
-        <main className="flex-1 pt-16">{children}</main>
+        {!hideHeader && <MarketingHeader />}
+        <main className={hideHeader ? "flex-1" : "flex-1 pt-16"}>{children}</main>
         <MarketingFooter />
       </div>
     </MotionConfig>
   );
 }
+
