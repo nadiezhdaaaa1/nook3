@@ -285,7 +285,6 @@ export function HeroScrollNav() {
         }
 
         .hero-nav-burger {
-          display: inline-flex;
           align-items: center;
           justify-content: center;
           height: 40px;
