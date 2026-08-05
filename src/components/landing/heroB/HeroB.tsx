@@ -3,7 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
 import { RollText } from "@/components/ui/RollText";
-import { HeroScrollNav, HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
+import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import {
   COLORS,
@@ -95,7 +95,6 @@ export function HeroB() {
       <HeroBBackground city={city} firstLoad={firstLoad} reduced={reduced} />
 
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-10">
-        <HeroScrollNav onSignup={startSignup} />
         <HeroNavSpacer />
 
         <div className="hero-b-grid">
