@@ -247,7 +247,7 @@ function HeroBBackground({
         .hero-b-map-slot {
           position: absolute;
           right: 0;
-          top: -80px;
+          bottom: 0;
           width: 880px;
           height: 800px;
           max-width: 100%;
@@ -267,6 +267,7 @@ function HeroBBackground({
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: right bottom;
           user-select: none;
           pointer-events: none;
         }
