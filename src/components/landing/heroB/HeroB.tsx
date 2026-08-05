@@ -220,7 +220,7 @@ function HeroBBackground({
       />
 
       <div className="hero-b-map-slot">
-        <AnimatePresence initial={true} mode="sync">
+        <AnimatePresence initial={true}>
           <motion.img
             key={city.key}
             src={city.mapImg}
@@ -231,17 +231,13 @@ function HeroBBackground({
               reduced
                 ? { opacity: 0 }
                 : firstLoad
-                  ? { opacity: 0, scale: 1.08, y: -16 }
-                  : { opacity: 0, scale: 1.12, y: -24 }
+                  ? { opacity: 0, filter: "blur(0px)", scale: 1 }
+                  : { opacity: 0, filter: "blur(24px)", scale: 1.05 }
             }
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 1.05, y: 16 }}
-            transition={{
-              duration: reduced ? 0.3 : 1.05,
-              ease: EASE_CROSS,
-              delay: reduced ? 0 : firstLoad ? 0.3 : 0.08,
-            }}
-            style={{ willChange: "opacity, transform", transformOrigin: "100% 100%" }}
+            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, filter: "blur(24px)", scale: 1.03 }}
+            transition={{ duration: reduced ? 0.3 : 0.9, ease: EASE_CROSS }}
+            style={{ willChange: "opacity, transform, filter" }}
             draggable={false}
           />
         </AnimatePresence>
