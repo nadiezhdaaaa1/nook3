@@ -639,17 +639,12 @@ function CardDeck({
   reduced: boolean;
   onCycle: (d: -1 | 1) => void;
 }) {
-  const x = useMotionValue(0);
-  const rotate = useTransform(x, (v) => v / 20);
-  const [dragging, setDragging] = useState(false);
-
-  const onDragEnd = (_: unknown, info: PanInfo) => {
-    setDragging(false);
-    if (Math.abs(info.offset.x) > DRAG_THRESHOLD) {
-      onCycle(info.offset.x > 0 ? 1 : -1);
-    }
-    x.set(0);
-  };
+  const activeIndex = Math.max(
+    0,
+    HERO_CITIES.findIndex((c) => c.key === city.key),
+  );
+  const nextCity = HERO_CITIES[(activeIndex + 1) % HERO_CITIES.length];
+  const thirdCity = HERO_CITIES[(activeIndex + 2) % HERO_CITIES.length];
 
   return (
     <div
@@ -658,8 +653,8 @@ function CardDeck({
       aria-label={`${city.cardTitle} market snapshot. Use left and right arrow keys to change city.`}
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "ArrowRight") onCycle(-1);
-        if (e.key === "ArrowLeft") onCycle(1);
+        if (e.key === "ArrowRight") onCycle(1);
+        if (e.key === "ArrowLeft") onCycle(-1);
       }}
     >
       <motion.div
@@ -667,69 +662,28 @@ function CardDeck({
         animate={{ rotate: 1.2, y: -25, scale: 1 }}
         transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.05 }}
         aria-hidden="true"
-      />
+      >
+        <span
+          className="hero-a-card-back-photo"
+          style={{ backgroundImage: `url(${thirdCity.cardImg})` }}
+        />
+      </motion.div>
       <motion.div
         className="hero-a-card-back-1"
         animate={{ rotate: -1.1, y: -14, scale: 1 }}
         transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.05 }}
         aria-hidden="true"
-      />
+      >
+        <span
+          className="hero-a-card-back-photo"
+          style={{ backgroundImage: `url(${nextCity.cardImg})` }}
+        />
+      </motion.div>
 
       <AnimatePresence initial={false} custom={dir}>
-        <motion.div
-          key={city.key}
-          className="hero-a-card"
-          drag={reduced ? false : "x"}
-          dragElastic={0.35}
-          dragConstraints={{ left: 0, right: 0 }}
-          onDragStart={() => setDragging(true)}
-          onDragEnd={onDragEnd}
-          style={{ x, rotate, cursor: dragging ? "grabbing" : "grab" }}
-          initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, rotate: -1.1, y: -10 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
-          exit={
-            reduced
-              ? { opacity: 0 }
-              : { opacity: 0, x: dir === 1 ? 520 : -520, rotate: dir === 1 ? 12 : -12 }
-          }
-          transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.05 }}
-        >
-          <div className="hero-a-card-photo">
-            <img src={city.cardImg} alt={`${city.cardTitle} skyline`} draggable={false} />
-            <span className="hero-a-card-title" style={displayFont}>
-              {city.cardTitle}
-            </span>
-          </div>
-          <div className="hero-a-stats">
-            {city.stats.map((s, i) => (
-              <div key={s.label} className="hero-a-stat">
-                <span className="hero-a-stat-roll">
-                  <AnimatePresence initial={false} mode="popLayout">
-                    <motion.span
-                      key={s.value}
-                      className="hero-a-stat-value"
-                      initial={reduced ? { opacity: 0 } : { y: "100%", opacity: 0 }}
-                      animate={{ y: "0%", opacity: 1 }}
-                      exit={reduced ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
-                      transition={{
-                        duration: reduced ? 0.3 : 0.3,
-                        ease: EASE_REVEAL,
-                        delay: reduced ? 0 : 0.15 + i * 0.05,
-                      }}
-                      style={uiFont}
-                    >
-                      {s.value}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-                <span className="hero-a-stat-label" style={uiFont}>
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <TopCard key={city.key} city={city} dir={dir} reduced={reduced} onCycle={onCycle} />
       </AnimatePresence>
+
 
       <style>{`
         .hero-a-deck {
