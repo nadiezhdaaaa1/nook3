@@ -153,12 +153,17 @@ export function HeroB() {
           </div>
 
           <div className="hero-b-card-col">
-            <AnimatePresence initial={false}>
-              {cardShown && <ListingCard key={cardCity.key} city={cardCity} reduced={reduced} />}
-            </AnimatePresence>
+            <div className="hero-b-card-stage">
+              <MapPins shown={cardShown} reduced={reduced} cityKey={cardCity.key} />
+              <AnimatePresence initial={false}>
+                {cardShown && <ListingCard key={cardCity.key} city={cardCity} reduced={reduced} />}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
+
+      <CityDotRail index={index} onPick={pick} reduced={reduced} />
 
       <style>{`
         .hero-b-grid {
@@ -177,6 +182,7 @@ export function HeroB() {
           align-items: center;
           min-height: 288px;
         }
+        .hero-b-card-stage { position: relative; display: flex; align-items: center; justify-content: center; }
         .hero-b-cta-row { display: flex; align-items: center; gap: 20px; }
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
@@ -189,6 +195,7 @@ export function HeroB() {
           .hero-b-cta-row { flex-direction: column; align-items: flex-start; gap: 12px; }
         }
       `}</style>
+
     </section>
   );
 }
