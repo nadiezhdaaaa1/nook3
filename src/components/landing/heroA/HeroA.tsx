@@ -234,8 +234,8 @@ function HeroBackground({
           position: absolute;
           right: 0;
           bottom: 0;
-          width: 668px;
-          height: 446px;
+          width: 780px;
+          height: 675px;
           max-width: 100%;
           -webkit-mask-image:
             linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 14%, #000 28%),
