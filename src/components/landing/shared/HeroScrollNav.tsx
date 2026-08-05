@@ -125,9 +125,81 @@ export function HeroScrollNav() {
             >
               Get free alerts
             </RollText>
+
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={open}
+              className="hero-nav-burger hero-nav-ring md:hidden"
+            >
+              <Menu className="h-5 w-5" strokeWidth={2} />
+            </button>
           </div>
         </nav>
       </div>
+
+      {open && (
+        <div className="hero-nav-sheet md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+          <div className="hero-nav-sheet-top">
+            <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
+              <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="hero-nav-burger hero-nav-ring"
+            >
+              <X className="h-5 w-5" strokeWidth={2} />
+            </button>
+          </div>
+
+          <div className="hero-nav-sheet-links">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="hero-nav-sheet-link hero-nav-ring"
+                style={{ ...uiFont, color: INK }}
+              >
+                {l.label}
+              </a>
+            ))}
+            <Link
+              to="/blog"
+              search={{ category: "all" }}
+              onClick={() => setOpen(false)}
+              className="hero-nav-sheet-link hero-nav-ring"
+              style={{ ...uiFont, color: INK }}
+            >
+              Blog
+            </Link>
+
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="hero-nav-sheet-signin hero-nav-ring"
+              style={{ ...uiFont, color: INK }}
+            >
+              Sign in
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onSignup();
+              }}
+              className="hero-nav-sheet-cta hero-nav-ring"
+              style={{ ...uiFont }}
+            >
+              Get free alerts
+            </button>
+          </div>
+        </div>
+      )}
+
 
       <style>{`
         .hero-nav-root {
