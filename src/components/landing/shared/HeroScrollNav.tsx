@@ -84,7 +84,7 @@ export function HeroScrollNav() {
             <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
           </Link>
 
-          <div className="hidden items-center gap-7 md:flex">
+          <div className="hidden items-center gap-7 lg:flex">
             {NAV_LINKS.map((l) => (
               <RollText
                 key={l.href}
@@ -111,7 +111,7 @@ export function HeroScrollNav() {
             <RollText
               as={Link}
               to="/login"
-              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring md:inline-flex"
+              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring lg:inline-flex"
               style={{ ...uiFont, color: NAV_TEXT }}
             >
               Sign in
@@ -131,7 +131,7 @@ export function HeroScrollNav() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="hero-nav-burger hero-nav-ring md:hidden"
+              className="hero-nav-burger hero-nav-ring lg:hidden"
             >
               <Menu className="h-5 w-5" strokeWidth={2} />
             </button>
@@ -140,7 +140,7 @@ export function HeroScrollNav() {
       </div>
 
       {open && (
-        <div className="hero-nav-sheet md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+        <div className="hero-nav-sheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="hero-nav-sheet-top">
             <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
               <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
