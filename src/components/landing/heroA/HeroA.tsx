@@ -557,17 +557,13 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
 
 function RollCta({ onClick, reduced }: { onClick: () => void; reduced: boolean }) {
   const [hover, setHover] = useState(false);
-  const label = "Get free alerts";
-  const chars = label.split("");
 
   return (
-    <button
+    <RollText
+      as="button"
       type="button"
       onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={() => setHover(false)}
+      onHoverChange={setHover}
       className="hero-a-cta focus-visible-ring"
       style={{
         ...uiFont,
@@ -576,59 +572,8 @@ function RollCta({ onClick, reduced }: { onClick: () => void; reduced: boolean }
         transform: hover ? "translateY(-1px)" : "translateY(0)",
       }}
     >
-      <span className="hero-a-cta-roll" aria-hidden="true">
-        <span className="hero-a-cta-layer">
-          {chars.map((c, i) => (
-            <motion.span
-              key={`a-${i}`}
-              className="hero-a-cta-char"
-              animate={reduced ? { opacity: hover ? 0 : 1 } : { y: hover ? "-100%" : "0%" }}
-              transition={{ duration: reduced ? 0.3 : 0.35, ease: EASE_REVEAL, delay: reduced ? 0 : i * 0.02 }}
-            >
-              {c === " " ? "\u00A0" : c}
-            </motion.span>
-          ))}
-        </span>
-        <span className="hero-a-cta-layer hero-a-cta-layer-2">
-          {chars.map((c, i) => (
-            <motion.span
-              key={`b-${i}`}
-              className="hero-a-cta-char"
-              animate={reduced ? { opacity: hover ? 1 : 0 } : { y: hover ? "-100%" : "0%" }}
-              transition={{ duration: reduced ? 0.3 : 0.35, ease: EASE_REVEAL, delay: reduced ? 0 : i * 0.02 }}
-            >
-              {c === " " ? "\u00A0" : c}
-            </motion.span>
-          ))}
-        </span>
-      </span>
-      <span className="sr-only">{label}</span>
-
-      <style>{`
-        .hero-a-cta {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 16px 24px;
-          border-radius: 12px;
-          color: #ffffff;
-          font-size: 16px;
-          font-weight: 500;
-          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-        }
-        .hero-a-cta-roll {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          line-height: 1.25;
-        }
-        .hero-a-cta-layer { display: flex; }
-        .hero-a-cta-layer-2 { position: absolute; inset: 0; transform: translateY(100%); }
-        .hero-a-cta-layer-2 .hero-a-cta-char { will-change: transform; }
-        .hero-a-cta-char { display: inline-block; will-change: transform; }
-      `}</style>
-    </button>
+      Get free alerts
+    </RollText>
   );
 }
 
