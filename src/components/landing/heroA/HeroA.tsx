@@ -279,41 +279,45 @@ function HeroNav({ onSignup }: { onSignup: () => void }) {
 
       <div className="hidden items-center gap-7 md:flex">
         {NAV_LINKS.map((l) => (
-          <a
+          <RollText
             key={l.href}
+            as="a"
             href={l.href}
             className="rounded-sm text-sm font-medium transition-colors focus-visible-ring"
             style={{ ...uiFont, color: COLORS.body }}
           >
             {l.label}
-          </a>
+          </RollText>
         ))}
-        <Link
+        <RollText
+          as={Link}
           to="/blog"
           search={{ category: "all" }}
           className="rounded-sm text-sm font-medium transition-colors focus-visible-ring"
           style={{ ...uiFont, color: COLORS.body }}
         >
           Blog
-        </Link>
+        </RollText>
       </div>
 
       <div className="flex items-center gap-2">
-        <Link
+        <RollText
+          as={Link}
           to="/login"
           className="hidden rounded-sm px-3 text-sm font-medium focus-visible-ring md:inline-flex"
           style={{ ...uiFont, color: COLORS.navText }}
         >
           Sign in
-        </Link>
-        <button
+        </RollText>
+        <RollText
+          as="button"
           type="button"
           onClick={onSignup}
           className="hero-a-nav-cta text-sm font-medium focus-visible-ring"
           style={{ ...uiFont, color: COLORS.navText }}
         >
           Get free alerts
-        </button>
+        </RollText>
       </div>
 
       <style>{`
