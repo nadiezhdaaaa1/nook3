@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { HeroA } from "./heroA/HeroA";
-import { HeroCityAware } from "./HeroCityAware";
+import { HeroB } from "./heroB/HeroB";
 
 // TODO: remove before production — A/B presentation switcher
 export function HeroAB() {
-  const [variant, setVariant] = useState<"A" | "B">("A");
+  const [variant, setVariant] = useState<"A" | "B">("B");
 
   return (
     <div className="relative">
@@ -13,7 +13,7 @@ export function HeroAB() {
         <HeroA />
       </div>
       <div style={{ display: variant === "B" ? "block" : "none" }}>
-        <HeroCityAware />
+        <HeroB />
       </div>
 
       {/* TODO: remove before production — A/B presentation switcher */}
