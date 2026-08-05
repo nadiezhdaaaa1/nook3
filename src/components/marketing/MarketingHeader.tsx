@@ -51,18 +51,20 @@ export function MarketingHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
+          <RollText
+            as={Link}
             to="/login"
             className="hidden md:inline-flex h-10 items-center px-3 text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 transition-colors"
           >
             Sign in
-          </Link>
-          <Link
+          </RollText>
+          <RollText
+            as={Link}
             to="/onboarding"
             className="inline-flex h-11 items-center px-5 rounded-pill text-sm font-semibold bg-charcoal-950 text-paper hover:bg-charcoal-800 transition-colors"
           >
             Get free alerts
-          </Link>
+          </RollText>
 
           <button
             onClick={() => setOpen(true)}
