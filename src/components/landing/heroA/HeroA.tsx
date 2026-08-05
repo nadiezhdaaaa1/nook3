@@ -13,7 +13,7 @@ import {
 import { ChevronDown, MapPin } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
-import { HeroScrollNav, HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
+import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import {
   COLORS,
   DISPLAY_VAR,
@@ -79,7 +79,6 @@ export function HeroA() {
       <HeroBackground city={city} prevCity={prevIndex !== null ? HERO_CITIES[prevIndex] : null} reduced={!!reduced} />
 
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-10">
-        <HeroScrollNav onSignup={startSignup} />
         <HeroNavSpacer />
 
         <div className="hero-a-grid">

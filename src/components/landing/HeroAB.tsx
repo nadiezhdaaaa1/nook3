@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { HeroA } from "./heroA/HeroA";
 import { HeroB } from "./heroB/HeroB";
+import { HeroScrollNav } from "./shared/HeroScrollNav";
 
 // TODO: remove before production — A/B presentation switcher
 export function HeroAB() {
@@ -8,6 +9,7 @@ export function HeroAB() {
 
   return (
     <div className="relative">
+      <HeroScrollNav />
       {/* Both variants stay mounted so toggling never re-runs the load animation. */}
       <div style={{ display: variant === "A" ? "block" : "none" }}>
         <HeroA />

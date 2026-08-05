@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
 
@@ -36,7 +36,9 @@ export function HeroNavSpacer() {
  * visually reproduces the in-flow hero header; past the scroll threshold it
  * morphs into a floating glass pill (hysteresis: down at 64, back at 24).
  */
-export function HeroScrollNav({ onSignup }: { onSignup: () => void }) {
+export function HeroScrollNav() {
+  const navigate = useNavigate();
+  const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
