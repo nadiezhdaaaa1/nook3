@@ -81,7 +81,7 @@ export function HeroA() {
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.25, ease: EASE_REVEAL }}
-              className="flex flex-wrap items-center gap-4"
+              className="relative z-30 flex flex-wrap items-center gap-4"
             >
               <CityPill city={city} onPick={(i) => goTo(i, -1)} />
               <AnimatePresence initial={false}>
