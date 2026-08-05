@@ -84,7 +84,7 @@ export function HeroScrollNav() {
             <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
           </Link>
 
-          <div className="hidden items-center gap-7 lg:flex">
+          <div className="hidden items-center gap-7 md:flex">
             {NAV_LINKS.map((l) => (
               <RollText
                 key={l.href}
