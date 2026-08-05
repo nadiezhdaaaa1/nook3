@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
 import { RollText } from "@/components/ui/RollText";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
+import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import {
   COLORS,
@@ -84,7 +85,14 @@ export function HeroB() {
     );
   };
 
-  const startSignup = () => navigate({ to: "/onboarding" });
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const startSignup = () => {
+    if (city.comingSoon) {
+      setWaitlistOpen(true);
+      return;
+    }
+    navigate({ to: "/onboarding" });
+  };
 
   return (
     <section
@@ -146,7 +154,12 @@ export function HeroB() {
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-b-cta-row mt-9"
             >
-              <RollCtaB onClick={startSignup} reduced={reduced} />
+              <RollCtaB
+                key={city.comingSoon ? "waitlist" : "alerts"}
+                onClick={startSignup}
+                reduced={reduced}
+                label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+              />
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 3-day trial. Cancel anytime.
               </span>
@@ -196,6 +209,12 @@ export function HeroB() {
         }
       `}</style>
 
+      <WaitlistDialog
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        requestedCity={city.comingSoon ? city.pillLabel : null}
+        requestedCityLabel={city.comingSoon ? city.pillLabel : null}
+      />
     </section>
   );
 }
@@ -699,9 +718,16 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
 
 /* ---------------- hero CTA with character roll ---------------- */
 
-function RollCtaB({ onClick, reduced }: { onClick: () => void; reduced: boolean }) {
+function RollCtaB({
+  onClick,
+  reduced,
+  label = "Get free alerts",
+}: {
+  onClick: () => void;
+  reduced: boolean;
+  label?: string;
+}) {
   const [hover, setHover] = useState(false);
-  const label = "Get free alerts";
   const chars = label.split("");
 
   return (

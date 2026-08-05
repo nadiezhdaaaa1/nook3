@@ -14,6 +14,7 @@ import { ChevronDown, MapPin } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
+import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
 import {
   COLORS,
   DISPLAY_VAR,
@@ -68,7 +69,14 @@ export function HeroA() {
   const cycle = (direction: -1 | 1) => goTo(index + 1, direction);
 
 
-  const startSignup = () => navigate({ to: "/onboarding" });
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const startSignup = () => {
+    if (city.comingSoon) {
+      setWaitlistOpen(true);
+      return;
+    }
+    navigate({ to: "/onboarding" });
+  };
 
   return (
     <section
@@ -126,7 +134,12 @@ export function HeroA() {
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-a-cta-row mt-9"
             >
-              <RollCta onClick={startSignup} />
+              <RollCta
+                key={city.comingSoon ? "waitlist" : "alerts"}
+                onClick={startSignup}
+                label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+              />
+
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 3-day trial. Cancel anytime.
               </span>
@@ -166,6 +179,13 @@ export function HeroA() {
           .hero-a-cta-row { flex-direction: column; align-items: flex-start; gap: 12px; }
         }
       `}</style>
+
+      <WaitlistDialog
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        requestedCity={city.comingSoon ? city.cardTitle : null}
+        requestedCityLabel={city.comingSoon ? city.cardTitle : null}
+      />
     </section>
   );
 }
@@ -481,7 +501,7 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
 
 /* ---------------- hero CTA with character roll ---------------- */
 
-function RollCta({ onClick }: { onClick: () => void }) {
+function RollCta({ onClick, label = "Get free alerts" }: { onClick: () => void; label?: string }) {
   const [hover, setHover] = useState(false);
 
   return (
@@ -499,7 +519,7 @@ function RollCta({ onClick }: { onClick: () => void }) {
           transform: hover ? "translateY(-1px)" : "translateY(0)",
         }}
       >
-        Get free alerts
+        {label}
       </RollText>
       <style>{`
         .hero-a-cta {
