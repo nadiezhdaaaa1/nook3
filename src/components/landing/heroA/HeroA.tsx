@@ -178,6 +178,13 @@ export function HeroA() {
           .hero-a-cta-row { flex-direction: column; align-items: flex-start; gap: 12px; }
         }
       `}</style>
+
+      <WaitlistDialog
+        open={waitlistOpen}
+        onOpenChange={setWaitlistOpen}
+        requestedCity={city.comingSoon ? city.cardTitle : null}
+        requestedCityLabel={city.comingSoon ? city.cardTitle : null}
+      />
     </section>
   );
 }
