@@ -249,11 +249,11 @@ function HeroBBackground({
           height: 1268px;
           max-width: 100%;
           -webkit-mask-image:
-            linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 16%, #000 32%),
-            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 13%, #000 26%);
+            linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 22%, #000 42%),
+            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 14%, #000 28%);
           mask-image:
-            linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 16%, #000 32%),
-            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 13%, #000 26%);
+            linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 22%, #000 42%),
+            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 14%, #000 28%);
           mask-composite: intersect;
           -webkit-mask-composite: source-in;
         }
