@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
+import { RollText } from "@/components/ui/RollText";
 import {
   COLORS,
   DISPLAY_VAR,
