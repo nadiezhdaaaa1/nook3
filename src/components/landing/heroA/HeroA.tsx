@@ -777,8 +777,10 @@ function CardDeck({
         }
         .hero-a-stat-value {
           display: block;
+          font-family: ${FONT_DISPLAY};
+          font-variation-settings: ${DISPLAY_VAR};
           font-size: 28px;
-          font-weight: 600;
+          font-weight: 700;
           line-height: 34px;
           color: #000;
           font-variant-numeric: tabular-nums;
@@ -864,7 +866,7 @@ function TopCard({
                     ease: EASE_REVEAL,
                     delay: reduced ? 0 : 0.15 + i * 0.05,
                   }}
-                  style={uiFont}
+                  style={{ ...displayFont, fontWeight: 700 }}
                 >
                   {s.value}
                 </motion.span>
