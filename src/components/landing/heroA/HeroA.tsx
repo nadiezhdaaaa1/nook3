@@ -12,6 +12,7 @@ import {
 } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
+import { RollText } from "@/components/ui/RollText";
 import {
   COLORS,
   DISPLAY_VAR,
@@ -124,7 +125,7 @@ export function HeroA() {
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-a-cta-row mt-9"
             >
-              <RollCta onClick={startSignup} reduced={!!reduced} />
+              <RollCta onClick={startSignup} />
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 3-day trial. Cancel anytime.
               </span>
@@ -278,41 +279,45 @@ function HeroNav({ onSignup }: { onSignup: () => void }) {
 
       <div className="hidden items-center gap-7 md:flex">
         {NAV_LINKS.map((l) => (
-          <a
+          <RollText
             key={l.href}
+            as="a"
             href={l.href}
             className="rounded-sm text-sm font-medium transition-colors focus-visible-ring"
             style={{ ...uiFont, color: COLORS.body }}
           >
             {l.label}
-          </a>
+          </RollText>
         ))}
-        <Link
+        <RollText
+          as={Link}
           to="/blog"
           search={{ category: "all" }}
           className="rounded-sm text-sm font-medium transition-colors focus-visible-ring"
           style={{ ...uiFont, color: COLORS.body }}
         >
           Blog
-        </Link>
+        </RollText>
       </div>
 
       <div className="flex items-center gap-2">
-        <Link
+        <RollText
+          as={Link}
           to="/login"
           className="hidden rounded-sm px-3 text-sm font-medium focus-visible-ring md:inline-flex"
           style={{ ...uiFont, color: COLORS.navText }}
         >
           Sign in
-        </Link>
-        <button
+        </RollText>
+        <RollText
+          as="button"
           type="button"
           onClick={onSignup}
           className="hero-a-nav-cta text-sm font-medium focus-visible-ring"
           style={{ ...uiFont, color: COLORS.navText }}
         >
           Get free alerts
-        </button>
+        </RollText>
       </div>
 
       <style>{`
@@ -550,55 +555,26 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
 
 /* ---------------- hero CTA with character roll ---------------- */
 
-function RollCta({ onClick, reduced }: { onClick: () => void; reduced: boolean }) {
+function RollCta({ onClick }: { onClick: () => void }) {
   const [hover, setHover] = useState(false);
-  const label = "Get free alerts";
-  const chars = label.split("");
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={() => setHover(false)}
-      className="hero-a-cta focus-visible-ring"
-      style={{
-        ...uiFont,
-        backgroundColor: hover ? COLORS.clayHover : COLORS.clay,
-        boxShadow: hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
-        transform: hover ? "translateY(-1px)" : "translateY(0)",
-      }}
-    >
-      <span className="hero-a-cta-roll" aria-hidden="true">
-        <span className="hero-a-cta-layer">
-          {chars.map((c, i) => (
-            <motion.span
-              key={`a-${i}`}
-              className="hero-a-cta-char"
-              animate={reduced ? { opacity: hover ? 0 : 1 } : { y: hover ? "-100%" : "0%" }}
-              transition={{ duration: reduced ? 0.3 : 0.35, ease: EASE_REVEAL, delay: reduced ? 0 : i * 0.02 }}
-            >
-              {c === " " ? "\u00A0" : c}
-            </motion.span>
-          ))}
-        </span>
-        <span className="hero-a-cta-layer hero-a-cta-layer-2">
-          {chars.map((c, i) => (
-            <motion.span
-              key={`b-${i}`}
-              className="hero-a-cta-char"
-              animate={reduced ? { opacity: hover ? 1 : 0 } : { y: hover ? "-100%" : "0%" }}
-              transition={{ duration: reduced ? 0.3 : 0.35, ease: EASE_REVEAL, delay: reduced ? 0 : i * 0.02 }}
-            >
-              {c === " " ? "\u00A0" : c}
-            </motion.span>
-          ))}
-        </span>
-      </span>
-      <span className="sr-only">{label}</span>
-
+    <>
+      <RollText
+        as="button"
+        type="button"
+        onClick={onClick}
+        onHoverChange={setHover}
+        className="hero-a-cta focus-visible-ring"
+        style={{
+          ...uiFont,
+          backgroundColor: hover ? COLORS.clayHover : COLORS.clay,
+          boxShadow: hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
+          transform: hover ? "translateY(-1px)" : "translateY(0)",
+        }}
+      >
+        Get free alerts
+      </RollText>
       <style>{`
         .hero-a-cta {
           position: relative;
@@ -612,18 +588,8 @@ function RollCta({ onClick, reduced }: { onClick: () => void; reduced: boolean }
           font-weight: 500;
           transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
         }
-        .hero-a-cta-roll {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          line-height: 1.25;
-        }
-        .hero-a-cta-layer { display: flex; }
-        .hero-a-cta-layer-2 { position: absolute; inset: 0; transform: translateY(100%); }
-        .hero-a-cta-layer-2 .hero-a-cta-char { will-change: transform; }
-        .hero-a-cta-char { display: inline-block; will-change: transform; }
       `}</style>
-    </button>
+    </>
   );
 }
 

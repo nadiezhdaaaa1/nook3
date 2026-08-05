@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Logo, LogoMark } from "@/components/brand/Logo";
+import { RollText } from "@/components/ui/RollText";
 
 import { cn } from "@/lib/utils";
 
@@ -32,26 +33,38 @@ export function MarketingHeader() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7">
-          <a href="#how" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">How it works</a>
-          <a href="#what" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">What you get</a>
-          <a href="#pricing" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Pricing</a>
-          <a href="#faq" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">FAQ</a>
-          <Link to="/blog" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Blog</Link>
+          <RollText as="a" href="#how" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            How it works
+          </RollText>
+          <RollText as="a" href="#what" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            What you get
+          </RollText>
+          <RollText as="a" href="#pricing" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            Pricing
+          </RollText>
+          <RollText as="a" href="#faq" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            FAQ
+          </RollText>
+          <RollText as={Link} to="/blog" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            Blog
+          </RollText>
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
+          <RollText
+            as={Link}
             to="/login"
             className="hidden md:inline-flex h-10 items-center px-3 text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 transition-colors"
           >
             Sign in
-          </Link>
-          <Link
+          </RollText>
+          <RollText
+            as={Link}
             to="/onboarding"
             className="inline-flex h-11 items-center px-5 rounded-pill text-sm font-semibold bg-charcoal-950 text-paper hover:bg-charcoal-800 transition-colors"
           >
             Get free alerts
-          </Link>
+          </RollText>
 
           <button
             onClick={() => setOpen(true)}
@@ -79,17 +92,25 @@ export function MarketingHeader() {
             </button>
           </div>
           <div className="p-6 flex flex-col gap-2">
-            <a href="#how" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">How it works</a>
-            <a href="#what" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">What you get</a>
-            <a href="#pricing" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">Pricing</a>
-            <a href="#faq" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">FAQ</a>
+            <RollText as="a" href="#how" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              How it works
+            </RollText>
+            <RollText as="a" href="#what" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              What you get
+            </RollText>
+            <RollText as="a" href="#pricing" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              Pricing
+            </RollText>
+            <RollText as="a" href="#faq" onClick={() => setOpen(false)} className="h-12 inline-flex items-center px-2 text-base font-medium">
+              FAQ
+            </RollText>
             
-            <Link to="/login" onClick={() => setOpen(false)} className="mt-4 h-12 inline-flex items-center justify-center px-5 rounded-pill border-2 border-charcoal-950 text-sm font-semibold">
+            <RollText as={Link} to="/login" onClick={() => setOpen(false)} className="mt-4 h-12 inline-flex items-center justify-center px-5 rounded-pill border-2 border-charcoal-950 text-sm font-semibold">
               Sign in
-            </Link>
-            <Link to="/signup" onClick={() => setOpen(false)} className="h-12 inline-flex items-center justify-center px-5 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold">
+            </RollText>
+            <RollText as={Link} to="/signup" onClick={() => setOpen(false)} className="h-12 inline-flex items-center justify-center px-5 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold">
               Get alerts
-            </Link>
+            </RollText>
           </div>
         </div>
       )}
