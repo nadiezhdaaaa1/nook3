@@ -149,7 +149,7 @@ export function HeroScrollNav() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close menu"
-              className="hero-nav-burger hero-nav-ring"
+              className="hero-nav-burger hero-nav-ring inline-flex"
             >
               <X className="h-5 w-5" strokeWidth={2} />
             </button>
