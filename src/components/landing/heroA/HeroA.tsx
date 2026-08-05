@@ -146,13 +146,13 @@ export function HeroA() {
       <style>{`
         .hero-a-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, auto);
-          gap: 80px;
+          grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+          gap: 40px;
           align-items: center;
           margin-top: 64px;
           padding-bottom: 112px;
         }
-        .hero-a-deck-wrap { justify-self: end; max-width: 100%; }
+        .hero-a-deck-wrap { justify-self: center; max-width: 100%; }
         .hero-a-cta-row { display: flex; align-items: center; gap: 20px; }
         #hero { min-height: 800px; }
         @media (max-width: 1100px) {
