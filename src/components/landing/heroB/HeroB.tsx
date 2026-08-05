@@ -247,10 +247,11 @@ function HeroBBackground({
         .hero-b-map-slot {
           position: absolute;
           right: 0;
-          top: -234px;
-          width: 1268px;
-          height: 1268px;
+          top: -80px;
+          width: 880px;
+          height: 800px;
           max-width: 100%;
+          opacity: 1;
           -webkit-mask-image:
             linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 22%, #000 42%),
             linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 14%, #000 28%);
