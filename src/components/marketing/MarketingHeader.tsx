@@ -33,11 +33,21 @@ export function MarketingHeader() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7">
-          <a href="#how" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">How it works</a>
-          <a href="#what" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">What you get</a>
-          <a href="#pricing" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Pricing</a>
-          <a href="#faq" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">FAQ</a>
-          <Link to="/blog" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">Blog</Link>
+          <RollText as="a" href="#how" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            How it works
+          </RollText>
+          <RollText as="a" href="#what" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            What you get
+          </RollText>
+          <RollText as="a" href="#pricing" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            Pricing
+          </RollText>
+          <RollText as="a" href="#faq" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            FAQ
+          </RollText>
+          <RollText as={Link} to="/blog" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
+            Blog
+          </RollText>
         </nav>
 
         <div className="flex items-center gap-2">
