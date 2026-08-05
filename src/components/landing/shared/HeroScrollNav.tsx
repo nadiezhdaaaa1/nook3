@@ -131,7 +131,7 @@ export function HeroScrollNav() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="hero-nav-burger hero-nav-ring md:hidden"
+              className="hero-nav-burger hero-nav-ring inline-flex md:hidden"
             >
               <Menu className="h-5 w-5" strokeWidth={2} />
             </button>
@@ -149,7 +149,7 @@ export function HeroScrollNav() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close menu"
-              className="hero-nav-burger hero-nav-ring"
+              className="hero-nav-burger hero-nav-ring inline-flex"
             >
               <X className="h-5 w-5" strokeWidth={2} />
             </button>
@@ -285,7 +285,6 @@ export function HeroScrollNav() {
         }
 
         .hero-nav-burger {
-          display: inline-flex;
           align-items: center;
           justify-content: center;
           height: 40px;
