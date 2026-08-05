@@ -133,7 +133,12 @@ export function HeroA() {
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-a-cta-row mt-9"
             >
-              <RollCta onClick={startSignup} />
+              <RollCta
+                key={city.comingSoon ? "waitlist" : "alerts"}
+                onClick={startSignup}
+                label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+              />
+
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 3-day trial. Cancel anytime.
               </span>
