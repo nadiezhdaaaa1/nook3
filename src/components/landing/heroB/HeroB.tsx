@@ -405,16 +405,50 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
 
 /* ---------------- map pins around the card ---------------- */
 
-const PIN_SPOTS = [
-  { x: -34, y: -18 },
-  { x: 40, y: -34 },
-  { x: 118, y: -12 },
-  { x: -30, y: 46 },
-  { x: 126, y: 40 },
-  { x: 62, y: 74 },
-  { x: 8, y: 108 },
-  { x: 108, y: 104 },
-];
+const PIN_SPOTS_BY_CITY: Record<string, { x: number; y: number }[]> = {
+  nyc: [
+    { x: -34, y: -18 },
+    { x: 40, y: -34 },
+    { x: 118, y: -12 },
+    { x: -30, y: 46 },
+    { x: 126, y: 40 },
+    { x: 62, y: 74 },
+    { x: 8, y: 108 },
+    { x: 108, y: 104 },
+  ],
+  la: [
+    { x: -42, y: 6 },
+    { x: 18, y: -30 },
+    { x: 96, y: -28 },
+    { x: 134, y: 18 },
+    { x: -22, y: 72 },
+    { x: 46, y: 96 },
+    { x: 116, y: 82 },
+    { x: 80, y: 116 },
+  ],
+  sf: [
+    { x: -28, y: -30 },
+    { x: 62, y: -22 },
+    { x: 128, y: 4 },
+    { x: -38, y: 34 },
+    { x: 104, y: 58 },
+    { x: 24, y: 82 },
+    { x: 132, y: 96 },
+    { x: -14, y: 112 },
+  ],
+  chi: [
+    { x: -30, y: 10 },
+    { x: 34, y: -32 },
+    { x: 110, y: -20 },
+    { x: 138, y: 48 },
+    { x: -36, y: 66 },
+    { x: 70, y: 88 },
+    { x: 14, y: 118 },
+    { x: 120, y: 112 },
+  ],
+};
+
+const PIN_SPOTS_FALLBACK = PIN_SPOTS_BY_CITY.nyc;
 
 function MapPins({
   shown,
@@ -425,12 +459,14 @@ function MapPins({
   reduced: boolean;
   cityKey: string;
 }) {
-  const step = 1.5 / PIN_SPOTS.length;
+  const spots = PIN_SPOTS_BY_CITY[cityKey] ?? PIN_SPOTS_FALLBACK;
+  const step = 1.5 / spots.length;
   return (
     <div className="hero-b-pins" aria-hidden="true">
       <AnimatePresence initial={false}>
         {shown &&
-          PIN_SPOTS.map((p, i) => (
+          spots.map((p, i) => (
+
             <motion.span
               key={`${cityKey}-${i}`}
               className="hero-b-pin"
@@ -511,28 +547,28 @@ function CityDotRail({
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 14px;
+          gap: 8px;
         }
         .hero-b-rail-btn {
           position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           border-radius: 999px;
           background: none;
           border: 0;
           cursor: pointer;
         }
         .hero-b-rail-dot {
-          width: 6px;
-          height: 6px;
+          width: 9px;
+          height: 9px;
           border-radius: 999px;
           background: rgba(43,37,33,0.28);
           transition: ${reduced ? "none" : "transform 0.25s ease, background-color 0.25s ease"};
         }
-        .hero-b-rail-dot.is-active { background: ${COLORS.ink}; transform: scale(1.6); }
+        .hero-b-rail-dot.is-active { background: ${COLORS.ink}; transform: scale(1.5); }
         .hero-b-rail-btn:hover .hero-b-rail-dot { background: ${COLORS.ink}; }
         .hero-b-rail-tip {
           position: absolute;
