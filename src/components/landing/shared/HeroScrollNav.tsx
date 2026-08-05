@@ -131,7 +131,7 @@ export function HeroScrollNav() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="hero-nav-burger hero-nav-ring md:hidden"
+              className="hero-nav-burger hero-nav-ring inline-flex md:hidden"
             >
               <Menu className="h-5 w-5" strokeWidth={2} />
             </button>
