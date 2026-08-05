@@ -12,7 +12,7 @@ export interface HeroCity {
   pillLabel: string;
   cardTitle: string;
   comingSoon: boolean;
-  stats: { value: string; label: string }[];
+  stats: { value: string; suffix?: string; label: string }[];
   cardImg: string;
   bgImg: string;
 }
