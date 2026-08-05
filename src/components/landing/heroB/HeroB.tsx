@@ -295,7 +295,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
   return (
     <motion.article
       className="hero-b-card"
-      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.6, y: -12 }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0 }}
       animate={
         reduced
           ? { opacity: 1 }
@@ -310,7 +310,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
       transition={
         reduced
           ? { duration: 0.3 }
-          : { type: "spring", stiffness: 260, damping: 20, opacity: { duration: 0.25 } }
+          : { type: "spring", stiffness: 180, damping: 11, opacity: { duration: 0.3 } }
       }
       style={{ ...uiFont, boxShadow: "0 0 0 rgba(12,12,13,0)" }}
     >
