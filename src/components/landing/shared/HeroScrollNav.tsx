@@ -111,7 +111,7 @@ export function HeroScrollNav() {
             <RollText
               as={Link}
               to="/login"
-              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring lg:inline-flex"
+              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring md:inline-flex"
               style={{ ...uiFont, color: NAV_TEXT }}
             >
               Sign in
