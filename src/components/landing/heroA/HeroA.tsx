@@ -153,12 +153,13 @@ export function HeroA() {
           margin-top: 64px;
           padding-bottom: 112px;
         }
-        .hero-a-deck-wrap { justify-self: center; max-width: 100%; }
+        .hero-a-deck-wrap { justify-self: end; max-width: 100%; }
         .hero-a-cta-row { display: flex; align-items: center; gap: 20px; }
         #hero { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-a-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
-          .hero-a-deck-wrap { justify-self: center; }
+          .hero-a-deck-wrap { justify-self: start; }
+          .hero-a-deck { margin-left: 0; }
         }
         @media (max-width: 680px) {
           #hero { min-height: 0; }
