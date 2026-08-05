@@ -24,8 +24,12 @@ const searchSchema = z.object({
     .default("all"),
 });
 
+type BlogSearch = z.infer<typeof searchSchema>;
+
 export const Route = createFileRoute("/blog/")({
-  validateSearch: (search: Record<string, unknown>) => searchSchema.parse(search),
+  validateSearch: (search: Partial<Record<string, unknown>>): BlogSearch =>
+    searchSchema.parse(search),
+
   head: () => ({
     meta: [
       { title: "Nook Blog — Honest guides to US apartment hunting" },
@@ -80,7 +84,7 @@ export const Route = createFileRoute("/blog/")({
 
 function BlogIndexPage() {
   const { category } = Route.useSearch();
-  const navigate = useNavigate({ from: "/blog" });
+  const navigate = useNavigate({ from: "/blog/" });
   const featured = getFeatured();
   const filtered =
     category === "all"
