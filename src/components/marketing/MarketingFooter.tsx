@@ -151,9 +151,7 @@ export function MarketingFooter() {
         <div className="ftr-legal">
           <p className="ftr-legal-name">NORELIX LIMITED · Trading as Nook</p>
           <p>
-            The Black Church, St Mary's Place, Dublin 7, D07 P4AX, Ireland
-            <br />
-            Company No. 817569
+            The Black Church, St Mary's Place, Dublin 7, D07 P4AX, Ireland, Company No. 817569
           </p>
           <p>© 2026 NORELIX LIMITED. All rights reserved.</p>
         </div>

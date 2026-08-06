@@ -78,7 +78,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 9,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-sage) 0%, var(--color-brand-cream) 100%)",
-    coverImage: coverVerifyRS,
+    coverImage: coverNycTimeline,
     coverImageAlt: "Abstract gradient cover representing rent regulation verification",
     body: [
       { type: "p", text: "Your landlord says it's rent-stabilized. The listing has the badge. The lease mentions it. Everything seems fine." },
@@ -199,7 +199,7 @@ export const ARTICLES: BlogArticle[] = [
     readingTimeMin: 8,
     coverGradient:
       "linear-gradient(135deg, var(--color-brand-clay) 0%, var(--color-brand-sage) 100%)",
-    coverImage: coverRSvsRC,
+    coverImage: coverVerifyRS,
     coverImageAlt: "Abstract gradient cover comparing rent control and rent stabilization",
     body: [
       { type: "p", text: "People use these terms interchangeably. They're not the same thing." },
