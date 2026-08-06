@@ -11,6 +11,7 @@ export function HeroEmailField({
   fontStyle?: React.CSSProperties;
 }) {
   const [focused, setFocused] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   return (
     <>
@@ -28,10 +29,16 @@ export function HeroEmailField({
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         className="hero-email-input"
         style={{
           ...fontStyle,
-          borderColor: focused ? "#CE4F12" : "rgba(36,28,18,0.18)",
+          borderColor: focused
+            ? "#CE4F12"
+            : hovered
+              ? "rgba(0,0,0,0.10)"
+              : "rgba(36,28,18,0.18)",
         }}
       />
       <style>{`
