@@ -464,7 +464,7 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
           width: 280px;
           padding: 6px;
           border-radius: 12px;
-          background: ${COLORS.surface};
+          background: rgba(255,255,255,0.6);
           border: 1px solid ${COLORS.border};
           backdrop-filter: blur(14px);
           box-shadow: 0 16px 32px rgba(36,28,18,0.12);
