@@ -516,54 +516,6 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
 
 /* ---------------- hero CTA with character roll ---------------- */
 
-function RollCta({
-  onClick,
-  label = "Get free alerts",
-  secondary = false,
-}: {
-  onClick: () => void;
-  label?: string;
-  secondary?: boolean;
-}) {
-  const [hover, setHover] = useState(false);
-  const isSecondary = secondary || label === "Join the watchlist";
-
-  return (
-    <>
-      <RollText
-        as="button"
-        type="button"
-        onClick={onClick}
-        onHoverChange={setHover}
-        className="hero-a-cta focus-visible-ring"
-        style={{
-          ...uiFont,
-          backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : hover ? "#CE4F12" : "#D66C38",
-          border: isSecondary ? "1.5px solid #D66C38" : "none",
-          color: isSecondary ? "#D66C38" : "#ffffff",
-          boxShadow: "none",
-        }}
-      >
-        {label}
-      </RollText>
-      <style>{`
-        .hero-a-cta {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          box-sizing: border-box;
-          height: 56px;
-          padding: 0 24px;
-          border-radius: 12px;
-          font-size: 16px;
-          font-weight: 500;
-          transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-        }
-      `}</style>
-    </>
-  );
-}
 
 /* ---------------- card deck ---------------- */
 
