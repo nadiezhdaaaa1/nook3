@@ -66,6 +66,7 @@ function hasTextContent(node: React.ReactNode): boolean {
 type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   children?: React.ReactNode;
   loading?: boolean;
+  variant?: "default" | "main";
 };
 
 const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
