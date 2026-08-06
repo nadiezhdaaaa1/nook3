@@ -195,7 +195,7 @@ export function HowItWorksThreeSteps() {
               textAlign: "center",
             }}
           >
-            Most users find their place within 3 weeks.
+            Most users find their place within 3 weeks
           </div>
           <Link
             to="/onboarding"
