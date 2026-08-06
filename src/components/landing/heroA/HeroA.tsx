@@ -121,12 +121,20 @@ export function HeroA() {
               Verified, no spam.
             </motion.p>
 
-            <motion.div
+            <motion.form
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-a-cta-row mt-9"
+              onSubmit={(e) => {
+                e.preventDefault();
+                startSignup();
+              }}
             >
+              {!city.comingSoon && (
+                <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
+              )}
+
               <RollCta
                 key={city.comingSoon ? "waitlist" : "alerts"}
                 onClick={startSignup}
@@ -137,7 +145,8 @@ export function HeroA() {
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
-            </motion.div>
+            </motion.form>
+
           </div>
 
           <motion.div
