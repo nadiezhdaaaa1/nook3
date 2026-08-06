@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
+import { OriginButton } from "@/components/ui/origin-button";
 
 const FONT_UI = '"Google Sans Flex", "Google Sans", system-ui, sans-serif';
 const UI_VAR = '"wght" 500';
