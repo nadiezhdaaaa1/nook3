@@ -39,6 +39,7 @@ const CSS = `
 `;
 
 export function CtaStrip() {
+  const navigate = useNavigate();
   return (
     <section className="ctab">
       <style>{CSS}</style>
@@ -47,9 +48,13 @@ export function CtaStrip() {
           <h2 className="ctab-h2">Your next apartment is already listed</h2>
           <p className="ctab-sub">Get the alert before everyone else does.</p>
         </div>
-        <Link to="/signup" className="ctab-btn">
+        <OriginButton
+          variant="main"
+          className="ctab-btn-origin"
+          onClick={() => navigate({ to: "/signup" })}
+        >
           Get alerts — Free
-        </Link>
+        </OriginButton>
       </div>
     </section>
   );
