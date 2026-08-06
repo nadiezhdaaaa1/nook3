@@ -1,10 +1,5 @@
-import { Eyebrow } from "@/components/marketing/Eyebrow";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { useState } from "react";
+
 
 export const FAQS: { q: string; a: string }[] = [
   {
