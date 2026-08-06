@@ -64,59 +64,113 @@ export const FAQS: { q: string; a: string }[] = [
   },
 ];
 
+const CSS = `
+.faq15 { background:#faf6ee; padding:104px 0; }
+.faq15-inner { display:flex; flex-direction:column; gap:48px; }
+.faq15-head { text-align:center; max-width:860px; margin:0 auto; padding:0 32px; }
+.faq15-eyebrow { display:flex; align-items:center; justify-content:center; gap:8px;
+  font-family:"Google Sans Flex",system-ui,sans-serif; font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:500; font-size:14px; color:#3a3a37; }
+.faq15-dot { width:8px; height:8px; border-radius:9999px; background:#cb4a0a; }
+.faq15-h2 { margin-top:20px; font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:600; font-size:48px; line-height:54px; letter-spacing:-1.2px; color:#2b2521; }
+.faq15-sub { margin-top:16px; font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:400; font-size:18px; line-height:1.6; color:#4a4a46; }
+.faq15-list { max-width:860px; margin:0 auto; padding:0 32px; display:flex; flex-direction:column; gap:16px; width:100%; }
+.faq15-item { background:#fff; border:1px solid rgba(36,28,18,0.1); border-radius:18px; overflow:hidden; }
+.faq15-summary { width:100%; display:flex; align-items:center; justify-content:space-between; gap:24px;
+  padding:21px 21px 21px 26px; background:transparent; border:0; text-align:left; cursor:pointer;
+  transition:background-color .2s ease-out; }
+.faq15-summary:hover { background:rgba(36,28,18,0.03); }
+.faq15-summary:focus-visible { outline:2px solid #241c12; outline-offset:-2px; border-radius:18px; }
+.faq15-q { font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:560; font-size:18px; line-height:27px; color:#241c12; }
+.faq15-chev { flex:0 0 auto; color:#d66c38; transition:transform .25s ease-out; }
+.faq15-item[data-open="true"] .faq15-chev { transform:rotate(180deg); }
+.faq15-panel { display:grid; grid-template-rows:0fr; transition:grid-template-rows .25s ease-out; }
+.faq15-item[data-open="true"] .faq15-panel { grid-template-rows:1fr; }
+.faq15-panel > div { overflow:hidden; opacity:0; transition:opacity .25s ease-out; }
+.faq15-item[data-open="true"] .faq15-panel > div { opacity:1; }
+.faq15-a { padding:0 26px 24px; max-width:605px;
+  font-family:"Google Sans Flex",system-ui,sans-serif; font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:400; font-size:15px; line-height:22.5px; color:#7a6f5c; }
+.faq15-foot { text-align:center; display:flex; flex-direction:column; gap:8px; }
+.faq15-foot-t { font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:540; font-size:24px; line-height:40px; color:#241c12; }
+.faq15-foot-a { font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:650; font-size:16px; line-height:24px; color:#d66c38; text-decoration:none; }
+@media (max-width:680px) {
+  .faq15 { padding:72px 0; }
+  .faq15-h2 { font-size:clamp(32px,6vw,40px); line-height:1.12; }
+  .faq15-summary { padding:18px 20px; align-items:flex-start; }
+  .faq15-q { font-size:16px; line-height:24px; }
+  .faq15-a { padding:0 20px 20px; max-width:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .faq15-chev, .faq15-panel, .faq15-panel > div, .faq15-summary { transition:none; }
+  .faq15-item[data-open="true"] .faq15-chev { transform:none; }
+}
+`;
+
 export function FaqFifteen() {
+  const [open, setOpen] = useState<Record<number, boolean>>({ 0: true });
+
   return (
-    <section
-      id="faq"
-      className="py-24 lg:py-32"
-      style={{ backgroundColor: "var(--color-brand-soft)" }}
-    >
-      <div className="max-w-4xl mx-auto px-6 lg:px-10">
-        <div className="max-w-3xl">
-          <Eyebrow>FAQ</Eyebrow>
-          <h2 className="mt-4 font-display font-medium text-4xl lg:text-[52px] leading-[1.05] tracking-[-0.02em] text-[var(--color-brand-charcoal)]">
-            Questions before you start.
-          </h2>
-          <p className="mt-5 text-base lg:text-lg text-[var(--color-charcoal-600)]">
+    <section id="faq" className="faq15">
+      <style>{CSS}</style>
+      <div className="faq15-inner">
+        <div className="faq15-head">
+          <div className="faq15-eyebrow">
+            <span className="faq15-dot" aria-hidden="true" />
+            FAQ
+          </div>
+          <h2 className="faq15-h2">Questions before you start</h2>
+          <p className="faq15-sub">
             Honest answers. If you have a question that isn't here, email us — we read everything.
           </p>
         </div>
 
-        <Accordion
-          type="single"
-          collapsible
-          defaultValue="faq-0"
-          className="mt-12 space-y-2"
-        >
-          {FAQS.map((f, i) => (
-            <AccordionItem
-              key={i}
-              value={`faq-${i}`}
-              className="rounded-card border px-5 data-[state=open]:shadow-card transition-shadow"
-              style={{
-                borderColor: "var(--color-brand-clay)",
-                backgroundColor: "var(--color-brand-cream)",
-              }}
-            >
-              <AccordionTrigger className="font-display text-lg lg:text-xl font-medium text-[var(--color-brand-charcoal)] hover:no-underline py-5 text-left">
-                {f.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-[15px] leading-relaxed text-[var(--color-charcoal-700)] pb-5">
-                {f.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <div className="faq15-list">
+          {FAQS.map((f, i) => {
+            const isOpen = !!open[i];
+            return (
+              <div className="faq15-item" key={i} data-open={isOpen}>
+                <button
+                  type="button"
+                  className="faq15-summary"
+                  aria-expanded={isOpen}
+                  aria-controls={`faq15-panel-${i}`}
+                  onClick={() => setOpen((s) => ({ ...s, [i]: !s[i] }))}
+                >
+                  <span className="faq15-q">{f.q}</span>
+                  <svg
+                    className="faq15-chev"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+                <div className="faq15-panel" id={`faq15-panel-${i}`} role="region">
+                  <div>
+                    <p className="faq15-a">{f.a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-        <div className="mt-12 text-center">
-          <p className="font-display text-xl text-[var(--color-brand-charcoal)]">
-            Still have questions?
-          </p>
-          <a
-            href="mailto:hello@thenook.rent"
-            className="mt-2 inline-block text-base font-semibold story-link"
-            style={{ color: "var(--color-brand-terracotta)" }}
-          >
+        <div className="faq15-foot">
+          <p className="faq15-foot-t">Still have questions?</p>
+          <a className="faq15-foot-a" href="mailto:hello@thenook.rent">
             hello@thenook.rent
           </a>
         </div>
@@ -124,3 +178,4 @@ export function FaqFifteen() {
     </section>
   );
 }
+
