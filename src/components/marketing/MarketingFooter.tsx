@@ -88,9 +88,6 @@ export function MarketingFooter() {
             <p className="ftr-tag">Where home finds you</p>
           </div>
           <div className="ftr-right">
-            <a className="ftr-email" href="mailto:hello@thenook.rent">
-              hello@thenook.rent
-            </a>
             <div className="ftr-socials">
               {SOCIALS.map(({ label, href, Icon }) => (
                 <a
@@ -104,6 +101,9 @@ export function MarketingFooter() {
                 </a>
               ))}
             </div>
+            <a className="ftr-email" href="mailto:hello@thenook.rent">
+              hello@thenook.rent
+            </a>
           </div>
         </div>
 
