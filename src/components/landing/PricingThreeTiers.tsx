@@ -344,11 +344,16 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
           {badge && (
             <motion.span
               key={badge.text}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: dur, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={
+                dur === 0
+                  ? { duration: 0 }
+                  : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }
+              }
               style={{
+
                 ...ui,
                 fontVariationSettings: `${UI_VAR}, "wght" 750`,
                 display: "inline-block",
