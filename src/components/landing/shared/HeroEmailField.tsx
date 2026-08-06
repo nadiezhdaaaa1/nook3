@@ -39,7 +39,7 @@ export function HeroEmailField({
           box-sizing: content-box;
           height: 56px;
           width: 100%;
-          max-width: 312px;
+          max-width: 272px;
           padding: 0 18px;
           border-radius: 12px;
           border: 1px solid rgba(0, 0, 0, 0.20);
