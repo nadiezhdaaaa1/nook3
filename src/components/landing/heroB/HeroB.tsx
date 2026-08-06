@@ -791,7 +791,7 @@ function RollCtaB({
           color: inherit;
           font-size: 16px;
           font-weight: 500;
-          transition: background-color 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+          transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
         .hero-b-cta-roll { position: relative; display: block; overflow: hidden; line-height: 1.25; }
         .hero-b-cta-layer { display: flex; }
