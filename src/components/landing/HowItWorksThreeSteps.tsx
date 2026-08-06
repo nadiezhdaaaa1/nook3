@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useReducedMotion } from "framer-motion";
 import { Bed, Bath, Ruler, ShieldCheck, CheckCircle2, Check } from "lucide-react";
 import keysAsset from "@/assets/keys.png.asset.json";
-import { RollText } from "@/components/ui/RollText";
+import { OriginButton } from "@/components/ui/origin-button";
 import {
   COLORS,
   DISPLAY_VAR,
@@ -61,7 +60,6 @@ export function HowItWorksThreeSteps() {
           .hiw-section { padding: 64px 20px; }
           .hiw-h2 { font-size: clamp(32px, 6vw, 40px); line-height: 1.14; letter-spacing: -0.8px; }
         }
-        .hiw-cta { position: relative; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
       `}</style>
 
       <div className="hiw-inner">
@@ -207,29 +205,15 @@ export function HowItWorksThreeSteps() {
 }
 
 function HiwCta({ to, label }: { to: string; label: string }) {
-  const [hover, setHover] = useState(false);
+  const navigate = useNavigate();
   return (
-    <RollText
-      as={Link}
-      to={to}
-      className="hiw-cta focus-visible-ring"
-      onHoverChange={setHover}
-      style={{
-        ...ui,
-        fontSize: 16,
-        fontWeight: 500,
-        color: "#ffffff",
-        backgroundColor: hover ? "#CE4F12" : "#D66C38",
-        borderRadius: 12,
-        height: 56,
-        padding: "0 24px",
-        boxShadow: "none",
-        boxSizing: "border-box",
-        transition: "background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease",
-      }}
+    <OriginButton
+      variant="main"
+      onClick={() => navigate({ to })}
+      className="focus-visible-ring"
     >
       {label}
-    </RollText>
+    </OriginButton>
   );
 }
 
