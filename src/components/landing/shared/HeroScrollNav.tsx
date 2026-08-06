@@ -87,36 +87,34 @@ export function HeroScrollNav() {
 
           <div className="hidden items-center gap-7 md:flex">
             {NAV_LINKS.map((l) => (
-              <RollText
+              <a
                 key={l.href}
-                as="a"
                 href={l.href}
-                className="rounded-sm text-sm font-medium transition-colors hero-nav-ring"
+                className="hero-nav-link rounded-sm text-sm hero-nav-ring"
                 style={{ ...uiFont, color: BODY }}
               >
                 {l.label}
-              </RollText>
+              </a>
             ))}
-            <RollText
-              as={Link}
+            <Link
               to="/blog"
               search={{ category: "all" }}
-              className="rounded-sm text-sm font-medium transition-colors hero-nav-ring"
+              className="hero-nav-link rounded-sm text-sm hero-nav-ring"
               style={{ ...uiFont, color: BODY }}
             >
               Blog
-            </RollText>
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
-            <RollText
-              as={Link}
+            <Link
               to="/login"
-              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring md:inline-flex"
+              className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring md:inline-flex"
               style={{ ...uiFont, color: NAV_TEXT }}
             >
               Sign in
-            </RollText>
+            </Link>
+
             <OriginButton
               variant="main"
               onClick={onSignup}
