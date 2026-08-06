@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useReducedMotion } from "framer-motion";
 import { Bed, Bath, Ruler, ShieldCheck, CheckCircle2, Check } from "lucide-react";
