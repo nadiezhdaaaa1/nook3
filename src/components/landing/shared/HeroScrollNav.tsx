@@ -265,18 +265,6 @@ export function HeroScrollNav() {
         }
         .hero-nav-root[data-scrolled="true"] .hero-nav-logo { transform: scale(0.857); }
 
-        .hero-nav-cta {
-          background: ${SURFACE};
-          border: 1px solid ${BORDER};
-          border-radius: 12px;
-          padding: 10px 14px;
-          backdrop-filter: blur(6px);
-          transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-        .hero-nav-cta:hover {
-          background: ${SURFACE_HOVER};
-          border-color: ${BORDER_HOVER};
-        }
         .hero-nav-ring:focus-visible {
           outline: 2px solid ${INK};
           outline-offset: 2px;
