@@ -136,9 +136,9 @@ export function HeroA() {
               )}
 
               <RollCta
-                key={city.comingSoon ? "waitlist" : "alerts"}
+                key={city.comingSoon ? "waitlist" : "start-free"}
                 onClick={startSignup}
-                label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+                label={city.comingSoon ? "Join the watchlist" : "Start free"}
                 secondary={city.comingSoon}
               />
 

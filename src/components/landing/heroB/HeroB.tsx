@@ -152,10 +152,10 @@ export function HeroB() {
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
               <RollCtaB
-                key={city.comingSoon ? "waitlist" : "alerts"}
+                key={city.comingSoon ? "waitlist" : "start-free"}
                 onClick={startSignup}
                 reduced={reduced}
-                label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+                label={city.comingSoon ? "Join the watchlist" : "Start free"}
                 secondary={city.comingSoon}
               />
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
