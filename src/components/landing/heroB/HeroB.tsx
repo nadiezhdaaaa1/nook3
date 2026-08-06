@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
-import { RollText } from "@/components/ui/RollText";
+
 import { OriginButton } from "@/components/ui/origin-button";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
@@ -153,16 +153,15 @@ export function HeroB() {
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
               {city.comingSoon ? (
-                <RollCtaB
-                  key={city.comingSoon ? "waitlist" : "start-free"}
+                <OriginButton
+                  variant="secondary"
                   onClick={startSignup}
-                  reduced={reduced}
-                  label={city.comingSoon ? "Join the watchlist" : "Start free"}
-                  secondary={city.comingSoon}
-                />
+                  className="focus-visible-ring"
+                >
+                  Join the watchlist
+                </OriginButton>
               ) : (
                 <OriginButton
-                  key={city.comingSoon ? "waitlist" : "start-free"}
                   variant="main"
                   onClick={startSignup}
                   className="focus-visible-ring"
@@ -728,88 +727,3 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
   );
 }
 
-/* ---------------- hero CTA with character roll ---------------- */
-
-function RollCtaB({
-  onClick,
-  reduced,
-  label = "Get free alerts",
-  secondary = false,
-}: {
-  onClick: () => void;
-  reduced: boolean;
-  label?: string;
-  secondary?: boolean;
-}) {
-  const [hover, setHover] = useState(false);
-  const chars = label.split("");
-  const isSecondary = secondary || label === "Join the watchlist";
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={() => setHover(false)}
-      className="hero-b-cta hero-b-ring"
-      style={{
-        ...uiFont,
-          backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : hover ? "#CE4F12" : "#D66C38",
-          border: isSecondary ? "1.5px solid #D66C38" : "none",
-          color: isSecondary ? "#D66C38" : "#ffffff",
-          boxShadow: "none",
-        }}
-    >
-      <span className="hero-b-cta-roll" aria-hidden="true">
-        <span className="hero-b-cta-layer">
-          {chars.map((c, i) => (
-            <motion.span
-              key={`a-${i}`}
-              className="hero-b-cta-char"
-              animate={reduced ? { opacity: hover ? 0 : 1 } : { y: hover ? "-100%" : "0%" }}
-              transition={{ duration: reduced ? 0.3 : 0.35, ease: EASE_REVEAL, delay: reduced ? 0 : i * 0.02 }}
-            >
-              {c === " " ? "\u00A0" : c}
-            </motion.span>
-          ))}
-        </span>
-        <span className="hero-b-cta-layer hero-b-cta-layer-2">
-          {chars.map((c, i) => (
-            <motion.span
-              key={`b-${i}`}
-              className="hero-b-cta-char"
-              animate={reduced ? { opacity: hover ? 1 : 0 } : { y: hover ? "-100%" : "0%" }}
-              transition={{ duration: reduced ? 0.3 : 0.35, ease: EASE_REVEAL, delay: reduced ? 0 : i * 0.02 }}
-            >
-              {c === " " ? "\u00A0" : c}
-            </motion.span>
-          ))}
-        </span>
-      </span>
-      <span className="sr-only">{label}</span>
-
-      <style>{`
-        .hero-b-cta {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          box-sizing: border-box;
-          height: 56px;
-          padding: 0 24px;
-          border-radius: 12px;
-          color: inherit;
-          font-size: 16px;
-          font-weight: 500;
-          transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-        }
-        .hero-b-cta-roll { position: relative; display: block; overflow: hidden; line-height: 1.25; }
-        .hero-b-cta-layer { display: flex; }
-        .hero-b-cta-layer-2 { position: absolute; inset: 0; transform: translateY(100%); }
-        .hero-b-cta-char { display: inline-block; will-change: transform; }
-      `}</style>
-    </button>
-  );
-}
