@@ -152,6 +152,8 @@ export function PricingThreeTiers() {
         .pr-cta:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
         .pr-card-dark .pr-cta:focus-visible,
         .pr-toggle-btn:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
+        .pr-toggle-btn { transition: background-color 0.2s ease, color 0.2s ease; }
+        .pr-toggle-btn[aria-checked="false"]:hover { background-color: rgba(255,255,255,0.5) !important; color: #241c12 !important; }
         .pr-card-dark .pr-cta:focus-visible { outline-color: ${CREAM}; }
         @media (max-width: 1100px) {
           .pr-grid { grid-template-columns: minmax(0, 1fr); justify-items: center; }
