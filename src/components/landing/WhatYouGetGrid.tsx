@@ -1,90 +1,149 @@
-import { ShieldCheck, Zap, Filter, Sparkles, Layers, Pause } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
+import shieldAsset from "@/assets/shield.png.asset.json";
+import lightningAsset from "@/assets/lightning.png.asset.json";
+import funnelAsset from "@/assets/funnel.png.asset.json";
+import sparkleAsset from "@/assets/sparkle.png.asset.json";
+import magnifierAsset from "@/assets/magnifier.png.asset.json";
+import pauseAsset from "@/assets/pause.png.asset.json";
+import {
+  DISPLAY_VAR,
+  FONT_DISPLAY,
+  FONT_UI,
+  UI_VAR,
+} from "@/components/landing/heroA/heroCities";
+
+const ui = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
+const display = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
+
+const INK = "#2b2521";
+const BODY = "#4a4a46";
+const LABEL = "#3a3a37";
+const EMBER = "#cb4a0a";
 
 const ITEMS = [
   {
-    icon: ShieldCheck,
+    icon: shieldAsset.url,
     title: "Verified regulated units",
     body: "Every listing cross-checked against public databases. Real regulation gets a badge. Fake claims don't.",
   },
   {
-    icon: Zap,
+    icon: lightningAsset.url,
     title: "First-mover advantage",
     body: "Best apartments vanish in hours. We ping you within minutes — before the open house crowd shows up.",
   },
   {
-    icon: Filter,
+    icon: funnelAsset.url,
     title: "Filters that actually filter",
     body: "Pet-friendly that means pet-friendly. Budget that means budget. No bait pricing, no fake matches.",
   },
   {
-    icon: Sparkles,
+    icon: sparkleAsset.url,
     title: "Wren AI on every match",
     body: "Ask Wren anything about a listing — price, neighborhood, commute. Answers, not just listings.",
   },
   {
-    icon: Layers,
+    icon: magnifierAsset.url,
     title: "3 searches at once",
     body: "Two neighborhoods? 1BR or split 2BR? Run searches in parallel, no filter resets.",
   },
   {
-    icon: Pause,
+    icon: pauseAsset.url,
     title: "Pause whenever",
     body: "Need a break? Pause. No alerts while paused. One click to resume.",
   },
 ];
 
 export function WhatYouGetGrid() {
-  const reduce = useReducedMotion();
   return (
-    <section
-      id="what"
-      className="py-24 lg:py-32"
-      style={{ backgroundColor: "var(--color-brand-cream)" }}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="max-w-3xl">
-          <Eyebrow>What's inside</Eyebrow>
-          <h2 className="mt-4 font-display font-medium text-4xl lg:text-[52px] leading-[1.05] tracking-[-0.02em] text-[var(--color-brand-charcoal)]">
-            More than alerts.{" "}
-            <span className="italic text-[var(--color-brand-sage)]">A full search assistant.</span>
+    <section id="what" className="wyg-section">
+      <style>{`
+        .wyg-section { background: #f5f0e4; padding: 88px 24px; }
+        .wyg-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+        .wyg-h2 { font-size: 48px; line-height: 54px; letter-spacing: -1.2px; max-width: 760px; }
+        .wyg-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+        @media (max-width: 1100px) {
+          .wyg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 680px) {
+          .wyg-section { padding: 64px 20px; }
+          .wyg-grid { grid-template-columns: minmax(0, 1fr); }
+          .wyg-h2 { font-size: clamp(32px, 6vw, 40px); line-height: 1.14; letter-spacing: -0.8px; }
+        }
+      `}</style>
+
+      <div className="wyg-inner">
+        <header>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              style={{ width: 8, height: 8, borderRadius: 999, background: EMBER, flexShrink: 0 }}
+              aria-hidden
+            />
+            <span style={{ ...ui, fontSize: 14, fontWeight: 500, color: LABEL }}>
+              What's inside
+            </span>
+          </div>
+
+          <h2 className="wyg-h2" style={{ ...display, fontWeight: 600, color: INK, marginTop: 20 }}>
+            More than alerts. A full search assistant.
           </h2>
-          <p className="mt-5 text-base lg:text-lg text-[var(--color-charcoal-600)]">
+
+          <p style={{ ...ui, fontSize: 18, lineHeight: 1.6, color: BODY, marginTop: 16 }}>
             Here's what Nook does that a free site refresh doesn't.
           </p>
-        </div>
+        </header>
 
-        <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {ITEMS.map((it, i) => (
-            <motion.div
+        <div className="wyg-grid">
+          {ITEMS.map((it) => (
+            <article
               key={it.title}
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.45, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-              className="group rounded-card border p-7 hover-lift"
               style={{
-                borderColor: "var(--color-brand-clay)",
-                backgroundColor: "var(--color-brand-soft)",
+                background: "#ffffff",
+                border: "1px solid rgba(0,0,0,0.1)",
+                borderRadius: 20,
+                padding: 32,
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
               }}
             >
-              <span
-                className="inline-flex h-11 w-11 items-center justify-center rounded-pill"
-                style={{
-                  backgroundColor: "color-mix(in oklab, var(--color-brand-terracotta) 14%, transparent)",
-                  color: "var(--color-brand-terracotta)",
-                }}
-              >
-                <it.icon className="h-5 w-5" />
-              </span>
-              <h3 className="mt-5 font-display text-xl font-medium text-[var(--color-brand-charcoal)] leading-tight">
-                {it.title}
-              </h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-[var(--color-charcoal-700)]">
-                {it.body}
-              </p>
-            </motion.div>
+              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <div
+                  style={{
+                    width: 48,
+                    height: 64,
+                    flexShrink: 0,
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={it.icon}
+                    alt={it.title}
+                    width={70}
+                    height={70}
+                    loading="lazy"
+                    style={{ width: 70, height: 70, objectFit: "contain", flexShrink: 0 }}
+                  />
+                </div>
+                <h3
+                  style={{
+                    ...display,
+                    fontWeight: 600,
+                    fontSize: 24,
+                    lineHeight: "30px",
+                    letterSpacing: "-0.4px",
+                    color: INK,
+                    flex: 1,
+                    minWidth: 0,
+                  }}
+                >
+                  {it.title}
+                </h3>
+              </div>
+
+              <p style={{ ...ui, fontSize: 15, lineHeight: 1.5, color: BODY }}>{it.body}</p>
+            </article>
           ))}
         </div>
       </div>
