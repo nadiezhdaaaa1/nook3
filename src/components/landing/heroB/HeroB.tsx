@@ -5,6 +5,9 @@ import { ChevronDown, MapPin } from "lucide-react";
 import { RollText } from "@/components/ui/RollText";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
+import { HeroEmailField } from "@/components/landing/shared/HeroEmailField";
+import { useOnboardingStore } from "@/lib/onboarding/store";
+
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import {
   COLORS,
