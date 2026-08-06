@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+import { OriginButton } from "@/components/ui/origin-button";
 
 const CARDS = [
   {
@@ -20,6 +21,7 @@ const CARDS = [
 ];
 
 export function TiredOfSection() {
+  const navigate = useNavigate();
   return (
     <section className="prob-section">
       <style>{`
@@ -185,9 +187,12 @@ export function TiredOfSection() {
           <div className="prob-close-line">
             Start free — see what comes in this week.
           </div>
-          <Link to="/onboarding" className="prob-btn">
+          <OriginButton
+            variant="main"
+            onClick={() => navigate({ to: "/onboarding" })}
+          >
             Get started →
-          </Link>
+          </OriginButton>
         </div>
       </div>
     </section>
