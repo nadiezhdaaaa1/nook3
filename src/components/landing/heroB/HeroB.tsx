@@ -153,16 +153,15 @@ export function HeroB() {
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
               {city.comingSoon ? (
-                <RollCtaB
-                  key={city.comingSoon ? "waitlist" : "start-free"}
+                <OriginButton
+                  variant="secondary"
                   onClick={startSignup}
-                  reduced={reduced}
-                  label={city.comingSoon ? "Join the watchlist" : "Start free"}
-                  secondary={city.comingSoon}
-                />
+                  className="focus-visible-ring"
+                >
+                  Join the watchlist
+                </OriginButton>
               ) : (
                 <OriginButton
-                  key={city.comingSoon ? "waitlist" : "start-free"}
                   variant="main"
                   onClick={startSignup}
                   className="focus-visible-ring"
