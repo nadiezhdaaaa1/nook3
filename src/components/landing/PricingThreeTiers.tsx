@@ -297,15 +297,12 @@ export function PricingThreeTiers() {
 }
 
 function badgeFor(tierId: string, cycle: Cycle) {
-  if (cycle === "monthly") {
-    if (tierId === "premium")
-      return { text: "Most popular", bg: LEAF, position: "center" as const };
-    return null;
-  }
+  if (cycle === "monthly") return null;
   if (tierId === "premium") return { text: "-47% off", bg: LEAF, position: "right" as const };
   if (tierId === "max") return { text: "-34% off", bg: "#7040C1", position: "right" as const };
   return null;
 }
+
 
 function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number }) {
   const dark = tier.variant !== "light";
