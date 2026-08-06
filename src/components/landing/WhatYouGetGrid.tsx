@@ -59,7 +59,7 @@ export function WhatYouGetGrid() {
         .wyg-section { background: #f5f0e4; padding: 88px 24px; }
         .wyg-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
         .wyg-h2 { font-size: 48px; line-height: 54px; letter-spacing: -1.2px; max-width: 760px; }
-        .wyg-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+        .wyg-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
         @media (max-width: 1100px) {
           .wyg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
