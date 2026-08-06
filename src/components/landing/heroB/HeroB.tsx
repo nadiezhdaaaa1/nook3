@@ -785,12 +785,14 @@ function RollCtaB({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 16px 24px;
+          box-sizing: border-box;
+          height: 56px;
+          padding: 0 24px;
           border-radius: 12px;
           color: inherit;
           font-size: 16px;
           font-weight: 500;
-          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+          transition: background-color 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
         .hero-b-cta-roll { position: relative; display: block; overflow: hidden; line-height: 1.25; }
         .hero-b-cta-layer { display: flex; }
