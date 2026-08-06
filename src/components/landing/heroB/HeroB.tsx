@@ -744,10 +744,10 @@ function RollCtaB({
       className="hero-b-cta hero-b-ring"
       style={{
         ...uiFont,
-        backgroundColor: isSecondary ? (hover ? "rgba(160,87,18,0.08)" : "transparent") : hover ? COLORS.clayHover : COLORS.clay,
-        border: isSecondary ? `1.5px solid ${hover ? COLORS.clayHover : COLORS.clay}` : "none",
-        color: isSecondary ? (hover ? COLORS.clayHover : COLORS.clay) : "#ffffff",
-        boxShadow: isSecondary ? "none" : hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
+        backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : "#D66C38",
+        border: isSecondary ? "1.5px solid #D66C38" : "none",
+        color: isSecondary ? "#D66C38" : "#ffffff",
+        boxShadow: "none",
         transform: hover ? "translateY(-1px)" : "translateY(0)",
       }}
     >
