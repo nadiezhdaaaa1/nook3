@@ -337,18 +337,6 @@ export function HeroScrollNav() {
           font-size: 15px;
           font-weight: 500;
         }
-        .hero-nav-sheet-cta {
-          margin-top: 8px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          height: 48px;
-          border-radius: 12px;
-          background: ${INK};
-          color: #f4f1ea;
-          font-size: 15px;
-          font-weight: 500;
-        }
 
         @media (prefers-reduced-motion: reduce) {
           .hero-nav-sheet { animation: none; }
