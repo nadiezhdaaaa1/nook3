@@ -30,7 +30,7 @@ import {
 
 const H1_LINES = ["Find it before it's", "gone. Without losing", "your mind."];
 const H1_TEXT = "Find it before it's gone. Without losing your mind.";
-const DRAG_THRESHOLD = 120;
+const DRAG_THRESHOLD = 60;
 
 const uiFont = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
 const displayFont = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
