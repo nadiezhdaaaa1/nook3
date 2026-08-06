@@ -184,17 +184,16 @@ export function HeroScrollNav() {
             >
               Sign in
             </Link>
-            <button
-              type="button"
+            <OriginButton
+              variant="main"
               onClick={() => {
                 setOpen(false);
                 onSignup();
               }}
-              className="hero-nav-sheet-cta hero-nav-ring"
-              style={{ ...uiFont }}
+              className="hero-nav-ring h-12 text-[15px]"
             >
               Get free alerts
-            </button>
+            </OriginButton>
           </div>
         </div>
       )}
