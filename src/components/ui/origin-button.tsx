@@ -192,7 +192,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
-          showFill && (variant === "main" ? "text-white" : "text-background dark:text-neutral-950"),
+          showFill && (variant === "main" || variant === "secondary" ? "text-white" : "text-background dark:text-neutral-950"),
           className,
         )}
         data-pressed={isPressed ? "true" : "false"}
