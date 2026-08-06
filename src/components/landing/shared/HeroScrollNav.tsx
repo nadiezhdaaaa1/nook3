@@ -89,6 +89,7 @@ export function HeroScrollNav() {
               <a
                 key={l.href}
                 href={l.href}
+                data-label={l.label}
                 className="hero-nav-link rounded-sm text-sm hero-nav-ring"
                 style={{ fontFamily: FONT_UI, color: BODY }}
               >
@@ -98,6 +99,7 @@ export function HeroScrollNav() {
             <Link
               to="/blog"
               search={{ category: "all" }}
+              data-label="Blog"
               className="hero-nav-link rounded-sm text-sm hero-nav-ring"
               style={{ fontFamily: FONT_UI, color: BODY }}
             >
@@ -108,11 +110,13 @@ export function HeroScrollNav() {
           <div className="flex items-center gap-2">
             <Link
               to="/login"
+              data-label="Sign in"
               className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring md:inline-flex"
               style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
             >
               Sign in
             </Link>
+
 
             <OriginButton
               variant="main"
@@ -266,6 +270,19 @@ export function HeroScrollNav() {
           font-weight: 500;
           font-variation-settings: "wght" 500;
           transition: font-variation-settings 0.25s ease, font-weight 0.25s ease;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        /* Reserve the bold width so siblings never shift on hover */
+        .hero-nav-link::after {
+          content: attr(data-label);
+          height: 0;
+          overflow: hidden;
+          visibility: hidden;
+          pointer-events: none;
+          font-weight: 700;
+          font-variation-settings: "wght" 700;
         }
         .hero-nav-link:hover {
           font-weight: 700;
