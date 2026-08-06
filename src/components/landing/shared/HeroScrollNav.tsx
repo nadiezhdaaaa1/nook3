@@ -303,7 +303,7 @@ export function HeroScrollNav() {
           height: 40px;
           width: 40px;
           border-radius: 12px;
-          border: 1px solid ${BORDER};
+          border: 1px solid rgba(0,0,0,0.10);
           background: ${SURFACE};
           color: ${INK};
           backdrop-filter: blur(6px);
@@ -311,7 +311,7 @@ export function HeroScrollNav() {
         }
         .hero-nav-burger:hover {
           background: ${SURFACE_HOVER};
-          border-color: ${BORDER_HOVER};
+          border-color: rgba(0,0,0,0.18);
         }
 
         .hero-nav-sheet {
