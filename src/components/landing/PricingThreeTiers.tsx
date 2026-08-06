@@ -334,8 +334,8 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
           left: 0,
           right: 32,
           display: "flex",
-          justifyContent: badge?.position === "right" ? "flex-end" : "center",
-          paddingLeft: badge?.position === "right" ? 0 : 32,
+          justifyContent: "flex-end",
+          paddingLeft: 0,
           pointerEvents: "none",
         }}
         aria-hidden={!badge}
