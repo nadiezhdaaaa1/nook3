@@ -206,6 +206,33 @@ export function HowItWorksThreeSteps() {
   );
 }
 
+function HiwCta({ to, label }: { to: string; label: string }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <RollText
+      as={Link}
+      to={to}
+      className="hiw-cta focus-visible-ring"
+      onHoverChange={setHover}
+      style={{
+        ...ui,
+        fontSize: 16,
+        fontWeight: 500,
+        color: "#ffffff",
+        backgroundColor: hover ? "#E8885A" : "#D66C38",
+        borderRadius: 12,
+        height: 56,
+        padding: "0 24px",
+        boxShadow: "none",
+        boxSizing: "border-box",
+        transition: "background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease",
+      }}
+    >
+      {label}
+    </RollText>
+  );
+}
+
 function Step({
   n,
   title,
