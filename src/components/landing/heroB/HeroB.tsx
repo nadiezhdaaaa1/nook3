@@ -195,7 +195,7 @@ export function HeroB() {
           min-height: 288px;
         }
         .hero-b-card-stage { position: relative; display: flex; align-items: center; justify-content: center; }
-        .hero-b-cta-row { display: flex; align-items: center; gap: 20px; }
+        .hero-b-cta-row { display: flex; align-items: center; gap: 12px; }
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-b-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
