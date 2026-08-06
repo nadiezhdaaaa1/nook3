@@ -644,6 +644,9 @@ function CardDeck({
           background: #ffffff;
           box-shadow: 0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05);
           touch-action: pan-y;
+          user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
         }
         .hero-a-card-photo {
           position: relative;
