@@ -21,6 +21,7 @@ const CARDS = [
 ];
 
 export function TiredOfSection() {
+  const navigate = useNavigate();
   return (
     <section className="prob-section">
       <style>{`
