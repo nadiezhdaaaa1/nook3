@@ -185,9 +185,12 @@ export function TiredOfSection() {
           <div className="prob-close-line">
             Start free — see what comes in this week.
           </div>
-          <Link to="/onboarding" className="prob-btn">
+          <OriginButton
+            variant="main"
+            onClick={() => navigate({ to: "/onboarding" })}
+          >
             Get started →
-          </Link>
+          </OriginButton>
         </div>
       </div>
     </section>
