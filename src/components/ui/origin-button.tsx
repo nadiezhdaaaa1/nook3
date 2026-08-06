@@ -186,7 +186,9 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           "relative inline-flex cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden font-medium tracking-[-0.02em]",
           variant === "main"
             ? "h-[56px] rounded-[12px] border border-transparent bg-[#D66C38] px-6 text-[16px] font-medium text-white"
-            : "h-12 rounded-xl border border-black/10 bg-card px-8 text-[15px] text-card-foreground dark:bg-muted dark:text-foreground",
+            : variant === "secondary"
+              ? "h-[56px] rounded-[12px] border-[1.5px] border-[#D66C38] bg-transparent px-6 text-[16px] font-medium text-[#D66C38]"
+              : "h-12 rounded-xl border border-black/10 bg-card px-8 text-[15px] text-card-foreground dark:bg-muted dark:text-foreground",
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
