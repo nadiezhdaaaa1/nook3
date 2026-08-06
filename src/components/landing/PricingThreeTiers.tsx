@@ -297,15 +297,12 @@ export function PricingThreeTiers() {
 }
 
 function badgeFor(tierId: string, cycle: Cycle) {
-  if (cycle === "monthly") {
-    if (tierId === "premium")
-      return { text: "Most popular", bg: LEAF, position: "center" as const };
-    return null;
-  }
+  if (cycle === "monthly") return null;
   if (tierId === "premium") return { text: "-47% off", bg: LEAF, position: "right" as const };
   if (tierId === "max") return { text: "-34% off", bg: "#7040C1", position: "right" as const };
   return null;
 }
+
 
 function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number }) {
   const dark = tier.variant !== "light";
@@ -347,14 +344,20 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
           {badge && (
             <motion.span
               key={badge.text}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: dur, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={
+                dur === 0
+                  ? { duration: 0 }
+                  : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }
+              }
               style={{
                 ...ui,
+                transformOrigin: "center center",
                 fontVariationSettings: `${UI_VAR}, "wght" 750`,
                 display: "inline-block",
+
                 borderRadius: 999,
                 padding: "7px 16px",
                 background: badge.bg,
