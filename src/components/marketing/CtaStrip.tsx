@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+
+import { OriginButton } from "@/components/ui/origin-button";
 
 const CSS = `
 .ctab { position:relative; overflow:hidden; padding:104px 0; background:#2c2415; }
