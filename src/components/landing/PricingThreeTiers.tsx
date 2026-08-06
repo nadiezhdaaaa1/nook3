@@ -319,18 +319,11 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
         boxShadow: DARK_SHADOW,
         color: text,
       }
-    : {
-        background: "#ffffff",
-        border: "1px solid rgba(36,28,18,0.12)",
-        color: text,
-      };
-
-  const ctaStyle: React.CSSProperties =
-    tier.variant === "light"
-      ? { background: "transparent", border: "1.5px solid #d66c38", color: "#a05712" }
-      : tier.variant === "warm"
-        ? { background: "#dce9cc", color: "#445500", border: "none" }
-        : { background: "#e7ddf2", color: "#42416a", border: "none" };
+      : {
+          background: "#ffffff",
+          border: "1px solid rgba(36,28,18,0.12)",
+          color: text,
+        };
 
   return (
     <div className={`pr-card${dark ? " pr-card-dark" : ""}`} style={cardStyle}>
