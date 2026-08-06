@@ -408,25 +408,16 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
         </span>
       </div>
 
-      <Link
-        to={tier.ctaTo}
-        className="pr-cta"
-        style={{
-          ...ui,
-          display: "block",
-          width: "100%",
-          textAlign: "center",
-          borderRadius: 12,
-          padding: "16px 24px",
-          fontSize: 16,
-          fontWeight: 500,
-          textDecoration: "none",
-          boxSizing: "border-box",
-          ...ctaStyle,
+      <OriginButton
+        className="w-full"
+        style={{ borderRadius: 12 }}
+        onClick={() => {
+          const navigate = useNavigate();
+          navigate({ to: tier.ctaTo });
         }}
       >
         {tier.cta}
-      </Link>
+      </OriginButton>
 
       {tier.finePrint && (
         <AnimatePresence mode="wait" initial={false}>
