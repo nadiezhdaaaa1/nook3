@@ -142,7 +142,7 @@ export function HowItWorksThreeSteps() {
                 width: 64,
                 height: 64,
                 objectFit: "contain",
-                transform: "rotate(40deg)",
+                
               }}
             />
           </div>
