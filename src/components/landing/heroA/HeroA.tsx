@@ -641,6 +641,19 @@ function CardDeck({
           border: 1px solid rgba(0,0,0,0.08);
           overflow: hidden;
         }
+        .hero-a-card-soon {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 10px;
+          border-radius: 80px;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1;
+        }
         .hero-a-card-photo img {
           width: 100%; height: 100%; object-fit: cover; display: block; user-select: none;
         }
