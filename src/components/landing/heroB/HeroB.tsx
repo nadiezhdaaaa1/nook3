@@ -162,7 +162,7 @@ export function HeroB() {
                 secondary={city.comingSoon}
               />
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
-                3-day trial. Cancel anytime.
+                {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
             </motion.div>
           </div>
