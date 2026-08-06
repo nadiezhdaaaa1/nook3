@@ -98,21 +98,6 @@ export function HeroA() {
               className="relative z-30 flex flex-wrap items-center gap-4"
             >
               <CityPill city={city} onPick={(i) => goTo(i, -1)} />
-              <AnimatePresence initial={false}>
-                {city.comingSoon && (
-                  <motion.span
-                    key="soon"
-                    initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    transition={{ duration: reduced ? 0.3 : 0.25, ease: EASE_REVEAL, delay: reduced ? 0 : 0.2 }}
-                    className="inline-flex items-center rounded-[80px] px-2 py-1 text-xs font-medium"
-                    style={{ ...uiFont, backgroundColor: COLORS.soonBg, color: COLORS.soonText }}
-                  >
-                    Coming soon
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </motion.div>
 
             <H1Reveal reduced={!!reduced} />
@@ -656,6 +641,19 @@ function CardDeck({
           border: 1px solid rgba(0,0,0,0.08);
           overflow: hidden;
         }
+        .hero-a-card-soon {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 10px;
+          border-radius: 80px;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1;
+        }
         .hero-a-card-photo img {
           width: 100%; height: 100%; object-fit: cover; display: block; user-select: none;
         }
@@ -774,6 +772,14 @@ function TopCard({
 
       <div className="hero-a-card-photo">
         <img src={city.cardImg} alt={`${city.cardTitle} skyline`} draggable={false} />
+        {city.comingSoon && (
+          <span
+            className="hero-a-card-soon"
+            style={{ ...uiFont, backgroundColor: COLORS.soonText, color: "#ffffff" }}
+          >
+            Coming soon
+          </span>
+        )}
         <span className="hero-a-card-title" style={displayFont}>
           {city.cardTitle}
         </span>
