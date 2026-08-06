@@ -369,6 +369,15 @@ export function HeroScrollNav() {
         }
 
 
+        @media (max-width: 1120px) {
+          .hero-nav-root[data-scrolled="true"] { padding-top: 16px; }
+          .hero-nav-root[data-scrolled="true"] .hero-nav-shell {
+            margin: 0 16px;
+            width: calc(100% - 32px);
+            padding: 12px;
+          }
+        }
+
         @media (max-width: 680px) {
           .hero-nav-shell { padding: 0 20px; }
           .hero-nav-root[data-scrolled="true"] { padding-top: 12px; }
