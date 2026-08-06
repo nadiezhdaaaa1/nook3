@@ -744,11 +744,11 @@ function RollCtaB({
       className="hero-b-cta hero-b-ring"
       style={{
         ...uiFont,
-        backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : hover ? "#E8885A" : "#D66C38",
-        border: isSecondary ? "1.5px solid #D66C38" : "none",
-        color: isSecondary ? "#D66C38" : "#ffffff",
-        boxShadow: "none",
-      }}
+          backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : hover ? "#CE4F12" : "#D66C38",
+          border: isSecondary ? "1.5px solid #D66C38" : "none",
+          color: isSecondary ? "#D66C38" : "#ffffff",
+          boxShadow: "none",
+        }}
     >
       <span className="hero-b-cta-roll" aria-hidden="true">
         <span className="hero-b-cta-layer">
