@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+
+import { OriginButton } from "@/components/ui/origin-button";
 
 const CSS = `
 .ctab { position:relative; overflow:hidden; padding:104px 0; background:#2c2415; }
@@ -31,12 +33,12 @@ const CSS = `
 @media (max-width:680px) {
   .ctab { padding:72px 0; }
   .ctab-h2 { font-size:clamp(30px,7vw,36px); }
-  .ctab-btn { width:100%; max-width:320px; }
+  .ctab-btn-origin { width:100%; max-width:320px; }
 }
-@media (prefers-reduced-motion:reduce) { .ctab-btn { transition:none; } .ctab-btn:hover { transform:none; } }
 `;
 
 export function CtaStrip() {
+  const navigate = useNavigate();
   return (
     <section className="ctab">
       <style>{CSS}</style>
@@ -45,9 +47,13 @@ export function CtaStrip() {
           <h2 className="ctab-h2">Your next apartment is already listed</h2>
           <p className="ctab-sub">Get the alert before everyone else does.</p>
         </div>
-        <Link to="/signup" className="ctab-btn">
+        <OriginButton
+          variant="main"
+          className="ctab-btn-origin"
+          onClick={() => navigate({ to: "/signup" })}
+        >
           Get alerts — Free
-        </Link>
+        </OriginButton>
       </div>
     </section>
   );
