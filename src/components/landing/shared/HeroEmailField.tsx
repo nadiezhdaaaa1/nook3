@@ -31,7 +31,7 @@ export function HeroEmailField({
         className="hero-email-input"
         style={{
           ...fontStyle,
-          borderColor: focused ? "#a05712" : "rgba(36,28,18,0.18)",
+          borderColor: focused ? "#CE4F12" : "rgba(36,28,18,0.18)",
         }}
       />
       <style>{`
