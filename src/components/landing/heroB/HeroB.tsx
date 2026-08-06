@@ -152,13 +152,24 @@ export function HeroB() {
               {!city.comingSoon && (
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
-              <RollCtaB
-                key={city.comingSoon ? "waitlist" : "start-free"}
-                onClick={startSignup}
-                reduced={reduced}
-                label={city.comingSoon ? "Join the watchlist" : "Start free"}
-                secondary={city.comingSoon}
-              />
+              {city.comingSoon ? (
+                <RollCtaB
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  onClick={startSignup}
+                  reduced={reduced}
+                  label={city.comingSoon ? "Join the watchlist" : "Start free"}
+                  secondary={city.comingSoon}
+                />
+              ) : (
+                <OriginButton
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  variant="main"
+                  onClick={startSignup}
+                  className="hero-b-cta hero-b-ring"
+                >
+                  Start free
+                </OriginButton>
+              )}
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
