@@ -15,6 +15,8 @@ import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
+import { HeroEmailField } from "@/components/landing/shared/HeroEmailField";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 import {
   COLORS,
@@ -71,11 +73,15 @@ export function HeroA() {
 
 
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const setOnboarding = useOnboardingStore((s) => s.set);
   const startSignup = () => {
     if (city.comingSoon) {
       setWaitlistOpen(true);
       return;
     }
+    const trimmed = email.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) setOnboarding("email", trimmed);
     navigate({ to: "/onboarding" });
   };
 
@@ -100,21 +106,6 @@ export function HeroA() {
               className="relative z-30 flex flex-wrap items-center gap-4"
             >
               <CityPill city={city} onPick={(i) => goTo(i, -1)} />
-              <AnimatePresence mode="wait" initial={false}>
-                {city.comingSoon && (
-                  <motion.span
-                    key={city.key}
-                    initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    transition={{ duration: reduced ? 0.2 : 0.25, ease: EASE_REVEAL }}
-                    className="hero-soon-pill"
-                    style={uiFont}
-                  >
-                    Coming soon
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </motion.div>
 
             <H1Reveal reduced={!!reduced} />
@@ -130,18 +121,31 @@ export function HeroA() {
               Verified, no spam.
             </motion.p>
 
-            <motion.div
+            <motion.form
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-a-cta-row mt-9"
+              onSubmit={(e) => {
+                e.preventDefault();
+                startSignup();
+              }}
             >
-              <RollCta onClick={startSignup} label="Get free alerts" />
+              {!city.comingSoon && (
+                <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
+              )}
 
-              <span className="hero-a-cta-note" style={{ ...uiFont, color: COLORS.muted }}>
-                3-day trial. Cancel anytime.
+              <RollCta
+                key={city.comingSoon ? "waitlist" : "start-free"}
+                onClick={startSignup}
+                label={city.comingSoon ? "Join the watchlist" : "Start free"}
+                secondary={city.comingSoon}
+              />
+
+              <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
+                {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
-            </motion.div>
+            </motion.form>
 
           </div>
 
@@ -166,19 +170,7 @@ export function HeroA() {
           padding-bottom: 112px;
         }
         .hero-a-deck-wrap { justify-self: center; max-width: 100%; }
-        .hero-a-cta-row { display: flex; align-items: center; gap: 20px; }
-        .hero-a-cta-note { font-size: 14px; white-space: nowrap; }
-        .hero-soon-pill {
-          display: inline-flex;
-          align-items: center;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: rgba(239,106,85,0.2);
-          color: #c93822;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 1.3;
-        }
+        .hero-a-cta-row { display: flex; align-items: center; gap: 12px; }
         #hero { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-a-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
@@ -808,6 +800,14 @@ function TopCard({
 
       <div className="hero-a-card-photo">
         <img src={city.cardImg} alt={`${city.cardTitle} skyline`} draggable={false} />
+        {city.comingSoon && (
+          <span
+            className="hero-a-card-soon"
+            style={{ ...uiFont, backgroundColor: COLORS.soonText, color: "#ffffff" }}
+          >
+            Coming soon
+          </span>
+        )}
         <span className="hero-a-card-title" style={displayFont}>
           {city.cardTitle}
         </span>

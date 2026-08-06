@@ -5,6 +5,8 @@ import { ChevronDown, MapPin } from "lucide-react";
 import { RollText } from "@/components/ui/RollText";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
+import { HeroEmailField } from "@/components/landing/shared/HeroEmailField";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import {
@@ -87,11 +89,15 @@ export function HeroB() {
   };
 
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const setOnboarding = useOnboardingStore((s) => s.set);
   const startSignup = () => {
     if (city.comingSoon) {
       setWaitlistOpen(true);
       return;
     }
+    const trimmed = email.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) setOnboarding("email", trimmed);
     navigate({ to: "/onboarding" });
   };
 
@@ -116,21 +122,6 @@ export function HeroB() {
               className="relative z-30 flex flex-wrap items-center gap-4"
             >
               <CityPillB city={city} onPick={pick} />
-              <AnimatePresence mode="wait" initial={false}>
-                {city.comingSoon && (
-                  <motion.span
-                    key={city.key}
-                    initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    transition={{ duration: reduced ? 0.2 : 0.25, ease: EASE_REVEAL }}
-                    className="hero-b-soon-pill"
-                    style={uiFont}
-                  >
-                    Coming soon
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </motion.div>
 
 
@@ -147,17 +138,30 @@ export function HeroB() {
               Verified, no spam.
             </motion.p>
 
-            <motion.div
+            <motion.form
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-b-cta-row mt-9"
+              onSubmit={(e) => {
+                e.preventDefault();
+                startSignup();
+              }}
             >
-              <RollCtaB onClick={startSignup} reduced={reduced} label="Get free alerts" />
-              <span className="hero-b-cta-note" style={{ ...uiFont, color: COLORS.muted }}>
-                3-day trial. Cancel anytime.
+              {!city.comingSoon && (
+                <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
+              )}
+              <RollCtaB
+                key={city.comingSoon ? "waitlist" : "start-free"}
+                onClick={startSignup}
+                reduced={reduced}
+                label={city.comingSoon ? "Join the watchlist" : "Start free"}
+                secondary={city.comingSoon}
+              />
+              <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
+                {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
-            </motion.div>
+            </motion.form>
 
           </div>
 
@@ -171,7 +175,7 @@ export function HeroB() {
         </div>
       </div>
 
-      
+      <CityDotRail index={index} onPick={pick} reduced={reduced} />
 
       <style>{`
         .hero-b-grid {
@@ -191,19 +195,7 @@ export function HeroB() {
           min-height: 288px;
         }
         .hero-b-card-stage { position: relative; display: flex; align-items: center; justify-content: center; }
-        .hero-b-cta-row { display: flex; align-items: center; gap: 20px; }
-        .hero-b-cta-note { font-size: 14px; white-space: nowrap; }
-        .hero-b-soon-pill {
-          display: inline-flex;
-          align-items: center;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: rgba(239,106,85,0.2);
-          color: #c93822;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 1.3;
-        }
+        .hero-b-cta-row { display: flex; align-items: center; gap: 12px; }
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-b-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
@@ -429,6 +421,97 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
   );
 }
 
+/* ---------------- right-side city dot rail ---------------- */
+
+function CityDotRail({
+  index,
+  onPick,
+  reduced,
+}: {
+  index: number;
+  onPick: (i: number) => void;
+  reduced: boolean;
+}) {
+  return (
+    <div className="hero-b-rail z-20" role="tablist" aria-label="Switch city">
+      {HERO_B_CITIES.map((c, i) => (
+        <button
+          key={c.key}
+          type="button"
+          role="tab"
+          aria-selected={i === index}
+          aria-label={c.pillLabel}
+          className="hero-b-rail-btn hero-b-ring"
+          onClick={() => onPick(i)}
+        >
+          <span className={`hero-b-rail-dot${i === index ? " is-active" : ""}`} />
+          <span className="hero-b-rail-tip" style={uiFont}>
+            {c.pillLabel}
+          </span>
+        </button>
+      ))}
+
+      <style>{`
+        .hero-b-rail {
+          position: absolute;
+          right: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+        .hero-b-rail-btn {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          border-radius: 999px;
+          background: none;
+          border: 0;
+          cursor: pointer;
+        }
+        .hero-b-rail-dot {
+          width: 9px;
+          height: 9px;
+          border-radius: 999px;
+          background: rgba(43,37,33,0.28);
+          transition: ${reduced ? "none" : "transform 0.25s ease, background-color 0.25s ease"};
+        }
+        .hero-b-rail-dot.is-active { background: ${COLORS.ink}; transform: scale(1.5); }
+        .hero-b-rail-btn:hover .hero-b-rail-dot { background: ${COLORS.ink}; }
+        .hero-b-rail-tip {
+          position: absolute;
+          right: calc(100% + 10px);
+          top: 50%;
+          transform: translateY(-50%) translateX(4px);
+          white-space: nowrap;
+          padding: 4px 10px;
+          border-radius: 80px;
+          font-size: 12px;
+          font-weight: 500;
+          color: ${COLORS.pillCity};
+          background: rgba(255,255,255,0.9);
+          box-shadow: 0 2px 8px rgba(12,12,13,0.1);
+          opacity: 0;
+          pointer-events: none;
+          transition: ${reduced ? "opacity 0.15s linear" : "opacity 0.2s ease, transform 0.2s ease"};
+        }
+        .hero-b-rail-btn:hover .hero-b-rail-tip,
+        .hero-b-rail-btn:focus-visible .hero-b-rail-tip {
+          opacity: 1;
+          transform: translateY(-50%) translateX(0);
+        }
+        @media (max-width: 680px) {
+          .hero-b-rail { display: none; }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 /* ---------------- nav ---------------- */
 
