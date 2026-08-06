@@ -219,7 +219,7 @@ function HiwCta({ to, label }: { to: string; label: string }) {
         fontSize: 16,
         fontWeight: 500,
         color: "#ffffff",
-        backgroundColor: hover ? "#E8885A" : "#D66C38",
+        backgroundColor: hover ? "#CE4F12" : "#D66C38",
         borderRadius: 12,
         height: 56,
         padding: "0 24px",
