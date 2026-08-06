@@ -1,9 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
-import { Logo, LogoMark } from "@/components/brand/Logo";
 import { openCookiePreferences } from "@/lib/cookieConsent";
 import {
-  SocialIcon,
   FacebookIcon,
   InstagramIcon,
   PinterestIcon,
@@ -11,195 +8,154 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/brand/SocialIcons";
+import logoAsset from "@/assets/Nook_Footer.svg.asset.json";
+import watermarkAsset from "@/assets/Footer_N.svg.asset.json";
+
+const CSS = `
+.ftr { position:relative; overflow:hidden; background:#faf6ee; padding:104px 0 64px; }
+.ftr-inner { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 32px;
+  display:flex; flex-direction:column; gap:64px; }
+.ftr-top { display:flex; align-items:center; justify-content:space-between; gap:40px; }
+.ftr-brand { display:flex; flex-direction:column; gap:24px; }
+.ftr-logo { width:81px; height:28px; display:block; }
+.ftr-tag { margin:0; font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:520; font-size:42px; line-height:46.2px; color:#241c12; }
+.ftr-right { display:flex; flex-direction:column; align-items:flex-end; gap:32px; }
+.ftr-email { font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:400; font-size:24px; line-height:1.2;
+  color:#d66c38; text-decoration:none; }
+.ftr-socials { display:flex; align-items:center; gap:24px; }
+.ftr-socials a { color:rgba(36,28,18,0.45); display:inline-flex; transition:color .2s ease-out; }
+.ftr-socials a:hover { color:rgba(36,28,18,0.7); }
+.ftr-socials svg { width:24px; height:24px; }
+.ftr-divider { height:1px; background:rgba(0,0,0,0.1); }
+.ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
+.ftr-col { width:220px; }
+.ftr-h { font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:700; font-size:12px;
+  letter-spacing:1.92px; text-transform:uppercase; color:#241c12; }
+.ftr-list { list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.ftr-list a, .ftr-list button { font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:400; font-size:14px; line-height:21px;
+  color:rgba(36,28,18,0.72); text-decoration:none; background:none; border:0; padding:0; text-align:left;
+  cursor:pointer; transition:color .2s ease-out; }
+.ftr-list a:hover, .ftr-list button:hover { color:#241c12; }
+.ftr-legal { max-width:560px; display:flex; flex-direction:column; gap:4px;
+  font-family:"Google Sans Flex",system-ui,sans-serif; font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-size:13px; line-height:22.1px; color:rgba(36,28,18,0.72); }
+.ftr-legal p { margin:0; }
+.ftr-legal-name { font-weight:650; letter-spacing:0.78px; text-transform:uppercase; color:rgba(36,28,18,0.85); }
+.ftr-wm { position:absolute; right:32px; bottom:0; width:330px; height:406px;
+  pointer-events:none; z-index:0; }
+.ftr a:focus-visible, .ftr button:focus-visible { outline:2px solid #241c12; outline-offset:2px; }
+@media (max-width:1100px) {
+  .ftr-top { flex-direction:column; align-items:flex-start; gap:32px; }
+  .ftr-right { align-items:flex-start; }
+}
+@media (max-width:680px) {
+  .ftr { padding:104px 0 48px; }
+  .ftr-inner { gap:48px; }
+  .ftr-tag { font-size:clamp(30px,7vw,36px); line-height:1.15; }
+  .ftr-cols { flex-direction:column; }
+  .ftr-col { width:100%; }
+  .ftr-wm { width:240px; height:auto; right:0; }
+}
+`;
+
+const SOCIALS = [
+  { label: "Instagram", href: "https://www.instagram.com/thenookrent", Icon: InstagramIcon },
+  { label: "Reddit", href: "https://www.reddit.com/user/thenookrent/", Icon: RedditIcon },
+  { label: "Pinterest", href: "https://www.pinterest.com/01thenookrent01/", Icon: PinterestIcon },
+  { label: "TikTok", href: "https://www.tiktok.com/@thenook.rent", Icon: TikTokIcon },
+  { label: "YouTube", href: "https://www.youtube.com/@TheNookRent", Icon: YouTubeIcon },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/people/Thenookrent/61592003651488/",
+    Icon: FacebookIcon,
+  },
+];
 
 export function MarketingFooter() {
   return (
-    <footer
-      className="relative overflow-hidden"
-      style={{
-        backgroundColor: "var(--color-brand-charcoal)",
-        color: "var(--color-brand-cream)",
-      }}
-    >
-      <div
-        className="absolute -top-40 -right-40 w-[480px] h-[480px] rounded-full opacity-20 blur-3xl pointer-events-none"
-        style={{ backgroundColor: "var(--color-brand-terracotta)" }}
-      />
-      <div
-        className="absolute -bottom-40 -left-40 w-[420px] h-[420px] rounded-full opacity-15 blur-3xl pointer-events-none"
-        style={{ backgroundColor: "var(--color-brand-sage)" }}
-      />
+    <footer className="ftr">
+      <style>{CSS}</style>
+      <img className="ftr-wm" src={watermarkAsset.url} alt="" aria-hidden="true" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 pt-20 lg:pt-24 pb-10">
-        <div className="grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-16 items-end pb-16 border-b" style={{ borderColor: "color-mix(in oklab, var(--color-brand-cream) 12%, transparent)" }}>
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              <LogoMark size={36} />
-              <Logo
-                className="text-2xl"
-                accentClassName="italic font-normal"
-              />
-            </div>
-            <h3 className="font-display font-medium text-4xl lg:text-[56px] leading-[0.98] tracking-[-0.02em] max-w-xl">
-              Where home{" "}
-              <span className="italic font-normal" style={{ color: "var(--color-brand-sage)" }}>finds you.</span>
-            </h3>
-            <div className="mt-6">
-              <div className="flex items-center gap-1" style={{ color: "var(--color-brand-cream)" }}>
-                <SocialIcon href="https://www.instagram.com/thenookrent" label="Instagram">
-                  <InstagramIcon />
-                </SocialIcon>
-                <SocialIcon href="https://www.reddit.com/user/thenookrent/" label="Reddit">
-                  <RedditIcon />
-                </SocialIcon>
-                <SocialIcon href="https://www.tiktok.com/@thenook.rent" label="TikTok">
-                  <TikTokIcon />
-                </SocialIcon>
-                <SocialIcon href="https://www.pinterest.com/01thenookrent01/" label="Pinterest">
-                  <PinterestIcon />
-                </SocialIcon>
-                <SocialIcon href="https://www.youtube.com/@TheNookRent" label="YouTube">
-                  <YouTubeIcon />
-                </SocialIcon>
-                <SocialIcon href="https://www.facebook.com/people/Thenookrent/61592003651488/" label="Facebook">
-                  <FacebookIcon />
-                </SocialIcon>
-              </div>
-            </div>
+      <div className="ftr-inner">
+        <div className="ftr-top">
+          <div className="ftr-brand">
+            <img className="ftr-logo" src={logoAsset.url} alt="Nook" width={81} height={28} />
+            <p className="ftr-tag">Where home finds you</p>
           </div>
-          <div className="flex flex-col items-start lg:items-end gap-4">
-            <Link
-              to="/onboarding"
-              className="group inline-flex items-center gap-2 h-13 px-7 py-3.5 rounded-pill text-sm font-semibold text-white transition-all hover:opacity-90"
-              style={{ backgroundColor: "var(--color-brand-terracotta)" }}
-            >
-              Start free
-              <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
-            <a
-              href="mailto:hello@thenook.rent"
-              className="text-sm opacity-70 hover:opacity-100 transition-opacity"
-            >
+          <div className="ftr-right">
+            <a className="ftr-email" href="mailto:hello@thenook.rent">
               hello@thenook.rent
             </a>
+            <div className="ftr-socials">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mt-12">
-          <FooterCol title="Product">
-            <FooterAnchor href="#how">How it works</FooterAnchor>
-            <FooterAnchor href="#what">What you get</FooterAnchor>
-            <FooterAnchor href="#pricing">Pricing</FooterAnchor>
-            <FooterAnchor href="#faq">FAQ</FooterAnchor>
-            <FooterAnchor href="/blog">Blog</FooterAnchor>
-          </FooterCol>
-          <FooterCol title="Company">
-            <FooterLink to="/contact">Contact</FooterLink>
-          </FooterCol>
-          <FooterCol title="Legal">
-            <FooterLink to="/terms">Terms of Service</FooterLink>
-            <FooterLink to="/privacy">Privacy Policy</FooterLink>
-            <FooterLink to="/cookies">Cookie Policy</FooterLink>
-            <li>
-              <button
-                type="button"
-                onClick={openCookiePreferences}
-                className="inline-flex items-center gap-1 text-sm opacity-70 hover:opacity-100 transition-opacity text-left"
-              >
-                Manage Cookie Preferences
-              </button>
-            </li>
-            <FooterLink to="/acceptable-use">Acceptable Use</FooterLink>
-            <FooterLink to="/fair-housing">Fair Housing</FooterLink>
-            <FooterLink to="/accessibility">Accessibility</FooterLink>
-            <li>
-              <Link
-                to="/do-not-sell"
-                className="inline-flex items-center gap-1 text-sm opacity-70 hover:opacity-100 transition-opacity"
-              >
-                Do Not Sell or Share <span aria-hidden>→</span>
-              </Link>
-            </li>
-            <FooterLink to="/dmca">DMCA</FooterLink>
-          </FooterCol>
+        <div className="ftr-divider" />
+
+        <div className="ftr-cols">
+          <nav className="ftr-col" aria-label="Legal">
+            <div className="ftr-h">Legal</div>
+            <ul className="ftr-list">
+              <li><Link to="/terms">Terms of Service</Link></li>
+              <li><Link to="/privacy">Privacy Policy</Link></li>
+              <li><Link to="/cookies">Cookie Policy</Link></li>
+              <li>
+                <button type="button" onClick={openCookiePreferences}>
+                  Manage Cookie Preferences
+                </button>
+              </li>
+              <li><Link to="/acceptable-use">Acceptable Use</Link></li>
+              <li><Link to="/fair-housing">Fair Housing</Link></li>
+              <li><Link to="/accessibility">Accessibility</Link></li>
+              <li><Link to="/do-not-sell">Do Not Sell or Share</Link></li>
+              <li><Link to="/dmca">DMCA</Link></li>
+            </ul>
+          </nav>
+
+          <nav className="ftr-col" aria-label="Product">
+            <div className="ftr-h">Product</div>
+            <ul className="ftr-list">
+              <li><a href="#how">How it works</a></li>
+              <li><a href="#what">What you get</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#faq">FAQ</a></li>
+              <li><Link to="/blog">Blog</Link></li>
+            </ul>
+          </nav>
+
+          <nav className="ftr-col" aria-label="Company">
+            <div className="ftr-h">Company</div>
+            <ul className="ftr-list">
+              <li><Link to="/contact">Contact</Link></li>
+            </ul>
+          </nav>
         </div>
 
-        <div
-          className="mt-8 pt-8 pb-6 border-t"
-          style={{ borderColor: "color-mix(in oklab, var(--color-brand-cream) 12%, transparent)" }}
-        >
-          <p
-            className="text-[12px] font-semibold uppercase tracking-[0.08em]"
-            style={{ color: "var(--color-brand-cream)" }}
-          >
-            Zentaro Systems Ltd · Trading as Nook
+        <div className="ftr-legal">
+          <p className="ftr-legal-name">NORELIX LIMITED · Trading as Nook</p>
+          <p>
+            The Black Church, St Mary's Place, Dublin 7, D07 P4AX, Ireland, Company No. 817569
           </p>
-          <div
-            className="mt-2 text-[12px] leading-[1.6]"
-            style={{ color: "color-mix(in oklab, var(--color-brand-cream) 65%, transparent)" }}
-          >
-            <p>167-169 Great Portland Street, 5th Floor</p>
-            <p>London, W1W 5PF</p>
-            <p>Company No. 17178666</p>
-          </div>
-          <p className="mt-3 text-[12px]">
-            <a
-              href="mailto:hello@thenook.rent"
-              className="hover:underline"
-              style={{ color: "var(--color-brand-terracotta)" }}
-            >
-              hello@thenook.rent
-            </a>
-          </p>
-          <p
-            className="mt-2 text-[12px]"
-            style={{ color: "color-mix(in oklab, var(--color-brand-cream) 65%, transparent)" }}
-          >
-            © {new Date().getFullYear()} Zentaro Systems Ltd. All rights reserved.
-          </p>
+          <p>© 2026 NORELIX LIMITED. All rights reserved.</p>
         </div>
-
       </div>
     </footer>
-  );
-}
-
-function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <div
-        className="text-[11px] font-mono uppercase tracking-[0.2em] mb-5 font-semibold"
-        style={{ color: "color-mix(in oklab, var(--color-brand-cream) 40%, transparent)" }}
-      >
-        {title}
-      </div>
-      <ul className="space-y-3">{children}</ul>
-    </div>
-  );
-}
-
-function FooterAnchor({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <li>
-      <a
-        href={href}
-        className="text-sm opacity-70 hover:opacity-100 transition-opacity"
-      >
-        {children}
-      </a>
-    </li>
-  );
-}
-
-function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
-  return (
-    <li>
-      <Link
-        to={to}
-        className="text-sm opacity-70 hover:opacity-100 transition-opacity"
-      >
-        {children}
-      </Link>
-    </li>
   );
 }
