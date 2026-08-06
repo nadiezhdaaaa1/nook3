@@ -61,7 +61,7 @@ export function HowItWorksThreeSteps() {
           .hiw-section { padding: 64px 20px; }
           .hiw-h2 { font-size: clamp(32px, 6vw, 40px); line-height: 1.14; letter-spacing: -0.8px; }
         }
-        .hiw-cta:hover { background: ${COLORS.clayHover} !important; transform: translateY(-1px); box-shadow: 4px 4px 0 rgba(36,28,18,0.14) !important; }
+        .hiw-cta { position: relative; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
       `}</style>
 
       <div className="hiw-inner">
