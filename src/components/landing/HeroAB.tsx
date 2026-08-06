@@ -5,7 +5,7 @@ import { HeroScrollNav } from "./shared/HeroScrollNav";
 
 // TODO: remove before production — A/B presentation switcher
 export function HeroAB() {
-  const [variant, setVariant] = useState<"A" | "B">("B");
+  const [variant, setVariant] = useState<"A" | "B">("A");
 
   return (
     <div className="relative">
