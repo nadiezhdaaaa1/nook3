@@ -117,15 +117,13 @@ export function HeroScrollNav() {
             >
               Sign in
             </RollText>
-            <RollText
-              as="button"
-              type="button"
+            <OriginButton
+              variant="main"
               onClick={onSignup}
-              className="hero-nav-cta text-sm font-medium hero-nav-ring"
-              style={{ ...uiFont, color: NAV_TEXT }}
+              className="hero-nav-ring h-[40px] px-4 text-sm"
             >
               Get free alerts
-            </RollText>
+            </OriginButton>
 
             <button
               type="button"
