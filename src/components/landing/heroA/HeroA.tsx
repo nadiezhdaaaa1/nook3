@@ -123,6 +123,7 @@ export function HeroA() {
                 key={city.comingSoon ? "waitlist" : "alerts"}
                 onClick={startSignup}
                 label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+                secondary={city.comingSoon}
               />
 
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>

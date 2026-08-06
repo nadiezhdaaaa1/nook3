@@ -159,6 +159,7 @@ export function HeroB() {
                 onClick={startSignup}
                 reduced={reduced}
                 label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+                secondary={city.comingSoon}
               />
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 3-day trial. Cancel anytime.
