@@ -30,7 +30,7 @@ import {
 
 const H1_LINES = ["Find it before it's", "gone. Without losing", "your mind."];
 const H1_TEXT = "Find it before it's gone. Without losing your mind.";
-const DRAG_THRESHOLD = 120;
+const DRAG_THRESHOLD = 60;
 
 const uiFont = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
 const displayFont = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
@@ -644,6 +644,9 @@ function CardDeck({
           background: #ffffff;
           box-shadow: 0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05);
           touch-action: pan-y;
+          user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
         }
         .hero-a-card-photo {
           position: relative;
@@ -742,7 +745,7 @@ function TopCard({
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     setDragging(false);
-    if (Math.abs(info.offset.x) > DRAG_THRESHOLD || Math.abs(info.velocity.x) > 500) {
+    if (Math.abs(info.offset.x) > DRAG_THRESHOLD || Math.abs(info.velocity.x) > 300) {
       throwDir.current = info.offset.x > 0 ? 1 : -1;
       onCycle(throwDir.current);
       return;
@@ -757,21 +760,18 @@ function TopCard({
     <motion.div
       className="hero-a-card"
       drag={reduced ? false : "x"}
-      dragElastic={0.35}
-      dragConstraints={{ left: 0, right: 0 }}
+      dragDirectionLock
+      dragElastic={1}
       dragMomentum={false}
       onDragStart={() => setDragging(true)}
       onDragEnd={onDragEnd}
-      style={{ x, rotate, cursor: dragging ? "grabbing" : "grab" }}
-      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, rotate: -1.1, y: -10 }}
-      animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
-      exit={
-        reduced
-          ? { opacity: 0 }
-          : { opacity: 0, x: exitDir === 1 ? 520 : -520, rotate: exitDir === 1 ? 12 : -12 }
-      }
+      style={{ x, rotate, cursor: dragging ? "grabbing" : "grab", touchAction: "pan-y" }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: -10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={reduced ? { opacity: 0 } : { opacity: 0, x: exitDir === 1 ? 520 : -520 }}
       transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.05 }}
     >
+
       <div className="hero-a-card-photo">
         <img src={city.cardImg} alt={`${city.cardTitle} skyline`} draggable={false} />
         <span className="hero-a-card-title" style={displayFont}>
