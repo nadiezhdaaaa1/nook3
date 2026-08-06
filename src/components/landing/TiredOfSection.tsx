@@ -1,7 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
 
 const CARDS = [
   {
@@ -23,67 +20,173 @@ const CARDS = [
 ];
 
 export function TiredOfSection() {
-  const reduce = useReducedMotion();
   return (
-    <section
-      className="py-24 lg:py-32 relative overflow-hidden"
-      style={{ backgroundColor: "var(--color-brand-charcoal)" }}
-    >
-      <div
-        className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full opacity-20 blur-3xl pointer-events-none"
-        style={{ backgroundColor: "var(--color-brand-terracotta)" }}
-      />
-      <div
-        className="absolute -bottom-32 -left-32 w-[420px] h-[420px] rounded-full opacity-15 blur-3xl pointer-events-none"
-        style={{ backgroundColor: "var(--color-brand-sage)" }}
-      />
+    <section className="prob-section">
+      <style>{`
+        .prob-section {
+          background: #2c2415;
+          padding: 104px 24px;
+        }
+        .prob-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 48px;
+        }
+        .prob-eyebrow {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+          font-weight: 500;
+          font-size: 14px;
+          color: #f8f3e1;
+        }
+        .prob-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: #ffd1aa;
+          flex-shrink: 0;
+        }
+        .prob-h2 {
+          margin-top: 20px;
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0, "WONK" 1;
+          font-weight: 600;
+          font-size: 48px;
+          line-height: 54px;
+          letter-spacing: -1.2px;
+          color: #ffffff;
+          max-width: 760px;
+        }
+        .prob-sub {
+          margin-top: 16px;
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 1.6;
+          color: #f8f3e1;
+        }
+        .prob-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 24px;
+          align-items: stretch;
+        }
+        .prob-card {
+          min-height: 220px;
+          background: rgba(248, 243, 225, 0.06);
+          border: 1px solid rgba(248, 243, 225, 0.15);
+          border-radius: 24px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 18px;
+        }
+        .prob-pain {
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0, "WONK" 1;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 24px;
+          color: #ffd1aa;
+        }
+        .prob-fix {
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+          font-weight: 400;
+          font-size: 15px;
+          line-height: 20px;
+          color: #ffffff;
+        }
+        .prob-close {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          padding: 8px 0;
+        }
+        .prob-close-line {
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0, "WONK" 1;
+          font-weight: 520;
+          font-size: 30px;
+          line-height: 45px;
+          color: #ffffff;
+        }
+        .prob-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: #ffffff;
+          color: #241c12;
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+          font-weight: 500;
+          font-size: 16px;
+          border-radius: 12px;
+          padding: 16px 24px;
+          box-shadow: none;
+          white-space: nowrap;
+          transition: background-color 0.18s ease, transform 0.18s ease;
+        }
+        .prob-btn:hover {
+          background: #f8f3e1;
+          transform: translateY(-1px);
+        }
+        .prob-btn:focus-visible {
+          outline: 2px solid #f8f3e1;
+          outline-offset: 2px;
+        }
+        @media (max-width: 1100px) {
+          .prob-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .prob-close {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+          }
+        }
+        @media (max-width: 680px) {
+          .prob-section { padding: 72px 24px; }
+          .prob-grid { grid-template-columns: minmax(0, 1fr); }
+          .prob-card { min-height: 0; }
+          .prob-h2 { font-size: clamp(32px, 6vw, 40px); line-height: 1.1; }
+          .prob-close-line { font-size: clamp(24px, 5vw, 30px); line-height: 1.3; }
+        }
+      `}</style>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="max-w-3xl">
-          <Eyebrow tone="ink">Built for active renters</Eyebrow>
-          <h2 className="mt-4 font-display font-medium text-4xl lg:text-[52px] leading-[1.05] tracking-[-0.02em] text-[var(--color-brand-cream)]">
-            You probably know this feeling.
-          </h2>
-          <p className="mt-5 text-base lg:text-lg italic text-[var(--color-brand-sage)]">
+      <div className="prob-inner">
+        <div>
+          <div className="prob-eyebrow">
+            <span className="prob-dot" />
+            Built for active renters
+          </div>
+          <h2 className="prob-h2">You probably know this feeling.</h2>
+          <p className="prob-sub">
             Apartment hunting is broken. We rebuilt the part you actually use.
           </p>
         </div>
 
-        <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {CARDS.map((c, i) => (
-            <motion.div
-              key={c.pain}
-              initial={reduce ? false : { opacity: 0, y: 18 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-card p-7 flex flex-col gap-5 border"
-              style={{
-                borderColor: "color-mix(in oklab, var(--color-brand-cream) 14%, transparent)",
-                backgroundColor: "color-mix(in oklab, var(--color-brand-cream) 5%, transparent)",
-              }}
-            >
-              <p className="font-display text-xl leading-snug text-[var(--color-brand-cream)]">
-                {c.pain}
-              </p>
-              <p className="text-sm text-[var(--color-brand-sage)] leading-relaxed mt-auto">
-                → {c.fix}
-              </p>
-            </motion.div>
+        <div className="prob-grid">
+          {CARDS.map((c) => (
+            <div key={c.pain} className="prob-card">
+              <p className="prob-pain">{c.pain}</p>
+              <p className="prob-fix">{c.fix}</p>
+            </div>
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div className="font-display text-2xl lg:text-3xl text-[var(--color-brand-cream)] leading-snug max-w-xl">
+        <div className="prob-close">
+          <div className="prob-close-line">
             Start free — see what comes in this week.
           </div>
-          <Link
-            to="/onboarding"
-            className="group inline-flex items-center justify-center gap-2 h-13 px-7 rounded-pill text-sm font-semibold text-[var(--color-brand-charcoal)] transition-all hover:opacity-90 whitespace-nowrap"
-            style={{ backgroundColor: "var(--color-brand-cream)" }}
-          >
-            Get started
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+          <Link to="/onboarding" className="prob-btn">
+            Get started →
           </Link>
         </div>
       </div>
