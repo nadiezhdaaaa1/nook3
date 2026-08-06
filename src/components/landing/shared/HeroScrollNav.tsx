@@ -303,15 +303,13 @@ export function HeroScrollNav() {
           height: 40px;
           width: 40px;
           border-radius: 12px;
-          border: 1px solid rgba(0,0,0,0.10);
-          background: ${SURFACE};
+          border: none;
+          background: transparent;
           color: ${INK};
-          backdrop-filter: blur(6px);
-          transition: background-color 0.2s ease, border-color 0.2s ease;
+          transition: opacity 0.2s ease;
         }
         .hero-nav-burger:hover {
-          background: ${SURFACE_HOVER};
-          border-color: rgba(0,0,0,0.18);
+          opacity: 0.7;
         }
 
         .hero-nav-sheet {
