@@ -36,13 +36,13 @@ export function HeroEmailField({
       />
       <style>{`
         .hero-email-input {
+          box-sizing: content-box;
           height: 56px;
           width: 100%;
-          max-width: 336px;
+          max-width: 312px;
           padding: 0 18px;
           border-radius: 12px;
-          border-width: 1.5px;
-          border-style: solid;
+          border: 1px solid rgba(0, 0, 0, 0.20);
           background-color: #ffffff;
           font-size: 16px;
           color: #241c12;
