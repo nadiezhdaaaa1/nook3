@@ -307,6 +307,7 @@ function badgeFor(tierId: string, cycle: Cycle) {
 
 function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number }) {
   const dark = tier.variant !== "light";
+  const navigate = useNavigate();
   const badge = badgeFor(tier.id, cycle);
   const text = dark ? CREAM : "#241c12";
   const checkColor = dark ? "#c2dd93" : LEAF;
