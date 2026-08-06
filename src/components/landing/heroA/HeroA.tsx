@@ -484,7 +484,16 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
           background: ${COLORS.surface};
           border: 1px solid ${COLORS.border};
           backdrop-filter: blur(6px);
+          transition: background-color 0.2s ease, border-color 0.2s ease;
         }
+        .hero-a-pill:hover {
+          background: rgba(255,255,255,0.7);
+          border-color: rgba(206,79,18,0.45);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-a-pill { transition: none; }
+        }
+
         .hero-a-menu {
           position: absolute;
           left: 0;
