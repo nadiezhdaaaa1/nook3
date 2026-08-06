@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useReducedMotion } from "framer-motion";
 import { Bed, Bath, Ruler, ShieldCheck, CheckCircle2, Check } from "lucide-react";
 import keysAsset from "@/assets/keys.png.asset.json";
-import { RollText } from "@/components/ui/RollText";
+import { OriginButton } from "@/components/ui/origin-button";
 import {
   COLORS,
   DISPLAY_VAR,
