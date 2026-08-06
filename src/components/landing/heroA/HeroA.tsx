@@ -541,11 +541,13 @@ function RollCta({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 16px 24px;
+          box-sizing: border-box;
+          height: 56px;
+          padding: 0 24px;
           border-radius: 12px;
           font-size: 16px;
           font-weight: 500;
-          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+          transition: background-color 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
       `}</style>
     </>
