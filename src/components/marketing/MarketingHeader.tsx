@@ -32,7 +32,7 @@ export function MarketingHeader() {
           <Logo className="text-xl" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden lg:flex items-center gap-7">
           <RollText as="a" href="#how" className="text-sm font-medium text-charcoal-700 hover:text-charcoal-950 transition-colors">
             How it works
           </RollText>
@@ -54,7 +54,7 @@ export function MarketingHeader() {
           <RollText
             as={Link}
             to="/login"
-            className="hidden md:inline-flex h-10 items-center px-3 text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 transition-colors"
+            className="hidden lg:inline-flex h-10 items-center px-3 text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 transition-colors"
           >
             Sign in
           </RollText>
@@ -68,7 +68,7 @@ export function MarketingHeader() {
 
           <button
             onClick={() => setOpen(true)}
-            className="md:hidden h-10 w-10 inline-flex items-center justify-center rounded-pill hover:bg-charcoal-950/5"
+            className="lg:hidden h-10 w-10 inline-flex items-center justify-center rounded-pill hover:bg-charcoal-950/5"
             aria-label="Open menu"
           >
             <Menu className="h-5 w-5" />
@@ -77,7 +77,7 @@ export function MarketingHeader() {
       </div>
 
       {open && (
-        <div className="md:hidden fixed inset-0 z-[60] bg-[#fbf4e6] flex flex-col">
+        <div className="lg:hidden fixed inset-0 z-[60] bg-[#fbf4e6] flex flex-col">
           <div className="h-18 px-6 flex items-center justify-between border-b border-charcoal-950/8 py-3">
             <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
               <LogoMark size={32} />
