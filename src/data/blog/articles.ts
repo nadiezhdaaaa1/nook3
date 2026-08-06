@@ -3,7 +3,6 @@
 
 
 import coverVerifyRS from "@/assets/blog/how-to-verify-rent-stabilized-apartment-nyc.jpg";
-import coverRSvsRC from "@/assets/blog/rent-stabilization-vs-rent-control.jpg";
 import coverSpotFake from "@/assets/blog/spot-fake-apartment-listing.jpg";
 import coverBrokerFees from "@/assets/blog/broker-fees-explained.jpg";
 import coverNycTimeline from "@/assets/blog/apartment-hunting-nyc-timeline-costs.jpg";
