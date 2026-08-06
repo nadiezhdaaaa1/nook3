@@ -546,7 +546,7 @@ function RollCta({
           border-radius: 12px;
           font-size: 16px;
           font-weight: 500;
-          transition: background-color 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+          transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
       `}</style>
     </>
