@@ -412,10 +412,7 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
       <OriginButton
         className="w-full"
         style={{ borderRadius: 12 }}
-        onClick={() => {
-          const navigate = useNavigate();
-          navigate({ to: tier.ctaTo });
-        }}
+        onClick={() => navigate({ to: tier.ctaTo })}
       >
         {tier.cta}
       </OriginButton>
