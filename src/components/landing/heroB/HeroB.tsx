@@ -159,6 +159,7 @@ export function HeroB() {
                 onClick={startSignup}
                 reduced={reduced}
                 label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+                secondary={city.comingSoon}
               />
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 3-day trial. Cancel anytime.
@@ -722,13 +723,16 @@ function RollCtaB({
   onClick,
   reduced,
   label = "Get free alerts",
+  secondary = false,
 }: {
   onClick: () => void;
   reduced: boolean;
   label?: string;
+  secondary?: boolean;
 }) {
   const [hover, setHover] = useState(false);
   const chars = label.split("");
+  const isSecondary = secondary || label === "Join the watchlist";
 
   return (
     <button
@@ -741,8 +745,10 @@ function RollCtaB({
       className="hero-b-cta hero-b-ring"
       style={{
         ...uiFont,
-        backgroundColor: hover ? COLORS.clayHover : COLORS.clay,
-        boxShadow: hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
+        backgroundColor: isSecondary ? (hover ? "rgba(160,87,18,0.08)" : "transparent") : hover ? COLORS.clayHover : COLORS.clay,
+        border: isSecondary ? `1.5px solid ${hover ? COLORS.clayHover : COLORS.clay}` : "none",
+        color: isSecondary ? (hover ? COLORS.clayHover : COLORS.clay) : "#ffffff",
+        boxShadow: isSecondary ? "none" : hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
         transform: hover ? "translateY(-1px)" : "translateY(0)",
       }}
     >
@@ -782,10 +788,10 @@ function RollCtaB({
           justify-content: center;
           padding: 16px 24px;
           border-radius: 12px;
-          color: #ffffff;
+          color: inherit;
           font-size: 16px;
           font-weight: 500;
-          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
         .hero-b-cta-roll { position: relative; display: block; overflow: hidden; line-height: 1.25; }
         .hero-b-cta-layer { display: flex; }

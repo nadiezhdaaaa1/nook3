@@ -123,6 +123,7 @@ export function HeroA() {
                 key={city.comingSoon ? "waitlist" : "alerts"}
                 onClick={startSignup}
                 label={city.comingSoon ? "Join the watchlist" : "Get free alerts"}
+                secondary={city.comingSoon}
               />
 
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
@@ -486,8 +487,17 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
 
 /* ---------------- hero CTA with character roll ---------------- */
 
-function RollCta({ onClick, label = "Get free alerts" }: { onClick: () => void; label?: string }) {
+function RollCta({
+  onClick,
+  label = "Get free alerts",
+  secondary = false,
+}: {
+  onClick: () => void;
+  label?: string;
+  secondary?: boolean;
+}) {
   const [hover, setHover] = useState(false);
+  const isSecondary = secondary || label === "Join the watchlist";
 
   return (
     <>
@@ -499,8 +509,10 @@ function RollCta({ onClick, label = "Get free alerts" }: { onClick: () => void; 
         className="hero-a-cta focus-visible-ring"
         style={{
           ...uiFont,
-          backgroundColor: hover ? COLORS.clayHover : COLORS.clay,
-          boxShadow: hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
+          backgroundColor: isSecondary ? (hover ? "rgba(160,87,18,0.08)" : "transparent") : hover ? COLORS.clayHover : COLORS.clay,
+          border: isSecondary ? `1.5px solid ${hover ? COLORS.clayHover : COLORS.clay}` : "none",
+          color: isSecondary ? (hover ? COLORS.clayHover : COLORS.clay) : "#ffffff",
+          boxShadow: isSecondary ? "none" : hover ? "4px 4px 0 rgba(36,28,18,0.14)" : "3px 3px 0 rgba(36,28,18,0.14)",
           transform: hover ? "translateY(-1px)" : "translateY(0)",
         }}
       >
@@ -514,10 +526,9 @@ function RollCta({ onClick, label = "Get free alerts" }: { onClick: () => void; 
           justify-content: center;
           padding: 16px 24px;
           border-radius: 12px;
-          color: #ffffff;
           font-size: 16px;
           font-weight: 500;
-          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+          transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
       `}</style>
     </>
