@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Check, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { OriginButton } from "@/components/ui/origin-button";
 import {
   DISPLAY_VAR,
   FONT_DISPLAY,
@@ -306,6 +307,7 @@ function badgeFor(tierId: string, cycle: Cycle) {
 
 function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number }) {
   const dark = tier.variant !== "light";
+  const navigate = useNavigate();
   const badge = badgeFor(tier.id, cycle);
   const text = dark ? CREAM : "#241c12";
   const checkColor = dark ? "#c2dd93" : LEAF;
@@ -317,18 +319,11 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
         boxShadow: DARK_SHADOW,
         color: text,
       }
-    : {
-        background: "#ffffff",
-        border: "1px solid rgba(36,28,18,0.12)",
-        color: text,
-      };
-
-  const ctaStyle: React.CSSProperties =
-    tier.variant === "light"
-      ? { background: "transparent", border: "1.5px solid #d66c38", color: "#a05712" }
-      : tier.variant === "warm"
-        ? { background: "#dce9cc", color: "#445500", border: "none" }
-        : { background: "#e7ddf2", color: "#42416a", border: "none" };
+      : {
+          background: "#ffffff",
+          border: "1px solid rgba(36,28,18,0.12)",
+          color: text,
+        };
 
   return (
     <div className={`pr-card${dark ? " pr-card-dark" : ""}`} style={cardStyle}>
@@ -407,25 +402,13 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
         </span>
       </div>
 
-      <Link
-        to={tier.ctaTo}
-        className="pr-cta"
-        style={{
-          ...ui,
-          display: "block",
-          width: "100%",
-          textAlign: "center",
-          borderRadius: 12,
-          padding: "16px 24px",
-          fontSize: 16,
-          fontWeight: 500,
-          textDecoration: "none",
-          boxSizing: "border-box",
-          ...ctaStyle,
-        }}
+      <OriginButton
+        className="w-full"
+        style={{ borderRadius: 12 }}
+        onClick={() => navigate({ to: tier.ctaTo })}
       >
         {tier.cta}
-      </Link>
+      </OriginButton>
 
       {tier.finePrint && (
         <AnimatePresence mode="wait" initial={false}>
