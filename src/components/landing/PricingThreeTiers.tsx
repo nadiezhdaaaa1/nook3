@@ -139,6 +139,7 @@ const DARK_SHADOW =
 export function PricingThreeTiers() {
   const [cycle, setCycle] = useState<Cycle>("monthly");
   const reduce = useReducedMotion();
+  const navigate = useNavigate();
   const dur = reduce ? 0 : 0.25;
 
   return (
