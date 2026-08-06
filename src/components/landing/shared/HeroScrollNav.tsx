@@ -266,6 +266,19 @@ export function HeroScrollNav() {
           font-weight: 500;
           font-variation-settings: "wght" 500;
           transition: font-variation-settings 0.25s ease, font-weight 0.25s ease;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        /* Reserve the bold width so siblings never shift on hover */
+        .hero-nav-link::after {
+          content: attr(data-label);
+          height: 0;
+          overflow: hidden;
+          visibility: hidden;
+          pointer-events: none;
+          font-weight: 700;
+          font-variation-settings: "wght" 700;
         }
         .hero-nav-link:hover {
           font-weight: 700;
