@@ -41,7 +41,7 @@ export function HowItWorksThreeSteps() {
   return (
     <section id="how" className="hiw-section">
       <style>{`
-        .hiw-section { background: #faf6ee; padding: 88px 24px; }
+        .hiw-section { background: #faf6ee; padding: 104px 24px; }
         .hiw-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
         .hiw-h2 { font-size: 48px; line-height: 54px; letter-spacing: -1.2px; max-width: 760px; }
         .hiw-route { position: relative; height: 64px; }
