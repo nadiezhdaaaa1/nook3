@@ -136,12 +136,23 @@ export function HeroA() {
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
 
-              <RollCta
-                key={city.comingSoon ? "waitlist" : "start-free"}
-                onClick={startSignup}
-                label={city.comingSoon ? "Join the watchlist" : "Start free"}
-                secondary={city.comingSoon}
-              />
+              {city.comingSoon ? (
+                <RollCta
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  onClick={startSignup}
+                  label={city.comingSoon ? "Join the watchlist" : "Start free"}
+                  secondary={city.comingSoon}
+                />
+              ) : (
+                <OriginButton
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  variant="main"
+                  onClick={startSignup}
+                  className="hero-a-cta focus-visible-ring"
+                >
+                  Start free
+                </OriginButton>
+              )}
 
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
