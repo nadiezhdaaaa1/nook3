@@ -526,11 +526,10 @@ function RollCta({
         className="hero-a-cta focus-visible-ring"
         style={{
           ...uiFont,
-          backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : "#D66C38",
+        backgroundColor: isSecondary ? (hover ? "rgba(214,108,56,0.08)" : "transparent") : hover ? "#E8885A" : "#D66C38",
           border: isSecondary ? "1.5px solid #D66C38" : "none",
           color: isSecondary ? "#D66C38" : "#ffffff",
           boxShadow: "none",
-          transform: hover ? "translateY(-1px)" : "translateY(0)",
         }}
       >
         {label}
