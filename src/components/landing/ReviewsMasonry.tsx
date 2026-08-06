@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   DISPLAY_VAR,
   FONT_DISPLAY,
@@ -213,7 +214,38 @@ const chris = (
   />
 );
 
+type Layout = "desktop" | "tablet" | "mobile";
+
+const LAYOUTS: Record<Layout, React.ReactNode[][]> = {
+  desktop: [
+    [priya, twelveMin],
+    [featured, fourDays],
+    [sara, chris],
+  ],
+  tablet: [
+    [priya, twelveMin, sara],
+    [featured, fourDays, chris],
+  ],
+  mobile: [[featured, twelveMin, priya, fourDays, sara, chris]],
+};
+
+function useLayout(): Layout {
+  const [layout, setLayout] = useState<Layout>("desktop");
+  useEffect(() => {
+    const read = () =>
+      setLayout(
+        window.innerWidth <= 680 ? "mobile" : window.innerWidth <= 1100 ? "tablet" : "desktop",
+      );
+    read();
+    window.addEventListener("resize", read);
+    return () => window.removeEventListener("resize", read);
+  }, []);
+  return layout;
+}
+
 export function ReviewsMasonry() {
+  const columns = LAYOUTS[useLayout()];
+
   return (
     <section id="reviews" className="rv-section">
       <style>{`
@@ -223,19 +255,14 @@ export function ReviewsMasonry() {
         .rv-h2 { font-size: 48px; line-height: 1.2; letter-spacing: -1.2px; margin: 0; }
         .rv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
         .rv-col { display: flex; flex-direction: column; gap: 24px; }
-        .rv-col-2, .rv-col-3, .rv-flat { display: none; }
         @media (max-width: 1100px) {
           .rv-head-row { flex-direction: column; align-items: flex-start; gap: 16px; }
           .rv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-          .rv-col-1, .rv-col-b { display: none; }
-          .rv-col-2, .rv-col-3 { display: flex; }
         }
         @media (max-width: 680px) {
           .rv-section { padding: 72px 20px; }
           .rv-h2 { font-size: clamp(32px, 6vw, 40px); letter-spacing: -0.8px; }
           .rv-grid { grid-template-columns: minmax(0, 1fr); }
-          .rv-col-2, .rv-col-3 { display: none; }
-          .rv-flat { display: flex; }
         }
       `}</style>
 
@@ -260,41 +287,11 @@ export function ReviewsMasonry() {
         </header>
 
         <div className="rv-grid">
-          {/* 3-column (desktop) */}
-          <div className="rv-col rv-col-1">
-            {priya}
-            {twelveMin}
-          </div>
-          <div className="rv-col rv-col-b">
-            {featured}
-            {fourDays}
-          </div>
-          <div className="rv-col rv-col-b">
-            {sara}
-            {chris}
-          </div>
-
-          {/* 2-column (≤1100px) */}
-          <div className="rv-col rv-col-2">
-            {priya}
-            {twelveMin}
-            {sara}
-          </div>
-          <div className="rv-col rv-col-3">
-            {featured}
-            {fourDays}
-            {chris}
-          </div>
-
-          {/* single column (≤680px) */}
-          <div className="rv-col rv-flat">
-            {featured}
-            {twelveMin}
-            {priya}
-            {fourDays}
-            {sara}
-            {chris}
-          </div>
+          {columns.map((col, i) => (
+            <div className="rv-col" key={i}>
+              {col}
+            </div>
+          ))}
         </div>
       </div>
     </section>
