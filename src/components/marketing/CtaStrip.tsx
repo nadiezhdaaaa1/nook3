@@ -33,11 +33,8 @@ const CSS = `
 @media (max-width:680px) {
   .ctab { padding:72px 0; }
   .ctab-h2 { font-size:clamp(30px,7vw,36px); }
-  .ctab-btn { width:100%; max-width:320px; }
-}
   .ctab-btn-origin { width:100%; max-width:320px; }
 }
-@media (prefers-reduced-motion:reduce) { .ctab-btn { transition:none; } .ctab-btn:hover { transform:none; } }
 `;
 
 export function CtaStrip() {
