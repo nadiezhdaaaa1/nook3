@@ -199,23 +199,7 @@ export function HowItWorksThreeSteps() {
           >
             Most users find their place within 3 weeks
           </div>
-          <Link
-            to="/onboarding"
-            className="hiw-cta"
-            style={{
-              ...ui,
-              fontSize: 16,
-              fontWeight: 500,
-              color: "#ffffff",
-              background: CLAY,
-              borderRadius: 12,
-              padding: "16px 24px",
-              boxShadow: "3px 3px 0 rgba(36,28,18,0.14)",
-              transition: "background 180ms ease, transform 180ms ease, box-shadow 180ms ease",
-            }}
-          >
-            Start free
-          </Link>
+          <HiwCta to="/onboarding" label="Start free" />
         </div>
       </div>
     </section>
