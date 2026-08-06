@@ -353,10 +353,11 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
                   : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }
               }
               style={{
-
                 ...ui,
+                transformOrigin: "center center",
                 fontVariationSettings: `${UI_VAR}, "wght" 750`,
                 display: "inline-block",
+
                 borderRadius: 999,
                 padding: "7px 16px",
                 background: badge.bg,
