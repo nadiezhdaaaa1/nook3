@@ -661,6 +661,14 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
                 <span className="text-base font-medium" style={{ ...uiFont, color: COLORS.pillCity }}>
                   {c.pillLabel}
                 </span>
+                {c.comingSoon && (
+                  <span
+                    className="rounded-[80px] px-2 py-0.5 text-[11px] font-medium"
+                    style={{ ...uiFont, backgroundColor: COLORS.soonBg, color: COLORS.soonText }}
+                  >
+                    Coming soon
+                  </span>
+                )}
               </button>
             </li>
           ))}
