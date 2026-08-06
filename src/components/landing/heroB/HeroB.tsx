@@ -114,26 +114,8 @@ export function HeroB() {
               className="relative z-30 flex flex-wrap items-center gap-4"
             >
               <CityPillB city={city} onPick={pick} />
-              <AnimatePresence initial={false}>
-                {city.comingSoon && (
-                  <motion.span
-                    key="soon"
-                    initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    transition={{
-                      duration: reduced ? 0.3 : 0.25,
-                      ease: EASE_REVEAL,
-                      delay: reduced ? 0 : 0.2,
-                    }}
-                    className="inline-flex items-center rounded-[80px] px-2 py-1 text-xs font-medium"
-                    style={{ ...uiFont, backgroundColor: COLORS.soonBg, color: COLORS.soonText }}
-                  >
-                    Coming soon
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </motion.div>
+
 
             <H1RevealB reduced={reduced} />
 
@@ -663,19 +645,12 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
                 <span className="text-base font-medium" style={{ ...uiFont, color: COLORS.pillCity }}>
                   {c.pillLabel}
                 </span>
-                {c.comingSoon && (
-                  <span
-                    className="rounded-[80px] px-2 py-0.5 text-[11px] font-medium"
-                    style={{ ...uiFont, backgroundColor: COLORS.soonBg, color: COLORS.soonText }}
-                  >
-                    Coming soon
-                  </span>
-                )}
               </button>
             </li>
           ))}
         </ul>
       )}
+
 
       <style>{`
         .hero-b-pill {
