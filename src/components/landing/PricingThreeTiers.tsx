@@ -209,7 +209,7 @@ export function PricingThreeTiers() {
             aria-label="Billing cycle"
             style={{
               display: "inline-flex",
-              gap: 0,
+              gap: 2,
               padding: 4,
               borderRadius: 16,
               background: "rgba(0,0,0,0.08)",
