@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
 import { RollText } from "@/components/ui/RollText";
+import { OriginButton } from "@/components/ui/origin-button";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
 import { HeroEmailField } from "@/components/landing/shared/HeroEmailField";
@@ -151,13 +152,24 @@ export function HeroB() {
               {!city.comingSoon && (
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
-              <RollCtaB
-                key={city.comingSoon ? "waitlist" : "start-free"}
-                onClick={startSignup}
-                reduced={reduced}
-                label={city.comingSoon ? "Join the watchlist" : "Start free"}
-                secondary={city.comingSoon}
-              />
+              {city.comingSoon ? (
+                <RollCtaB
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  onClick={startSignup}
+                  reduced={reduced}
+                  label={city.comingSoon ? "Join the watchlist" : "Start free"}
+                  secondary={city.comingSoon}
+                />
+              ) : (
+                <OriginButton
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  variant="main"
+                  onClick={startSignup}
+                  className="focus-visible-ring"
+                >
+                  Start free
+                </OriginButton>
+              )}
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>

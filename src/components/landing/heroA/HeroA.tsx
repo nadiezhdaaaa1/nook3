@@ -13,6 +13,7 @@ import {
 import { ChevronDown, MapPin } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
+import { OriginButton } from "@/components/ui/origin-button";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
 import { HeroEmailField } from "@/components/landing/shared/HeroEmailField";
@@ -135,12 +136,23 @@ export function HeroA() {
                 <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
               )}
 
-              <RollCta
-                key={city.comingSoon ? "waitlist" : "start-free"}
-                onClick={startSignup}
-                label={city.comingSoon ? "Join the watchlist" : "Start free"}
-                secondary={city.comingSoon}
-              />
+              {city.comingSoon ? (
+                <RollCta
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  onClick={startSignup}
+                  label={city.comingSoon ? "Join the watchlist" : "Start free"}
+                  secondary={city.comingSoon}
+                />
+              ) : (
+                <OriginButton
+                  key={city.comingSoon ? "waitlist" : "start-free"}
+                  variant="main"
+                  onClick={startSignup}
+                  className="focus-visible-ring"
+                >
+                  Start free
+                </OriginButton>
+              )}
 
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
