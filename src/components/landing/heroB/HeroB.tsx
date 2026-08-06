@@ -89,13 +89,18 @@ export function HeroB() {
   };
 
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const setOnboarding = useOnboardingStore((s) => s.set);
   const startSignup = () => {
     if (city.comingSoon) {
       setWaitlistOpen(true);
       return;
     }
+    const trimmed = email.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) setOnboarding("email", trimmed);
     navigate({ to: "/onboarding" });
   };
+
 
   return (
     <section
