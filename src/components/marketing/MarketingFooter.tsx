@@ -45,7 +45,7 @@ const CSS = `
   font-size:13px; line-height:22.1px; color:rgba(36,28,18,0.72); }
 .ftr-legal p { margin:0; }
 .ftr-legal-name { font-weight:650; letter-spacing:0.78px; text-transform:uppercase; color:rgba(36,28,18,0.85); }
-.ftr-wm { position:absolute; right:32px; bottom:0; width:330px; height:406px;
+.ftr-wm { position:absolute; right:32px; bottom:0; width:282px; height:347px;
   pointer-events:none; z-index:0; }
 .ftr a:focus-visible, .ftr button:focus-visible { outline:2px solid #241c12; outline-offset:2px; }
 @media (max-width:1100px) {
