@@ -237,9 +237,9 @@ export function HeroScrollNav() {
           position: absolute;
           inset: 0;
           border-radius: 16px;
-          background: rgba(255,255,255,0.6);
+          background: rgba(255,255,255,0.7);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(255,255,255,0.7);
+          border: 1px solid rgba(0,0,0,0.1);
           opacity: 0;
           will-change: opacity;
           pointer-events: none;
