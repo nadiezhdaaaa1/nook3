@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
-import { RollText } from "@/components/ui/RollText";
 import { OriginButton } from "@/components/ui/origin-button";
 
 const FONT_UI = '"Google Sans Flex", "Google Sans", system-ui, sans-serif';
@@ -87,36 +86,34 @@ export function HeroScrollNav() {
 
           <div className="hidden items-center gap-7 md:flex">
             {NAV_LINKS.map((l) => (
-              <RollText
+              <a
                 key={l.href}
-                as="a"
                 href={l.href}
-                className="rounded-sm text-sm font-medium transition-colors hero-nav-ring"
-                style={{ ...uiFont, color: BODY }}
+                className="hero-nav-link rounded-sm text-sm hero-nav-ring"
+                style={{ fontFamily: FONT_UI, color: BODY }}
               >
                 {l.label}
-              </RollText>
+              </a>
             ))}
-            <RollText
-              as={Link}
+            <Link
               to="/blog"
               search={{ category: "all" }}
-              className="rounded-sm text-sm font-medium transition-colors hero-nav-ring"
-              style={{ ...uiFont, color: BODY }}
+              className="hero-nav-link rounded-sm text-sm hero-nav-ring"
+              style={{ fontFamily: FONT_UI, color: BODY }}
             >
               Blog
-            </RollText>
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
-            <RollText
-              as={Link}
+            <Link
               to="/login"
-              className="hidden rounded-sm px-3 text-sm font-medium hero-nav-ring md:inline-flex"
-              style={{ ...uiFont, color: NAV_TEXT }}
+              className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring md:inline-flex"
+              style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
             >
               Sign in
-            </RollText>
+            </Link>
+
             <OriginButton
               variant="main"
               onClick={onSignup}
@@ -264,6 +261,19 @@ export function HeroScrollNav() {
           transition: transform 0.45s ${EASE_REVEAL};
         }
         .hero-nav-root[data-scrolled="true"] .hero-nav-logo { transform: scale(0.857); }
+
+        .hero-nav-link {
+          font-weight: 500;
+          font-variation-settings: "wght" 500;
+          transition: font-variation-settings 0.25s ease, font-weight 0.25s ease;
+        }
+        .hero-nav-link:hover {
+          font-weight: 700;
+          font-variation-settings: "wght" 700;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-nav-link { transition: none; }
+        }
 
         .hero-nav-ring:focus-visible {
           outline: 2px solid ${INK};
