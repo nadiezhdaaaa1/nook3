@@ -727,25 +727,3 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
   );
 }
 
-        .hero-b-cta {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          box-sizing: border-box;
-          height: 56px;
-          padding: 0 24px;
-          border-radius: 12px;
-          color: inherit;
-          font-size: 16px;
-          font-weight: 500;
-          transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-        }
-        .hero-b-cta-roll { position: relative; display: block; overflow: hidden; line-height: 1.25; }
-        .hero-b-cta-layer { display: flex; }
-        .hero-b-cta-layer-2 { position: absolute; inset: 0; transform: translateY(100%); }
-        .hero-b-cta-char { display: inline-block; will-change: transform; }
-      `}</style>
-    </button>
-  );
-}
