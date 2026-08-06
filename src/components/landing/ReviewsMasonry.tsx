@@ -1,360 +1,298 @@
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { Star } from "lucide-react";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
+import { useEffect, useState } from "react";
+import {
+  DISPLAY_VAR,
+  FONT_DISPLAY,
+  FONT_UI,
+  UI_VAR,
+} from "@/components/landing/heroA/heroCities";
 
-/* ----------------------------- shared bits ----------------------------- */
+const ui = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
+const display = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
 
-const ease = [0.16, 1, 0.3, 1] as const;
+const INK = "#2b2521";
+const QUOTE_INK = "#241c12";
+const BODY = "#4a4a46";
+const LABEL = "#3a3a37";
+const SUFFIX = "#7a6f5c";
+const EMBER = "#cb4a0a";
+const PURPLE = "#7040c1";
+const OLIVE = "#748b12";
 
-function useCardVariants(): Variants {
-  return {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
-  };
+interface Attribution {
+  name: string;
+  suffix?: string;
+  suffixColor?: string;
 }
 
-function Divider({ tone = "sage" }: { tone?: "sage" | "cream" }) {
+function Attribution({ name, suffix, suffixColor = SUFFIX }: Attribution) {
+  return (
+    <figcaption style={{ ...ui, fontSize: 14, color: QUOTE_INK }}>
+      <span style={{ fontWeight: 650 }}>{name}</span>
+      {suffix && (
+        <span style={{ fontWeight: 400, color: suffixColor }}>{` · ${suffix}`}</span>
+      )}
+    </figcaption>
+  );
+}
+
+function Rule({ color }: { color: string }) {
   return (
     <div
-      className="h-px w-10 my-4"
-      style={{
-        backgroundColor:
-          tone === "sage" ? "var(--color-brand-sage)" : "color-mix(in oklab, var(--color-brand-cream) 60%, transparent)",
-      }}
+      style={{ width: 34, height: 2, borderRadius: 2, background: color, flexShrink: 0 }}
+      aria-hidden
     />
   );
 }
 
-function InlineQuote({
-  children,
-  markColor,
-  className = "",
+const cardStyle: React.CSSProperties = {
+  background: "#ffffff",
+  border: "1px solid rgba(0,0,0,0.1)",
+  borderRadius: 24,
+  padding: 32,
+  display: "flex",
+  flexDirection: "column",
+  gap: 24,
+  margin: 0,
+};
+
+function QuoteCard({
+  quote,
+  rule,
+  fontSize = 18,
+  quoteColor = QUOTE_INK,
+  label,
+  attribution,
 }: {
-  children: string;
-  markColor: string;
-  className?: string;
+  quote: string;
+  rule: string;
+  fontSize?: number;
+  quoteColor?: string;
+  label?: string;
+  attribution: Attribution;
 }) {
   return (
-    <blockquote className={className}>
-      <span
-        aria-hidden="true"
-        className="font-display"
-        style={{ color: markColor, fontWeight: 500 }}
-      >
-        “
-      </span>
-      {children}
-      <span
-        aria-hidden="true"
-        className="font-display"
-        style={{ color: markColor, fontWeight: 500 }}
-      >
-        ”
-      </span>
-    </blockquote>
-  );
-}
-
-/* --------------------------------- data -------------------------------- */
-
-const HERO = {
-  quote:
-    "I'll be honest — I signed up expecting to cancel after the trial. But the alerts were actually relevant. I got 4 matches in the first week that fit my exact budget. Two were apartments I would have missed.",
-  name: "Jake M.",
-  meta: "Premium · 3 months",
-};
-
-const STAT_MAYA = {
-  big: "4 days",
-  sub: "from setup to signed lease.",
-  quote:
-    "Set up Nook on Friday, got a match Saturday morning at 8am, signed the lease Tuesday. The rent-stabilized badge sold me.",
-  name: "Maya R.",
-  meta: "Williamsburg",
-};
-
-const STAT_DANIEL = {
-  big: "12 min",
-  sub: "from listing to first inquiry.",
-  quote:
-    "Sent me a 1BR at $2,400 twelve minutes after it posted. Got there at noon. Signed the lease that night.",
-  name: "Daniel K.",
-  meta: "Brooklyn",
-};
-
-const COMPACT_PRIYA = {
-  quote:
-    "The 'pet-friendly' filter actually means pet-friendly. I had a hard time with other apps' pet filters.",
-  name: "Priya S.",
-  bg: "sage" as const,
-};
-
-const COMPACT_SARA = {
-  quote:
-    "The AI assistant is genuinely useful. I sent it a listing and it pulled the building's permit history and recent rent changes — made me ask the landlord questions I wouldn't have thought of.",
-  name: "Sara L.",
-  bg: "cream" as const,
-};
-
-const COMPACT_CHRIS = {
-  quote:
-    "Moving cross-country, didn't know which neighborhood I wanted. Set up three searches in different areas. Killed two after a week, found my place through the third.",
-  name: "Chris D.",
-  bg: "terracotta" as const,
-};
-
-/* ------------------------------- cards --------------------------------- */
-
-function HeroCard() {
-  const variants = useCardVariants();
-  return (
-    <motion.figure
-      variants={variants}
-      className="relative overflow-hidden rounded-[16px] p-10 transition-shadow duration-300 hover:shadow-[0_20px_60px_-20px_rgba(194,102,78,0.35)]"
-      style={{ backgroundColor: "var(--color-brand-charcoal)" }}
-    >
-      {/* decorative background quote */}
-      <span
-        aria-hidden="true"
-        className="absolute -top-4 -left-2 font-display select-none pointer-events-none"
-        style={{
-          fontSize: "180px",
-          lineHeight: 1,
-          color: "var(--color-brand-sage)",
-          opacity: 0.12,
-          fontStyle: "italic",
-        }}
-      >
-        “
-      </span>
-
-      <div
-        className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.18em] relative"
-        style={{ color: "var(--color-brand-sage)" }}
-      >
-        <Star className="h-3 w-3 fill-current" />
-        Featured
-      </div>
-
+    <figure style={cardStyle}>
+      {label && (
+        <div
+          style={{
+            ...ui,
+            fontVariationSettings: `${UI_VAR}, "wght" 750`,
+            fontWeight: 750,
+            fontSize: 11,
+            letterSpacing: "1.76px",
+            textTransform: "uppercase",
+            color: OLIVE,
+          }}
+        >
+          {label}
+        </div>
+      )}
       <blockquote
-        className="relative mt-5 font-display italic"
         style={{
-          color: "var(--color-brand-cream)",
-          fontSize: "22px",
-          lineHeight: 1.5,
-          fontWeight: 400,
+          ...display,
+          fontWeight: 470,
+          fontSize,
+          lineHeight: 1.42,
+          color: quoteColor,
+          margin: 0,
         }}
       >
-        <span
-          aria-hidden="true"
-          style={{ color: "var(--color-brand-terracotta)", fontWeight: 500 }}
-        >
-          “
-        </span>
-        {HERO.quote}
-        <span
-          aria-hidden="true"
-          style={{ color: "var(--color-brand-terracotta)", fontWeight: 500 }}
-        >
-          ”
-        </span>
+        {quote}
       </blockquote>
-
-      <Divider tone="cream" />
-
-      <figcaption className="relative">
-        <div
-          className="text-[15px] font-medium"
-          style={{ color: "var(--color-brand-cream)", fontFamily: "var(--font-sans, Inter), sans-serif" }}
-        >
-          {HERO.name}
-        </div>
-        <div
-          className="text-[13px] mt-0.5"
-          style={{ color: "var(--color-brand-sage)", fontFamily: "var(--font-sans, Inter), sans-serif" }}
-        >
-          {HERO.meta}
-        </div>
-      </figcaption>
-    </motion.figure>
+      <Rule color={rule} />
+      <Attribution {...attribution} />
+    </figure>
   );
 }
 
-function StatCard({ data }: { data: typeof STAT_MAYA }) {
-  const variants = useCardVariants();
-  return (
-    <motion.figure
-      variants={variants}
-      className="rounded-[16px] border p-8 transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-18px_rgba(43,37,33,0.25)]"
-      style={{
-        backgroundColor: "var(--color-brand-soft)",
-        borderColor: "var(--color-brand-clay)",
-      }}
-    >
-      <div
-        className="font-display leading-[0.95] tracking-[-0.02em]"
-        style={{
-          color: "var(--color-brand-charcoal)",
-          fontSize: "clamp(48px, 6vw, 68px)",
-          fontWeight: 500,
-        }}
-      >
-        {data.big}
-      </div>
-      <div
-        className="mt-2 text-[16px]"
-        style={{
-          color: "var(--color-brand-charcoal)",
-          fontFamily: "var(--font-sans, Inter), sans-serif",
-        }}
-      >
-        {data.sub}
-      </div>
-
-      <InlineQuote
-        markColor="var(--color-brand-terracotta)"
-        className="mt-5 font-display italic text-[15px] leading-[1.55]"
-      >
-        {data.quote}
-      </InlineQuote>
-
-      <Divider />
-
-      <figcaption>
-        <div
-          className="text-[14px] font-medium"
-          style={{ color: "var(--color-brand-charcoal)", fontFamily: "var(--font-sans, Inter), sans-serif" }}
-        >
-          {data.name}
-        </div>
-        <div
-          className="text-[12px] mt-0.5"
-          style={{ color: "var(--color-brand-sage)", fontFamily: "var(--font-sans, Inter), sans-serif" }}
-        >
-          {data.meta}
-        </div>
-      </figcaption>
-    </motion.figure>
-  );
-}
-
-function CompactCard({
-  data,
+function StatCard({
+  figure,
+  caption,
+  quote,
+  attribution,
 }: {
-  data: { quote: string; name: string; bg: "cream" | "sage" | "terracotta" };
+  figure: string;
+  caption: string;
+  quote: string;
+  attribution: Attribution;
 }) {
-  const variants = useCardVariants();
-  const bgMap = {
-    cream: { bg: "var(--color-brand-cream)", border: "color-mix(in oklab, var(--color-brand-clay) 70%, transparent)" },
-    sage: { bg: "color-mix(in oklab, var(--color-brand-sage) 22%, var(--color-brand-soft))", border: "color-mix(in oklab, var(--color-brand-sage) 45%, transparent)" },
-    terracotta: { bg: "color-mix(in oklab, var(--color-brand-terracotta) 14%, var(--color-brand-soft))", border: "color-mix(in oklab, var(--color-brand-terracotta) 35%, transparent)" },
-  };
-  const tone = bgMap[data.bg];
-
   return (
-    <motion.figure
-      variants={variants}
-      className="rounded-[12px] border p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-16px_rgba(43,37,33,0.25)]"
-      style={{ backgroundColor: tone.bg, borderColor: tone.border }}
-    >
-      <InlineQuote
-        markColor="var(--color-brand-terracotta)"
-        className="font-display italic text-[15px] leading-[1.55]"
-      >
-        {data.quote}
-      </InlineQuote>
-
-      <Divider />
-
-      <figcaption>
+    <figure style={cardStyle}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <div
-          className="text-[14px] font-medium"
-          style={{ color: "var(--color-brand-charcoal)", fontFamily: "var(--font-sans, Inter), sans-serif" }}
+          style={{
+            ...display,
+            fontWeight: 540,
+            fontSize: 54,
+            lineHeight: "54px",
+            color: INK,
+          }}
         >
-          {data.name}
+          {figure}
         </div>
-      </figcaption>
-    </motion.figure>
+        <div style={{ ...ui, fontSize: 14, lineHeight: "21px", color: SUFFIX }}>{caption}</div>
+      </div>
+      <blockquote
+        style={{
+          ...display,
+          fontWeight: 470,
+          fontSize: 16.5,
+          lineHeight: 1.42,
+          color: QUOTE_INK,
+          margin: 0,
+        }}
+      >
+        {quote}
+      </blockquote>
+      <Attribution {...attribution} />
+    </figure>
   );
 }
 
-/* ------------------------------- section ------------------------------- */
+/* --------------------------------- cards -------------------------------- */
+
+const priya = (
+  <QuoteCard
+    key="priya"
+    quote="“The 'pet-friendly' filter actually means pet-friendly. I had a hard time with other apps' pet filters.”"
+    rule={PURPLE}
+    attribution={{ name: "Priya S." }}
+  />
+);
+
+const twelveMin = (
+  <StatCard
+    key="12min"
+    figure="12 min"
+    caption="from listing to first inquiry."
+    quote="“Sent me a 1BR at $2,400 twelve minutes after it posted. Got there at noon. Signed the lease that night.”"
+    attribution={{ name: "Daniel K.", suffix: "Brooklyn" }}
+  />
+);
+
+const featured = (
+  <QuoteCard
+    key="featured"
+    label="Featured"
+    quote="“I'll be honest — I signed up expecting to cancel after the trial. But the alerts were actually relevant. I got 4 matches in the first week that fit my exact budget. Two were apartments I would have missed.”"
+    rule={OLIVE}
+    fontSize={20}
+    quoteColor={INK}
+    attribution={{
+      name: "Jake M.",
+      suffix: "Premium · 3 months",
+      suffixColor: "rgba(43,37,33,0.7)",
+    }}
+  />
+);
+
+const fourDays = (
+  <StatCard
+    key="4days"
+    figure="4 days"
+    caption="from setup to signed lease."
+    quote="“Set up Nook on Friday, got a match Saturday morning at 8am, signed the lease Tuesday. The rent-stabilized badge sold me.”"
+    attribution={{ name: "Maya R.", suffix: "Williamsburg" }}
+  />
+);
+
+const sara = (
+  <QuoteCard
+    key="sara"
+    quote="“The AI assistant is genuinely useful. I sent it a listing and it pulled the building's permit history and recent rent changes — made me ask the landlord questions I wouldn't have thought of.”"
+    rule={PURPLE}
+    attribution={{ name: "Sara L." }}
+  />
+);
+
+const chris = (
+  <QuoteCard
+    key="chris"
+    quote="“Moving cross-country, didn't know which neighborhood I wanted. Set up three searches in different areas. Killed two after a week, found my place through the third.”"
+    rule={EMBER}
+    attribution={{ name: "Chris D." }}
+  />
+);
+
+type Layout = "desktop" | "tablet" | "mobile";
+
+const LAYOUTS: Record<Layout, React.ReactNode[][]> = {
+  desktop: [
+    [priya, twelveMin],
+    [featured, fourDays],
+    [sara, chris],
+  ],
+  tablet: [
+    [priya, twelveMin, sara],
+    [featured, fourDays, chris],
+  ],
+  mobile: [[featured, twelveMin, priya, fourDays, sara, chris]],
+};
+
+function useLayout(): Layout {
+  const [layout, setLayout] = useState<Layout>("desktop");
+  useEffect(() => {
+    const read = () =>
+      setLayout(
+        window.innerWidth <= 680 ? "mobile" : window.innerWidth <= 1100 ? "tablet" : "desktop",
+      );
+    read();
+    window.addEventListener("resize", read);
+    return () => window.removeEventListener("resize", read);
+  }, []);
+  return layout;
+}
 
 export function ReviewsMasonry() {
-  const reduce = useReducedMotion();
-
-  const column = (children: React.ReactNode, orderMobile: number) => (
-    <motion.div
-      initial={reduce ? false : "hidden"}
-      whileInView={reduce ? undefined : "show"}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ staggerChildren: 0.08 }}
-      className="flex flex-col gap-4 lg:gap-5"
-      style={{ order: orderMobile }}
-    >
-      {children}
-    </motion.div>
-  );
+  const columns = LAYOUTS[useLayout()];
 
   return (
-    <section
-      className="py-24 lg:py-28"
-      style={{ backgroundColor: "var(--color-brand-soft)" }}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-          <div className="max-w-2xl">
-            <Eyebrow>Reviews</Eyebrow>
-            <h2 className="mt-3 font-display font-medium text-4xl lg:text-[52px] leading-[1.05] tracking-[-0.02em] text-[var(--color-brand-charcoal)]">
-              What renters are{" "}
-              <span className="italic text-[var(--color-brand-sage)]">actually saying.</span>
+    <section id="reviews" className="rv-section">
+      <style>{`
+        .rv-section { background: #f5f0e4; padding: 104px 24px; }
+        .rv-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+        .rv-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-top: 20px; }
+        .rv-h2 { font-size: 48px; line-height: 1.2; letter-spacing: -1.2px; margin: 0; }
+        .rv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+        .rv-col { display: flex; flex-direction: column; gap: 24px; }
+        @media (max-width: 1100px) {
+          .rv-head-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+          .rv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 680px) {
+          .rv-section { padding: 72px 20px; }
+          .rv-h2 { font-size: clamp(32px, 6vw, 40px); letter-spacing: -0.8px; }
+          .rv-grid { grid-template-columns: minmax(0, 1fr); }
+        }
+      `}</style>
+
+      <div className="rv-inner">
+        <header>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              style={{ width: 8, height: 8, borderRadius: 999, background: EMBER, flexShrink: 0 }}
+              aria-hidden
+            />
+            <span style={{ ...ui, fontSize: 14, fontWeight: 500, color: LABEL }}>Reviews</span>
+          </div>
+
+          <div className="rv-head-row">
+            <h2 className="rv-h2" style={{ ...display, fontWeight: 600, color: INK }}>
+              What renters are actually saying.
             </h2>
+            <p style={{ ...ui, fontSize: 18, lineHeight: 1.6, color: BODY, margin: 0 }}>
+              Sourced from beta users · 6 of 200+
+            </p>
           </div>
-          <div
-            className="text-[13px] italic lg:text-right"
-            style={{ color: "var(--color-brand-sage)", fontFamily: "var(--font-sans, Inter), sans-serif" }}
-          >
-            Sourced from beta users · 6 of 200+
-          </div>
+        </header>
+
+        <div className="rv-grid">
+          {columns.map((col, i) => (
+            <div className="rv-col" key={i}>
+              {col}
+            </div>
+          ))}
         </div>
-
-        {/* Grid */}
-        <div className="mt-10 lg:mt-12 grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5 lg:items-start">
-          {/* Left column */}
-          <div className="contents lg:block">
-            {column(
-              <>
-                <CompactCard data={COMPACT_PRIYA} />
-                <StatCard data={STAT_DANIEL} />
-              </>,
-              2,
-            )}
-          </div>
-
-          {/* Center column (hero first on mobile) */}
-          <div className="contents lg:block">
-            {column(
-              <>
-                <HeroCard />
-                <StatCard data={STAT_MAYA} />
-              </>,
-              1,
-            )}
-          </div>
-
-          {/* Right column */}
-          <div className="contents lg:block">
-            {column(
-              <>
-                <CompactCard data={COMPACT_SARA} />
-                <CompactCard data={COMPACT_CHRIS} />
-              </>,
-              3,
-            )}
-          </div>
-        </div>
-
       </div>
     </section>
   );
