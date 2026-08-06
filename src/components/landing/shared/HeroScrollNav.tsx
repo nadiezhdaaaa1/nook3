@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
+import { OriginButton } from "@/components/ui/origin-button";
 
 const FONT_UI = '"Google Sans Flex", "Google Sans", system-ui, sans-serif';
 const UI_VAR = '"wght" 500';
@@ -116,15 +117,13 @@ export function HeroScrollNav() {
             >
               Sign in
             </RollText>
-            <RollText
-              as="button"
-              type="button"
+            <OriginButton
+              variant="main"
               onClick={onSignup}
-              className="hero-nav-cta text-sm font-medium hero-nav-ring"
-              style={{ ...uiFont, color: NAV_TEXT }}
+              className="hero-nav-ring h-[40px] px-4 text-sm"
             >
               Get free alerts
-            </RollText>
+            </OriginButton>
 
             <button
               type="button"
@@ -185,17 +184,16 @@ export function HeroScrollNav() {
             >
               Sign in
             </Link>
-            <button
-              type="button"
+            <OriginButton
+              variant="main"
               onClick={() => {
                 setOpen(false);
                 onSignup();
               }}
-              className="hero-nav-sheet-cta hero-nav-ring"
-              style={{ ...uiFont }}
+              className="hero-nav-ring h-12 text-[15px]"
             >
               Get free alerts
-            </button>
+            </OriginButton>
           </div>
         </div>
       )}
@@ -267,18 +265,6 @@ export function HeroScrollNav() {
         }
         .hero-nav-root[data-scrolled="true"] .hero-nav-logo { transform: scale(0.857); }
 
-        .hero-nav-cta {
-          background: ${SURFACE};
-          border: 1px solid ${BORDER};
-          border-radius: 12px;
-          padding: 10px 14px;
-          backdrop-filter: blur(6px);
-          transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-        .hero-nav-cta:hover {
-          background: ${SURFACE_HOVER};
-          border-color: ${BORDER_HOVER};
-        }
         .hero-nav-ring:focus-visible {
           outline: 2px solid ${INK};
           outline-offset: 2px;
@@ -348,18 +334,6 @@ export function HeroScrollNav() {
           border-radius: 12px;
           border: 1px solid ${BORDER};
           background: ${SURFACE};
-          font-size: 15px;
-          font-weight: 500;
-        }
-        .hero-nav-sheet-cta {
-          margin-top: 8px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          height: 48px;
-          border-radius: 12px;
-          background: ${INK};
-          color: #f4f1ea;
           font-size: 15px;
           font-weight: 500;
         }
