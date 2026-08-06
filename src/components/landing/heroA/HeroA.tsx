@@ -15,6 +15,9 @@ import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { RollText } from "@/components/ui/RollText";
 import { HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { WaitlistDialog } from "@/components/landing/WaitlistDialog";
+import { HeroEmailField } from "@/components/landing/shared/HeroEmailField";
+import { useOnboardingStore } from "@/lib/onboarding/store";
+
 import {
   COLORS,
   DISPLAY_VAR,
@@ -70,13 +73,18 @@ export function HeroA() {
 
 
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const setOnboarding = useOnboardingStore((s) => s.set);
   const startSignup = () => {
     if (city.comingSoon) {
       setWaitlistOpen(true);
       return;
     }
+    const trimmed = email.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) setOnboarding("email", trimmed);
     navigate({ to: "/onboarding" });
   };
+
 
   return (
     <section
@@ -113,12 +121,20 @@ export function HeroA() {
               Verified, no spam.
             </motion.p>
 
-            <motion.div
+            <motion.form
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.6 }}
               className="hero-a-cta-row mt-9"
+              onSubmit={(e) => {
+                e.preventDefault();
+                startSignup();
+              }}
             >
+              {!city.comingSoon && (
+                <HeroEmailField value={email} onChange={setEmail} fontStyle={uiFont} />
+              )}
+
               <RollCta
                 key={city.comingSoon ? "waitlist" : "alerts"}
                 onClick={startSignup}
@@ -129,7 +145,8 @@ export function HeroA() {
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
-            </motion.div>
+            </motion.form>
+
           </div>
 
           <motion.div
