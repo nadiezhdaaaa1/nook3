@@ -158,7 +158,7 @@ export function HeroB() {
                 label={city.comingSoon ? "Join the watchlist" : "Start free"}
                 secondary={city.comingSoon}
               />
-              <span className="text-sm" style={{ ...uiFont, color: COLORS.muted }}>
+              <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
                 {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
               </span>
             </motion.form>
