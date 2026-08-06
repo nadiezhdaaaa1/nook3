@@ -148,7 +148,7 @@ export function HeroA() {
                   key={city.comingSoon ? "waitlist" : "start-free"}
                   variant="main"
                   onClick={startSignup}
-                  className="hero-a-cta focus-visible-ring"
+                  className="focus-visible-ring"
                 >
                   Start free
                 </OriginButton>
