@@ -290,7 +290,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           }}
           transition={fillTransition}
         />
-        <span className="relative z-10 inline-flex items-center justify-center gap-2 font-['Google_Sans_Flex',sans-serif]">
+        <span className="relative z-10 inline-flex items-center justify-center gap-2 whitespace-nowrap font-['Google_Sans_Flex',sans-serif]">
           {children}
         </span>
       </motion.button>
