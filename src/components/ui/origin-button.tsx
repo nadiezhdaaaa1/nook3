@@ -77,6 +77,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
       disabled = false,
       loading = false,
       type = "button",
+      variant = "default",
       onBlur,
       onClick,
       onFocus,
