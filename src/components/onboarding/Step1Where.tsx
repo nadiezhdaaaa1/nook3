@@ -56,7 +56,7 @@ export function Step1Where() {
   return (
     <div style={{ paddingBottom: 40 }}>
       {/* Header row */}
-      <div className="ob-head flex items-start justify-between gap-6">
+      <div className="ob-head flex items-center justify-between gap-6">
         <div>
           <h1 className="font-display ob-h1" style={H1}>
             Pick your city
