@@ -89,24 +89,9 @@ export function MarketingFooter() {
             <img className="ftr-logo" src={logoAsset.url} alt="Nook" width={81} height={28} />
             <p className="ftr-tag">Where home finds you</p>
           </div>
-          <div className="ftr-right">
-            <div className="ftr-socials">
-              {SOCIALS.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  <Icon />
-                </a>
-              ))}
-            </div>
-            <a className="ftr-email" href="mailto:hello@thenook.rent">
-              hello@thenook.rent
-            </a>
-          </div>
+          <a className="ftr-email" href="mailto:hello@thenook.rent">
+            hello@thenook.rent
+          </a>
         </div>
 
         <div className="ftr-divider" />
@@ -148,6 +133,22 @@ export function MarketingFooter() {
               <li><Link to="/contact">Contact</Link></li>
             </ul>
           </nav>
+
+          <div className="ftr-social-col">
+            <div className="ftr-socials">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="ftr-legal">
