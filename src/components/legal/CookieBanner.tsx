@@ -127,8 +127,8 @@ function CookieManageModal({
     <Dialog open={open} onOpenChange={(o) => (o ? null : onClose())}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Cookie preferences</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="font-display">Cookie preferences</DialogTitle>
+          <DialogDescription className="font-sans">
             Choose which categories of cookies Nook can use. You can change
             these anytime from the Cookie Policy page.
           </DialogDescription>
@@ -161,22 +161,15 @@ function CookieManageModal({
           />
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-2">
+        <DialogFooter className="gap-2 sm:gap-2 sm:space-x-0">
           {initialDecided && (
-            <button
-              onClick={onClose}
-              className="h-10 px-4 rounded-full text-sm font-medium border border-charcoal-300 hover:bg-charcoal-50 transition-colors"
-            >
+            <OriginButton variant="tertiary" onClick={onClose}>
               Cancel
-            </button>
+            </OriginButton>
           )}
-          <button
-            onClick={save}
-            className="h-10 px-5 rounded-full text-sm font-semibold text-white transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "var(--color-brand-charcoal, #2B2521)" }}
-          >
+          <OriginButton variant="main" onClick={save}>
             Save preferences
-          </button>
+          </OriginButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
