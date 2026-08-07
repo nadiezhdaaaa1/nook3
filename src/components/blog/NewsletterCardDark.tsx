@@ -138,8 +138,8 @@ export function NewsletterCardDark({ source }: { source?: string }) {
             radial-gradient(120% 90% at 100% 0%, rgba(203,74,10,0.26) 0%, rgba(203,74,10,0) 62%),
             radial-gradient(120% 95% at 100% 100%, rgba(122,143,55,0.30) 0%, rgba(122,143,55,0) 62%),
             radial-gradient(120% 90% at 0% 100%, rgba(120,165,200,0.12) 0%, rgba(120,165,200,0) 60%);
-          box-shadow: 0 2px 2px rgba(36,28,18,0.08), 0 24px 28px rgba(36,28,18,0.28);
         }
+
         .bnl-eyebrow {
           font-family: "Google Sans Flex", system-ui, sans-serif;
           font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
