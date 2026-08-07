@@ -172,6 +172,12 @@ export function LegalPageLayout({
 
         @media (max-width: 1100px) {
           .legal-layout { padding: 48px 0 80px; }
+          .legal-questions-section { padding: 72px 0; }
+          .legal-questions-inner {
+            padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 16px;
+          }
+          .legal-questions-label { font-size: 36px; }
+          .legal-questions-link { font-size: 22px; }
           .legal-layout-inner {
             grid-template-columns: 1fr; padding: 0 24px; justify-content: stretch;
           }
