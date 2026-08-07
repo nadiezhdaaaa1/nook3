@@ -103,6 +103,7 @@ export function LegalPageLayout({
           font-variation-settings: "SOFT" 0,"WONK" 1;
           font-weight: 600; font-size: 18px; line-height: 1.2;
           letter-spacing: -0.02em; color: #2b2521; margin-bottom: 12px;
+          padding: 0 10px;
         }
         .legal-sidebar-list {
           list-style: none; margin: 0; padding: 0;
