@@ -92,10 +92,17 @@ export function ShareRow({ url, title }: Props) {
     <div className="shr-card">
       <style>{CSS}</style>
       <div className="shr-label">Share</div>
-      <button type="button" onClick={handleCopy} aria-label="Copy link to this article" className="shr-copy">
-        {copied ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />}
-        {copied ? "Copied" : "Copy link"}
-      </button>
+      <div className="shr-copy-wrap">
+        <OriginButton
+          variant="tertiary"
+          className="w-full"
+          onClick={handleCopy}
+          aria-label="Copy link to this article"
+        >
+          {copied ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />}
+          {copied ? "Copied" : "Copy link"}
+        </OriginButton>
+      </div>
 
       <div className="shr-icons">
         <IconLink href={shareLinks.x} label="Share on X">
