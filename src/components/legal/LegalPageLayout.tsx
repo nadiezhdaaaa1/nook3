@@ -96,20 +96,20 @@ export function LegalPageLayout({
         .legal-sidebar { position: sticky; top: 96px; }
         .legal-sidebar-card {
           background: #ffffff; border: 1px solid rgba(0,0,0,0.20);
-          border-radius: 24px; padding: 28px;
+          border-radius: 24px; padding: 20px;
         }
         .legal-sidebar-title {
           font-family: Fraunces, Georgia, serif;
           font-variation-settings: "SOFT" 0,"WONK" 1;
-          font-weight: 600; font-size: 20px; line-height: 1.2;
-          letter-spacing: -0.02em; color: #2b2521; margin-bottom: 16px;
+          font-weight: 600; font-size: 18px; line-height: 1.2;
+          letter-spacing: -0.02em; color: #2b2521; margin-bottom: 12px;
         }
         .legal-sidebar-list {
           list-style: none; margin: 0; padding: 0;
           display: flex; flex-direction: column; gap: 2px;
         }
         .legal-sidebar-link {
-          display: block; padding: 10px 12px; border-radius: 10px;
+          display: block; padding: 8px 10px; border-radius: 8px;
           font-family: "Google Sans Flex", system-ui, sans-serif;
           font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
           font-weight: 500; font-size: 14px; color: #5a5a55;
