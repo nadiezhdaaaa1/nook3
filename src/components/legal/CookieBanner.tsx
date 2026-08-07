@@ -163,11 +163,11 @@ function CookieManageModal({
 
         <DialogFooter className="gap-2 sm:gap-2 sm:space-x-0">
           {initialDecided && (
-            <OriginButton variant="tertiary" onClick={onClose}>
+            <OriginButton variant="tertiary" size="medium" onClick={onClose}>
               Cancel
             </OriginButton>
           )}
-          <OriginButton variant="main" onClick={save}>
+          <OriginButton variant="main" size="medium" onClick={save}>
             Save preferences
           </OriginButton>
         </DialogFooter>
