@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { SITE } from "@/lib/site";
 import { useEffect, useState } from "react";
 import { ChevronDown, Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
@@ -17,7 +18,6 @@ import {
 } from "@/data/blog/articles";
 
 
-const SITE = "https://thenook.rent";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {

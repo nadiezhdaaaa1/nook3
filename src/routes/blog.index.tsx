@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { SITE } from "@/lib/site";
 
 import { z } from "zod";
 import { Clock } from "lucide-react";
@@ -14,7 +15,6 @@ import {
   type BlogArticle,
 } from "@/data/blog/articles";
 
-const SITE = "https://thenook.rent";
 
 const searchSchema = z.object({
   category: z
