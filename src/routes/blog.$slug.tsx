@@ -420,6 +420,7 @@ const PAGE_CSS = `
 }
 .apg-col { min-width:0; }
 
+.apg-toc { align-self:stretch; }
 .apg-toc-sticky { position:sticky; top:112px; }
 .apg-toc-title {
   font-family:"Google Sans Flex",system-ui,sans-serif;
@@ -455,7 +456,7 @@ const PAGE_CSS = `
   font-weight:700; font-size:12px; line-height:16px; letter-spacing:1.1px; color:#809917;
 }
 
-.apg-rail { display:flex; flex-direction:column; gap:32px; min-width:0; }
+.apg-rail { align-self:stretch; display:flex; flex-direction:column; gap:32px; min-width:0; }
 .apg-rail-card {
   background:#ffffff; border:1px solid rgba(36,28,18,0.2); border-radius:16px; padding:20px;
 }
