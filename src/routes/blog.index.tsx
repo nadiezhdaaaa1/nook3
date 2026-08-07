@@ -3,9 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
-import { AuthorByline } from "@/components/blog/AuthorByline";
-import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
+import { NewsletterCardDark } from "@/components/blog/NewsletterCardDark";
 import {
   ARTICLES,
   CATEGORIES,
@@ -13,7 +11,6 @@ import {
   getFeatured,
   type BlogArticle,
 } from "@/data/blog/articles";
-import { cn } from "@/lib/utils";
 
 const SITE = "https://thenook.rent";
 
@@ -26,6 +23,7 @@ const searchSchema = z.object({
 
 
 type BlogSearch = z.infer<typeof searchSchema>;
+
 
 export const Route = createFileRoute("/blog/")({
   validateSearch: (search: Partial<Record<string, unknown>>): BlogSearch =>
