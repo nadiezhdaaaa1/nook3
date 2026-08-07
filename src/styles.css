@@ -118,9 +118,9 @@
 
 :root {
   --radius: 12px;
-  --background: #f5f0e4;
+  --background: #FAF6EE;
   --foreground: #241c12;
-  --surface: #faf6ee;
+  --surface: #FAF6EE;
   --surface-elevated: #ffffff;
   --card: #ffffff;
   --card-foreground: #241c12;
@@ -142,7 +142,7 @@
   --input: rgba(0, 0, 0, 0.2);
   --ring: #d66c38;
 
-  --sidebar: #faf6ee;
+  --sidebar: #FAF6EE;
   --sidebar-foreground: #241c12;
   --sidebar-primary: #d66c38;
   --sidebar-primary-foreground: #ffffff;
