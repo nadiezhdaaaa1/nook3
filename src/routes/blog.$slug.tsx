@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown, Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
-import { AuthorByline } from "@/components/blog/AuthorByline";
-import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
+import { NewsletterDigestBand } from "@/components/blog/NewsletterDigestBand";
 import { ShareRow } from "@/components/blog/ShareRow";
 import {
   ARTICLES,
@@ -12,9 +11,9 @@ import {
   getArticle,
   getRelated,
   type BlogArticle,
-  
+
 } from "@/data/blog/articles";
-import { cn } from "@/lib/utils";
+
 
 const SITE = "https://thenook.rent";
 
