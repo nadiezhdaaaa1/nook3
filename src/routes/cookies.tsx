@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
+import { OriginButton } from "@/components/ui/origin-button";
 import { openCookiePreferences } from "@/lib/cookieConsent";
 
 export const Route = createFileRoute("/cookies")({
@@ -20,26 +21,11 @@ function CookiesPage() {
   return (
     <LegalPageLayout title="Cookie Policy" lastUpdated="July 2, 2026">
       <div style={{ margin: "0 0 1.6em" }}>
-        <button
-          type="button"
-          onClick={openCookiePreferences}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            height: 44,
-            padding: "0 20px",
-            borderRadius: 999,
-            background: "var(--color-brand-charcoal, #2B2521)",
-            color: "white",
-            fontSize: 14,
-            fontWeight: 600,
-            border: 0,
-            cursor: "pointer",
-          }}
-        >
+        <OriginButton variant="secondary" onClick={openCookiePreferences}>
           Manage Cookie Preferences
-        </button>
+        </OriginButton>
       </div>
+
       <h2>1. Introduction</h2>
       <p>
         This Cookie Policy explains how Nook ("we," "us," "our"), operated by Zentaro Systems
