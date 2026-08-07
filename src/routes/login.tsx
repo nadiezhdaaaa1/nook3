@@ -88,9 +88,10 @@ function LoginPage() {
         </div>
 
         <button type="button" onClick={onGoogle} disabled={submitting} className="sgn-google">
-          <GoogleG />
+          <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
           <span>Continue with Google</span>
         </button>
+
 
         <div className="sgn-divider">
           <span className="sgn-rule" />
