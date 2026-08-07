@@ -97,6 +97,6 @@ export const COLORS = {
 } as const;
 
 export const FONT_DISPLAY = '"Fraunces", "Times New Roman", serif';
-export const FONT_UI = '"Google Sans Flex", "Inter Tight", system-ui, sans-serif';
+export const FONT_UI = '"Google Sans Flex", system-ui, sans-serif';
 export const UI_VAR = '"GRAD" 0, "ROND" 0, "wdth" 100';
 export const DISPLAY_VAR = '"SOFT" 0, "WONK" 1';
