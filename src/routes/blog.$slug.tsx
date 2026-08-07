@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { SITE } from "@/lib/site";
 import { useEffect, useState } from "react";
 import { ChevronDown, Clock } from "lucide-react";
@@ -7,6 +7,7 @@ import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { NewsletterDigestBand } from "@/components/blog/NewsletterDigestBand";
 import { RelatedReading } from "@/components/blog/RelatedReading";
 import { ShareRow } from "@/components/blog/ShareRow";
+import { OriginButton } from "@/components/ui/origin-button";
 
 import {
   ARTICLES,
