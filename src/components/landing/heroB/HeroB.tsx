@@ -372,6 +372,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           padding: 16px;
           border-radius: 24px;
           border: 1px solid rgba(0,0,0,0.20);
+          background: #ffffff;
           display: flex;
           flex-direction: column;
           gap: 8px;
