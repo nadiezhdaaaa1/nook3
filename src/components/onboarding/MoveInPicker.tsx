@@ -1,81 +1,80 @@
-import { cn } from "@/lib/utils";
+import { useRef } from "react";
 
 interface Props {
   mode: "specific" | "flexible";
   date?: string;
+  /** Whether the user has made an explicit choice yet. */
+  chosen: boolean;
   onChange: (mode: "specific" | "flexible", date?: string) => void;
 }
 
-export function MoveInPicker({ mode, date, onChange }: Props) {
+function fmt(iso: string) {
+  const d = new Date(iso + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+const CHIP: React.CSSProperties = {
+  borderRadius: 12,
+  padding: "16px 24px",
+  fontWeight: 500,
+  fontSize: 14,
+  border: "1px solid rgba(0,0,0,0.2)",
+  transition: "background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out",
+};
+
+export function MoveInPicker({ mode, date, chosen, onChange }: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const defaultDate = (() => {
     const d = new Date();
     d.setDate(d.getDate() + 30);
     return d.toISOString().slice(0, 10);
   })();
-
   const effective = date ?? defaultDate;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const picked = mode === "specific" ? new Date(effective + "T00:00:00") : null;
-  const isPast = picked ? picked.getTime() < today.getTime() : false;
-  const sixMonths = new Date();
-  sixMonths.setMonth(sixMonths.getMonth() + 6);
-  const isFarOut = picked ? picked.getTime() > sixMonths.getTime() : false;
+
+  const specificOn = chosen && mode === "specific";
+  const flexibleOn = chosen && mode === "flexible";
+
+  const openPicker = () => {
+    onChange("specific", effective);
+    const el = inputRef.current;
+    if (el) {
+      if (typeof el.showPicker === "function") el.showPicker();
+      else el.focus();
+    }
+  };
+
+  const selStyle = (on: boolean): React.CSSProperties =>
+    on
+      ? { ...CHIP, background: "#d66c38", borderColor: "#d66c38", color: "#ffffff" }
+      : { ...CHIP, background: "transparent", color: "#3a3a37" };
 
   return (
-    <div className="space-y-3">
-      <div className="grid sm:grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={() => onChange("specific", effective)}
-          className={cn(
-            "p-5 rounded-card border-2 text-left transition-colors",
-            mode === "specific"
-              ? "border-charcoal-950 bg-surface-elevated"
-              : "border-border bg-transparent hover:border-charcoal-400",
-          )}
-        >
-          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-2">
-            📅 Specific date
-          </div>
-          <input
-            type="date"
-            value={effective}
-            onClick={(e) => e.stopPropagation()}
-            onChange={(e) => onChange("specific", e.target.value)}
-            className="w-full bg-transparent text-base font-semibold text-charcoal-950 focus:outline-none"
-          />
+    <div className="ob-chips flex" style={{ gap: 12 }}>
+      <div className="relative">
+        <button type="button" aria-pressed={specificOn} onClick={openPicker} style={selStyle(specificOn)} className="w-full">
+          {specificOn ? `Specific date • ${fmt(effective)}` : "Specific date"}
         </button>
-
-        <button
-          type="button"
-          onClick={() => onChange("flexible")}
-          className={cn(
-            "p-5 rounded-card border-2 text-left transition-colors",
-            mode === "flexible"
-              ? "border-charcoal-950 bg-surface-elevated"
-              : "border-border bg-transparent hover:border-charcoal-400",
-          )}
-        >
-          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-2">
-            ⏰ Flexible
-          </div>
-          <div className="text-base font-semibold text-charcoal-950">
-            I'm exploring
-          </div>
-        </button>
+        <input
+          ref={inputRef}
+          type="date"
+          value={effective}
+          onChange={(e) => onChange("specific", e.target.value)}
+          aria-label="Move-in date"
+          className="absolute left-3 bottom-0 h-0 w-0 opacity-0 pointer-events-none"
+          tabIndex={-1}
+        />
       </div>
 
-      {isPast && (
-        <div className="rounded-md border border-peach-500 bg-peach-100 text-peach-900 text-xs px-3 py-2">
-          Move-in date must be in the future.
-        </div>
-      )}
-      {!isPast && isFarOut && (
-        <div className="rounded-md border border-charcoal-200 bg-paper-warm text-charcoal-700 text-xs px-3 py-2">
-          Your move is far out. We'll keep alerts on standby and ramp up 60 days before.
-        </div>
-      )}
+      <button
+        type="button"
+        aria-pressed={flexibleOn}
+        onClick={() => onChange("flexible")}
+        style={selStyle(flexibleOn)}
+      >
+        Flexible
+      </button>
     </div>
   );
 }
