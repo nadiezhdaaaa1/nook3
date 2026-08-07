@@ -410,7 +410,8 @@ const PAGE_CSS = `
 
 .apg-hero {
   margin-top:48px; width:100%; max-width:1200px; aspect-ratio:16/9; position:relative;
-  border-radius:20px; border:1px solid rgba(0,0,0,0.2); overflow:hidden;
+  border-radius:20px; overflow:hidden;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
 }
 .apg-hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 
