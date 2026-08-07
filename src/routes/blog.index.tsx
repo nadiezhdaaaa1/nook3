@@ -5,6 +5,7 @@ import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { CtaStrip } from "@/components/marketing/CtaStrip";
 import { NewsletterCardDark } from "@/components/blog/NewsletterCardDark";
+import { OriginButton } from "@/components/ui/origin-button";
 import {
   ARTICLES,
   CATEGORIES,
@@ -348,17 +349,6 @@ function BlogIndexPage() {
           font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
           font-weight: 400; font-size: 14px; line-height: 24px; color: #4a4a46;
         }
-        .blog-about-btn {
-          display: flex; align-items: center; justify-content: center;
-          width: 100%; padding: 16px 24px; border-radius: 12px;
-          border: 1px solid rgba(0,0,0,0.1); text-decoration: none;
-          font-family: "Google Sans Flex", system-ui, sans-serif;
-          font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
-          font-weight: 500; font-size: 16px; color: #241c12;
-          transition: border-color 0.2s ease, background-color 0.2s ease;
-        }
-        .blog-about-btn:hover { border-color: rgba(0,0,0,0.32); background: #f8f3e1; }
-        .blog-about-btn:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
 
         @media (max-width: 1100px) {
           .blog-main-inner { grid-template-columns: minmax(0,1fr); }
@@ -440,6 +430,7 @@ function ArticleCard({ article }: { article: BlogArticle }) {
 }
 
 function AboutNookCard() {
+  const navigate = useNavigate();
   return (
     <div className="blog-about">
       <div className="blog-about-eyebrow">About Nook</div>
@@ -450,9 +441,14 @@ function AboutNookCard() {
           listings, rent-regulated units flagged, no spam.
         </p>
       </div>
-      <Link to="/onboarding" className="blog-about-btn">
+      <OriginButton
+        variant="tertiary"
+        size="big"
+        className="w-full"
+        onClick={() => navigate({ to: "/onboarding" })}
+      >
         Start free
-      </Link>
+      </OriginButton>
     </div>
   );
 }
