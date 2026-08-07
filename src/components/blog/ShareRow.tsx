@@ -16,22 +16,10 @@ const CSS = `
 .shr-label {
   font-family: "Google Sans Flex", system-ui, sans-serif;
   font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
-  font-weight: 700; font-size: 13px; letter-spacing: 1.82px;
+  font-weight: 700; font-size: 12px; letter-spacing: 1.82px;
   text-transform: uppercase; color: #241c12;
 }
-.shr-copy {
-  margin-top: 16px; width: 100%;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px;
-  padding: 16px 24px;
-  font-family: "Google Sans Flex", system-ui, sans-serif;
-  font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
-  font-weight: 500; font-size: 16px; line-height: 1; color: #241c12;
-  transition: border-color .2s ease, background-color .2s ease;
-}
-.shr-copy:hover { border-color: rgba(0,0,0,0.32); background: #f8f3e1; }
-.shr-copy:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
-.shr-copy svg { width: 20px; height: 20px; flex: 0 0 20px; }
+.shr-copy-wrap { margin-top: 16px; }
 .shr-icons {
   margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 16px;
 }
