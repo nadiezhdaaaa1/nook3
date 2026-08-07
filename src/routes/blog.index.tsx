@@ -379,6 +379,8 @@ function BlogIndexPage() {
           .blog-tabsbar-inner { overflow: hidden; }
         }
       `}</style>
+
+      <CtaStrip />
     </MarketingLayout>
   );
 }
