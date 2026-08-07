@@ -329,9 +329,13 @@ function ArticleDetailPage() {
                   Nook watches the US market 24/7 and emails you the moment new listings match your
                   criteria.
                 </p>
-                <Link to="/onboarding" className="apg-rail-btn">
+                <OriginButton
+                  variant="main"
+                  className="w-full mt-5"
+                  onClick={() => navigate({ to: "/onboarding" })}
+                >
                   Start Free
-                </Link>
+                </OriginButton>
               </div>
 
               <ShareRow
