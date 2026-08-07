@@ -66,7 +66,7 @@ function hasTextContent(node: React.ReactNode): boolean {
 type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   children?: React.ReactNode;
   loading?: boolean;
-  variant?: "default" | "main" | "secondary" | "tertiary" | "dark";
+  variant?: "default" | "main" | "secondary" | "tertiary" | "dark" | "premium" | "max";
   size?: "big" | "medium";
 };
 
@@ -214,11 +214,25 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
                         ? "h-[48px] px-5 text-[15px]"
                         : "h-[56px] px-6 text-[16px]",
                     )
-                  : "h-12 rounded-xl border border-black/10 bg-card px-8 text-[15px] text-card-foreground dark:bg-muted dark:text-foreground",
+                  : variant === "premium"
+                    ? cn(
+                        "rounded-[12px] border border-black/20 bg-white font-medium text-[#2B2521]",
+                        size === "medium"
+                          ? "h-[48px] px-5 text-[15px]"
+                          : "h-[56px] px-6 text-[16px]",
+                      )
+                    : variant === "max"
+                      ? cn(
+                          "rounded-[12px] border border-black/20 bg-white font-medium text-[#2B2521]",
+                          size === "medium"
+                            ? "h-[48px] px-5 text-[15px]"
+                            : "h-[56px] px-6 text-[16px]",
+                        )
+                      : "h-12 rounded-xl border border-black/10 bg-card px-8 text-[15px] text-card-foreground dark:bg-muted dark:text-foreground",
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
-          showFill && (variant === "main" || variant === "secondary" || variant === "dark" ? "text-white" : variant === "tertiary" ? "text-[#2B2521]" : "text-background dark:text-neutral-950"),
+          showFill && (variant === "main" || variant === "secondary" ? "text-white" : variant === "tertiary" ? "text-[#2B2521]" : variant === "dark" ? "text-white" : "text-[#2B2521]"),
           className,
         )}
         data-pressed={isPressed ? "true" : "false"}
@@ -308,7 +322,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           aria-hidden
           className={cn(
             "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-            variant === "dark" ? "bg-[#000000]" : variant === "tertiary" ? "bg-[#EBE2CF]" : "bg-[#CE4F12]",
+            variant === "dark" ? "bg-[#000000]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : "bg-[#CE4F12]",
           )}
           initial={false}
           style={{
