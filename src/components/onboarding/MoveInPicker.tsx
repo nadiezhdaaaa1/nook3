@@ -4,7 +4,7 @@ interface Props {
   mode: "specific" | "flexible";
   date?: string;
   /** Whether the user has made an explicit choice yet. */
-  chosen: boolean;
+  chosen?: boolean;
   onChange: (mode: "specific" | "flexible", date?: string) => void;
 }
 
@@ -23,7 +23,7 @@ const CHIP: React.CSSProperties = {
   transition: "background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out",
 };
 
-export function MoveInPicker({ mode, date, chosen, onChange }: Props) {
+export function MoveInPicker({ mode, date, chosen = true, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const defaultDate = (() => {
