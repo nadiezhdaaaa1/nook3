@@ -5,7 +5,10 @@ import { Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
-import { Logo, LogoMark } from "@/components/brand/Logo";
+import { OriginButton } from "@/components/ui/origin-button";
+import { Input } from "@/components/ui/input";
+import logoSvg from "@/assets/Nook_Green.svg.asset.json";
+import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 import {
   buildConsents,
   persistConsentsForCurrentUser,
@@ -115,138 +118,191 @@ function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col">
-      <header className="border-b border-charcoal-950/8">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center">
-          <Link to="/" className="flex items-center gap-2.5">
-            <LogoMark size={28} />
-            <Logo className="text-lg" />
-          </Link>
+    <div className="sgn-page">
+      <div className="sgn-col">
+        <Link to="/" className="sgn-logo" aria-label="Nook home">
+          <img src={logoSvg.url} alt="Nook" width={81} height={28} />
+        </Link>
+
+        <div className="sgn-head">
+          <h1 className="sgn-title">Create your account</h1>
+          <p className="sgn-sub">Save searches and get alerts.</p>
         </div>
-      </header>
-      <main className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md">
-          <h1 className="font-display text-3xl font-bold text-charcoal-950">Create your account</h1>
-          <p className="mt-2 text-sm text-charcoal-600">Save searches and get alerts.</p>
 
-          {referralCode && !sent && (
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-sage-100/60 border border-sage-300/50 px-3 py-1.5 text-[13px] text-sage-900">
-              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} />
-              Invite applied · +7 days of Premium on us
+        {referralCode && !sent && (
+          <div className="sgn-referral">
+            <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+            Invite applied · +7 days of Premium on us
+          </div>
+        )}
+
+        {sent ? (
+          <div className="sgn-sent">
+            <p>
+              We sent a confirmation link to <strong>{email}</strong>. Open it to finish signing up.
+            </p>
+          </div>
+        ) : (
+          <>
+            <OriginButton
+              type="button"
+              variant="tertiary"
+              size="big"
+              onClick={onGoogle}
+              disabled={submitting}
+              className="w-full"
+            >
+              <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
+              <span>Continue with Google</span>
+            </OriginButton>
+
+            <div className="sgn-divider">
+              <span className="sgn-rule" />
+              <span className="sgn-or">or</span>
+              <span className="sgn-rule" />
             </div>
-          )}
 
-          {sent ? (
-            <div className="mt-6 p-4 rounded-md border border-charcoal-200 bg-charcoal-950/5">
-              <p className="text-sm text-charcoal-700">
-                We sent a confirmation link to <span className="font-semibold">{email}</span>. Open
-                it to finish signing up.
-              </p>
-            </div>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={onGoogle}
-                disabled={submitting}
-                className="mt-6 w-full h-11 inline-flex items-center justify-center gap-2 rounded-md border border-charcoal-200 bg-paper text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 disabled:opacity-60"
-              >
-                Continue with Google
-              </button>
-
-              <div className="my-5 flex items-center gap-3 text-xs text-charcoal-500">
-                <div className="flex-1 h-px bg-charcoal-200" /> or <div className="flex-1 h-px bg-charcoal-200" />
-              </div>
-
-              <form onSubmit={onSubmit} className="space-y-4" noValidate>
-                <div>
-                  <label className="text-sm font-medium text-charcoal-700">Email</label>
-                  <input
+            <form onSubmit={onSubmit} className="sgn-form" noValidate>
+              <div className="sgn-fields">
+                <div className="sgn-field">
+                  <label className="sgn-label" htmlFor="sgn-email">
+                    Email
+                  </label>
+                  <Input
+                    id="sgn-email"
                     type="email"
                     autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={!!errors.email}
                     placeholder="you@email.com"
-                    className="mt-1 w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:border-charcoal-950 outline-none"
+                    size="big"
                   />
-                  {errors.email && <p className="mt-1 text-xs text-danger">{errors.email}</p>}
+                  {errors.email && <p className="sgn-err">{errors.email}</p>}
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-charcoal-700">Password</label>
-                  <input
+                <div className="sgn-field">
+                  <label className="sgn-label" htmlFor="sgn-password">
+                    Password
+                  </label>
+                  <Input
+                    id="sgn-password"
                     type="password"
                     autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     aria-invalid={!!errors.password}
                     placeholder="At least 8 characters"
-                    className="mt-1 w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:border-charcoal-950 outline-none"
+                    size="big"
                   />
                   {errors.password ? (
-                    <p className="mt-1 text-xs text-danger">{errors.password}</p>
+                    <p className="sgn-err">{errors.password}</p>
                   ) : (
-                    <p className="mt-1 text-xs text-charcoal-500">At least 8 characters.</p>
+                    <p className="sgn-hint">At least 8 characters.</p>
                   )}
                 </div>
-                <div className="space-y-3 pt-1">
-                  <label className="flex items-start gap-2 text-sm text-charcoal-700">
-                    <input
-                      type="checkbox"
-                      checked={acceptTerms}
-                      onChange={(e) => setAcceptTerms(e.target.checked)}
-                      aria-invalid={!!errors.terms}
-                      className="mt-0.5 h-4 w-4 rounded border-charcoal-300 text-charcoal-950 focus:ring-charcoal-950"
-                    />
-                    <span>
-                      I agree to the{" "}
-                      <Link to="/terms" className="font-semibold underline text-charcoal-950">
-                        Terms of Service
-                      </Link>{" "}
-                      and{" "}
-                      <Link to="/privacy" className="font-semibold underline text-charcoal-950">
-                        Privacy Policy
-                      </Link>
-                      .
-                    </span>
-                  </label>
-                  {errors.terms && <p className="text-xs text-danger">{errors.terms}</p>}
-                  <label className="flex items-start gap-2 text-sm text-charcoal-700">
-                    <input
-                      type="checkbox"
-                      checked={marketing}
-                      onChange={(e) => setMarketing(e.target.checked)}
-                      className="mt-0.5 h-4 w-4 rounded border-charcoal-300 text-charcoal-950 focus:ring-charcoal-950"
-                    />
-                    <span>
-                      Send me product updates and apartment-hunting tips. You can unsubscribe anytime.
-                    </span>
-                  </label>
-                </div>
-                {errors.form && <p className="text-sm text-danger">{errors.form}</p>}
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full h-11 rounded-md bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 disabled:opacity-60"
-                >
-                  {submitting ? "Creating account…" : "Create account"}
-                </button>
-              </form>
-            </>
-          )}
+              </div>
 
-          <p className="mt-6 text-sm text-charcoal-600">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              search={redirectTo ? { redirect: redirectTo } : undefined}
-              className="font-semibold text-charcoal-950 underline"
-            >
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </main>
+              <div className="sgn-checks">
+                <label className="sgn-check">
+                  <input
+                    type="checkbox"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    aria-invalid={!!errors.terms}
+                  />
+                  <span>
+                    I agree to the <Link to="/terms">Terms of Service</Link> and{" "}
+                    <Link to="/privacy">Privacy Policy</Link>.
+                  </span>
+                </label>
+                {errors.terms && <p className="sgn-err">{errors.terms}</p>}
+                <label className="sgn-check">
+                  <input
+                    type="checkbox"
+                    checked={marketing}
+                    onChange={(e) => setMarketing(e.target.checked)}
+                  />
+                  <span>
+                    Send me product updates and apartment-hunting tips. You can unsubscribe anytime.
+                  </span>
+                </label>
+              </div>
+
+              {errors.form && <p className="sgn-err">{errors.form}</p>}
+
+              <OriginButton
+                type="submit"
+                variant="main"
+                size="big"
+                disabled={submitting}
+                className="w-full"
+              >
+                {submitting ? "Creating account…" : "Create account"}
+              </OriginButton>
+            </form>
+          </>
+        )}
+
+        <p className="sgn-foot">
+          Already have an account?{" "}
+          <Link to="/login" search={redirectTo ? { redirect: redirectTo } : undefined}>
+            Sign in
+          </Link>
+        </p>
+      </div>
+
+      <style>{`
+        .sgn-page {
+          min-height: 100vh;
+          background: #faf6ee;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 48px 24px;
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+        }
+        .sgn-col { width: 100%; max-width: 448px; padding-bottom: 48px; }
+        .sgn-logo { display: inline-flex; }
+        .sgn-logo img { display: block; width: 81px; height: 28px; }
+        .sgn-head { padding: 32px 0; display: flex; flex-direction: column; gap: 4px; }
+        .sgn-title {
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0, "WONK" 1;
+          font-weight: 700;
+          font-size: 30px;
+          line-height: 36px;
+          letter-spacing: -0.45px;
+          color: #241c12;
+          margin: 0;
+        }
+        .sgn-sub { margin: 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
+        .sgn-referral {
+          display: inline-flex; align-items: center; gap: 8px;
+          margin-bottom: 20px; padding: 6px 12px; border-radius: 999px;
+          border: 1px solid rgba(106,130,10,0.35); background: rgba(106,130,10,0.08);
+          font-size: 13px; color: #4d5f08;
+        }
+        .sgn-sent {
+          margin-top: 8px; padding: 16px; border-radius: 12px;
+          border: 1px solid rgba(0,0,0,0.20); background: #fff;
+        }
+        .sgn-sent p { margin: 0; font-size: 14px; line-height: 20px; color: #4a4a46; }
+        .sgn-divider { padding: 20px 0; display: flex; align-items: center; gap: 12px; }
+        .sgn-rule { flex: 1; height: 1px; background: #d8d5cd; }
+        .sgn-or { font-size: 12px; color: #6e6459; }
+        .sgn-form { display: flex; flex-direction: column; gap: 24px; }
+        .sgn-fields { display: flex; flex-direction: column; gap: 16px; }
+        .sgn-label { display: block; font-size: 14px; line-height: 20px; font-weight: 500; color: #4a4a46; margin-bottom: 8px; }
+        .sgn-err { margin: 8px 0 0; font-size: 13px; color: #c93822; }
+        .sgn-hint { margin: 8px 0 0; font-size: 13px; color: #6e6459; }
+        .sgn-checks { display: flex; flex-direction: column; gap: 12px; }
+        .sgn-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 20px; color: #4a4a46; }
+        .sgn-check input { margin-top: 2px; width: 16px; height: 16px; accent-color: #d66c38; }
+        .sgn-check a { color: #241c12; text-decoration: underline; }
+        .sgn-foot { margin: 24px 0 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
+        .sgn-foot a { color: #241c12; text-decoration: underline; }
+      `}</style>
     </div>
   );
 }
