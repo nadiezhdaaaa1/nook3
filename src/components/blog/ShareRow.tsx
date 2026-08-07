@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, Link2 } from "lucide-react";
+import { OriginButton } from "@/components/ui/origin-button";
 
 type Props = {
   url: string;
