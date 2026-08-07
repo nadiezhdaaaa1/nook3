@@ -92,6 +92,31 @@ export function LegalPageLayout({
         }
         .legal-article { max-width: 760px; }
 
+        .legal-questions-section {
+          background: #F5F0E4;
+          padding: 96px 0;
+        }
+        .legal-questions-inner {
+          margin: 0 auto; width: 100%; max-width: 1280px; padding: 0 40px;
+          display: flex; justify-content: space-between; align-items: center; gap: 24px;
+        }
+        .legal-questions-label {
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0,"WONK" 1;
+          font-weight: 500; font-size: 42px; line-height: 1.2;
+          letter-spacing: -0.02em; color: #241C12;
+        }
+        .legal-questions-link {
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
+          font-weight: 500; font-size: 24px; color: #D66C38;
+          text-decoration: none; transition: color 0.2s ease;
+        }
+        .legal-questions-link:hover { color: #CE4F12; }
+        .legal-questions-link:focus-visible {
+          outline: 2px solid #241c12; outline-offset: 2px; border-radius: 4px;
+        }
+
         .legal-sidebar { position: sticky; top: 96px; }
         .legal-sidebar-card {
           background: #ffffff; border: 1px solid rgba(0,0,0,0.20);
