@@ -119,8 +119,8 @@ export function LegalPageLayout({
 
         .legal-sidebar { position: sticky; top: 96px; }
         .legal-sidebar-card {
-          background: #ffffff; border: 1px solid rgba(0,0,0,0.20);
-          border-radius: 24px; padding: 20px;
+          background: transparent; border: none;
+          border-radius: 0; padding: 0;
         }
         .legal-sidebar-title {
           font-family: Fraunces, Georgia, serif;
