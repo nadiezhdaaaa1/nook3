@@ -35,7 +35,7 @@ export function LegalPageLayout({
       <div className="legal-layout">
         <div className="legal-layout-inner">
           <article className="legal-article">
-            <header className="mb-12 pb-8 border-b border-charcoal-200/60">
+            <header className="mb-12 pb-8 border-b border-black/20">
               <h1 className="font-display text-4xl lg:text-5xl tracking-[-0.02em] text-charcoal-950 leading-tight">
                 {title}
               </h1>
