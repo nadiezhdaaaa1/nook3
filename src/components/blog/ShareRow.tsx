@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Check, Link2, Mail, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Check, Link2 } from "lucide-react";
 
 type Props = {
   url: string;
@@ -7,18 +7,44 @@ type Props = {
   excerpt?: string;
 };
 
-export function ShareRow({ url, title, excerpt }: Props) {
-  const [copied, setCopied] = useState(false);
-  const [canNativeShare, setCanNativeShare] = useState(false);
+const CSS = `
+.shr-card {
+  background: #ffffff; border: 1px solid rgba(36,28,18,0.2);
+  border-radius: 20px; padding: 20px;
+}
+.shr-label {
+  font-family: "Google Sans Flex", system-ui, sans-serif;
+  font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight: 700; font-size: 13px; letter-spacing: 1.82px;
+  text-transform: uppercase; color: #241c12;
+}
+.shr-copy {
+  margin-top: 16px; width: 100%;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px;
+  padding: 16px 24px;
+  font-family: "Google Sans Flex", system-ui, sans-serif;
+  font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight: 500; font-size: 16px; line-height: 1; color: #241c12;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.shr-copy:hover { border-color: rgba(0,0,0,0.32); background: #f8f3e1; }
+.shr-copy:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
+.shr-copy svg { width: 20px; height: 20px; flex: 0 0 20px; }
+.shr-icons {
+  margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 16px;
+}
+.shr-icon {
+  width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+  color: #241c12; transition: color .2s ease;
+}
+.shr-icon:hover { color: #809917; }
+.shr-icon:focus-visible { outline: 2px solid #241c12; outline-offset: 3px; border-radius: 4px; }
+.shr-icon svg { width: 20px; height: 20px; }
+`;
 
-  useEffect(() => {
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      const isCoarse =
-        typeof window !== "undefined" &&
-        window.matchMedia?.("(pointer: coarse)").matches;
-      setCanNativeShare(Boolean(isCoarse));
-    }
-  }, []);
+export function ShareRow({ url, title }: Props) {
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -27,14 +53,6 @@ export function ShareRow({ url, title, excerpt }: Props) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // ignore
-    }
-  };
-
-  const handleNativeShare = async () => {
-    try {
-      await navigator.share({ title, text: excerpt, url });
-    } catch {
-      // user cancelled
     }
   };
 
@@ -57,41 +75,9 @@ export function ShareRow({ url, title, excerpt }: Props) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
     reddit: `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(title)}`,
-    email: `mailto:?subject=${enc(title)}&body=${enc(url)}`,
   };
 
-  const label = (
-    <span className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-charcoal-500)]">
-      Share
-    </span>
-  );
-
-  const liveRegion = (
-    <span aria-live="polite" className="sr-only">
-      {copied ? "Link copied to clipboard" : ""}
-    </span>
-  );
-
-  if (canNativeShare) {
-    return (
-      <div className="flex items-center gap-3 py-4 border-y" style={{ borderColor: "var(--color-brand-clay)" }}>
-        {label}
-        <button
-          type="button"
-          onClick={handleNativeShare}
-          aria-label="Share this article"
-          className="ml-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border bg-white text-sm font-semibold text-[var(--color-brand-charcoal)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-sage)]"
-          style={{ borderColor: "var(--color-brand-clay)" }}
-        >
-          <Share2 className="h-4 w-4" style={{ color: "var(--color-brand-sage)" }} />
-          Share…
-        </button>
-        {liveRegion}
-      </div>
-    );
-  }
-
-  const IconBtn = ({
+  const IconLink = ({
     href,
     label,
     children,
@@ -107,59 +93,47 @@ export function ShareRow({ url, title, excerpt }: Props) {
       rel="noopener noreferrer"
       aria-label={label}
       title={label}
-      className="w-10 h-10 rounded-full border bg-white flex items-center justify-center text-[var(--color-brand-charcoal)] hover:bg-[var(--color-sage-100,#ECF1E6)] hover:border-[var(--color-brand-sage)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-sage)]"
-      style={{ borderColor: "var(--color-brand-clay)" }}
+      className="shr-icon"
     >
       {children}
     </a>
   );
 
   return (
-    <div
-      className="flex flex-wrap items-center gap-3 py-4 border-y"
-      style={{ borderColor: "var(--color-brand-clay)" }}
-    >
-      {label}
-      <button
-        type="button"
-        onClick={handleCopy}
-        aria-label="Copy link to this article"
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border bg-white text-sm font-semibold text-[var(--color-brand-charcoal)] hover:border-[var(--color-brand-sage)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-sage)]"
-        style={{ borderColor: "var(--color-brand-clay)" }}
-      >
-        {copied ? (
-          <Check className="h-[15px] w-[15px]" style={{ color: "var(--color-brand-sage)" }} />
-        ) : (
-          <Link2 className="h-[15px] w-[15px]" style={{ color: "var(--color-brand-sage)" }} />
-        )}
-        {copied ? "Copied ✓" : "Copy link"}
+    <div className="shr-card">
+      <style>{CSS}</style>
+      <div className="shr-label">Share</div>
+      <button type="button" onClick={handleCopy} aria-label="Copy link to this article" className="shr-copy">
+        {copied ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />}
+        {copied ? "Copied" : "Copy link"}
       </button>
 
-      <div className="flex flex-wrap gap-2 w-full sm:w-auto sm:ml-auto">
-        <IconBtn href={shareLinks.x} label="Share on X">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-[17px] h-[17px]">
-            <path d="M4 4l16 16M20 4L4 20" />
+      <div className="shr-icons">
+        <IconLink href={shareLinks.x} label="Share on X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.22-6.82-5.96 6.82H1.67l7.49-8.56L1 2.25h6.83l4.86 6.43 5.55-6.43Zm-1.16 17.52h1.83L6.99 4.13H5.03l12.05 15.64Z" />
           </svg>
-        </IconBtn>
-        <IconBtn href={shareLinks.facebook} label="Share on Facebook">
-          <span className="font-bold text-[15px] leading-none">f</span>
-        </IconBtn>
-        <IconBtn href={shareLinks.linkedin} label="Share on LinkedIn">
-          <span className="font-bold text-[12px] leading-none">in</span>
-        </IconBtn>
-        <IconBtn href={shareLinks.reddit} label="Share on Reddit">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-[17px] h-[17px]">
-            <circle cx="12" cy="13" r="7" />
-            <circle cx="9" cy="12.5" r="1" fill="currentColor" stroke="none" />
-            <circle cx="15" cy="12.5" r="1" fill="currentColor" stroke="none" />
-            <path d="M9 16c1.8 1.2 4.2 1.2 6 0M12 6l1-3 3 .7" />
+        </IconLink>
+        <IconLink href={shareLinks.facebook} label="Share on Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z" />
           </svg>
-        </IconBtn>
-        <IconBtn href={shareLinks.email} label="Share by email">
-          <Mail className="w-[17px] h-[17px]" />
-        </IconBtn>
+        </IconLink>
+        <IconLink href={shareLinks.linkedin} label="Share on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM3 9h4v12H3V9Zm6.5 0h3.83v1.64h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.44 4.78 5.61V21h-4v-5.63c0-1.34-.02-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97V21h-4V9Z" />
+          </svg>
+        </IconLink>
+        <IconLink href={shareLinks.reddit} label="Share on Reddit">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M22 11.5a2.1 2.1 0 0 0-3.56-1.5 10.3 10.3 0 0 0-5.1-1.6l1.02-3.2 2.72.62a1.6 1.6 0 1 0 .2-1.06l-3.26-.74a.55.55 0 0 0-.64.37l-1.25 3.94a10.4 10.4 0 0 0-5.29 1.6A2.1 2.1 0 1 0 3.7 13.6c-.03.26-.05.52-.05.78 0 3.32 3.74 6.02 8.35 6.02s8.35-2.7 8.35-6.02c0-.25-.02-.5-.05-.75A2.1 2.1 0 0 0 22 11.5ZM8.6 13.1a1.2 1.2 0 1 1 1.2 1.2 1.2 1.2 0 0 1-1.2-1.2Zm6.72 3.9c-.87.86-2.4.93-3.32.93-.93 0-2.46-.07-3.32-.93a.4.4 0 0 1 .56-.57c.55.55 1.72.74 2.76.74s2.21-.19 2.76-.74a.4.4 0 0 1 .56.57Zm-.93-2.7a1.2 1.2 0 1 1 1.2-1.2 1.2 1.2 0 0 1-1.2 1.2Z" />
+          </svg>
+        </IconLink>
       </div>
-      {liveRegion}
+
+      <span aria-live="polite" className="sr-only">
+        {copied ? "Link copied to clipboard" : ""}
+      </span>
     </div>
   );
 }

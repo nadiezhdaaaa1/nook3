@@ -3,18 +3,19 @@ import { useEffect, useState } from "react";
 import { ChevronDown, Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
-import { AuthorByline } from "@/components/blog/AuthorByline";
-import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
+import { NewsletterDigestBand } from "@/components/blog/NewsletterDigestBand";
+import { RelatedReading } from "@/components/blog/RelatedReading";
 import { ShareRow } from "@/components/blog/ShareRow";
+
 import {
   ARTICLES,
   CATEGORY_LABEL,
   getArticle,
   getRelated,
   type BlogArticle,
-  
+
 } from "@/data/blog/articles";
-import { cn } from "@/lib/utils";
+
 
 const SITE = "https://thenook.rent";
 
@@ -191,280 +192,341 @@ function ArticleDetailPage() {
     return () => observer.disconnect();
   }, [toc]);
 
+  const authorName = "Nook Team";
+  const authorInitial = "N";
+
   return (
     <MarketingLayout>
-      <div
-        className="fixed top-0 left-0 right-0 h-[3px] z-[60]"
-        style={{ backgroundColor: "transparent" }}
-      >
-        <div
-          className="h-full transition-[width] duration-150"
-          style={{
-            width: `${progress}%`,
-            backgroundColor: "var(--color-brand-terracotta)",
-          }}
-        />
+      <style>{PAGE_CSS}</style>
+
+      <div className="apg-progress" aria-hidden="true">
+        <div className="apg-progress-bar" style={{ width: `${progress}%` }} />
       </div>
 
-      <article className="py-12 lg:py-20" style={{ backgroundColor: "var(--color-brand-cream)" }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          {/* Breadcrumbs */}
-          <nav
-            aria-label="Breadcrumb"
-            className="text-sm text-[var(--color-charcoal-500)] mb-8 flex flex-wrap gap-2"
-          >
-            <Link to="/" className="hover:text-[var(--color-brand-sage)]">
+      <article className="apg">
+        <div className="apg-inner">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="apg-crumb">
+            <Link to="/" className="apg-crumb-link">
               Home
             </Link>
-            <span>›</span>
-            <Link to="/blog" className="hover:text-[var(--color-brand-sage)]">
+            <span className="apg-crumb-sep">›</span>
+            <Link to="/blog" className="apg-crumb-link">
               Blog
             </Link>
-            <span>›</span>
-            <Link
-              to="/blog"
-              search={{ category: article.category }}
-              className="hover:text-[var(--color-brand-sage)]"
-            >
+            <span className="apg-crumb-sep">›</span>
+            <Link to="/blog" search={{ category: article.category }} className="apg-crumb-link">
               {CATEGORY_LABEL[article.category]}
             </Link>
-            <span>›</span>
-            <span className="text-[var(--color-charcoal-700)] truncate max-w-[40ch]">
-              {article.title}
-            </span>
+            <span className="apg-crumb-sep">›</span>
+            <span className="apg-crumb-current">{article.title}</span>
           </nav>
 
           {/* Header */}
-          <header className="max-w-3xl">
-            <div className="flex flex-wrap gap-3 text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">
+          <header className="apg-head">
+            <div className="apg-meta">
               <span>{CATEGORY_LABEL[article.category]}</span>
               <span>·</span>
-              <span className="inline-flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+              <span className="apg-meta-read">
+                <Clock aria-hidden="true" />
                 {article.readingTimeMin} min read
               </span>
               <span>·</span>
-              <time dateTime={article.publishedAt}>
-                {new Date(article.publishedAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </time>
+              <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
             </div>
-            <h1 className="mt-5 font-display font-medium text-4xl lg:text-6xl tracking-[-0.02em] leading-[1.05] text-[var(--color-brand-charcoal)]">
-              {article.title}
-            </h1>
-            <p className="mt-6 text-xl text-[var(--color-charcoal-600)] leading-relaxed">
-              {article.excerpt}
-            </p>
-            <div className="mt-6">
-              <AuthorByline />
+            <h1 className="apg-h1">{article.title}</h1>
+            <p className="apg-lede">{article.excerpt}</p>
+            <div className="apg-author">
+              <span className="apg-avatar" aria-hidden="true">
+                {authorInitial}
+              </span>
+              <span className="apg-author-name">By {authorName}</span>
             </div>
           </header>
 
-          {/* Cover */}
-          <div
-            className="mt-12 aspect-[16/9] relative rounded-card overflow-hidden"
-            style={{ background: article.coverGradient }}
-          >
-            <img
-              src={article.coverImage}
-              alt={article.coverImageAlt}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+          {/* Hero */}
+          <div className="apg-hero" style={{ background: article.coverGradient }}>
+            <img src={article.coverImage} alt={article.coverImageAlt} />
           </div>
-        </div>
-      </article>
 
-      {/* Body + sidebars */}
-      <section className="py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-[200px_minmax(0,1fr)_240px] gap-10">
-          {/* TOC */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-28">
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)] mb-4">
-                On this page
-              </div>
-              <ul className="space-y-2">
-                {toc.map((t) => (
-                  <li key={t.id}>
-                    <a
-                      href={`#${t.id}`}
-                      className={cn(
-                        "block text-sm pl-3 border-l-2 transition-colors",
-                        activeId === t.id
-                          ? "border-[var(--color-brand-sage)] text-[var(--color-brand-charcoal)] font-medium"
-                          : "border-transparent text-[var(--color-charcoal-500)] hover:text-[var(--color-brand-sage)]",
-                      )}
-                    >
-                      {t.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
-
-          {/* Body */}
-          <div className="max-w-[720px] mx-auto w-full">
-            {toc.length > 0 && (
-              <details className="lg:hidden mb-8 rounded-card border p-4" style={{ borderColor: "var(--color-brand-clay)" }}>
-                <summary className="cursor-pointer text-sm font-semibold flex items-center justify-between">
-                  Table of contents
-                  <ChevronDown className="h-4 w-4" />
-                </summary>
-                <ul className="mt-3 space-y-2 text-sm">
+          {/* Body layout */}
+          <div className="apg-cols">
+            {/* TOC */}
+            <nav className="apg-toc" aria-label="On this page">
+              <div className="apg-toc-sticky">
+                <div className="apg-toc-title">On this page</div>
+                <ul className="apg-toc-list">
                   {toc.map((t) => (
                     <li key={t.id}>
-                      <a href={`#${t.id}`} className="text-[var(--color-charcoal-700)]">
+                      <a
+                        href={`#${t.id}`}
+                        className="apg-toc-link"
+                        data-active={activeId === t.id ? "true" : "false"}
+                      >
                         {t.text}
                       </a>
                     </li>
                   ))}
                 </ul>
-              </details>
-            )}
-
-            <BlogBody blocks={article.body} />
-
-            {/* Tags */}
-            <div className="mt-16 pt-8 border-t" style={{ borderColor: "var(--color-brand-clay)" }}>
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)] mb-3">
-                Tagged
               </div>
-              <div className="flex flex-wrap gap-2">
-                {article.tags.map((t: string) => (
-                  <span
-                    key={t}
-                    className="text-[11px] font-mono uppercase tracking-[0.1em] font-semibold px-3 py-1.5 rounded-pill"
-                    style={{
-                      backgroundColor: "var(--color-sage-100, #E8EEE3)",
-                      color: "var(--color-brand-sage)",
-                    }}
-                  >
-                    {t}
+            </nav>
+
+            {/* Article column */}
+            <div className="apg-col">
+              {toc.length > 0 && (
+                <details className="apg-toc-mobile">
+                  <summary>
+                    Table of contents
+                    <ChevronDown aria-hidden="true" />
+                  </summary>
+                  <ul>
+                    {toc.map((t) => (
+                      <li key={t.id}>
+                        <a href={`#${t.id}`}>{t.text}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+
+              <BlogBody blocks={article.body} />
+
+              {/* Tags */}
+              <div className="apg-tags">
+                <div className="apg-tags-label">Tagged</div>
+                <div className="apg-tags-row">
+                  {article.tags.map((t: string) => (
+                    <span key={t} className="apg-tag">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right rail */}
+            <aside className="apg-rail" aria-label="About and sharing">
+              <div className="apg-rail-card">
+                <div className="apg-rail-label">About the author</div>
+                <div className="apg-author" style={{ marginTop: 16 }}>
+                  <span className="apg-avatar" aria-hidden="true">
+                    {authorInitial}
                   </span>
-                ))}
+                  <span className="apg-author-name">By {authorName}</span>
+                </div>
+                <p className="apg-rail-text">
+                  The Nook editorial team covers US rental markets, tenant rights, and apartment
+                  search strategies.
+                </p>
               </div>
-            </div>
 
-          </div>
-
-          {/* Sidebar right */}
-          <aside className="space-y-6">
-            <div
-              className="rounded-card p-5 border"
-              style={{
-                backgroundColor: "var(--color-brand-soft)",
-                borderColor: "var(--color-brand-clay)",
-              }}
-            >
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">
-                About the author
-              </div>
-              <div className="mt-3">
-                <AuthorByline />
-              </div>
-              <p className="mt-3 text-sm text-[var(--color-charcoal-700)]">
-                The Nook editorial team covers US rental markets, tenant rights, and apartment search strategies.
-              </p>
-            </div>
-
-            <div
-              className="rounded-card p-5 border"
-              style={{
-                backgroundColor: "var(--color-sage-100, #E8EEE3)",
-                borderColor: "var(--color-brand-sage)",
-              }}
-            >
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">
-                Try Nook
-              </div>
-              <div className="mt-2 font-display text-lg font-medium text-[var(--color-brand-charcoal)]">
-                Get rental alerts within minutes
-              </div>
-              <p className="mt-2 text-sm text-[var(--color-charcoal-700)]">
-                Nook watches the US market 24/7 and emails you the moment new listings match your criteria.
-              </p>
-              <Link
-                to="/onboarding"
-                className="mt-4 inline-flex items-center gap-1 text-sm font-semibold"
-                style={{ color: "var(--color-brand-terracotta)" }}
-              >
-                Start free →
-              </Link>
-            </div>
-
-            <ShareRow
-              url={`${SITE}/blog/${article.slug}`}
-              title={article.title}
-              excerpt={article.excerpt}
-            />
-          </aside>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="py-14 border-t" style={{ borderColor: "var(--color-brand-clay)" }}>
-        <div className="max-w-2xl mx-auto px-6 lg:px-10">
-          <NewsletterSignup source={`blog-article:${article.slug}`} variant="inline" />
-        </div>
-      </section>
-
-      {/* Related */}
-      {related.length > 0 && (
-        <section className="py-16 border-t" style={{ borderColor: "var(--color-brand-clay)" }}>
-          <div className="max-w-7xl mx-auto px-6 lg:px-10">
-            <h2 className="font-display text-3xl font-medium text-[var(--color-brand-charcoal)] mb-8">
-              Related reading
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {related.map((r) => (
-                <Link
-                  key={r.slug}
-                  to="/blog/$slug"
-                  params={{ slug: r.slug }}
-                  className="rounded-card border overflow-hidden hover-lift flex flex-col"
-                  style={{
-                    borderColor: "var(--color-brand-clay)",
-                    backgroundColor: "var(--color-brand-soft)",
-                  }}
-                >
-                  <div className="aspect-[4/3] relative overflow-hidden" style={{ background: r.coverGradient }}>
-                    <img
-                      src={r.coverImage}
-                      alt={r.coverImageAlt}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <div className="text-[10px] font-mono uppercase tracking-[0.18em] font-semibold text-[var(--color-brand-sage)]">
-                      {CATEGORY_LABEL[r.category]}
-                    </div>
-                    <h3 className="mt-2 font-display text-lg font-medium text-[var(--color-brand-charcoal)] leading-snug">
-                      {r.title}
-                    </h3>
-                  </div>
+              <div className="apg-rail-dark">
+                <div className="apg-rail-label apg-rail-label-light">Try Nook</div>
+                <div className="apg-rail-dark-title">Get rental alerts within minutes</div>
+                <p className="apg-rail-dark-text">
+                  Nook watches the US market 24/7 and emails you the moment new listings match your
+                  criteria.
+                </p>
+                <Link to="/onboarding" className="apg-rail-btn">
+                  Start Free
                 </Link>
-              ))}
-            </div>
-            <div className="mt-10">
-              <Link
-                to="/blog"
-                className="text-sm font-semibold"
-                style={{ color: "var(--color-brand-terracotta)" }}
-              >
-                ← Back to all articles
-              </Link>
-            </div>
+              </div>
+
+              <ShareRow
+                url={`${SITE}/blog/${article.slug}`}
+                title={article.title}
+                excerpt={article.excerpt}
+              />
+            </aside>
           </div>
-        </section>
-      )}
+        </div>
+      </article>
+
+      <NewsletterDigestBand source={`blog-article:${article.slug}`} />
+
+      {related.length > 0 && <RelatedReading articles={related} />}
     </MarketingLayout>
   );
 }
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+const PAGE_CSS = `
+.apg-progress { position:fixed; top:0; left:0; right:0; height:3px; z-index:60; background:transparent; }
+.apg-progress-bar { height:100%; background:#d66c38; transition:width .15s linear; }
+
+.apg { background:#faf6ee; padding:40px 0 104px; }
+.apg-inner { max-width:1280px; margin:0 auto; padding:0 40px; }
+
+.apg-crumb {
+  display:flex; align-items:center; gap:8px; min-width:0; white-space:nowrap;
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:400; font-size:14px; line-height:20px;
+}
+.apg-crumb-link { color:#6e6e68; text-decoration:none; transition:color .2s ease; flex:0 0 auto; }
+.apg-crumb-link:hover { color:#2b2521; }
+.apg-crumb-link:focus-visible { outline:2px solid #241c12; outline-offset:3px; }
+.apg-crumb-sep { color:#6e6e68; flex:0 0 auto; }
+.apg-crumb-current { color:#4a4a46; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+
+.apg-head { margin-top:20px; max-width:768px; }
+.apg-meta {
+  display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:700; font-size:10px; line-height:15px; letter-spacing:1.8px;
+  text-transform:uppercase; color:#7a6f5c;
+}
+.apg-meta-read { display:inline-flex; align-items:center; gap:6px; }
+.apg-meta-read svg { width:12px; height:12px; }
+.apg-h1 {
+  margin:16px 0 0; font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:600; font-size:60px; line-height:64px; letter-spacing:-1.2px; color:#2b2521;
+}
+.apg-lede {
+  margin:24px 0 0; font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:400; font-size:20px; line-height:32px; color:#5a5a55;
+}
+.apg-author { margin-top:24px; display:flex; align-items:center; gap:12px; }
+.apg-avatar {
+  width:40px; height:40px; flex:0 0 40px; border-radius:9999px; background:#809917;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:600; font-size:14px; color:#f5ede0;
+}
+.apg-author-name {
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:600; font-size:16px; line-height:24px; color:#4a4a46;
+}
+
+.apg-hero {
+  margin-top:48px; width:100%; max-width:1200px; aspect-ratio:16/9; position:relative;
+  border-radius:20px; border:1px solid rgba(0,0,0,0.2); overflow:hidden;
+}
+.apg-hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+
+.apg-cols {
+  margin-top:80px; max-width:1200px;
+  display:grid; grid-template-columns:200px 680px 240px; gap:40px; align-items:start;
+}
+.apg-col { min-width:0; }
+
+.apg-toc { align-self:stretch; }
+.apg-toc-sticky { position:sticky; top:112px; }
+.apg-toc-title {
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:700; font-size:10px; line-height:15px; letter-spacing:1.8px;
+  text-transform:uppercase; color:#809917;
+}
+.apg-toc-list { margin-top:16px; display:flex; flex-direction:column; gap:8px; list-style:none; padding:0; }
+.apg-toc-link {
+  display:block; padding-left:14px; border-left:2px solid transparent; text-decoration:none;
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:400; font-size:14px; line-height:20px; color:#5a5a55;
+  transition:color .2s ease, border-color .2s ease;
+}
+.apg-toc-link:hover { color:#2b2521; }
+.apg-toc-link:focus-visible { outline:2px solid #241c12; outline-offset:3px; }
+.apg-toc-link[data-active="true"] { font-weight:500; color:#2b2521; border-left-color:#809917; }
+
+.apg-toc-mobile { display:none; }
+
+.apg-tags { margin-top:40px; }
+.apg-tags-label {
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:700; font-size:13px; letter-spacing:1.82px; text-transform:uppercase; color:#241c12;
+}
+.apg-tags-row { margin-top:12px; display:flex; flex-wrap:wrap; gap:8px; }
+.apg-tag {
+  background:#ebf0d5; border-radius:8px; padding:6px 12px;
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:700; font-size:12px; line-height:16px; letter-spacing:1.1px; color:#809917;
+}
+
+.apg-rail { align-self:stretch; display:flex; flex-direction:column; gap:32px; min-width:0; }
+.apg-rail-card {
+  background:#ffffff; border:1px solid rgba(36,28,18,0.2); border-radius:16px; padding:20px;
+}
+.apg-rail-label {
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:700; font-size:13px; letter-spacing:1.82px; text-transform:uppercase; color:#241c12;
+}
+.apg-rail-label-light { color:#ffffff; }
+.apg-rail-text {
+  margin-top:16px; font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:400; font-size:14px; line-height:24px; color:#4a4a46;
+}
+.apg-rail-dark { background:#2c2415; border-radius:20px; padding:20px; }
+.apg-rail-dark-title {
+  margin-top:12px; font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:600; font-size:24px; line-height:28px; letter-spacing:-0.3px; color:#ffffff;
+}
+.apg-rail-dark-text {
+  margin-top:12px; font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:400; font-size:14px; line-height:24px; color:#f8f3e1;
+}
+.apg-rail-btn {
+  margin-top:20px; width:100%; display:inline-flex; align-items:center; justify-content:center;
+  background:#d66c38; color:#ffffff; border-radius:12px; padding:16px 24px; text-decoration:none;
+  font-family:"Google Sans Flex",system-ui,sans-serif;
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+  font-weight:500; font-size:16px; line-height:1;
+  transition:background-color .2s ease;
+}
+.apg-rail-btn:hover { background:#c25e2d; }
+.apg-rail-btn:focus-visible { outline:2px solid #f8f3e1; outline-offset:2px; }
+
+@media (max-width:1280px) {
+  .apg-cols { grid-template-columns:200px minmax(0,1fr) 240px; }
+}
+@media (max-width:1100px) {
+  .apg-cols { grid-template-columns:minmax(0,1fr); }
+  .apg-toc { display:none; }
+  .apg-rail { width:100%; max-width:480px; margin:0 auto; }
+  .apg-toc-mobile {
+    display:block; margin-bottom:24px; border:1px solid rgba(0,0,0,0.2);
+    border-radius:16px; padding:16px; background:#ffffff;
+  }
+  .apg-toc-mobile summary {
+    cursor:pointer; display:flex; align-items:center; justify-content:space-between;
+    font-family:"Google Sans Flex",system-ui,sans-serif;
+    font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+    font-weight:500; font-size:15px; color:#2b2521; list-style:none;
+  }
+  .apg-toc-mobile summary svg { width:16px; height:16px; }
+  .apg-toc-mobile ul { margin:12px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .apg-toc-mobile a {
+    font-family:"Google Sans Flex",system-ui,sans-serif;
+    font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
+    font-size:14px; line-height:20px; color:#5a5a55; text-decoration:none;
+  }
+  .apg-h1 { font-size:clamp(40px,5.4vw,60px); line-height:1.08; }
+}
+@media (max-width:680px) {
+  .apg { padding:24px 0 64px; }
+  .apg-inner { padding:0 20px; }
+  .apg-h1 { font-size:clamp(36px,8vw,44px); line-height:1.1; }
+  .apg-lede { font-size:18px; line-height:28px; }
+  .apg-hero { margin-top:32px; border-radius:16px; }
+  .apg-cols { margin-top:48px; }
+}
+`;
 
 // Reference ARTICLES so static analyzers know the data backs all slugs.
 void ARTICLES;
