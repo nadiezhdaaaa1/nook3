@@ -74,6 +74,15 @@ export function LegalPageLayout({
         </div>
       </div>
 
+      <section className="legal-questions-section">
+        <div className="legal-questions-inner">
+          <span className="legal-questions-label">Questions?</span>
+          <a href="mailto:legal@thenook.rent" className="legal-questions-link">
+            legal@thenook.rent
+          </a>
+        </div>
+      </section>
+
       <style>{`
         .legal-layout { background: #FAF6EE; padding: 64px 0 120px; }
         .legal-layout-inner {
