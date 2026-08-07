@@ -117,40 +117,41 @@
 }
 
 :root {
-  --radius: 4px;
-  --background: #f4f1ea;
-  --foreground: #2a2a28;
-  --surface: #f8f5ee;
+  --radius: 12px;
+  --background: #f5f0e4;
+  --foreground: #241c12;
+  --surface: #faf6ee;
   --surface-elevated: #ffffff;
   --card: #ffffff;
-  --card-foreground: #2a2a28;
+  --card-foreground: #241c12;
   --popover: #ffffff;
-  --popover-foreground: #2a2a28;
-  --primary: #7a8f6e;
-  --primary-foreground: #f4f1ea;
-  --secondary: #ececdf;
-  --secondary-foreground: #2a2a28;
-  --muted: #ececdf;
-  --muted-foreground: #6e6e68;
-  --accent: #e1e6d8;
-  --accent-foreground: #3d4a36;
-  --highlight: #b89548;
-  --highlight-foreground: #2a2a28;
+  --popover-foreground: #241c12;
+  --primary: #d66c38;
+  --primary-foreground: #ffffff;
+  --secondary: #f8f3e1;
+  --secondary-foreground: #241c12;
+  --muted: #f8f3e1;
+  --muted-foreground: #6e6459;
+  --accent: #f8f3e1;
+  --accent-foreground: #241c12;
+  --highlight: #cb4a0a;
+  --highlight-foreground: #ffffff;
   --destructive: #a04848;
-  --destructive-foreground: #f4f1ea;
-  --border: #d8d5cd;
-  --input: #d8d5cd;
-  --ring: #7a8f6e;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.2);
+  --input: rgba(0, 0, 0, 0.2);
+  --ring: #d66c38;
 
-  --sidebar: #f8f5ee;
-  --sidebar-foreground: #2a2a28;
-  --sidebar-primary: #7a8f6e;
-  --sidebar-primary-foreground: #f4f1ea;
-  --sidebar-accent: #ececdf;
-  --sidebar-accent-foreground: #2a2a28;
-  --sidebar-border: #d8d5cd;
-  --sidebar-ring: #7a8f6e;
+  --sidebar: #faf6ee;
+  --sidebar-foreground: #241c12;
+  --sidebar-primary: #d66c38;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f8f3e1;
+  --sidebar-accent-foreground: #241c12;
+  --sidebar-border: rgba(0, 0, 0, 0.2);
+  --sidebar-ring: #d66c38;
 }
+
 
 .dark {
   --background: #1a1a18;
@@ -356,4 +357,153 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
   -webkit-text-fill-color: var(--color-brand-charcoal) !important;
   caret-color: var(--color-brand-charcoal);
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ---------------------------------------------------------------------------
+   App-screen visual language (matches the landing page: cream surfaces,
+   white cards with 1px rgba(0,0,0,0.20) borders, 12px radii, ember CTAs).
+   Landing sections use their own scoped classes and are unaffected.
+   --------------------------------------------------------------------------- */
+
+/* Primary CTAs written as legacy charcoal pills */
+.rounded-pill.bg-charcoal-950,
+.rounded-pill.bg-charcoal-900 {
+  background-color: #d66c38;
+  color: #ffffff;
+  border-radius: 12px;
+}
+.rounded-pill.bg-charcoal-950:hover,
+.rounded-pill.bg-charcoal-900:hover,
+.rounded-pill.bg-charcoal-950.hover\:bg-charcoal-800:hover {
+  background-color: #c05f2e;
+}
+
+/* Secondary / outlined pills */
+.rounded-pill.border-charcoal-950,
+.rounded-pill.border-charcoal-200,
+.rounded-pill.border-charcoal-300 {
+  border-radius: 12px;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.rounded-pill.border-charcoal-200:hover,
+.rounded-pill.border-charcoal-300:hover {
+  border-color: rgba(0, 0, 0, 0.32);
+}
+
+/* Disabled CTA state */
+.rounded-pill.bg-charcoal-200 {
+  border-radius: 12px;
+  background-color: #f8f3e1;
+  color: rgba(36, 28, 18, 0.4);
+}
+
+/* Cards / panels written with the old radii + hairlines */
+.rounded-card,
+.rounded-tight {
+  border-radius: 20px;
+}
+.border-charcoal-200,
+.border-charcoal-100,
+.border-charcoal-950\/8,
+.border-charcoal-950\/10 {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.bg-surface-elevated,
+.bg-paper-elevated {
+  background-color: #ffffff;
+}
+.bg-paper,
+.bg-paper-warm {
+  background-color: #f5f0e4;
+}
+
+/* Text tone alignment with the landing charcoal */
+.text-charcoal-950,
+.text-charcoal-900 {
+  color: #241c12;
+}
+.text-charcoal-500,
+.text-charcoal-400 {
+  color: #6e6459;
+}
+
+/* Inputs written as bare Tailwind fields on app screens */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]).rounded-md,
+textarea.rounded-md,
+select.rounded-md {
+  border-radius: 12px;
+}
+
+/* Legacy app-screen buttons/fields written with rounded-md + charcoal utilities */
+.rounded-md.bg-charcoal-950,
+.rounded-lg.bg-charcoal-950,
+.rounded-xl.bg-charcoal-950,
+.rounded-md.bg-charcoal-900 {
+  background-color: #d66c38;
+  color: #ffffff;
+  border-radius: 12px;
+}
+.rounded-md.bg-charcoal-950:hover,
+.rounded-lg.bg-charcoal-950:hover,
+.rounded-xl.bg-charcoal-950:hover,
+.rounded-md.bg-charcoal-900:hover {
+  background-color: #c05f2e;
+}
+
+.rounded-md.border-charcoal-200,
+.rounded-md.border-charcoal-300,
+.rounded-lg.border-charcoal-200,
+.rounded-xl.border-charcoal-200 {
+  border-radius: 12px;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+input.bg-paper,
+textarea.bg-paper,
+select.bg-paper,
+input.bg-transparent:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+textarea.bg-transparent {
+  background-color: #ffffff;
+}
+
+.focus\:border-charcoal-950:focus,
+.focus-visible\:border-charcoal-950:focus-visible {
+  border-color: #d66c38;
+}
+
+/* Selected states, progress fills and dark chips on app screens */
+.bg-charcoal-950.border-charcoal-950,
+.bg-charcoal-950.text-paper,
+.h-full.bg-charcoal-950,
+.bg-sage-700.border-sage-700 {
+  background-color: #d66c38;
+  border-color: #d66c38;
+  color: #ffffff;
+}
+.bg-charcoal-950.border-charcoal-950:hover,
+.bg-charcoal-950.text-paper:hover {
+  background-color: #c05f2e;
+  border-color: #c05f2e;
+}
+.bg-sage-100.border-sage-300 {
+  background-color: #f8f3e1;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #241c12;
+}
+
+/* Sage-era controls and tint panels on app screens → landing ember/cream */
+button.bg-sage-700, a.bg-sage-700, button.bg-sage-500, a.bg-sage-500,
+button.bg-sage-900, a.bg-sage-900 {
+  background-color: #d66c38;
+  color: #ffffff;
+  border-radius: 12px;
+}
+button.bg-sage-700:hover, a.bg-sage-700:hover,
+button.bg-sage-500:hover, a.bg-sage-500:hover,
+button.bg-sage-900:hover, a.bg-sage-900:hover {
+  background-color: #c05f2e;
+}
+.bg-sage-100 {
+  background-color: #f8f3e1;
 }
