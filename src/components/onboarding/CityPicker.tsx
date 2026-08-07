@@ -1,93 +1,80 @@
-import { useState, useMemo } from "react";
-import { Search, Check } from "lucide-react";
-import { CITY_LIST, type CityId, type CityConfig } from "@/data/cities";
-import { CITY_EMOJI } from "@/data/cities/icons";
-import { cn } from "@/lib/utils";
+import { useMemo } from "react";
+import { CITY_LIST, type CityId } from "@/data/cities";
+import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
 
 interface Props {
   value: CityId | null;
   onChange: (id: CityId) => void;
+  /** Live search query — filters the row. */
+  query?: string;
 }
 
-export function CityPicker({ value, onChange }: Props) {
-  const [query, setQuery] = useState("");
-  const filtered = useMemo(() => {
+export function CityPicker({ value, onChange, query = "" }: Props) {
+  const cities = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return [] as CityConfig[];
+    if (!q) return CITY_LIST;
     return CITY_LIST.filter(
       (c) =>
         c.displayName.toLowerCase().includes(q) ||
+        c.name.toLowerCase().includes(q) ||
         c.state.toLowerCase().includes(q),
     );
   }, [query]);
 
   return (
-    <div className="space-y-5">
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-400" />
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search cities..."
-          autoComplete="off"
-          className="w-full h-12 pl-11 pr-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium placeholder:text-charcoal-400"
-        />
-        {filtered.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-surface-elevated border border-border rounded-md shadow-elevated overflow-hidden z-10">
-            {filtered.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => {
-                  onChange(c.id);
-                  setQuery("");
-                }}
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-paper-warm text-left"
-              >
-                <span className="text-lg leading-none">{CITY_EMOJI[c.id]}</span>
-                <span className="text-sm font-medium text-charcoal-950">
-                  {c.displayName}
-                </span>
-                <span className="text-xs font-mono text-charcoal-400 ml-auto">
-                  {c.state}
-                </span>
-              </button>
-            ))}
+    <div
+      role="group"
+      aria-label="Pick your city"
+      className="ob-cards-row flex gap-4 overflow-x-auto pb-2"
+    >
+      {cities.map((c) => (
+        <button
+          key={c.id}
+          type="button"
+          aria-pressed={value === c.id}
+          onClick={() => onChange(c.id)}
+          className="ob-city-card shrink-0 text-left"
+          style={{
+            width: 188,
+            borderRadius: 24,
+            padding: 12,
+            background: CITY_TINT[c.id],
+          }}
+        >
+          <div
+            className="w-full overflow-hidden"
+            style={{ height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
+          >
+            {CITY_PHOTO[c.id] && (
+              <img
+                src={CITY_PHOTO[c.id]}
+                alt={c.displayName}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            )}
           </div>
-        )}
-      </div>
-
-      <div>
-        <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-3">
-          Popular cities
+          <div
+            className="font-display text-center"
+            style={{
+              marginTop: 8,
+              padding: "8px 0",
+              fontWeight: 700,
+              fontSize: 18,
+              lineHeight: 1.2,
+              letterSpacing: "-0.45px",
+              color: "#241c12",
+            }}
+          >
+            {c.displayName}
+          </div>
+        </button>
+      ))}
+      {cities.length === 0 && (
+        <div className="text-sm" style={{ color: "#5a5a55" }}>
+          No cities match that search.
         </div>
-        <div className="flex flex-wrap gap-2">
-          {CITY_LIST.map((c) => {
-            const selected = value === c.id;
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => onChange(c.id)}
-                className={cn(
-                  "h-10 px-4 inline-flex items-center gap-2 rounded-pill border text-sm font-medium transition-colors",
-                  selected
-                    ? "bg-charcoal-950 text-paper border-charcoal-950"
-                    : "bg-transparent border-charcoal-200 text-charcoal-800 hover:border-charcoal-950",
-                )}
-              >
-                {selected ? (
-                  <Check className="h-3.5 w-3.5" />
-                ) : (
-                  <span className="text-base leading-none">{CITY_EMOJI[c.id]}</span>
-                )}
-                {c.displayName}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
