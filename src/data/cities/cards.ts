@@ -24,10 +24,16 @@ export const CITY_TINT: Record<CityId, string> = {
   philadelphia: "#c7d9bf",
 };
 
-/** Card photos. Cities without a photo yet render the tint only. */
+/** Card photos. */
 export const CITY_PHOTO: Partial<Record<CityId, string>> = {
   nyc: nycCard.url,
   la: laCard.url,
   "sf-bay": sfCard.url,
   chicago: chiCard.url,
+  dc: dcCard.url,
+  boston: bostonCard.url,
+  seattle: seattleCard.url,
+  miami: miamiCard.url,
+  austin: austinCard.url,
+  philadelphia: phillyCard.url,
 };
