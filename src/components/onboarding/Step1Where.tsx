@@ -135,7 +135,7 @@ export function Step1Where() {
 
       <OnboardingFooter
         canContinue={canContinue}
-        onBack={() => navigate({ to: "/" })}
+        onBack={() => set("city", null)}
         onNext={() => {
           set("lastStep", 2);
           navigate({ to: "/onboarding/step/$step", params: { step: "2" } });
