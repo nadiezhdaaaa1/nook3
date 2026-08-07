@@ -434,3 +434,40 @@ textarea.rounded-md,
 select.rounded-md {
   border-radius: 12px;
 }
+
+/* Legacy app-screen buttons/fields written with rounded-md + charcoal utilities */
+.rounded-md.bg-charcoal-950,
+.rounded-lg.bg-charcoal-950,
+.rounded-xl.bg-charcoal-950,
+.rounded-md.bg-charcoal-900 {
+  background-color: #d66c38;
+  color: #ffffff;
+  border-radius: 12px;
+}
+.rounded-md.bg-charcoal-950:hover,
+.rounded-lg.bg-charcoal-950:hover,
+.rounded-xl.bg-charcoal-950:hover,
+.rounded-md.bg-charcoal-900:hover {
+  background-color: #c05f2e;
+}
+
+.rounded-md.border-charcoal-200,
+.rounded-md.border-charcoal-300,
+.rounded-lg.border-charcoal-200,
+.rounded-xl.border-charcoal-200 {
+  border-radius: 12px;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+input.bg-paper,
+textarea.bg-paper,
+select.bg-paper,
+input.bg-transparent:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+textarea.bg-transparent {
+  background-color: #ffffff;
+}
+
+.focus\:border-charcoal-950:focus,
+.focus-visible\:border-charcoal-950:focus-visible {
+  border-color: #d66c38;
+}
