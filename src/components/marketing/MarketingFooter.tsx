@@ -20,18 +20,19 @@ const CSS = `
 .ftr-logo { width:81px; height:28px; display:block; }
 .ftr-tag { margin:0; font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
   font-weight:520; font-size:42px; line-height:46.2px; color:#241c12; }
-.ftr-right { display:flex; flex-direction:column; align-items:flex-end; gap:32px; }
+
 .ftr-email { font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:500; font-size:24px; line-height:1.2;
   color:#d66c38; text-decoration:none; transition:color .2s ease; }
 .ftr-email:hover { color:#CE4F12; }
+.ftr-divider { height:1px; background:rgba(0,0,0,0.20); }
+.ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
+.ftr-col { width:220px; }
+.ftr-social-col { margin-left:auto; align-self:flex-start; }
 .ftr-socials { display:flex; align-items:center; gap:24px; }
 .ftr-socials a { color:rgba(36,28,18,0.45); display:inline-flex; transition:color .2s ease-out; }
 .ftr-socials a:hover { color:rgba(36,28,18,0.7); }
 .ftr-socials svg { width:24px; height:24px; }
-.ftr-divider { height:1px; background:rgba(0,0,0,0.20); }
-.ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
-.ftr-col { width:220px; }
 .ftr-h { font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:700; font-size:12px;
   letter-spacing:1.92px; text-transform:uppercase; color:#241c12; }
@@ -51,7 +52,6 @@ const CSS = `
 .ftr a:focus-visible, .ftr button:focus-visible { outline:2px solid #241c12; outline-offset:2px; }
 @media (max-width:1100px) {
   .ftr-top { flex-direction:column; align-items:flex-start; gap:32px; }
-  .ftr-right { align-items:flex-start; }
 }
 @media (max-width:680px) {
   .ftr { padding:104px 0 48px; }
@@ -88,24 +88,9 @@ export function MarketingFooter() {
             <img className="ftr-logo" src={logoAsset.url} alt="Nook" width={81} height={28} />
             <p className="ftr-tag">Where home finds you</p>
           </div>
-          <div className="ftr-right">
-            <div className="ftr-socials">
-              {SOCIALS.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  <Icon />
-                </a>
-              ))}
-            </div>
-            <a className="ftr-email" href="mailto:hello@thenook.rent">
-              hello@thenook.rent
-            </a>
-          </div>
+          <a className="ftr-email" href="mailto:hello@thenook.rent">
+            hello@thenook.rent
+          </a>
         </div>
 
         <div className="ftr-divider" />
@@ -147,6 +132,22 @@ export function MarketingFooter() {
               <li><Link to="/contact">Contact</Link></li>
             </ul>
           </nav>
+
+          <div className="ftr-social-col">
+            <div className="ftr-socials">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="ftr-legal">
