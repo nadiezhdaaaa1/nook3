@@ -1,24 +1,33 @@
 import { useNavigate } from "@tanstack/react-router";
 import { OriginButton } from "@/components/ui/origin-button";
+import icon1 from "@/assets/Problem_1.png.asset.json";
+import icon2 from "@/assets/Problem_2.png.asset.json";
+import icon3 from "@/assets/Prblem_3.png.asset.json";
+import icon4 from "@/assets/Problem_4.png.asset.json";
 
 const CARDS = [
   {
+    icon: icon1.url,
     pain: "Refreshing rental sites every 30 minutes hoping something new appears.",
     fix: "Get a text when it does.",
   },
   {
+    icon: icon2.url,
     pain: "Showing up to a viewing and finding the listing was a bait price.",
     fix: "We strip out 'starting from' pricing before you ever see the listing.",
   },
   {
+    icon: icon3.url,
     pain: "Asking a landlord about rent-stabilization and hearing 'oh that's not really regulated'.",
     fix: "We verify against public records. The badge means it's real.",
   },
   {
+    icon: icon4.url,
     pain: "Losing the apartment because you saw it 4 hours after it posted.",
     fix: "Median alert time: minutes after listing goes live.",
   },
 ];
+
 
 export function TiredOfSection() {
   const navigate = useNavigate();
@@ -87,9 +96,18 @@ export function TiredOfSection() {
           padding: 24px;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          align-items: flex-start;
+          justify-content: flex-start;
           gap: 18px;
         }
+        .prob-icon {
+          width: 56px;
+          height: 56px;
+          object-fit: contain;
+          display: block;
+          flex-shrink: 0;
+        }
+
         .prob-pain {
           font-family: Fraunces, Georgia, serif;
           font-variation-settings: "SOFT" 0, "WONK" 1;
@@ -177,9 +195,11 @@ export function TiredOfSection() {
         <div className="prob-grid">
           {CARDS.map((c) => (
             <div key={c.pain} className="prob-card">
+              <img src={c.icon} alt="" className="prob-icon" loading="lazy" />
               <p className="prob-pain">{c.pain}</p>
               <p className="prob-fix">{c.fix}</p>
             </div>
+
           ))}
         </div>
 
