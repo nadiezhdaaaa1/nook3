@@ -67,6 +67,7 @@ type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   children?: React.ReactNode;
   loading?: boolean;
   variant?: "default" | "main" | "secondary" | "tertiary";
+  size?: "big" | "medium";
 };
 
 const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
@@ -76,6 +77,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
       className,
       disabled = false,
       loading = false,
+      size = "big",
       type = "button",
       variant = "default",
       onBlur,
