@@ -119,15 +119,15 @@ export function LegalPageLayout({
 
         .legal-sidebar { position: sticky; top: 96px; }
         .legal-sidebar-card {
-          background: #ffffff; border: 1px solid rgba(0,0,0,0.20);
-          border-radius: 24px; padding: 20px;
+          background: transparent; border: none;
+          border-radius: 0; padding: 0;
         }
         .legal-sidebar-title {
           font-family: Fraunces, Georgia, serif;
           font-variation-settings: "SOFT" 0,"WONK" 1;
           font-weight: 600; font-size: 18px; line-height: 1.2;
           letter-spacing: -0.02em; color: #2b2521; margin-bottom: 12px;
-          padding: 0 10px;
+          padding: 0;
         }
         .legal-sidebar-list {
           list-style: none; margin: 0; padding: 0;
