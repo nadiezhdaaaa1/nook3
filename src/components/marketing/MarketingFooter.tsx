@@ -52,7 +52,6 @@ const CSS = `
 .ftr a:focus-visible, .ftr button:focus-visible { outline:2px solid #241c12; outline-offset:2px; }
 @media (max-width:1100px) {
   .ftr-top { flex-direction:column; align-items:flex-start; gap:32px; }
-  .ftr-right { align-items:flex-start; }
 }
 @media (max-width:680px) {
   .ftr { padding:104px 0 48px; }
