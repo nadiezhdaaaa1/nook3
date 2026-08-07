@@ -36,9 +36,9 @@ const CSS = `
 }
 .shr-icon {
   width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
-  color: #241c12; transition: color .2s ease;
+  color: #4A4A46; transition: color .2s ease;
 }
-.shr-icon:hover { color: #809917; }
+.shr-icon:hover { color: #D66C38; }
 .shr-icon:focus-visible { outline: 2px solid #241c12; outline-offset: 3px; border-radius: 4px; }
 .shr-icon svg { width: 20px; height: 20px; }
 `;
