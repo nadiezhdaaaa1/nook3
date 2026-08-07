@@ -37,8 +37,8 @@ export function HeroEmailField({
           borderColor: focused
             ? "#CE4F12"
             : hovered
-              ? "rgba(0,0,0,0.20)"
-              : "rgba(36,28,18,0.18)",
+              ? "rgba(0,0,0,0.32)"
+              : "rgba(0,0,0,0.20)",
         }}
       />
       <style>{`
