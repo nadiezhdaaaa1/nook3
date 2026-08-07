@@ -56,6 +56,10 @@ export function HeroEmailField({
           outline: none;
           transition: border-color 0.2s ease;
         }
+        .hero-email-input:hover,
+        .hero-email-input:focus {
+          border-color: rgba(0, 0, 0, 0.32);
+        }
         .hero-email-input::placeholder { color: rgba(36,28,18,0.45); }
       `}</style>
     </>
