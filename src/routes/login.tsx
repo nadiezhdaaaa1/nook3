@@ -108,7 +108,7 @@ function LoginPage() {
               <label className="sgn-label" htmlFor="sgn-email">
                 Email
               </label>
-              <input
+              <Input
                 id="sgn-email"
                 type="email"
                 autoComplete="email"
@@ -116,7 +116,7 @@ function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={!!errors.email}
                 placeholder="you@email.com"
-                className="sgn-input"
+                size="big"
               />
               {errors.email && <p className="sgn-err">{errors.email}</p>}
             </div>
@@ -124,7 +124,7 @@ function LoginPage() {
               <label className="sgn-label" htmlFor="sgn-password">
                 Password
               </label>
-              <input
+              <Input
                 id="sgn-password"
                 type="password"
                 autoComplete="current-password"
@@ -132,7 +132,7 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 aria-invalid={!!errors.password}
                 placeholder="Your password"
-                className="sgn-input"
+                size="big"
               />
               {errors.password && <p className="sgn-err">{errors.password}</p>}
             </div>
