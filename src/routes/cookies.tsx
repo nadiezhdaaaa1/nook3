@@ -21,7 +21,7 @@ function CookiesPage() {
   return (
     <LegalPageLayout title="Cookie Policy" lastUpdated="July 2, 2026">
       <div style={{ margin: "0 0 1.6em" }}>
-        <OriginButton variant="secondary" onClick={openCookiePreferences}>
+        <OriginButton variant="tertiary" onClick={openCookiePreferences}>
           Manage Cookie Preferences
         </OriginButton>
       </div>
