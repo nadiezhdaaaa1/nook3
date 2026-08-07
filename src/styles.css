@@ -471,3 +471,23 @@ textarea.bg-transparent {
 .focus-visible\:border-charcoal-950:focus-visible {
   border-color: #d66c38;
 }
+
+/* Selected states, progress fills and dark chips on app screens */
+.bg-charcoal-950.border-charcoal-950,
+.bg-charcoal-950.text-paper,
+.h-full.bg-charcoal-950,
+.bg-sage-700.border-sage-700 {
+  background-color: #d66c38;
+  border-color: #d66c38;
+  color: #ffffff;
+}
+.bg-charcoal-950.border-charcoal-950:hover,
+.bg-charcoal-950.text-paper:hover {
+  background-color: #c05f2e;
+  border-color: #c05f2e;
+}
+.bg-sage-100.border-sage-300 {
+  background-color: #f8f3e1;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #241c12;
+}
