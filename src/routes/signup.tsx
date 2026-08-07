@@ -298,7 +298,34 @@ function SignupPage() {
         .sgn-hint { margin: 8px 0 0; font-size: 13px; color: #6e6459; }
         .sgn-checks { display: flex; flex-direction: column; gap: 12px; }
         .sgn-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 20px; color: #4a4a46; }
-        .sgn-check input { margin-top: 2px; width: 16px; height: 16px; accent-color: #d66c38; }
+        .sgn-check input {
+          -webkit-appearance: none;
+          appearance: none;
+          margin-top: 2px;
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
+          border: 1px solid rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+          background: #fff;
+          cursor: pointer;
+          position: relative;
+        }
+        .sgn-check input:checked {
+          background: #d66c38;
+          border-color: #d66c38;
+        }
+        .sgn-check input:checked::after {
+          content: "";
+          position: absolute;
+          left: 5px;
+          top: 2px;
+          width: 4px;
+          height: 8px;
+          border: solid #fff;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
         .sgn-check a { color: #241c12; text-decoration: underline; }
         .sgn-foot { margin: 24px 0 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
         .sgn-foot a { color: #241c12; text-decoration: underline; }
