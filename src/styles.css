@@ -507,3 +507,71 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 .bg-sage-100 {
   background-color: #f8f3e1;
 }
+
+/* ── Onboarding wizard (step 1 redesign) ───────────────────────── */
+.ob-cards-row { scrollbar-width: none; -ms-overflow-style: none; }
+.ob-cards-row::-webkit-scrollbar { display: none; }
+.ob-bleed { margin-right: calc((100vw - min(800px, 100vw - 32px)) / -2); }
+@media (max-width: 900px) { .ob-bleed { margin-right: -1rem; } }
+
+.ob-city-card { transition: transform .3s ease-out, box-shadow .3s ease-out; }
+.ob-city-card:hover { transform: translateY(-2px); }
+.ob-city-card:focus-visible,
+.ob-search:focus-within,
+.ob-next:focus-visible,
+.ob-ghost:focus-visible,
+.ob-ghost-dark:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
+
+.ob-ghost { background: transparent; transition: background-color .2s ease-out; }
+.ob-ghost:hover { background: rgba(0,0,0,0.05); }
+.ob-ghost-dark { background: transparent; transition: background-color .2s ease-out; }
+.ob-ghost-dark:hover { background: rgba(0,0,0,0.06); }
+.ob-next:not(:disabled):hover { background: #c25e2d !important; }
+.ob-progress-fill { transition: width .3s ease-out; }
+
+.ob-thumb {
+  display: block; height: 20px; width: 20px; border-radius: 999px;
+  background: #d66c38; border: 2px solid #f4f1ea;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
+  cursor: grab;
+}
+.ob-thumb:active { cursor: grabbing; }
+.ob-thumb:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
+
+.ob-check {
+  appearance: none; -webkit-appearance: none;
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px;
+  background: #ffffff; border: 1px solid #767676; border-radius: 4px;
+  position: relative; cursor: pointer;
+}
+.ob-check:checked { background: #809917; border-color: #809917; }
+.ob-check:checked::after {
+  content: ""; position: absolute; left: 6px; top: 2px;
+  width: 6px; height: 11px; border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.ob-fade-up { animation: obFadeUp .3s ease-out both; }
+@keyframes obFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 900px) {
+  .ob-head { flex-direction: column; align-items: stretch; }
+  .ob-head .ob-search { width: 100%; }
+}
+@media (max-width: 680px) {
+  .ob-pct { display: none; }
+  .ob-banner-photo { width: 72px !important; height: 52px !important; }
+  .ob-banner-name { font-size: 22px !important; }
+  .ob-chips { flex-direction: column; }
+  .ob-chips > * { width: 100%; }
+  .ob-chips button { width: 100%; }
+  .ob-next { width: 100%; }
+  .ob-next-wrap { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ob-fade-up { animation: none; }
+  .ob-city-card, .ob-progress-fill { transition: none; }
+}
+@media (max-width: 680px) {
+  .ob-h1 { font-size: 32px !important; }
+}

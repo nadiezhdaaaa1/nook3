@@ -8,6 +8,15 @@ interface Props {
   onChange: (v: [number, number]) => void;
 }
 
+const META: React.CSSProperties = {
+  fontWeight: 500,
+  fontSize: 12,
+  lineHeight: "16px",
+  letterSpacing: "1.54px",
+  textTransform: "uppercase",
+  color: "#6e6459",
+};
+
 export function RentSlider({ city, value, onChange }: Props) {
   const { min, max, step, median1BR } = city.budget;
   const [local, setLocal] = useState<[number, number]>(value);
@@ -16,14 +25,18 @@ export function RentSlider({ city, value, onChange }: Props) {
   const [lo, hi] = local;
 
   return (
-    <div className="space-y-5">
-      <div>
-        <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-1">
-          Monthly rent range
-        </div>
-        <div className="font-display text-4xl font-bold text-charcoal-950 tabular-nums">
-          ${lo.toLocaleString()} <span className="text-charcoal-400">–</span> ${hi.toLocaleString()}
-        </div>
+    <div>
+      <div
+        className="font-display tabular-nums"
+        style={{
+          fontWeight: 700,
+          fontSize: 36,
+          lineHeight: "40px",
+          letterSpacing: "-0.54px",
+          color: "#241c12",
+        }}
+      >
+        ${lo.toLocaleString()} <span style={{ color: "#6e6459" }}>–</span> ${hi.toLocaleString()}
       </div>
 
       <SliderPrimitive.Root
@@ -34,39 +47,26 @@ export function RentSlider({ city, value, onChange }: Props) {
         minStepsBetweenThumbs={1}
         onValueChange={(v) => setLocal([v[0], v[1]] as [number, number])}
         onValueCommit={(v) => onChange([v[0], v[1]] as [number, number])}
-        className="relative flex w-full touch-none select-none items-center h-5"
+        className="relative flex w-full touch-none select-none items-center"
+        style={{ marginTop: 20, height: 20 }}
       >
-        <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-charcoal-200">
-          <SliderPrimitive.Range className="absolute h-full bg-charcoal-950" />
+        <SliderPrimitive.Track
+          className="relative w-full grow overflow-hidden"
+          style={{ height: 6, borderRadius: 999, background: "#d8d5cd" }}
+        >
+          <SliderPrimitive.Range className="absolute h-full" style={{ background: "#d66c38" }} />
         </SliderPrimitive.Track>
-        <SliderPrimitive.Thumb
-          aria-label="Minimum rent"
-          className="block h-5 w-5 rounded-full bg-charcoal-950 border-2 border-paper shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30 cursor-grab active:cursor-grabbing"
-        />
-        <SliderPrimitive.Thumb
-          aria-label="Maximum rent"
-          className="block h-5 w-5 rounded-full bg-charcoal-950 border-2 border-paper shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30 cursor-grab active:cursor-grabbing"
-        />
+        <SliderPrimitive.Thumb aria-label="Minimum rent" className="ob-thumb" />
+        <SliderPrimitive.Thumb aria-label="Maximum rent" className="ob-thumb" />
       </SliderPrimitive.Root>
 
-      <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.14em] text-charcoal-500">
-        <span>${min.toLocaleString()}</span>
-        <span className="text-sage-700 hidden sm:block">
+      <div className="flex items-center justify-between gap-3" style={{ marginTop: 20 }}>
+        <span style={META}>${min.toLocaleString()}</span>
+        <span style={META} className="hidden sm:block">
           Median 1BR in {city.displayName}: ${median1BR.toLocaleString()}
         </span>
-        <span>${max.toLocaleString()}</span>
+        <span style={META}>${max.toLocaleString()}</span>
       </div>
-
-      {hi < median1BR * 0.5 && (
-        <div className="rounded-md border border-peach-300 bg-peach-100/60 text-peach-900 text-xs px-3 py-2">
-          This may be limiting. Expect 1–2 listings/week at this budget.
-        </div>
-      )}
-      {hi > median1BR * 2 && (
-        <div className="rounded-md border border-peach-300 bg-peach-100/60 text-peach-900 text-xs px-3 py-2">
-          Luxury budget — expect ~5 listings/week. Consider broadening neighborhoods.
-        </div>
-      )}
     </div>
   );
 }
