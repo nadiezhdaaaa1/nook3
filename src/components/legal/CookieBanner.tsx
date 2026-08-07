@@ -167,7 +167,7 @@ function CookieManageModal({
               Cancel
             </OriginButton>
           )}
-          <OriginButton variant="main" size="medium" onClick={save}>
+          <OriginButton variant="dark" size="medium" onClick={save}>
             Save preferences
           </OriginButton>
         </DialogFooter>
