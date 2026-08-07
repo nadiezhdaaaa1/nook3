@@ -66,7 +66,7 @@ function hasTextContent(node: React.ReactNode): boolean {
 type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   children?: React.ReactNode;
   loading?: boolean;
-  variant?: "default" | "main" | "secondary";
+  variant?: "default" | "main" | "secondary" | "tertiary";
 };
 
 const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
@@ -188,11 +188,13 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
             ? "h-[56px] rounded-[12px] border border-transparent bg-[#D66C38] px-6 text-[16px] font-medium text-white"
             : variant === "secondary"
               ? "h-[56px] rounded-[12px] border-[1.5px] border-[#D66C38] bg-transparent px-6 text-[16px] font-medium text-[#D66C38]"
-              : "h-12 rounded-xl border border-black/10 bg-card px-8 text-[15px] text-card-foreground dark:bg-muted dark:text-foreground",
+              : variant === "tertiary"
+                ? "h-[56px] rounded-[12px] border border-black/20 bg-transparent px-6 text-[16px] font-medium text-[#2B2521]"
+                : "h-12 rounded-xl border border-black/10 bg-card px-8 text-[15px] text-card-foreground dark:bg-muted dark:text-foreground",
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
-          showFill && (variant === "main" || variant === "secondary" ? "text-white" : "text-background dark:text-neutral-950"),
+          showFill && (variant === "main" || variant === "secondary" ? "text-white" : variant === "tertiary" ? "text-[#2B2521]" : "text-background dark:text-neutral-950"),
           className,
         )}
         data-pressed={isPressed ? "true" : "false"}
@@ -280,7 +282,10 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
         <motion.span
           animate={{ scale: showFill && coverSize > 0 ? 1 : 0 }}
           aria-hidden
-          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#CE4F12]"
+          className={cn(
+            "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
+            variant === "tertiary" ? "bg-[#EBE2CF]" : "bg-[#CE4F12]",
+          )}
           initial={false}
           style={{
             height: coverSize,
