@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { CtaStrip } from "@/components/marketing/CtaStrip";
 import { NewsletterCardDark } from "@/components/blog/NewsletterCardDark";
 import {
   ARTICLES,
