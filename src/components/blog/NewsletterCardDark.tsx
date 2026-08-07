@@ -107,9 +107,9 @@ export function NewsletterCardDark({ source }: { source?: string }) {
             disabled={state.kind === "loading"}
             className="bnl-input"
           />
-          <button type="submit" disabled={state.kind === "loading"} className="bnl-btn">
-            {state.kind === "loading" ? "Subscribing…" : "Subscribe"}
-          </button>
+          <OriginButton type="submit" variant="main" loading={state.kind === "loading"} className="w-full">
+            Subscribe
+          </OriginButton>
           {state.kind === "error" && (
             <p className="bnl-err" role="alert" aria-live="polite">
               {state.message}
