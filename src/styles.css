@@ -491,3 +491,19 @@ textarea.bg-transparent {
   border-color: rgba(0, 0, 0, 0.2);
   color: #241c12;
 }
+
+/* Sage-era controls and tint panels on app screens → landing ember/cream */
+button.bg-sage-700, a.bg-sage-700, button.bg-sage-500, a.bg-sage-500,
+button.bg-sage-900, a.bg-sage-900 {
+  background-color: #d66c38;
+  color: #ffffff;
+  border-radius: 12px;
+}
+button.bg-sage-700:hover, a.bg-sage-700:hover,
+button.bg-sage-500:hover, a.bg-sage-500:hover,
+button.bg-sage-900:hover, a.bg-sage-900:hover {
+  background-color: #c05f2e;
+}
+.bg-sage-100 {
+  background-color: #f8f3e1;
+}
