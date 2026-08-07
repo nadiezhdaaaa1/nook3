@@ -28,7 +28,7 @@ const CSS = `
 .ftr-socials a { color:rgba(36,28,18,0.45); display:inline-flex; transition:color .2s ease-out; }
 .ftr-socials a:hover { color:rgba(36,28,18,0.7); }
 .ftr-socials svg { width:24px; height:24px; }
-.ftr-divider { height:1px; background:rgba(0,0,0,0.1); }
+.ftr-divider { height:1px; background:rgba(0,0,0,0.20); }
 .ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
 .ftr-col { width:220px; }
 .ftr-h { font-family:"Google Sans Flex",system-ui,sans-serif;
