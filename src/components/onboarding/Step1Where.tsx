@@ -66,7 +66,7 @@ export function Step1Where() {
           </div>
           <button
             type="button"
-            onClick={() => navigate({ to: "/" })}
+            onClick={() => set("city", null)}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-sage-800 hover:text-sage-900"
           >
             <Pencil className="h-3 w-3" /> Change
