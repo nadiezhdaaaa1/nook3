@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Pencil } from "lucide-react";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
@@ -64,12 +64,13 @@ export function Step1Where() {
             <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500 mr-2">City</span>
             <span className="font-semibold text-charcoal-950">{cityConfig.displayName}</span>
           </div>
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/" })}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-sage-800 hover:text-sage-900"
           >
             <Pencil className="h-3 w-3" /> Change
-          </Link>
+          </button>
         </section>
       )}
 
