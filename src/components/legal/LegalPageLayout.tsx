@@ -117,10 +117,10 @@ export function LegalPageLayout({
           transition: color 0.2s ease, background-color 0.2s ease;
         }
         .legal-sidebar-link:hover {
-          color: #2b2521; background-color: #f8f3e1;
+          color: #2b2521; background-color: #EBE2CF;
         }
         .legal-sidebar-link[data-active="true"] {
-          color: #2b2521; background-color: #f8f3e1; font-weight: 600;
+          color: #2b2521; background-color: #EBE2CF; font-weight: 600;
         }
         .legal-sidebar-link:focus-visible {
           outline: 2px solid #241c12; outline-offset: 2px;
