@@ -35,49 +35,91 @@ export function CookieBanner() {
       {showBanner && (
         <div
           role="dialog"
+          aria-live="polite"
           aria-label="Cookie preferences"
-          className="fixed inset-x-0 bottom-0 z-[9999] animate-in slide-in-from-bottom-4 fade-in duration-300"
-          style={{
-            backgroundColor: "var(--color-brand-charcoal, #2B2521)",
-            color: "var(--color-brand-cream, #F5EFE6)",
-          }}
+          className="ckt animate-in slide-in-from-bottom-4 fade-in duration-300"
         >
-          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-5 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
-            <div className="flex-1 text-sm leading-relaxed">
+          <div className="ckt-inner">
+            <p className="ckt-text">
               We use cookies for product functionality and analytics. You can
               choose what to allow.{" "}
-              <a
-                href="/cookies"
-                className="underline underline-offset-2 hover:opacity-80"
-              >
-                See Cookie Policy →
+              <a href="/cookies" className="ckt-link">
+                See Cookie Policy
               </a>
-            </div>
-            <div className="flex flex-wrap gap-2 justify-end shrink-0">
-              <button
-                onClick={rejectAll}
-                className="h-10 px-4 rounded-full text-sm font-medium border border-current/30 hover:bg-white/5 transition-colors"
-              >
+            </p>
+            <div className="ckt-actions">
+              <button onClick={rejectAll} className="ckt-btn ckt-btn-outline">
                 Reject all
               </button>
-              <button
-                onClick={openModal}
-                className="h-10 px-4 rounded-full text-sm font-medium border border-current/30 hover:bg-white/5 transition-colors"
-              >
+              <button onClick={openModal} className="ckt-btn ckt-btn-outline">
                 Manage
               </button>
-              <button
-                onClick={acceptAll}
-                className="h-10 px-5 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
-                style={{
-                  backgroundColor: "var(--color-brand-terracotta, #C2664E)",
-                  color: "white",
-                }}
-              >
+              <button onClick={acceptAll} className="ckt-btn ckt-btn-accept">
                 Accept all
               </button>
             </div>
           </div>
+
+          <style>{`
+            .ckt {
+              position: fixed;
+              left: 0;
+              right: 0;
+              bottom: 16px;
+              z-index: 9999;
+              display: flex;
+              justify-content: center;
+              padding: 0 16px;
+              font-family: "Google Sans Flex", system-ui, sans-serif;
+              font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+            }
+            .ckt-inner {
+              width: 100%;
+              max-width: 1024px;
+              display: flex;
+              align-items: center;
+              gap: 40px;
+              background: #2c2415;
+              border: 1px solid rgba(255,255,255,0.4);
+              border-radius: 24px;
+              padding: 20px 40px;
+            }
+            .ckt-text {
+              flex: 1;
+              margin: 0;
+              font-size: 14px;
+              line-height: 24px;
+              color: #f5ede0;
+            }
+            .ckt-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+            .ckt-actions { display: flex; gap: 8px; flex-shrink: 0; }
+            .ckt-btn {
+              border-radius: 12px;
+              padding: 12px 20px;
+              font-size: 16px;
+              font-weight: 500;
+              color: #ffffff;
+              cursor: pointer;
+              white-space: nowrap;
+              transition: background-color .15s ease;
+            }
+            .ckt-btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
+            .ckt-btn-outline:hover { background: rgba(255,255,255,0.1); }
+            .ckt-btn-accept { background: #d66c38; border: none; }
+            .ckt-btn-accept:hover { background: #c25e2d; }
+            .ckt-btn:focus-visible { outline: 2px solid #f8f3e1; outline-offset: 2px; }
+            @media (max-width: 680px) {
+              .ckt-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+                padding: 20px;
+                border-radius: 20px;
+              }
+              .ckt-actions { width: 100%; }
+              .ckt-btn { flex: 1; }
+            }
+          `}</style>
         </div>
       )}
 
