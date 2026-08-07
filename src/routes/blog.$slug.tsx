@@ -418,9 +418,12 @@ const PAGE_CSS = `
   margin-top:48px; width:100%; max-width:1200px; aspect-ratio:16/9; position:relative;
   border-radius:20px; overflow:hidden;
 }
+.apg-hero::after {
+  content:""; position:absolute; inset:0; border-radius:20px; pointer-events:none;
+  border:1px solid rgba(0,0,0,0.2); z-index:1;
+}
 .apg-hero img {
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
 }
 
 .apg-cols {
