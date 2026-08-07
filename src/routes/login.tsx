@@ -88,10 +88,11 @@ function LoginPage() {
           <p className="sgn-sub">Sign in to manage your alerts.</p>
         </div>
 
-        <button type="button" onClick={onGoogle} disabled={submitting} className="sgn-google">
+        <OriginButton type="button" variant="tertiary" size="big" onClick={onGoogle} disabled={submitting} className="w-full">
           <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
           <span>Continue with Google</span>
-        </button>
+        </OriginButton>
+
 
 
         <div className="sgn-divider">
