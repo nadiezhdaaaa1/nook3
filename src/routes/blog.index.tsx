@@ -228,7 +228,7 @@ function BlogIndexPage() {
           margin-top: 24px;
           display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px;
         }
-        .blog-side { display: flex; flex-direction: column; gap: 32px; }
+        .blog-side { display: flex; flex-direction: column; gap: 32px; position: sticky; top: 96px; }
 
         /* Featured card */
         .blog-feat {
