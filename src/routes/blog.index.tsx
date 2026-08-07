@@ -5,6 +5,7 @@ import { Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { CtaStrip } from "@/components/marketing/CtaStrip";
 import { NewsletterCardDark } from "@/components/blog/NewsletterCardDark";
+import { OriginButton } from "@/components/ui/origin-button";
 import {
   ARTICLES,
   CATEGORIES,
