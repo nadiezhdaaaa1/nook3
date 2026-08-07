@@ -195,8 +195,10 @@ export function TiredOfSection() {
         <div className="prob-grid">
           {CARDS.map((c) => (
             <div key={c.pain} className="prob-card">
+              <img src={c.icon} alt="" className="prob-icon" loading="lazy" />
               <p className="prob-pain">{c.pain}</p>
               <p className="prob-fix">{c.fix}</p>
+
             </div>
           ))}
         </div>
