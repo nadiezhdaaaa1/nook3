@@ -87,7 +87,7 @@ export function LegalPageLayout({
         .legal-layout { background: #FAF6EE; padding: 64px 0 120px; }
         .legal-layout-inner {
           margin: 0 auto; width: 100%; max-width: 1280px; padding: 0 40px;
-          display: grid; grid-template-columns: minmax(0, 760px) 260px; gap: 48px;
+          display: grid; grid-template-columns: minmax(0, 760px) 220px; gap: 48px;
           align-items: start; justify-content: center;
         }
         .legal-article { max-width: 760px; }
