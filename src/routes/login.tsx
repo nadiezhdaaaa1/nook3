@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
-import { Logo, LogoMark } from "@/components/brand/Logo";
+import logoSvg from "@/assets/Nook_Green.svg.asset.json";
 
 type Search = { redirect?: string };
 
@@ -29,6 +29,29 @@ export const Route = createFileRoute("/login")({
   }),
   component: LoginPage,
 });
+
+function GoogleG() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden focusable="false">
+      <path
+        fill="#EA4335"
+        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+      />
+      <path
+        fill="#4285F4"
+        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M10.53 28.59A14.5 14.5 0 0 1 9.77 24c0-1.6.27-3.15.76-4.59l-7.98-6.19A23.93 23.93 0 0 0 0 24c0 3.88.93 7.55 2.56 10.78l7.97-6.19z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.46-9.91l-7.97 6.19C6.51 42.62 14.62 48 24 48z"
+      />
+    </svg>
+  );
+}
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -73,90 +96,167 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col">
-      <header className="border-b border-charcoal-950/8">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center">
-          <Link to="/" className="flex items-center gap-2.5">
-            <LogoMark size={28} />
-            <Logo className="text-lg" />
-          </Link>
+    <div className="sgn-page">
+      <div className="sgn-col">
+        <Link to="/" className="sgn-logo" aria-label="Nook home">
+          <img src={logoSvg.url} alt="Nook" width={81} height={28} />
+        </Link>
+
+        <div className="sgn-head">
+          <h1 className="sgn-title">Welcome back</h1>
+          <p className="sgn-sub">Sign in to manage your alerts.</p>
         </div>
-      </header>
-      <main className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md">
-          <h1 className="font-display text-3xl font-bold text-charcoal-950">Welcome back</h1>
-          <p className="mt-2 text-sm text-charcoal-600">Sign in to manage your alerts.</p>
 
-          <button
-            type="button"
-            onClick={onGoogle}
-            disabled={submitting}
-            className="mt-6 w-full h-11 inline-flex items-center justify-center gap-2 rounded-md border border-charcoal-200 bg-paper text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 disabled:opacity-60"
-          >
-            Continue with Google
-          </button>
+        <button type="button" onClick={onGoogle} disabled={submitting} className="sgn-google">
+          <GoogleG />
+          <span>Continue with Google</span>
+        </button>
 
-          <div className="my-5 flex items-center gap-3 text-xs text-charcoal-500">
-            <div className="flex-1 h-px bg-charcoal-200" /> or <div className="flex-1 h-px bg-charcoal-200" />
-          </div>
+        <div className="sgn-divider">
+          <span className="sgn-rule" />
+          <span className="sgn-or">or</span>
+          <span className="sgn-rule" />
+        </div>
 
-          <form onSubmit={onSubmit} className="space-y-4" noValidate>
-            <div>
-              <label className="text-sm font-medium text-charcoal-700">Email</label>
+        <form onSubmit={onSubmit} className="sgn-form" noValidate>
+          <div className="sgn-fields">
+            <div className="sgn-field">
+              <label className="sgn-label" htmlFor="sgn-email">
+                Email
+              </label>
               <input
+                id="sgn-email"
                 type="email"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={!!errors.email}
                 placeholder="you@email.com"
-                className="mt-1 w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:border-charcoal-950 outline-none"
+                className="sgn-input"
               />
-              {errors.email && <p className="mt-1 text-xs text-danger">{errors.email}</p>}
+              {errors.email && <p className="sgn-err">{errors.email}</p>}
             </div>
-            <div>
-              <label className="text-sm font-medium text-charcoal-700">Password</label>
+            <div className="sgn-field">
+              <label className="sgn-label" htmlFor="sgn-password">
+                Password
+              </label>
               <input
+                id="sgn-password"
                 type="password"
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 aria-invalid={!!errors.password}
                 placeholder="Your password"
-                className="mt-1 w-full h-11 px-3 rounded-md border border-charcoal-200 bg-paper text-sm focus:border-charcoal-950 outline-none"
+                className="sgn-input"
               />
-              {errors.password && <p className="mt-1 text-xs text-danger">{errors.password}</p>}
+              {errors.password && <p className="sgn-err">{errors.password}</p>}
             </div>
-            {errors.form && <p className="text-sm text-danger">{errors.form}</p>}
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full h-11 rounded-md bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 disabled:opacity-60"
-            >
-              {submitting ? "Signing in…" : "Sign in"}
-            </button>
-            <div className="text-right">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-charcoal-600 hover:text-charcoal-950 underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-          </form>
+          </div>
 
-          <p className="mt-6 text-sm text-charcoal-600">
-            No account?{" "}
-            <Link
-              to="/signup"
-              search={redirectTo ? { redirect: redirectTo } : undefined}
-              className="font-semibold text-charcoal-950 underline"
-            >
-              Create one
-            </Link>
-          </p>
-        </div>
-      </main>
+          {errors.form && <p className="sgn-err">{errors.form}</p>}
+
+          <button type="submit" disabled={submitting} className="sgn-submit">
+            {submitting ? "Signing in…" : "Sign in"}
+          </button>
+
+          <div className="sgn-forgot">
+            <Link to="/forgot-password">Forgot your password?</Link>
+          </div>
+        </form>
+
+        <p className="sgn-foot">
+          No account?{" "}
+          <Link to="/signup" search={redirectTo ? { redirect: redirectTo } : undefined}>
+            Create one
+          </Link>
+        </p>
+      </div>
+
+      <style>{`
+        .sgn-page {
+          min-height: 100vh;
+          background: #faf6ee;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 48px 24px;
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0, "ROND" 0, "wdth" 100;
+        }
+        .sgn-col { width: 100%; max-width: 448px; padding-bottom: 48px; }
+        .sgn-logo { display: inline-flex; }
+        .sgn-logo img { display: block; width: 81px; height: 28px; }
+        .sgn-head { padding: 32px 0; display: flex; flex-direction: column; gap: 4px; }
+        .sgn-title {
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0, "WONK" 1;
+          font-weight: 700;
+          font-size: 30px;
+          line-height: 36px;
+          letter-spacing: -0.45px;
+          color: #241c12;
+          margin: 0;
+        }
+        .sgn-sub { margin: 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
+        .sgn-google {
+          width: 100%;
+          height: 56px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          background: transparent;
+          border: 1px solid rgba(0,0,0,0.2);
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #241c12;
+          cursor: pointer;
+          transition: background-color .15s ease;
+        }
+        .sgn-google:hover { background: rgba(0,0,0,0.03); }
+        .sgn-google:disabled { opacity: .6; cursor: default; }
+        .sgn-divider { padding: 20px 0; display: flex; align-items: center; gap: 12px; }
+        .sgn-rule { flex: 1; height: 1px; background: #d8d5cd; }
+        .sgn-or { font-size: 12px; color: #6e6459; }
+        .sgn-form { display: flex; flex-direction: column; gap: 24px; }
+        .sgn-fields { display: flex; flex-direction: column; gap: 16px; }
+        .sgn-label { display: block; font-size: 14px; line-height: 20px; font-weight: 500; color: #4a4a46; margin-bottom: 8px; }
+        .sgn-input {
+          width: 100%;
+          height: 54px;
+          padding: 0 12px;
+          border-radius: 12px;
+          border: 1px solid rgba(0,0,0,0.2);
+          background: #ffffff;
+          font-size: 14px;
+          color: #241c12;
+          outline: none;
+        }
+        .sgn-input::placeholder { color: rgba(36,28,18,0.5); }
+        .sgn-input:focus-visible { border-color: #241c12; box-shadow: 0 0 0 2px #241c12; }
+        .sgn-err { margin: 8px 0 0; font-size: 13px; color: #c93822; }
+        .sgn-submit {
+          width: 100%;
+          padding: 16px 24px;
+          border-radius: 12px;
+          border: none;
+          background: #d66c38;
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color .15s ease;
+        }
+        .sgn-submit:hover { background: #c25e2d; }
+        .sgn-submit:disabled { opacity: .6; cursor: default; }
+        .sgn-forgot { text-align: right; }
+        .sgn-forgot a { font-size: 14px; line-height: 20px; color: #241c12; text-decoration: underline; }
+        .sgn-foot { margin: 24px 0 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
+        .sgn-foot a { color: #241c12; text-decoration: underline; }
+        .sgn-page :focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
+      `}</style>
     </div>
   );
 }
