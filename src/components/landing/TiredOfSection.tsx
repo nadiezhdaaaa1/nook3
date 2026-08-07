@@ -96,9 +96,18 @@ export function TiredOfSection() {
           padding: 24px;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          align-items: flex-start;
+          justify-content: flex-start;
           gap: 18px;
         }
+        .prob-icon {
+          width: 56px;
+          height: 56px;
+          object-fit: contain;
+          display: block;
+          flex-shrink: 0;
+        }
+
         .prob-pain {
           font-family: Fraunces, Georgia, serif;
           font-variation-settings: "SOFT" 0, "WONK" 1;
