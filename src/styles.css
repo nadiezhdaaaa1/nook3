@@ -358,3 +358,79 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
   caret-color: var(--color-brand-charcoal);
   transition: background-color 5000s ease-in-out 0s;
 }
+
+/* ---------------------------------------------------------------------------
+   App-screen visual language (matches the landing page: cream surfaces,
+   white cards with 1px rgba(0,0,0,0.20) borders, 12px radii, ember CTAs).
+   Landing sections use their own scoped classes and are unaffected.
+   --------------------------------------------------------------------------- */
+
+/* Primary CTAs written as legacy charcoal pills */
+.rounded-pill.bg-charcoal-950,
+.rounded-pill.bg-charcoal-900 {
+  background-color: #d66c38;
+  color: #ffffff;
+  border-radius: 12px;
+}
+.rounded-pill.bg-charcoal-950:hover,
+.rounded-pill.bg-charcoal-900:hover,
+.rounded-pill.bg-charcoal-950.hover\:bg-charcoal-800:hover {
+  background-color: #c05f2e;
+}
+
+/* Secondary / outlined pills */
+.rounded-pill.border-charcoal-950,
+.rounded-pill.border-charcoal-200,
+.rounded-pill.border-charcoal-300 {
+  border-radius: 12px;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.rounded-pill.border-charcoal-200:hover,
+.rounded-pill.border-charcoal-300:hover {
+  border-color: rgba(0, 0, 0, 0.32);
+}
+
+/* Disabled CTA state */
+.rounded-pill.bg-charcoal-200 {
+  border-radius: 12px;
+  background-color: #f8f3e1;
+  color: rgba(36, 28, 18, 0.4);
+}
+
+/* Cards / panels written with the old radii + hairlines */
+.rounded-card,
+.rounded-tight {
+  border-radius: 20px;
+}
+.border-charcoal-200,
+.border-charcoal-100,
+.border-charcoal-950\/8,
+.border-charcoal-950\/10 {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.bg-surface-elevated,
+.bg-paper-elevated {
+  background-color: #ffffff;
+}
+.bg-paper,
+.bg-paper-warm {
+  background-color: #f5f0e4;
+}
+
+/* Text tone alignment with the landing charcoal */
+.text-charcoal-950,
+.text-charcoal-900 {
+  color: #241c12;
+}
+.text-charcoal-500,
+.text-charcoal-400 {
+  color: #6e6459;
+}
+
+/* Inputs written as bare Tailwind fields on app screens */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]).rounded-md,
+textarea.rounded-md,
+select.rounded-md {
+  border-radius: 12px;
+}
