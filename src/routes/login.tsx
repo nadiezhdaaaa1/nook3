@@ -196,7 +196,6 @@ function LoginPage() {
         .sgn-forgot a { font-size: 14px; line-height: 20px; color: #241c12; text-decoration: underline; }
         .sgn-foot { margin: 24px 0 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
         .sgn-foot a { color: #241c12; text-decoration: underline; }
-        .sgn-page :focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
       `}</style>
     </div>
   );
