@@ -3,6 +3,12 @@ import nycCard from "@/assets/NYC.png.asset.json";
 import laCard from "@/assets/LA.png.asset.json";
 import sfCard from "@/assets/SF.png.asset.json";
 import chiCard from "@/assets/CHI.png.asset.json";
+import dcCard from "@/assets/Washington.png.asset.json";
+import bostonCard from "@/assets/Boston.png.asset.json";
+import seattleCard from "@/assets/Seattle.png.asset.json";
+import miamiCard from "@/assets/Miami.png.asset.json";
+import austinCard from "@/assets/Austin.png.asset.json";
+import phillyCard from "@/assets/Philadelphia.png.asset.json";
 
 /** Card background tints per city (from design). */
 export const CITY_TINT: Record<CityId, string> = {
