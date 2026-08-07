@@ -7,9 +7,11 @@ import { ScrollProgress } from "./anim/ScrollProgress";
 export function MarketingLayout({
   children,
   hideHeader = false,
+  footer,
 }: {
   children: ReactNode;
   hideHeader?: boolean;
+  footer?: ReactNode;
 }) {
   useEffect(() => {
     const html = document.documentElement;
@@ -31,6 +33,7 @@ export function MarketingLayout({
           </>
         )}
         <main className="flex-1">{children}</main>
+        {footer}
         <MarketingFooter />
       </div>
     </MotionConfig>
