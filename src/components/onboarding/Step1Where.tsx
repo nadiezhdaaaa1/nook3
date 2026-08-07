@@ -63,27 +63,20 @@ export function Step1Where() {
           </h1>
           <p style={SUB}>Where you searching for apartment</p>
         </div>
-        <div
-          className="ob-search relative flex items-center shrink-0"
-          style={{
-            width: 240,
-            height: 48,
-            borderRadius: 12,
-            border: "1px solid rgba(0,0,0,0.2)",
-            padding: "0 12px",
-            gap: 8,
-          }}
-        >
-          <Search style={{ width: 20, height: 20, color: "rgba(36,28,18,0.5)" }} />
-          <input
+        <div className="relative flex items-center" style={{ width: 240 }}>
+          <Search
+            className="pointer-events-none absolute left-3 z-10"
+            style={{ width: 20, height: 20, color: "rgba(36,28,18,0.5)" }}
+          />
+          <Input
             type="text"
+            size="medium"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search cities..."
             autoComplete="off"
             aria-label="Search cities"
-            className="w-full bg-transparent focus:outline-none"
-            style={{ fontSize: 14, color: "#241c12" }}
+            className="w-full pl-10"
           />
         </div>
       </div>
