@@ -7,8 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { OriginButton } from "@/components/ui/origin-button";
 import { Switch } from "@/components/ui/switch";
 import { useCookieConsent } from "@/lib/cookieConsent";
+
 
 export function CookieBanner() {
   const [hydrated, setHydrated] = useState(false);
