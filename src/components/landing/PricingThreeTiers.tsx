@@ -320,7 +320,7 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
       }
       : {
           background: "#ffffff",
-          border: "1px solid rgba(36,28,18,0.12)",
+          border: "1px solid rgba(0,0,0,0.20)",
           color: text,
         };
 
