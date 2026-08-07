@@ -5,6 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
 import logoSvg from "@/assets/Nook_Green.svg.asset.json";
+import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
+
 
 type Search = { redirect?: string };
 
