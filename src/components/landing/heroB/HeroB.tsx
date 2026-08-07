@@ -371,6 +371,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           width: 280px;
           padding: 16px;
           border-radius: 24px;
+          border: 1px solid rgba(0,0,0,0.20);
           background: #ffffff;
           display: flex;
           flex-direction: column;
@@ -695,7 +696,7 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
           padding: 12px 16px;
           border-radius: 12px;
           background: ${COLORS.surface};
-          border: 1px solid ${COLORS.border};
+          border: 1px solid rgba(0,0,0,0.20);
           backdrop-filter: blur(6px);
         }
         .hero-b-menu {
@@ -707,7 +708,7 @@ function CityPillB({ city, onPick }: { city: HeroBCity; onPick: (i: number) => v
           padding: 6px;
           border-radius: 12px;
           background: rgba(255,255,255,0.6);
-          border: 1px solid ${COLORS.border};
+          border: 1px solid rgba(0,0,0,0.20);
           backdrop-filter: blur(14px);
           box-shadow: 0 16px 32px rgba(36,28,18,0.12);
         }

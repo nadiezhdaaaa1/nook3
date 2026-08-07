@@ -37,8 +37,8 @@ export function HeroEmailField({
           borderColor: focused
             ? "#CE4F12"
             : hovered
-              ? "rgba(0,0,0,0.20)"
-              : "rgba(36,28,18,0.18)",
+              ? "rgba(0,0,0,0.32)"
+              : "rgba(0,0,0,0.20)",
         }}
       />
       <style>{`
@@ -55,6 +55,10 @@ export function HeroEmailField({
           color: #241c12;
           outline: none;
           transition: border-color 0.2s ease;
+        }
+        .hero-email-input:hover,
+        .hero-email-input:focus {
+          border-color: rgba(0, 0, 0, 0.32);
         }
         .hero-email-input::placeholder { color: rgba(36,28,18,0.45); }
       `}</style>

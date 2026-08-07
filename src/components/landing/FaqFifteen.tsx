@@ -77,7 +77,7 @@ const CSS = `
 .faq15-sub { margin-top:16px; font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:400; font-size:18px; line-height:1.6; color:#4a4a46; }
 .faq15-list { max-width:860px; margin:0 auto; padding:0 32px; display:flex; flex-direction:column; gap:16px; width:100%; }
-.faq15-item { background:#fff; border:1px solid rgba(36,28,18,0.1); border-radius:18px; overflow:hidden; }
+.faq15-item { background:#fff; border:1px solid rgba(0,0,0,0.20); border-radius:18px; overflow:hidden; }
 .faq15-summary { width:100%; display:flex; align-items:center; justify-content:space-between; gap:24px;
   padding:21px 21px 21px 26px; background:transparent; border:0; text-align:left; cursor:pointer;
   transition:background-color .2s ease-out; }

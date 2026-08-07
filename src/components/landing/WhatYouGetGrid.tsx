@@ -97,7 +97,7 @@ export function WhatYouGetGrid() {
               key={it.title}
               style={{
                 background: "#ffffff",
-                border: "1px solid rgba(0,0,0,0.1)",
+                border: "1px solid rgba(0,0,0,0.20)",
                 borderRadius: 20,
                 padding: 32,
                 display: "flex",

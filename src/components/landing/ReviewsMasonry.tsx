@@ -46,7 +46,7 @@ function Rule({ color }: { color: string }) {
 
 const cardStyle: React.CSSProperties = {
   background: "#ffffff",
-  border: "1px solid rgba(0,0,0,0.1)",
+  border: "1px solid rgba(0,0,0,0.20)",
   borderRadius: 24,
   padding: 32,
   display: "flex",

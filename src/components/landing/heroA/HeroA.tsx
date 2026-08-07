@@ -482,7 +482,7 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
           padding: 12px 16px;
           border-radius: 12px;
           background: ${COLORS.surface};
-          border: 1px solid ${COLORS.border};
+          border: 1px solid rgba(0,0,0,0.20);
           backdrop-filter: blur(6px);
           transition: background-color 0.2s ease;
         }
@@ -503,7 +503,7 @@ function CityPill({ city, onPick }: { city: HeroCity; onPick: (i: number) => voi
           padding: 6px;
           border-radius: 12px;
           background: rgba(255,255,255,0.6);
-          border: 1px solid ${COLORS.border};
+          border: 1px solid rgba(0,0,0,0.20);
           backdrop-filter: blur(14px);
           box-shadow: 0 16px 32px rgba(36,28,18,0.12);
         }
@@ -628,6 +628,7 @@ function CardDeck({
           width: 280px;
           padding: 16px;
           border-radius: 24px;
+          border: 1px solid rgba(0,0,0,0.20);
           background: #ffffff;
           box-shadow: 0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05);
           touch-action: pan-y;
