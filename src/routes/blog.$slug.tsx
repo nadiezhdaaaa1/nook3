@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { SITE } from "@/lib/site";
 import { useEffect, useState } from "react";
 import { ChevronDown, Clock } from "lucide-react";
@@ -7,6 +7,7 @@ import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { NewsletterDigestBand } from "@/components/blog/NewsletterDigestBand";
 import { RelatedReading } from "@/components/blog/RelatedReading";
 import { ShareRow } from "@/components/blog/ShareRow";
+import { OriginButton } from "@/components/ui/origin-button";
 
 import {
   ARTICLES,
@@ -158,6 +159,7 @@ export const Route = createFileRoute("/blog/$slug")({
 function ArticleDetailPage() {
   const data = Route.useLoaderData() as { article: BlogArticle };
   const article = data.article;
+  const navigate = useNavigate();
   const toc = extractToc(article.body);
   const related = getRelated(article.slug);
   const [progress, setProgress] = useState(0);
@@ -327,9 +329,13 @@ function ArticleDetailPage() {
                   Nook watches the US market 24/7 and emails you the moment new listings match your
                   criteria.
                 </p>
-                <Link to="/onboarding" className="apg-rail-btn">
+                <OriginButton
+                  variant="main"
+                  className="w-full mt-5"
+                  onClick={() => navigate({ to: "/onboarding" })}
+                >
                   Start Free
-                </Link>
+                </OriginButton>
               </div>
 
               <ShareRow
@@ -459,14 +465,14 @@ const PAGE_CSS = `
   font-weight:700; font-size:12px; line-height:16px; letter-spacing:1.1px; color:#809917;
 }
 
-.apg-rail { align-self:stretch; display:flex; flex-direction:column; gap:32px; min-width:0; }
+.apg-rail { align-self:stretch; display:flex; flex-direction:column; gap:24px; min-width:0; }
 .apg-rail-card {
   background:#ffffff; border:1px solid rgba(36,28,18,0.2); border-radius:16px; padding:20px;
 }
 .apg-rail-label {
   font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
-  font-weight:700; font-size:13px; letter-spacing:1.82px; text-transform:uppercase; color:#241c12;
+  font-weight:700; font-size:12px; letter-spacing:1.82px; text-transform:uppercase; color:#241c12;
 }
 .apg-rail-label-light { color:#ffffff; }
 .apg-rail-text {
@@ -484,16 +490,6 @@ const PAGE_CSS = `
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
   font-weight:400; font-size:14px; line-height:24px; color:#f8f3e1;
 }
-.apg-rail-btn {
-  margin-top:20px; width:100%; display:inline-flex; align-items:center; justify-content:center;
-  background:#d66c38; color:#ffffff; border-radius:12px; padding:16px 24px; text-decoration:none;
-  font-family:"Google Sans Flex",system-ui,sans-serif;
-  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
-  font-weight:500; font-size:16px; line-height:1;
-  transition:background-color .2s ease;
-}
-.apg-rail-btn:hover { background:#c25e2d; }
-.apg-rail-btn:focus-visible { outline:2px solid #f8f3e1; outline-offset:2px; }
 
 @media (max-width:1280px) {
   .apg-cols { grid-template-columns:200px minmax(0,1fr) 240px; }
