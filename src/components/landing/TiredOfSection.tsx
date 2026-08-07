@@ -91,7 +91,7 @@ export function TiredOfSection() {
         .prob-card {
           min-height: 220px;
           background: rgba(248, 243, 225, 0.06);
-          border: 1px solid rgba(248, 243, 225, 0.15);
+          border: 1px solid rgba(248, 243, 225, 0.20);
           border-radius: 24px;
           padding: 24px;
           display: flex;
