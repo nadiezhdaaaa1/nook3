@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { MotionConfig } from "framer-motion";
-import { MarketingHeader } from "./MarketingHeader";
+import { HeroScrollNav, HeroNavSpacer } from "@/components/landing/shared/HeroScrollNav";
 import { MarketingFooter } from "./MarketingFooter";
 import { ScrollProgress } from "./anim/ScrollProgress";
 
@@ -24,8 +24,13 @@ export function MarketingLayout({
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <ScrollProgress />
-        {!hideHeader && <MarketingHeader />}
-        <main className={hideHeader ? "flex-1" : "flex-1 pt-16"}>{children}</main>
+        {!hideHeader && (
+          <>
+            <HeroScrollNav />
+            <HeroNavSpacer />
+          </>
+        )}
+        <main className="flex-1">{children}</main>
         <MarketingFooter />
       </div>
     </MotionConfig>

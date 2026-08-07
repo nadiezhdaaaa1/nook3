@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
@@ -39,6 +39,8 @@ export function HeroNavSpacer() {
  */
 export function HeroScrollNav() {
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onHome = pathname === "/";
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -88,7 +90,7 @@ export function HeroScrollNav() {
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={onHome ? l.href : `/${l.href}`}
                 data-label={l.label}
                 className="hero-nav-link rounded-sm text-sm hero-nav-ring"
                 style={{ fontFamily: FONT_UI, color: BODY }}
@@ -159,7 +161,7 @@ export function HeroScrollNav() {
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={onHome ? l.href : `/${l.href}`}
                 onClick={() => setOpen(false)}
                 className="hero-nav-sheet-link hero-nav-ring"
                 style={{ ...uiFont, color: INK }}
