@@ -4,7 +4,9 @@ import { ChevronDown, Clock } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { BlogBody, extractToc } from "@/components/blog/BlogBody";
 import { NewsletterDigestBand } from "@/components/blog/NewsletterDigestBand";
+import { RelatedReading } from "@/components/blog/RelatedReading";
 import { ShareRow } from "@/components/blog/ShareRow";
+
 import {
   ARTICLES,
   CATEGORY_LABEL,
