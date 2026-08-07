@@ -417,7 +417,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           color: rgba(0,0,0,0.7);
         }
         .hero-b-card-price {
-          font-family: ${FONT_UI};
+          font-family: ${FONT_DISPLAY};
+          font-variation-settings: ${DISPLAY_VAR};
           font-size: 24px;
           font-weight: 500;
           line-height: 1.2;
