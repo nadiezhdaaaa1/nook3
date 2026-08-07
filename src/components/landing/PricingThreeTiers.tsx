@@ -409,6 +409,7 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
 
       <OriginButton
         className="w-full"
+        variant={tier.id === "free" ? "tertiary" : "main"}
         style={{ borderRadius: 12 }}
         onClick={() => navigate({ to: tier.ctaTo })}
       >
