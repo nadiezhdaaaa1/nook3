@@ -73,7 +73,7 @@ export function Step1Where() {
             type="text"
             size="medium"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             placeholder="Search cities..."
             autoComplete="off"
             aria-label="Search cities"
