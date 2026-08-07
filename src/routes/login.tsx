@@ -139,9 +139,9 @@ function LoginPage() {
 
           {errors.form && <p className="sgn-err">{errors.form}</p>}
 
-          <button type="submit" disabled={submitting} className="sgn-submit">
+          <OriginButton type="submit" variant="main" size="big" disabled={submitting} className="w-full">
             {submitting ? "Signing in…" : "Sign in"}
-          </button>
+          </OriginButton>
 
           <div className="sgn-forgot">
             <Link to="/forgot-password">Forgot your password?</Link>
