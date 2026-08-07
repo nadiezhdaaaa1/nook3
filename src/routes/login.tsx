@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
 import { OriginButton } from "@/components/ui/origin-button";
+import { Input } from "@/components/ui/input";
 import logoSvg from "@/assets/Nook_Green.svg.asset.json";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 
@@ -107,7 +108,7 @@ function LoginPage() {
               <label className="sgn-label" htmlFor="sgn-email">
                 Email
               </label>
-              <input
+              <Input
                 id="sgn-email"
                 type="email"
                 autoComplete="email"
@@ -115,7 +116,7 @@ function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={!!errors.email}
                 placeholder="you@email.com"
-                className="sgn-input"
+                size="big"
               />
               {errors.email && <p className="sgn-err">{errors.email}</p>}
             </div>
@@ -123,7 +124,7 @@ function LoginPage() {
               <label className="sgn-label" htmlFor="sgn-password">
                 Password
               </label>
-              <input
+              <Input
                 id="sgn-password"
                 type="password"
                 autoComplete="current-password"
@@ -131,7 +132,7 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 aria-invalid={!!errors.password}
                 placeholder="Your password"
-                className="sgn-input"
+                size="big"
               />
               {errors.password && <p className="sgn-err">{errors.password}</p>}
             </div>
@@ -189,19 +190,6 @@ function LoginPage() {
         .sgn-form { display: flex; flex-direction: column; gap: 24px; }
         .sgn-fields { display: flex; flex-direction: column; gap: 16px; }
         .sgn-label { display: block; font-size: 14px; line-height: 20px; font-weight: 500; color: #4a4a46; margin-bottom: 8px; }
-        .sgn-input {
-          width: 100%;
-          height: 54px;
-          padding: 0 12px;
-          border-radius: 12px;
-          border: 1px solid rgba(0,0,0,0.2);
-          background: #ffffff;
-          font-size: 14px;
-          color: #241c12;
-          outline: none;
-        }
-        .sgn-input::placeholder { color: rgba(36,28,18,0.5); }
-        .sgn-input:focus-visible { border-color: #241c12; box-shadow: 0 0 0 2px #241c12; }
         .sgn-err { margin: 8px 0 0; font-size: 13px; color: #c93822; }
         .sgn-forgot { text-align: right; }
 
