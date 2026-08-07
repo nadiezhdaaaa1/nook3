@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Pencil, Search, ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { CityPicker } from "@/components/onboarding/CityPicker";
 import { RentSlider } from "@/components/onboarding/RentSlider";
 import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
