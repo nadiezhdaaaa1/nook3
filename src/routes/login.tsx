@@ -203,21 +203,8 @@ function LoginPage() {
         .sgn-input::placeholder { color: rgba(36,28,18,0.5); }
         .sgn-input:focus-visible { border-color: #241c12; box-shadow: 0 0 0 2px #241c12; }
         .sgn-err { margin: 8px 0 0; font-size: 13px; color: #c93822; }
-        .sgn-submit {
-          width: 100%;
-          padding: 16px 24px;
-          border-radius: 12px;
-          border: none;
-          background: #d66c38;
-          color: #ffffff;
-          font-size: 16px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: background-color .15s ease;
-        }
-        .sgn-submit:hover { background: #c25e2d; }
-        .sgn-submit:disabled { opacity: .6; cursor: default; }
         .sgn-forgot { text-align: right; }
+
         .sgn-forgot a { font-size: 14px; line-height: 20px; color: #241c12; text-decoration: underline; }
         .sgn-foot { margin: 24px 0 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
         .sgn-foot a { color: #241c12; text-decoration: underline; }
