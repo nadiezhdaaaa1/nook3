@@ -45,16 +45,6 @@ export function LegalPageLayout({
             </header>
 
             <div className="legal-prose text-charcoal-800">{children}</div>
-
-            <footer className="mt-16 pt-8 border-t border-charcoal-200/60 text-sm text-charcoal-500">
-              Questions?{" "}
-              <a
-                href="mailto:legal@thenook.rent"
-                className="text-charcoal-950 underline underline-offset-2 hover:text-brand-terracotta"
-              >
-                legal@thenook.rent
-              </a>
-            </footer>
           </article>
 
           <aside className="legal-sidebar" aria-label="Legal pages">
