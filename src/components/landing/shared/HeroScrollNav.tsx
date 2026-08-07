@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
@@ -39,6 +39,8 @@ export function HeroNavSpacer() {
  */
 export function HeroScrollNav() {
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onHome = pathname === "/";
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
