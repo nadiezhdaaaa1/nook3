@@ -66,7 +66,7 @@ function hasTextContent(node: React.ReactNode): boolean {
 type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   children?: React.ReactNode;
   loading?: boolean;
-  variant?: "default" | "main" | "secondary" | "tertiary" | "dark";
+  variant?: "default" | "main" | "secondary" | "tertiary" | "dark" | "premium" | "max";
   size?: "big" | "medium";
 };
 
