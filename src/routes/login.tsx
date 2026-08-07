@@ -182,25 +182,8 @@ function LoginPage() {
           margin: 0;
         }
         .sgn-sub { margin: 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
-        .sgn-google {
-          width: 100%;
-          height: 56px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          background: transparent;
-          border: 1px solid rgba(0,0,0,0.2);
-          border-radius: 12px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #241c12;
-          cursor: pointer;
-          transition: background-color .15s ease;
-        }
-        .sgn-google:hover { background: rgba(0,0,0,0.03); }
-        .sgn-google:disabled { opacity: .6; cursor: default; }
         .sgn-divider { padding: 20px 0; display: flex; align-items: center; gap: 12px; }
+
         .sgn-rule { flex: 1; height: 1px; background: #d8d5cd; }
         .sgn-or { font-size: 12px; color: #6e6459; }
         .sgn-form { display: flex; flex-direction: column; gap: 24px; }
