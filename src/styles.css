@@ -509,10 +509,10 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 }
 
 /* ── Onboarding wizard (step 1 redesign) ───────────────────────── */
-.ob-cards-row { scrollbar-width: none; -ms-overflow-style: none; }
+.ob-cards-row { scrollbar-width: none; -ms-overflow-style: none; scroll-snap-type: x mandatory; scroll-padding-left: 0; overscroll-behavior-x: contain; }
 .ob-cards-row::-webkit-scrollbar { display: none; }
-.ob-bleed { margin-right: calc((100vw - min(800px, 100vw - 32px)) / -2); }
-@media (max-width: 900px) { .ob-bleed { margin-right: -1rem; } }
+.ob-cards-row > button { scroll-snap-align: start; }
+.ob-bleed { margin-right: 0; }
 
 .ob-city-card { transition: transform .3s ease-out, box-shadow .3s ease-out; }
 .ob-city-card:hover { transform: translateY(-2px); }
