@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
+import { OriginButton } from "@/components/ui/origin-button";
 import logoSvg from "@/assets/Nook_Green.svg.asset.json";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 
@@ -87,10 +88,11 @@ function LoginPage() {
           <p className="sgn-sub">Sign in to manage your alerts.</p>
         </div>
 
-        <button type="button" onClick={onGoogle} disabled={submitting} className="sgn-google">
+        <OriginButton type="button" variant="tertiary" size="big" onClick={onGoogle} disabled={submitting} className="w-full">
           <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
           <span>Continue with Google</span>
-        </button>
+        </OriginButton>
+
 
 
         <div className="sgn-divider">
@@ -137,9 +139,9 @@ function LoginPage() {
 
           {errors.form && <p className="sgn-err">{errors.form}</p>}
 
-          <button type="submit" disabled={submitting} className="sgn-submit">
+          <OriginButton type="submit" variant="main" size="big" disabled={submitting} className="w-full">
             {submitting ? "Signing in…" : "Sign in"}
-          </button>
+          </OriginButton>
 
           <div className="sgn-forgot">
             <Link to="/forgot-password">Forgot your password?</Link>
@@ -180,25 +182,8 @@ function LoginPage() {
           margin: 0;
         }
         .sgn-sub { margin: 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
-        .sgn-google {
-          width: 100%;
-          height: 56px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          background: transparent;
-          border: 1px solid rgba(0,0,0,0.2);
-          border-radius: 12px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #241c12;
-          cursor: pointer;
-          transition: background-color .15s ease;
-        }
-        .sgn-google:hover { background: rgba(0,0,0,0.03); }
-        .sgn-google:disabled { opacity: .6; cursor: default; }
         .sgn-divider { padding: 20px 0; display: flex; align-items: center; gap: 12px; }
+
         .sgn-rule { flex: 1; height: 1px; background: #d8d5cd; }
         .sgn-or { font-size: 12px; color: #6e6459; }
         .sgn-form { display: flex; flex-direction: column; gap: 24px; }
@@ -218,21 +203,8 @@ function LoginPage() {
         .sgn-input::placeholder { color: rgba(36,28,18,0.5); }
         .sgn-input:focus-visible { border-color: #241c12; box-shadow: 0 0 0 2px #241c12; }
         .sgn-err { margin: 8px 0 0; font-size: 13px; color: #c93822; }
-        .sgn-submit {
-          width: 100%;
-          padding: 16px 24px;
-          border-radius: 12px;
-          border: none;
-          background: #d66c38;
-          color: #ffffff;
-          font-size: 16px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: background-color .15s ease;
-        }
-        .sgn-submit:hover { background: #c25e2d; }
-        .sgn-submit:disabled { opacity: .6; cursor: default; }
         .sgn-forgot { text-align: right; }
+
         .sgn-forgot a { font-size: 14px; line-height: 20px; color: #241c12; text-decoration: underline; }
         .sgn-foot { margin: 24px 0 0; font-size: 14px; line-height: 20px; color: #5a5a55; }
         .sgn-foot a { color: #241c12; text-decoration: underline; }
