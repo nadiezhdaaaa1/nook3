@@ -95,6 +95,7 @@ export function ShareRow({ url, title }: Props) {
       <div className="shr-copy-wrap">
         <OriginButton
           variant="tertiary"
+          size="medium"
           className="w-full"
           onClick={handleCopy}
           aria-label="Copy link to this article"

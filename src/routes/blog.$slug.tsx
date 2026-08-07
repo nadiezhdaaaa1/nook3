@@ -331,6 +331,7 @@ function ArticleDetailPage() {
                 </p>
                 <OriginButton
                   variant="main"
+                  size="medium"
                   className="w-full mt-5"
                   onClick={() => navigate({ to: "/onboarding" })}
                 >
