@@ -25,13 +25,14 @@ const CSS = `
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:500; font-size:24px; line-height:1.2;
   color:#d66c38; text-decoration:none; transition:color .2s ease; }
 .ftr-email:hover { color:#CE4F12; }
+.ftr-divider { height:1px; background:rgba(0,0,0,0.20); }
+.ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
+.ftr-col { width:220px; }
+.ftr-social-col { margin-left:auto; align-self:flex-start; }
 .ftr-socials { display:flex; align-items:center; gap:24px; }
 .ftr-socials a { color:rgba(36,28,18,0.45); display:inline-flex; transition:color .2s ease-out; }
 .ftr-socials a:hover { color:rgba(36,28,18,0.7); }
 .ftr-socials svg { width:24px; height:24px; }
-.ftr-divider { height:1px; background:rgba(0,0,0,0.20); }
-.ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
-.ftr-col { width:220px; }
 .ftr-h { font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:700; font-size:12px;
   letter-spacing:1.92px; text-transform:uppercase; color:#241c12; }
