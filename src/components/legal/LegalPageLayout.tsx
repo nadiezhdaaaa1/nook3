@@ -190,6 +190,10 @@ export function LegalPageLayout({
         @media (max-width: 680px) {
           .legal-layout { padding: 32px 0 64px; }
           .legal-layout-inner { padding: 0 20px; }
+          .legal-questions-section { padding: 56px 0; }
+          .legal-questions-inner { padding: 0 20px; }
+          .legal-questions-label { font-size: 32px; }
+          .legal-questions-link { font-size: 20px; }
         }
       `}</style>
     </MarketingLayout>
