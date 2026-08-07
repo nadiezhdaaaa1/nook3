@@ -58,7 +58,7 @@ export function Step1Where() {
       {/* Header row */}
       <div className="ob-head flex items-start justify-between gap-6">
         <div>
-          <h1 className="font-display" style={H1}>
+          <h1 className="font-display ob-h1" style={H1}>
             Pick your city
           </h1>
           <p style={SUB}>Where you searching for apartment</p>
@@ -136,7 +136,7 @@ export function Step1Where() {
 
           <div className="ob-fade-up" style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}>
             <div>
-              <h2 className="font-display" style={H1}>
+              <h2 className="font-display ob-h1" style={H1}>
                 Let's narrow down <span style={{ color: "#5a5a55" }}>{cityConfig.displayName}</span>
               </h2>
               <p style={SUB}>Tell us your rent range and when you need to move</p>
@@ -201,7 +201,7 @@ export function Step1Where() {
               {cityConfig.displayName} listings
             </p>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end ob-next-row">
               <button
                 type="button"
                 disabled={!canContinue}

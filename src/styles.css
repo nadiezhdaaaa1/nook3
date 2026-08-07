@@ -572,3 +572,6 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
   .ob-fade-up { animation: none; }
   .ob-city-card, .ob-progress-fill { transition: none; }
 }
+@media (max-width: 680px) {
+  .ob-h1 { font-size: 32px !important; }
+}
