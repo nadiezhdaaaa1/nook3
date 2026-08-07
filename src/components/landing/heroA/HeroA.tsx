@@ -614,9 +614,11 @@ function CardDeck({
         }
         .hero-a-card-back-2 {
           width: 216px; height: 265px; margin-left: -108px; background: #f6f0e6;
+          border: 1px solid rgba(0,0,0,0.20);
         }
         .hero-a-card-back-1 {
           width: 244px; height: 256px; margin-left: -122px; background: #faf6ef;
+          border: 1px solid rgba(0,0,0,0.20);
         }
         .hero-a-card {
           position: absolute;
