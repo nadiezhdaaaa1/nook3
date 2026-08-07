@@ -45,16 +45,6 @@ export function LegalPageLayout({
             </header>
 
             <div className="legal-prose text-charcoal-800">{children}</div>
-
-            <footer className="mt-16 pt-8 border-t border-charcoal-200/60 text-sm text-charcoal-500">
-              Questions?{" "}
-              <a
-                href="mailto:legal@thenook.rent"
-                className="text-charcoal-950 underline underline-offset-2 hover:text-brand-terracotta"
-              >
-                legal@thenook.rent
-              </a>
-            </footer>
           </article>
 
           <aside className="legal-sidebar" aria-label="Legal pages">
@@ -84,6 +74,15 @@ export function LegalPageLayout({
         </div>
       </div>
 
+      <section className="legal-questions-section">
+        <div className="legal-questions-inner">
+          <span className="legal-questions-label">Questions?</span>
+          <a href="mailto:legal@thenook.rent" className="legal-questions-link">
+            legal@thenook.rent
+          </a>
+        </div>
+      </section>
+
       <style>{`
         .legal-layout { background: #FAF6EE; padding: 64px 0 120px; }
         .legal-layout-inner {
@@ -92,6 +91,31 @@ export function LegalPageLayout({
           align-items: start; justify-content: center;
         }
         .legal-article { max-width: 760px; }
+
+        .legal-questions-section {
+          background: #F5F0E4;
+          padding: 96px 0;
+        }
+        .legal-questions-inner {
+          margin: 0 auto; width: 100%; max-width: 1280px; padding: 0 40px;
+          display: flex; justify-content: space-between; align-items: center; gap: 24px;
+        }
+        .legal-questions-label {
+          font-family: Fraunces, Georgia, serif;
+          font-variation-settings: "SOFT" 0,"WONK" 1;
+          font-weight: 500; font-size: 42px; line-height: 1.2;
+          letter-spacing: -0.02em; color: #241C12;
+        }
+        .legal-questions-link {
+          font-family: "Google Sans Flex", system-ui, sans-serif;
+          font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
+          font-weight: 500; font-size: 24px; color: #D66C38;
+          text-decoration: none; transition: color 0.2s ease;
+        }
+        .legal-questions-link:hover { color: #CE4F12; }
+        .legal-questions-link:focus-visible {
+          outline: 2px solid #241c12; outline-offset: 2px; border-radius: 4px;
+        }
 
         .legal-sidebar { position: sticky; top: 96px; }
         .legal-sidebar-card {
@@ -148,6 +172,12 @@ export function LegalPageLayout({
 
         @media (max-width: 1100px) {
           .legal-layout { padding: 48px 0 80px; }
+          .legal-questions-section { padding: 72px 0; }
+          .legal-questions-inner {
+            padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 16px;
+          }
+          .legal-questions-label { font-size: 36px; }
+          .legal-questions-link { font-size: 22px; }
           .legal-layout-inner {
             grid-template-columns: 1fr; padding: 0 24px; justify-content: stretch;
           }
@@ -160,6 +190,10 @@ export function LegalPageLayout({
         @media (max-width: 680px) {
           .legal-layout { padding: 32px 0 64px; }
           .legal-layout-inner { padding: 0 20px; }
+          .legal-questions-section { padding: 56px 0; }
+          .legal-questions-inner { padding: 0 20px; }
+          .legal-questions-label { font-size: 32px; }
+          .legal-questions-link { font-size: 20px; }
         }
       `}</style>
     </MarketingLayout>
