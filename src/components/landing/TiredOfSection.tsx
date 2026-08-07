@@ -198,8 +198,8 @@ export function TiredOfSection() {
               <img src={c.icon} alt="" className="prob-icon" loading="lazy" />
               <p className="prob-pain">{c.pain}</p>
               <p className="prob-fix">{c.fix}</p>
-
             </div>
+
           ))}
         </div>
 
