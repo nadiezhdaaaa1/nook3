@@ -88,7 +88,7 @@ export function HeroScrollNav() {
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={onHome ? l.href : `/${l.href}`}
                 data-label={l.label}
                 className="hero-nav-link rounded-sm text-sm hero-nav-ring"
                 style={{ fontFamily: FONT_UI, color: BODY }}
@@ -159,7 +159,7 @@ export function HeroScrollNav() {
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={onHome ? l.href : `/${l.href}`}
                 onClick={() => setOpen(false)}
                 className="hero-nav-sheet-link hero-nav-ring"
                 style={{ ...uiFont, color: INK }}
