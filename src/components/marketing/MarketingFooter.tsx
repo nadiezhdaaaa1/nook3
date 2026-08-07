@@ -20,7 +20,7 @@ const CSS = `
 .ftr-logo { width:81px; height:28px; display:block; }
 .ftr-tag { margin:0; font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
   font-weight:520; font-size:42px; line-height:46.2px; color:#241c12; }
-.ftr-right { display:flex; flex-direction:column; align-items:flex-end; gap:32px; }
+
 .ftr-email { font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:500; font-size:24px; line-height:1.2;
   color:#d66c38; text-decoration:none; transition:color .2s ease; }
