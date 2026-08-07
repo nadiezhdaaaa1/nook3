@@ -441,6 +441,7 @@ function ArticleCard({ article }: { article: BlogArticle }) {
 }
 
 function AboutNookCard() {
+  const navigate = useNavigate();
   return (
     <div className="blog-about">
       <div className="blog-about-eyebrow">About Nook</div>
@@ -451,9 +452,14 @@ function AboutNookCard() {
           listings, rent-regulated units flagged, no spam.
         </p>
       </div>
-      <Link to="/onboarding" className="blog-about-btn">
+      <OriginButton
+        variant="tertiary"
+        size="big"
+        className="w-full"
+        onClick={() => navigate({ to: "/onboarding" })}
+      >
         Start free
-      </Link>
+      </OriginButton>
     </div>
   );
 }
