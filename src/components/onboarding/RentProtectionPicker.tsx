@@ -88,7 +88,7 @@ export function RentProtectionPicker({
               className={cn(
                 "w-full text-left rounded-[16px] border p-4 transition-all",
                 selected
-                  ? "border-charcoal-950 bg-paper shadow-sm"
+                  ? "border-charcoal-950 bg-white"
                   : "border-border bg-transparent hover:border-charcoal-400",
               )}
             >
