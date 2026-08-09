@@ -116,7 +116,7 @@ export function OnboardingShell() {
 
       <main
         className="flex-1 w-full mx-auto px-5"
-        style={{ maxWidth: 800, paddingTop: 104, paddingBottom: 40 }}
+        style={{ maxWidth: 800, paddingTop: 160, paddingBottom: 40 }}
       >
         <Outlet />
       </main>
