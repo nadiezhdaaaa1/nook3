@@ -15,7 +15,7 @@ interface Props {
 }
 
 const CHIP_CLASS =
-  "w-full h-[54px] px-6 text-[14px] justify-start text-left";
+  "w-full h-[54px] px-6 text-[16px] justify-start text-left";
 
 export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
   const [calendarOpen, setCalendarOpen] = useState(false);
