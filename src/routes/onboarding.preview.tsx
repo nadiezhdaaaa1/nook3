@@ -202,83 +202,13 @@ function SamplePreview() {
     [matched, activeId],
   );
 
-  const card = useMemo(() => {
-    if (!activeListing) return null;
-    return (
-      <motion.article
-        key={activeListing.id}
-        initial={{ opacity: 0, y: -16, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        className="w-[320px] max-w-[calc(100%-32px)]"
-        style={HERO_CARD_STYLE}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h2
-              className="font-sans text-base font-semibold leading-tight tracking-tight text-[#000000]"
-              style={{ letterSpacing: "-0.42px" }}
-            >
-              {activeListing.address}
-            </h2>
-            <p className="mt-1 text-sm text-black/70 inline-flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" /> {activeListing.neighborhood}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setActiveId(null)}
-            className="shrink-0 inline-flex items-center justify-center h-7 w-7 rounded-full hover:bg-black/5 transition-colors"
-            aria-label="Close listing"
-          >
-            <X className="h-4 w-4 text-black/60" />
-          </button>
-        </div>
-
-        <div className="mt-3 flex items-baseline gap-3 flex-wrap">
-          <span className="font-display text-2xl font-medium text-[#000000] tabular-nums leading-none tracking-tight">
-            ${activeListing.rent.toLocaleString()}
-            <span className="text-lg font-medium text-black/60">/mo</span>
-          </span>
-          {activeListing.belowMedianPct && (
-            <span className="inline-flex items-center gap-1 text-xs text-sage-700 font-semibold">
-              <TrendingDown className="h-3 w-3" /> {activeListing.belowMedianPct}% below median
-            </span>
-          )}
-        </div>
-
-        <div className="mt-2 text-sm text-charcoal-700">
-          {activeListing.beds === 0 ? "Studio" : `${activeListing.beds} bed`} · {activeListing.baths} bath
-        </div>
-
-        {activeListing.tag && (
-          <div className="mt-3 inline-flex items-center gap-1 px-2 py-1 rounded-pill bg-paper/95 backdrop-blur text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 border border-border">
-            <Shield className="h-3 w-3" /> {activeListing.tag}
-          </div>
-        )}
-
-        {activeListing.buildingNote && cityConfig?.buildingDataAvailable && (
-          <div className="mt-2 text-[10px] font-mono text-charcoal-500 uppercase tracking-wider">
-            {activeListing.buildingNote}
-          </div>
-        )}
-
-        <div className="mt-3 p-3 rounded-md bg-sage-100/70 border border-sage-300/40">
-          <div className="flex items-start gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-sage-700 mt-0.5 shrink-0" />
-            <div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 font-semibold mb-1">
-                Wren's take
-              </div>
-              <p className="text-xs text-charcoal-800 leading-relaxed">
-                {wrenTake(activeListing)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </motion.article>
-    );
-  }, [activeListing]);
+  const card = activeListing ? (
+    <ListingCard
+      listing={activeListing}
+      cityConfig={cityConfig}
+      onClose={() => setActiveId(null)}
+    />
+  ) : null;
 
   const pins = useMemo(
     () => matched.filter((l) => l.coords).map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
