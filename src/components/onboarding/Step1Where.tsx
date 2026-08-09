@@ -13,7 +13,7 @@ import { CITY_TINT, CITY_PHOTO, CITY_ACCENT } from "@/data/cities/cards";
 
 const H1: React.CSSProperties = {
   fontWeight: 700,
-  fontSize: 40,
+  fontSize: 32,
   lineHeight: 1.2,
   letterSpacing: "-0.96px",
   color: "#241c12",
