@@ -124,8 +124,6 @@ export function SampleListingsMap({
 
   // Render/update markers when the listing set changes.
   useEffect(() => {
-    if (!ready || !mapRef.current) return;
-    console.log("[markers effect] ready:", ready, "listings:", listings.length);
     const map = mapRef.current;
 
     markersRef.current.forEach((m) => m.setMap(null));
@@ -149,11 +147,6 @@ export function SampleListingsMap({
       const data = CITY_MAP[city.id];
       map.setCenter({ lat: data.center[0], lng: data.center[1] });
       map.setZoom(data.zoom);
-    }
-
-    // Debug: expose markers for preview testing (removed before merge).
-    if (typeof window !== "undefined") {
-      (window as any).__nookMapMarkers = Array.from(markersRef.current.values());
     }
   }, [ready, city.id, listings]);
 
