@@ -94,8 +94,8 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
             layoutId={isAnimating ? `city-card-${c.id}` : undefined}
           >
             <motion.div
-              className="w-full overflow-hidden"
-              style={{ height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
+              className="overflow-hidden mx-auto"
+              style={{ width: 120, height: 120, borderRadius: 9999, background: "rgba(0,0,0,0.06)" }}
               layoutId={isAnimating ? `city-photo-${c.id}` : undefined}
             >
               {CITY_PHOTO[c.id] && (
@@ -110,12 +110,12 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
             <motion.div
               className="font-display text-center"
               style={{
-                marginTop: 8,
-                padding: "8px 0",
-                fontWeight: 700,
-                fontSize: 18,
-                lineHeight: 1.2,
-                letterSpacing: "-0.45px",
+                marginTop: 14,
+                padding: "4px 0",
+                fontWeight: 600,
+                fontSize: 14,
+                lineHeight: 1.25,
+                letterSpacing: "-0.2px",
                 color: "#241c12",
               }}
               layoutId={isAnimating ? `city-name-${c.id}` : undefined}
