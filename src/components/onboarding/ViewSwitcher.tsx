@@ -41,6 +41,7 @@ export function ViewSwitcher<T extends string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
+      className="view-switcher"
       style={{
         display: "inline-flex",
         gap: 2,
@@ -51,6 +52,12 @@ export function ViewSwitcher<T extends string>({
         boxSizing: "border-box",
       }}
     >
+      <style>{`
+        .view-switcher button[aria-checked="false"]:hover {
+          background-color: rgba(255,255,255,0.5) !important;
+          color: #241c12 !important;
+        }
+      `}</style>
       {options.map((option) => {
         const active = value === option.value;
         const Icon = option.icon;
