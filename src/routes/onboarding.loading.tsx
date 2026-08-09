@@ -178,19 +178,6 @@ function SearchSetupLoader() {
             );
           })}
         </motion.ul>
-
-        {/* Main Origin Button */}
-        <motion.div variants={itemVariants} className="mt-10 w-full">
-          <OriginButton
-            type="button"
-            variant="main"
-            size="big"
-            className="w-full"
-            onClick={() => navigate({ to: "/onboarding/preview" })}
-          >
-            Continue to preview
-          </OriginButton>
-        </motion.div>
       </motion.div>
 
       {/* Local keyframes for the done "settle" pop */}
