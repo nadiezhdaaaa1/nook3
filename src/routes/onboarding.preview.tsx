@@ -84,6 +84,7 @@ function ListingCard({
 
   return (
     <motion.article
+      onClick={(e) => e.stopPropagation()}
       key={listing.id}
       initial={{ opacity: 0, y: -16, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
