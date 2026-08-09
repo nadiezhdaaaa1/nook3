@@ -159,7 +159,7 @@ function SamplePreview() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 16, scale: 0.96 }}
                     transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-10 w-[280px] max-w-[calc(100%-32px)] sm:max-w-[calc(100%-48px)]"
+                    className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-10 w-[320px] max-w-[calc(100%-32px)] sm:max-w-[calc(100%-48px)]"
                     style={HERO_CARD_STYLE}
                   >
                     <div className="flex items-start justify-between gap-3">
