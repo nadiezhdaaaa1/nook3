@@ -124,6 +124,7 @@ export function SampleListingsMap({
 
   // Render/update markers when the listing set changes.
   useEffect(() => {
+    if (!ready || !mapRef.current) return;
     const map = mapRef.current;
 
     markersRef.current.forEach((m) => m.setMap(null));
