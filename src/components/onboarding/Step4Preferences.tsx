@@ -239,7 +239,7 @@ export function Step4Preferences() {
 
 
       <OnboardingFooter
-        nextLabel="Find my apartments"
+        nextLabel="Find apartments"
         onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "3" } })}
         onSkip={() => {
           set("lastStep", 4);
