@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 import type { RentProtection } from "@/lib/onboarding/store";
 import type { CityConfig } from "@/data/cities";
-import { Shield, Check } from "lucide-react";
+import { IconShield } from "@tabler/icons-react";
+import { Check } from "lucide-react";
 
 interface Props {
   city: CityConfig;
