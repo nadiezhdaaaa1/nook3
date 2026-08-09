@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
+import { IconList, IconMap } from "@tabler/icons-react";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { ViewSwitcher } from "@/components/onboarding/ViewSwitcher";
@@ -81,8 +82,8 @@ export function Step3Location() {
         value={view}
         onChange={(v) => setView(v)}
         options={[
-          { value: "list", label: "List" },
-          { value: "map", label: "Map" },
+          { value: "list", label: "List", icon: IconList },
+          { value: "map", label: "Map", icon: IconMap },
         ]}
         ariaLabel="Neighborhood view"
       />

@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import type { ComponentType } from "react";
 
 const INK = "#2b2521";
 const BODY = "#4a4a46";
@@ -8,9 +9,16 @@ const UI_VAR = "'wght' 500";
 
 const ui = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
 
+interface IconProps {
+  className?: string;
+  size?: number;
+  stroke?: number;
+}
+
 interface ViewSwitcherOption<T extends string> {
   value: T;
   label: string;
+  icon: ComponentType<IconProps>;
 }
 
 interface ViewSwitcherProps<T extends string> {
@@ -33,6 +41,7 @@ export function ViewSwitcher<T extends string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
+      className="view-switcher"
       style={{
         display: "inline-flex",
         gap: 2,
@@ -43,8 +52,15 @@ export function ViewSwitcher<T extends string>({
         boxSizing: "border-box",
       }}
     >
+      <style>{`
+        .view-switcher button[aria-checked="false"]:hover {
+          background-color: rgba(255,255,255,0.5) !important;
+          color: #241c12 !important;
+        }
+      `}</style>
       {options.map((option) => {
         const active = value === option.value;
+        const Icon = option.icon;
         return (
           <button
             key={option.value}
@@ -52,7 +68,7 @@ export function ViewSwitcher<T extends string>({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(option.value)}
-            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#241c12]"
+            className="group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#241c12]"
             style={{
               ...ui,
               position: "relative",
@@ -85,6 +101,11 @@ export function ViewSwitcher<T extends string>({
                 aria-hidden
               />
             )}
+            <Icon
+              size={16}
+              stroke={2}
+              className="relative"
+            />
             <span style={{ position: "relative" }}>{option.label}</span>
           </button>
         );
