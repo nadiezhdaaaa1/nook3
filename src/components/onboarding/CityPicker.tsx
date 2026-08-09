@@ -13,7 +13,7 @@ interface Props {
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const FILL_DURATION = 0.5;
+const FILL_DURATION = 0.85;
 const FILL_EASE = [0.16, 1, 0.3, 1] as const;
 const ORIGIN_HOVER = "#CE4F12";
 
