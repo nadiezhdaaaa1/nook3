@@ -69,6 +69,106 @@ function wrenTake(s: SampleListing) {
     `Nothing flashy, but the fundamentals check out. Bring your application docs to the showing.`,
   ]);
 }
+type CityConfig = ReturnType<typeof getCity>;
+
+function ListingCard({
+  listing,
+  cityConfig,
+  onClose,
+}: {
+  listing: SampleListing;
+  cityConfig: CityConfig;
+  onClose: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.article
+      key={listing.id}
+      initial={{ opacity: 0, y: -16, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      className="w-[320px] max-w-[calc(100%-32px)]"
+      style={HERO_CARD_STYLE}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <h2
+            className="font-sans text-base font-semibold leading-tight tracking-tight text-[#000000]"
+            style={{ letterSpacing: "-0.42px" }}
+          >
+            {listing.address}
+          </h2>
+          <p className="mt-1 text-sm text-black/70 inline-flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5" /> {listing.neighborhood}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="shrink-0 inline-flex items-center justify-center h-7 w-7 rounded-full hover:bg-black/5 transition-colors"
+          aria-label="Close listing"
+        >
+          <X className="h-4 w-4 text-black/60" />
+        </button>
+      </div>
+
+      <div className="mt-3 flex items-baseline gap-3 flex-wrap">
+        <span className="font-display text-2xl font-medium text-[#000000] tabular-nums leading-none tracking-tight">
+          ${listing.rent.toLocaleString()}
+          <span className="text-lg font-medium text-black/60">/mo</span>
+        </span>
+        {listing.belowMedianPct && (
+          <span className="inline-flex items-center gap-1 text-xs text-sage-700 font-semibold">
+            <TrendingDown className="h-3 w-3" /> {listing.belowMedianPct}% below median
+          </span>
+        )}
+      </div>
+
+      <div className="mt-2 text-sm text-charcoal-700">
+        {listing.beds === 0 ? "Studio" : `${listing.beds} bed`} · {listing.baths} bath
+      </div>
+
+      {listing.tag && (
+        <div className="mt-3 inline-flex items-center gap-1 px-2 py-1 rounded-pill bg-paper/95 backdrop-blur text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 border border-border">
+          <Shield className="h-3 w-3" /> {listing.tag}
+        </div>
+      )}
+
+      {listing.buildingNote && cityConfig?.buildingDataAvailable && (
+        <div className="mt-2 text-[10px] font-mono text-charcoal-500 uppercase tracking-wider">
+          {listing.buildingNote}
+        </div>
+      )}
+
+      <div className="mt-3 p-3 rounded-md bg-sage-100/70 border border-sage-300/40">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="w-full flex items-center justify-between gap-2 text-left"
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-3.5 w-3.5 text-sage-700 shrink-0" />
+            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 font-semibold">
+              Wren's take
+            </div>
+          </div>
+          {open ? (
+            <ChevronUp className="h-4 w-4 text-sage-700 shrink-0" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-sage-700 shrink-0" />
+          )}
+        </button>
+        {open && (
+          <p className="mt-2 text-xs text-charcoal-800 leading-relaxed">
+            {wrenTake(listing)}
+          </p>
+        )}
+      </div>
+    </motion.article>
+  );
+}
 
 
 function SamplePreview() {
