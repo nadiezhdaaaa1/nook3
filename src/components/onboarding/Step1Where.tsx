@@ -91,22 +91,24 @@ export function Step1Where() {
           </h1>
           <p style={SUB}>Where you searching for apartment</p>
         </div>
-        <div className="relative flex items-center shrink-0" style={{ width: 240 }}>
-          <Search
-            className="pointer-events-none absolute left-3 z-10"
-            style={{ width: 20, height: 20, color: "#5a5a55" }}
-          />
-          <Input
-            type="text"
-            size="medium"
-            value={query}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-            placeholder="Search cities..."
-            autoComplete="off"
-            aria-label="Search cities"
-            className="w-full pl-10"
-          />
-        </div>
+        {!cityConfig && (
+          <div className="relative flex items-center shrink-0" style={{ width: 240 }}>
+            <Search
+              className="pointer-events-none absolute left-3 z-10"
+              style={{ width: 20, height: 20, color: "#5a5a55" }}
+            />
+            <Input
+              type="text"
+              size="medium"
+              value={query}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+              placeholder="Search cities..."
+              autoComplete="off"
+              aria-label="Search cities"
+              className="w-full pl-10"
+            />
+          </div>
+        )}
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
