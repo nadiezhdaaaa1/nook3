@@ -232,7 +232,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
-          showFill && (variant === "main" || variant === "secondary" ? "text-white" : variant === "tertiary" ? "text-[#2B2521]" : variant === "dark" ? "text-white" : "text-[#2B2521]"),
+          showFill && (variant === "main" || variant === "secondary" ? "text-white" : variant === "nice" ? "text-[#D66C38]" : variant === "tertiary" ? "text-[#2B2521]" : variant === "dark" ? "text-white" : "text-[#2B2521]"),
           className,
         )}
         data-pressed={isPressed ? "true" : "false"}
