@@ -248,6 +248,7 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
         const others = Boolean(animatingId) && !isPressed;
         const stagger =
           pressedIndex >= 0 ? Math.min(Math.abs(i - pressedIndex) * 0.06, 0.24) : 0;
+        const mountDelay = reduce ? 0 : i * 0.06;
 
         return (
           <CityCard
@@ -256,6 +257,7 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
             isPressed={isPressed}
             others={others}
             stagger={stagger}
+            mountDelay={mountDelay}
             value={value}
             onChange={onChange}
             reduce={reduce}
