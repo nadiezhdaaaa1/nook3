@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useReducer, useRef, useState } from "react";
-import { Check, Circle, Loader2, Search } from "lucide-react";
+import { Check, Circle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import searchIcon from "@/assets/search-icon.png.asset.json";
 
 export const Route = createFileRoute("/onboarding/loading")({
   component: SearchSetupLoader,
