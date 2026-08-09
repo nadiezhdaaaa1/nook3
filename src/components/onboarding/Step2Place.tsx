@@ -1,6 +1,6 @@
 import { useNavigate, Navigate } from "@tanstack/react-router";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
 import { PillGroup } from "@/components/onboarding/PillGroup";
 import { RentProtectionPicker } from "@/components/onboarding/RentProtectionPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -38,18 +38,15 @@ export function Step2Place() {
   return (
     <div className="space-y-12">
       <header>
-        <Eyebrow>Step 2 · Place type</Eyebrow>
-        <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
-          What kind of <span className="accent-italic">place</span>?
+        <h1 className="font-display ob-h1" style={OB_H1}>
+          What kind of place?
         </h1>
-        <p className="mt-4 text-base text-charcoal-600">
-          Pick beds, baths, and your protection preferences.
-        </p>
+        <p style={OB_SUB}>Pick beds, baths, and your protection preferences.</p>
       </header>
 
       <section className="space-y-4">
-        <h2 className="font-display text-lg font-semibold text-charcoal-950">
-          1. Bedrooms <span className="text-charcoal-400 font-normal">· pick any</span>
+        <h2 className="font-display" style={OB_H2}>
+          1. Bedrooms <span style={{ color: "#5a5a55", fontWeight: 400 }}>· pick any</span>
         </h2>
         <PillGroup
           options={BEDS}
@@ -61,7 +58,7 @@ export function Step2Place() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-display text-lg font-semibold text-charcoal-950">
+        <h2 className="font-display" style={OB_H2}>
           2. Minimum bathrooms
         </h2>
         <PillGroup
