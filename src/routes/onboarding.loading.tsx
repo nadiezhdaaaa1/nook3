@@ -79,7 +79,7 @@ function SearchSetupLoader() {
     >
       <div className="w-full max-w-[520px] flex flex-col items-center text-center">
         {/* Icon badge */}
-        <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-sage-100 flex items-center justify-center overflow-hidden p-3">
+        <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full flex items-center justify-center overflow-hidden p-3">
           <img
             src={searchIcon.url}
             alt=""
