@@ -58,7 +58,7 @@ export function ExitModal({ open, onStay, onExit }: Props) {
             and pick up exactly where you left off.
           </p>
           <div className="mt-6 flex items-center justify-end gap-3">
-            <OriginButton variant="secondary" size="medium" onClick={onExit}>
+            <OriginButton variant="tertiary" size="medium" onClick={onExit}>
               Exit
             </OriginButton>
             <OriginButton variant="dark" size="medium" onClick={onStay}>
