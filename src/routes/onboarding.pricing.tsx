@@ -32,6 +32,7 @@ function PricingScreen() {
         cycle={billingCycle}
         onCycleChange={(c) => set("billingCycle", c)}
         onTierSelect={handleTierSelect}
+        compactTop
         tierCta={{
           free: "Continue with free",
           premium: "Start 3-day trial",
