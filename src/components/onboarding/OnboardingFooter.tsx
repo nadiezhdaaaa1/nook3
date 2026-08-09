@@ -43,7 +43,7 @@ export function OnboardingFooter({
           }}
         >
           <ArrowLeft style={{ width: 16, height: 16 }} />
-          <span className="hidden sm:inline">Back</span>
+          <span>Back</span>
         </button>
       )}
       <OriginButton
