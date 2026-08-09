@@ -220,7 +220,7 @@ export function PricingThreeTiers({
               marginTop: 16,
             }}
           >
-            Start free. Upgrade when you're serious about moving.
+            Start free, upgrade anytime
           </p>
         </header>
 
