@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { format, parseISO, startOfDay } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { IconArrowsRandom } from "@tabler/icons-react";
+import { IconCalendarEvent, IconArrowsRandom } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { OriginButton } from "@/components/ui/origin-button";
@@ -36,7 +35,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
             aria-pressed={specificOn}
           >
             <span className="inline-flex w-full items-center gap-2">
-              <CalendarIcon aria-hidden="true" className="shrink-0" />
+              <IconCalendarEvent aria-hidden="true" className="shrink-0" size={20} stroke={2} />
               <span className="truncate">
                 {specificOn && selectedDate
                   ? `Specific date • ${format(selectedDate, "d MMM yyyy")}`
