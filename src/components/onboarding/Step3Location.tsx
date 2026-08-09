@@ -77,18 +77,15 @@ export function Step3Location() {
       </header>
 
       {/* View toggle */}
-      <div className="flex" style={{ gap: 12 }}>
-        <ObChip selected={view === "list"} onClick={() => setView("list")}>
-          <span className="inline-flex items-center gap-2">
-            <List className="h-4 w-4" /> List
-          </span>
-        </ObChip>
-        <ObChip selected={view === "map"} onClick={() => setView("map")}>
-          <span className="inline-flex items-center gap-2">
-            <MapIcon className="h-4 w-4" /> Map
-          </span>
-        </ObChip>
-      </div>
+      <ViewSwitcher
+        value={view}
+        onChange={(v) => setView(v)}
+        options={[
+          { value: "list", label: "List" },
+          { value: "map", label: "Map" },
+        ]}
+        ariaLabel="Neighborhood view"
+      />
 
       {/* Quick presets */}
       {presets.length > 0 && (
