@@ -76,17 +76,20 @@ export function OnboardingShell() {
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
               <span style={{ ...LABEL, width: 100, flexShrink: 0 }}>Step {step} of 4</span>
               <div
-                className="flex-1 overflow-hidden"
-                style={{ height: 6, borderRadius: 999, background: "rgba(0,0,0,0.2)" }}
+                className="flex flex-1 overflow-hidden"
+                style={{ height: 6, borderRadius: 40 }}
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <div
-                  className="h-full ob-progress-fill"
-                  style={{ width: `${pct}%`, background: "#d66c38", borderRadius: 999 }}
-                />
+                {[1, 2, 3, 4].map((n) => (
+                  <div
+                    key={n}
+                    className="h-full flex-1 ob-progress-fill"
+                    style={{ background: step && n <= step ? "#d66c38" : "rgba(0,0,0,0.2)" }}
+                  />
+                ))}
               </div>
               <span className="ob-pct" style={{ ...LABEL, width: 40, textAlign: "right", flexShrink: 0 }}>
                 {pct}%
