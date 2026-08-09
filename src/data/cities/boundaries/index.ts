@@ -22,18 +22,18 @@ export interface BoundaryCollection {
  * boundaries, US Census place boundaries (suburbs) and OpenStreetMap.
  * Geometry is simplified and rounded to ~5 decimals.
  */
-const LOADERS: Record<CityId, () => Promise<{ default: BoundaryCollection }>> = {
-  nyc: () => import("./nyc.json") as Promise<{ default: BoundaryCollection }>,
-  la: () => import("./la.json") as Promise<{ default: BoundaryCollection }>,
-  "sf-bay": () => import("./sf-bay.json") as Promise<{ default: BoundaryCollection }>,
-  chicago: () => import("./chicago.json") as Promise<{ default: BoundaryCollection }>,
-  dc: () => import("./dc.json") as Promise<{ default: BoundaryCollection }>,
-  boston: () => import("./boston.json") as Promise<{ default: BoundaryCollection }>,
-  seattle: () => import("./seattle.json") as Promise<{ default: BoundaryCollection }>,
-  miami: () => import("./miami.json") as Promise<{ default: BoundaryCollection }>,
-  austin: () => import("./austin.json") as Promise<{ default: BoundaryCollection }>,
+const LOADERS: Record<CityId, () => Promise<unknown>> = {
+  nyc: () => import("./nyc.json"),
+  la: () => import("./la.json"),
+  "sf-bay": () => import("./sf-bay.json"),
+  chicago: () => import("./chicago.json"),
+  dc: () => import("./dc.json"),
+  boston: () => import("./boston.json"),
+  seattle: () => import("./seattle.json"),
+  miami: () => import("./miami.json"),
+  austin: () => import("./austin.json"),
   philadelphia: () =>
-    import("./philadelphia.json") as Promise<{ default: BoundaryCollection }>,
+    import("./philadelphia.json"),
 };
 
 const cache = new Map<CityId, BoundaryCollection>();
@@ -46,8 +46,8 @@ export async function loadCityBoundaries(
   const loader = LOADERS[id];
   if (!loader) return null;
   try {
-    const mod = await loader();
-    const data = mod.default ?? (mod as unknown as BoundaryCollection);
+    const mod = (await loader()) as { default?: BoundaryCollection };
+    const data = (mod.default ?? mod) as BoundaryCollection;
     cache.set(id, data);
     return data;
   } catch (err) {
