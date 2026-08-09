@@ -192,22 +192,7 @@ export function PricingThreeTiers({
 
       <div className="pr-inner">
         <header style={{ textAlign: "center" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-            }}
-          >
-            <span
-              style={{ width: 8, height: 8, borderRadius: 999, background: EMBER, flexShrink: 0 }}
-              aria-hidden
-            />
-            <span style={{ ...ui, fontSize: 14, fontWeight: 500, color: LABEL }}>Pricing</span>
-          </div>
-
-          <h2 className="pr-h2" style={{ ...display, fontWeight: 600, color: INK, marginTop: 20 }}>
+          <h2 className="pr-h2" style={{ ...display, fontWeight: 600, color: INK, marginTop: 0 }}>
             Choose your plan
           </h2>
 
