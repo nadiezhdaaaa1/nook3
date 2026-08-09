@@ -82,7 +82,10 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
             key={c.id}
             type="button"
             aria-pressed={value === c.id}
-            onClick={() => onChange(c.id)}
+            onClick={() => {
+              console.log("CityPicker card clicked", c.id);
+              onChange(c.id);
+            }}
             className="ob-city-card shrink-0 text-left"
             style={{
               width: 188,
