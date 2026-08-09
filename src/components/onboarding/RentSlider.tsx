@@ -48,7 +48,7 @@ export function RentSlider({ city, value, onChange }: Props) {
         onValueChange={(v) => setLocal([v[0], v[1]] as [number, number])}
         onValueCommit={(v) => onChange([v[0], v[1]] as [number, number])}
         className="relative flex w-full touch-none select-none items-center"
-        style={{ marginTop: 20, height: 20 }}
+        style={{ marginTop: 20, height: 24 }}
       >
         <SliderPrimitive.Track
           className="relative w-full grow overflow-hidden"

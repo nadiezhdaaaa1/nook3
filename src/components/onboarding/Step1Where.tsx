@@ -9,7 +9,7 @@ import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_ACTIVE_LISTINGS } from "@/data/cities/icons";
-import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
+import { CITY_TINT, CITY_PHOTO, CITY_ACCENT } from "@/data/cities/cards";
 
 const H1: React.CSSProperties = {
   fontWeight: 700,
@@ -57,12 +57,12 @@ export function Step1Where() {
     }
   }, [cityConfig, budget, patch]);
 
-  // Reset animation id once the shared-element transition has completed.
+  // Release the interaction lock once the transition has finished.
   useEffect(() => {
     if (!animatingId) return;
-    const t = setTimeout(() => setAnimatingId(null), 850);
+    const t = setTimeout(() => setAnimatingId(null), reduce ? 200 : 1400);
     return () => clearTimeout(t);
-  }, [animatingId, cityConfig]);
+  }, [animatingId, cityConfig, reduce]);
 
   const canContinue = Boolean(cityConfig && budget !== null && moveInChosen);
 
@@ -72,24 +72,26 @@ export function Step1Where() {
   };
 
   const handleClearCity = () => {
-    if (cityConfig) setAnimatingId(cityConfig.id);
     set("city", null);
   };
+
+  // Enter delays for the selected state (relative to when it mounts).
+  const d = (t: number) => (reduce ? 0 : t);
 
   return (
     <div style={{ paddingBottom: 40 }}>
       {/* Header row */}
       <div className="ob-head flex items-center justify-between gap-6">
-        <div>
+        <div style={{ maxWidth: 552 }}>
           <h1 className="font-display ob-h1" style={H1}>
             Pick your city
           </h1>
           <p style={SUB}>Where you searching for apartment</p>
         </div>
-        <div className="relative flex items-center" style={{ width: 240 }}>
+        <div className="relative flex items-center shrink-0" style={{ width: 240 }}>
           <Search
             className="pointer-events-none absolute left-3 z-10"
-            style={{ width: 20, height: 20, color: "rgba(36,28,18,0.5)" }}
+            style={{ width: 20, height: 20, color: "#5a5a55" }}
           />
           <Input
             type="text"
@@ -104,16 +106,20 @@ export function Step1Where() {
         </div>
       </div>
 
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="wait" initial={false}>
         {!cityConfig ? (
           <motion.div
             key="picker"
-            className="ob-fade-up ob-bleed"
+            className="ob-bleed"
             style={{ marginTop: 32 }}
-            initial={{ opacity: 0, y: 16 }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 1 }}
-            transition={{ duration: reduce ? 0.15 : 0.25, ease: EASE }}
+            exit={
+              reduce
+                ? { opacity: 0, transition: { duration: 0.15 } }
+                : { opacity: 1, transition: { duration: 0.55 } }
+            }
+            transition={{ duration: reduce ? 0.15 : 0.35, ease: EASE }}
           >
             <CityPicker
               value={city}
@@ -123,37 +129,38 @@ export function Step1Where() {
             />
           </motion.div>
         ) : (
-          <motion.div key="selected">
+          <motion.div
+            key="selected"
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+            transition={{ duration: reduce ? 0.15 : 0.3, ease: EASE }}
+          >
+            {/* Selected city banner */}
             <motion.div
-              className="flex items-center"
+              className="relative"
               style={{
                 marginTop: 32,
+                width: "100%",
+                height: 68,
                 background: CITY_TINT[cityConfig.id],
-                borderRadius: 24,
-                padding: "12px 24px 12px 12px",
-                gap: 20,
+                border: "1px solid rgba(0,0,0,0.2)",
+                borderRadius: 16,
+                overflow: "hidden",
                 pointerEvents: animatingId ? "none" : "auto",
               }}
-              layoutId={reduce ? undefined : `city-card-${cityConfig.id}`}
-              initial={reduce ? { opacity: 0 } : undefined}
-              animate={reduce ? { opacity: 1 } : undefined}
-              transition={
-                reduce
-                  ? { duration: 0.15 }
-                  : { layout: { duration: 0.45, delay: 0.2, ease: EASE } }
-              }
+              initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: reduce ? 0.15 : 0.3, ease: EASE }}
             >
-              <motion.div
-                className="overflow-hidden shrink-0 ob-banner-photo"
-                style={{ width: 100, height: 72, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
-                layoutId={reduce ? undefined : `city-photo-${cityConfig.id}`}
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={
-                  reduce
-                    ? { duration: 0.15 }
-                    : { duration: 0.2, delay: 0.65, ease: EASE, layout: { duration: 0.45, delay: 0.2, ease: EASE } }
-                }
+              <div
+                className="absolute overflow-hidden"
+                style={{
+                  left: -8,
+                  top: -6,
+                  width: 80,
+                  height: 80,
+                  borderRadius: 9999,
+                  background: "rgba(0,0,0,0.06)",
+                }}
               >
                 {CITY_PHOTO[cityConfig.id] && (
                   <img
@@ -162,55 +169,76 @@ export function Step1Where() {
                     className="h-full w-full object-cover"
                   />
                 )}
-              </motion.div>
-              <motion.div
-                className="font-display flex-1 ob-banner-name"
-                style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.45px", color: "#241c12" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2, delay: reduce ? 0 : 0.72, ease: EASE }}
+              </div>
+              <div
+                className="font-display absolute flex items-center"
+                style={{
+                  left: 88,
+                  top: 0,
+                  bottom: 0,
+                  fontWeight: 700,
+                  fontSize: 20,
+                  lineHeight: 1.2,
+                  letterSpacing: "-0.45px",
+                  color: "#241c12",
+                }}
               >
                 {cityConfig.displayName}
-              </motion.div>
-              <motion.button
+              </div>
+              <button
                 type="button"
                 onClick={handleClearCity}
-                className="ob-ghost-dark inline-flex items-center shrink-0"
-                style={{ gap: 8, padding: "12px 16px", borderRadius: 12, fontWeight: 600, fontSize: 14, color: "#241c12" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2, delay: reduce ? 0 : 0.72, ease: EASE }}
+                aria-label="Change city"
+                className="ob-ghost-dark absolute inline-flex items-center justify-center"
+                style={{
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  width: 44,
+                  height: 44,
+                  borderRadius: 12,
+                  color: "#241c12",
+                }}
               >
-                <Pencil style={{ width: 20, height: 20 }} /> Change
-              </motion.button>
+                <Pencil style={{ width: 20, height: 20 }} />
+              </button>
             </motion.div>
 
-            <motion.div
-              style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}
-              initial={{ opacity: 0, y: reduce ? 0 : 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduce ? 0.15 : 0.3, delay: reduce ? 0 : 0.78, ease: EASE }}
-            >
-
-              <div>
+            <div style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}>
+              <motion.div
+                initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.3), ease: EASE }}
+              >
                 <h2 className="font-display ob-h1" style={H1}>
-                  Let's narrow down <span style={{ color: "#5a5a55" }}>{cityConfig.displayName}</span>
+                  Let's narrow down{" "}
+                  <span style={{ color: CITY_ACCENT[cityConfig.id] }}>
+                    {cityConfig.displayName}
+                  </span>
                 </h2>
                 <p style={SUB}>Tell us your rent range and when you need to move</p>
-              </div>
+              </motion.div>
 
               {budget !== null && (
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.38), ease: EASE }}
+                >
                   <h3 className="font-display" style={H2}>
                     1. Monthly rent range
                   </h3>
                   <div style={{ marginTop: 16 }}>
                     <RentSlider city={cityConfig} value={budget} onChange={(v) => set("budget", v)} />
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              <div>
+              <motion.div
+                initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.46), ease: EASE }}
+              >
                 <h3 className="font-display" style={H2}>
                   2. Move-in date
                 </h3>
@@ -225,9 +253,9 @@ export function Step1Where() {
                     }}
                   />
                 </div>
-              </div>
+              </motion.div>
 
-              <label
+              <motion.label
                 className="flex items-start cursor-pointer"
                 style={{
                   background: "#ebf0d5",
@@ -236,6 +264,9 @@ export function Step1Where() {
                   padding: "16px 20px",
                   gap: 16,
                 }}
+                initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.54), ease: EASE }}
               >
                 <input
                   type="checkbox"
@@ -251,14 +282,24 @@ export function Step1Where() {
                     Share your move-out date later for $50 off Premium annual.
                   </div>
                 </div>
-              </label>
+              </motion.label>
 
-              <p style={{ fontSize: 13, lineHeight: "16px", color: "#4a4a46" }}>
+              <motion.p
+                style={{ fontSize: 13, lineHeight: "16px", color: "#4a4a46" }}
+                initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.62), ease: EASE }}
+              >
                 Today we're monitoring {CITY_ACTIVE_LISTINGS[cityConfig.id].toLocaleString()} active{" "}
                 {cityConfig.displayName} listings
-              </p>
+              </motion.p>
 
-              <div className="flex justify-end ob-next-row">
+              <motion.div
+                className="flex justify-end ob-next-row"
+                initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.7), ease: EASE }}
+              >
                 <button
                   type="button"
                   disabled={!canContinue}
@@ -269,20 +310,19 @@ export function Step1Where() {
                   className="ob-next inline-flex items-center justify-center"
                   style={{
                     gap: 8,
-                    background: "#d66c38",
+                    background: canContinue ? "#d66c38" : "#eae0cd",
                     color: "#ffffff",
                     borderRadius: 12,
                     padding: "16px 24px",
                     fontWeight: 500,
                     fontSize: 16,
-                    opacity: canContinue ? 1 : 0.35,
                     cursor: canContinue ? "pointer" : "not-allowed",
                   }}
                 >
                   Next <ArrowRight style={{ width: 16, height: 16 }} />
                 </button>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

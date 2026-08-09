@@ -8,7 +8,7 @@ interface Props {
   onChange: (id: CityId) => void;
   /** Live search query — filters the row. */
   query?: string;
-  /** City id currently animating between picker and selected banner. */
+  /** City id currently animating out of the picker. */
   animatingId?: CityId | null;
 }
 
@@ -58,6 +58,8 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
     requestAnimationFrame(() => el.classList.remove("is-dragging"));
   };
 
+  const pressedIndex = animatingId ? cities.findIndex((c) => c.id === animatingId) : -1;
+
   return (
     <div
       ref={rowRef}
@@ -78,32 +80,56 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
         }
       }}
     >
-      {cities.map((c) => {
-        const isAnimating = animatingId === c.id;
-        const others = Boolean(animatingId) && !isAnimating;
+      {cities.map((c, i) => {
+        const isPressed = animatingId === c.id;
+        const others = Boolean(animatingId) && !isPressed;
+        const stagger =
+          pressedIndex >= 0 ? Math.min(Math.abs(i - pressedIndex) * 0.06, 0.24) : 0;
+
+        let animate: Record<string, number> = { opacity: 1, scale: 1 };
+        let transition: Record<string, unknown> = { duration: 0.25, ease: EASE };
+
+        if (reduce) {
+          if (animatingId) animate = { opacity: 0, scale: 1 };
+          transition = { duration: 0.15, ease: "linear" };
+        } else if (isPressed) {
+          animate = { opacity: 0, scale: 1.1 };
+          transition = {
+            scale: { duration: 0.35, ease: EASE },
+            opacity: { duration: 0.2, delay: 0.35, ease: EASE },
+          };
+        } else if (others) {
+          animate = { opacity: 0, scale: 0.98 };
+          transition = { duration: 0.3, delay: stagger, ease: EASE };
+        }
+
         return (
           <motion.button
             key={c.id}
             type="button"
             aria-pressed={value === c.id}
             onClick={() => onChange(c.id)}
-            className="ob-city-card shrink-0 text-left"
+            className="ob-city-card shrink-0 flex flex-col items-center justify-center"
             style={{
               width: 188,
+              height: 219,
               borderRadius: 24,
-              padding: 12,
+              padding: "32px 24px",
+              gap: 16,
               background: CITY_TINT[c.id],
+              zIndex: isPressed ? 2 : 1,
             }}
-            animate={others ? { opacity: 0, scale: 0.98 } : { opacity: 1, scale: 1 }}
-            transition={{ duration: reduce ? 0.15 : 0.25, ease: EASE }}
-            layoutId={isAnimating && !reduce ? `city-card-${c.id}` : undefined}
+            animate={animate}
+            transition={transition}
           >
-            <motion.div
-              className="overflow-hidden"
-              style={{ width: "100%", height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
-              animate={{ opacity: isAnimating ? 0 : 1 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
-              layoutId={isAnimating && !reduce ? `city-photo-${c.id}` : undefined}
+            <div
+              className="overflow-hidden shrink-0"
+              style={{
+                width: 120,
+                height: 120,
+                borderRadius: 9999,
+                background: "rgba(0,0,0,0.06)",
+              }}
             >
               {CITY_PHOTO[c.id] && (
                 <img
@@ -113,23 +139,19 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
                   className="h-full w-full object-cover"
                 />
               )}
-            </motion.div>
-            <motion.div
+            </div>
+            <div
               className="font-display text-center"
               style={{
-                marginTop: 8,
-                padding: "8px 0",
                 fontWeight: 700,
-                fontSize: 18,
+                fontSize: 16,
                 lineHeight: 1.2,
                 letterSpacing: "-0.45px",
                 color: "#241c12",
               }}
-              animate={{ opacity: isAnimating ? 0 : 1 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
             >
               {c.displayName}
-            </motion.div>
+            </div>
           </motion.button>
         );
       })}
