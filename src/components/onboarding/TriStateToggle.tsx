@@ -25,12 +25,12 @@ export function TriStateToggle({ label, state, onCycle }: Props) {
         <span className="min-w-0 flex-1 truncate text-left">{label}</span>
         <span
           className={cn(
-            "inline-flex items-center justify-center gap-1.5 rounded-[12px] border px-3 py-2 text-[13px] font-medium whitespace-nowrap",
+            "inline-flex items-center justify-center gap-1.5 text-[13px] font-medium whitespace-nowrap",
             isRequired
-              ? "border-transparent bg-[#2B2521] text-white"
+              ? "text-[#2B2521]"
               : isNice
-                ? "border-[#D66C38] bg-transparent text-[#D66C38]"
-                : "border-black/20 bg-transparent text-[#2B2521]"
+                ? "text-[#D66C38]"
+                : "text-[#2B2521]"
           )}
           aria-hidden
         >
