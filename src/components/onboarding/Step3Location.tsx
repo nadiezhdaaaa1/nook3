@@ -143,7 +143,7 @@ export function Step3Location() {
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
             Selected · {neighborhoods.length}
           </div>
-          <div className="flex flex-wrap" style={{ gap: 12 }}>
+          <div className="flex flex-wrap" style={{ gap: 8 }}>
             {neighborhoods.map((n) => (
               <button
                 key={n}
@@ -260,7 +260,7 @@ export function Step3Location() {
                           <Sparkles className="h-3 w-3" />
                           Best fit for your budget
                         </div>
-                        <div className="flex flex-wrap" style={{ gap: 12 }}>
+                        <div className="flex flex-wrap" style={{ gap: 8 }}>
                           {bestFits.map(({ name, price }) => {
                             const selected = neighborhoods.includes(name);
                             return (
@@ -285,7 +285,7 @@ export function Step3Location() {
                       </div>
                     )}
 
-                    <div className="flex flex-wrap" style={{ gap: 12 }}>
+                    <div className="flex flex-wrap" style={{ gap: 8 }}>
                       {restVisible.map(({ name, price }) => {
                         const selected = neighborhoods.includes(name);
                         return (
