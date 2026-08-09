@@ -17,8 +17,17 @@ export function OnboardingFooter({
   nextLabel = "Next",
 }: Props) {
   return (
-    <div className="flex items-center justify-between gap-3 ob-next-row">
-      {onBack ? (
+    <div className="flex items-center justify-end gap-2 ob-next-row">
+      {onSkip && (
+        <button
+          type="button"
+          onClick={onSkip}
+          className="h-11 px-4 inline-flex items-center text-sm font-semibold text-charcoal-500 hover:text-charcoal-950"
+        >
+          Skip
+        </button>
+      )}
+      {onBack && (
         <button
           type="button"
           onClick={onBack}
@@ -36,31 +45,17 @@ export function OnboardingFooter({
           <ArrowLeft style={{ width: 20, height: 20 }} />
           <span className="hidden sm:inline">Back</span>
         </button>
-      ) : (
-        <div />
       )}
-
-      <div className="flex items-center gap-3">
-        {onSkip && (
-          <button
-            type="button"
-            onClick={onSkip}
-            className="h-11 px-4 inline-flex items-center text-sm font-semibold text-charcoal-500 hover:text-charcoal-950"
-          >
-            Skip
-          </button>
-        )}
-        <OriginButton
-          type="button"
-          variant="main"
-          size="big"
-          disabled={!canContinue}
-          onClick={onNext}
-          className="ob-next"
-        >
-          {nextLabel} <ArrowRight style={{ width: 16, height: 16 }} />
-        </OriginButton>
-      </div>
+      <OriginButton
+        type="button"
+        variant="main"
+        size="big"
+        disabled={!canContinue}
+        onClick={onNext}
+        className="ob-next"
+      >
+        {nextLabel} <ArrowRight style={{ width: 16, height: 16 }} />
+      </OriginButton>
     </div>
   );
 }
