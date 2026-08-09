@@ -60,7 +60,7 @@ export function Step1Where() {
   // Reset animation id once the shared-element transition has completed.
   useEffect(() => {
     if (!animatingId) return;
-    const t = setTimeout(() => setAnimatingId(null), 450);
+    const t = setTimeout(() => setAnimatingId(null), 850);
     return () => clearTimeout(t);
   }, [animatingId, cityConfig]);
 
@@ -140,7 +140,7 @@ export function Step1Where() {
               transition={
                 reduce
                   ? { duration: 0.15 }
-                  : { layout: { duration: 0.28, delay: 0.12, ease: EASE } }
+                  : { layout: { duration: 0.45, delay: 0.2, ease: EASE } }
               }
             >
               <motion.div
@@ -152,7 +152,7 @@ export function Step1Where() {
                 transition={
                   reduce
                     ? { duration: 0.15 }
-                    : { duration: 0.12, delay: 0.4, ease: EASE, layout: { duration: 0.28, delay: 0.12, ease: EASE } }
+                    : { duration: 0.2, delay: 0.65, ease: EASE, layout: { duration: 0.45, delay: 0.2, ease: EASE } }
                 }
               >
                 {CITY_PHOTO[cityConfig.id] && (
@@ -168,7 +168,7 @@ export function Step1Where() {
                 style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.45px", color: "#241c12" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.12, delay: reduce ? 0 : 0.46, ease: EASE }}
+                transition={{ duration: 0.2, delay: reduce ? 0 : 0.72, ease: EASE }}
               >
                 {cityConfig.displayName}
               </motion.div>
@@ -179,7 +179,7 @@ export function Step1Where() {
                 style={{ gap: 8, padding: "12px 16px", borderRadius: 12, fontWeight: 600, fontSize: 14, color: "#241c12" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.12, delay: reduce ? 0 : 0.46, ease: EASE }}
+                transition={{ duration: 0.2, delay: reduce ? 0 : 0.72, ease: EASE }}
               >
                 <Pencil style={{ width: 20, height: 20 }} /> Change
               </motion.button>
@@ -189,7 +189,7 @@ export function Step1Where() {
               style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}
               initial={{ opacity: 0, y: reduce ? 0 : 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduce ? 0.15 : 0.2, delay: reduce ? 0 : 0.48, ease: EASE }}
+              transition={{ duration: reduce ? 0.15 : 0.3, delay: reduce ? 0 : 0.78, ease: EASE }}
             >
 
               <div>
