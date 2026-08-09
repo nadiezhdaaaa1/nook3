@@ -320,7 +320,7 @@ export function Step1Where() {
                   }}
                 >
                   <ArrowLeft style={{ width: 16, height: 16 }} />
-                  <span className="hidden sm:inline">Back</span>
+                  <span>Back</span>
                 </button>
                 <OriginButton
                   type="button"
