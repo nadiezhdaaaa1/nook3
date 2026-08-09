@@ -17,7 +17,7 @@ export function OnboardingFooter({
   nextLabel = "Next",
 }: Props) {
   return (
-    <div className="flex items-center justify-end gap-2 ob-next-row">
+    <div className="flex items-center gap-2 ob-next-row">
       {onBack && (
         <button
           type="button"
@@ -61,7 +61,7 @@ export function OnboardingFooter({
         size="big"
         disabled={!canContinue}
         onClick={onNext}
-        className="ob-next"
+        className="ob-next ml-auto"
       >
         {nextLabel} <ArrowRight style={{ width: 16, height: 16 }} />
       </OriginButton>
