@@ -1,4 +1,5 @@
 import { ObChip } from "@/components/onboarding/ObChip";
+import { IconCheck } from "@tabler/icons-react";
 
 export interface PillOption {
   id: string;
