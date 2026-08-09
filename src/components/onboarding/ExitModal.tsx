@@ -34,7 +34,7 @@ export function ExitModal({ open, onStay, onExit }: Props) {
       />
       <div
         className={cn(
-          "relative w-full max-w-md bg-paper rounded-card shadow-elevated border border-charcoal-950/8",
+          "relative w-full max-w-md bg-white rounded-card shadow-elevated border border-charcoal-950/8",
           "animate-in fade-in zoom-in-95 duration-150",
         )}
       >
