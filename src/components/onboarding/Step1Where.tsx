@@ -281,7 +281,7 @@ export function Step1Where() {
                   <div style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2b2521" }}>
                     I'm also moving out of my current place
                   </div>
-                  <div style={{ marginTop: 4, fontSize: 14, lineHeight: "24px", color: "#4a4a46" }}>
+                  <div style={{ fontSize: 14, lineHeight: "24px", color: "#4a4a46" }}>
                     Share your move-out date later for $50 off Premium annual.
                   </div>
                 </div>
