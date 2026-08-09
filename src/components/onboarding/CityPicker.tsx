@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CITY_LIST, type CityId } from "@/data/cities";
 import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
@@ -13,6 +13,162 @@ interface Props {
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+const FILL_DURATION = 0.5;
+const FILL_EASE = [0.16, 1, 0.3, 1] as const;
+const ORIGIN_HOVER = "#CE4F12";
+
+function getCoverDiameter(width: number, height: number, x: number, y: number) {
+  return Math.ceil(
+    2 *
+      Math.max(
+        Math.hypot(x, y),
+        Math.hypot(width - x, y),
+        Math.hypot(x, height - y),
+        Math.hypot(width - x, height - y),
+      ),
+  );
+}
+
+function CityCard({
+  c,
+  isPressed,
+  others,
+  stagger,
+  value,
+  onChange,
+  reduce,
+}: {
+  c: (typeof CITY_LIST)[number];
+  isPressed: boolean;
+  others: boolean;
+  stagger: number;
+  value: CityId | null;
+  onChange: (id: CityId) => void;
+  reduce: boolean | null;
+}) {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+  const [coverSize, setCoverSize] = useState(0);
+
+  const updateOrigin = useCallback((x: number, y: number) => {
+    const node = cardRef.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    setOrigin({ x, y });
+    setCoverSize(getCoverDiameter(rect.width, rect.height, x, y));
+  }, []);
+
+  const handlePointerEnter = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      updateOrigin(e.clientX - rect.left, e.clientY - rect.top);
+      setHovered(true);
+    },
+    [updateOrigin],
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      if (!hovered) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      updateOrigin(e.clientX - rect.left, e.clientY - rect.top);
+    },
+    [hovered, updateOrigin],
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    setHovered(false);
+  }, []);
+
+  let animate: Record<string, number> = { opacity: 1, scale: 1 };
+  let transition: Record<string, unknown> = { duration: 0.25, ease: EASE };
+
+  if (reduce) {
+    if (isPressed || others) animate = { opacity: 0, scale: 1 };
+    transition = { duration: 0.15, ease: "linear" };
+  } else if (isPressed) {
+    animate = { opacity: 0, scale: 1.1 };
+    transition = {
+      scale: { duration: 0.35, ease: EASE },
+      opacity: { duration: 0.2, delay: 0.35, ease: EASE },
+    };
+  } else if (others) {
+    animate = { opacity: 0, scale: 0.98 };
+    transition = { duration: 0.3, delay: stagger, ease: EASE };
+  }
+
+  return (
+    <motion.button
+      ref={cardRef}
+      key={c.id}
+      type="button"
+      aria-pressed={value === c.id}
+      onClick={() => onChange(c.id)}
+      className="ob-city-card shrink-0 flex flex-col items-center justify-center relative overflow-hidden"
+      style={{
+        width: 188,
+        height: 219,
+        borderRadius: 24,
+        padding: "32px 24px",
+        gap: 16,
+        background: CITY_TINT[c.id],
+        zIndex: isPressed ? 2 : 1,
+      }}
+      animate={animate}
+      transition={transition}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
+      <motion.span
+        aria-hidden
+        initial={false}
+        animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
+        transition={{ duration: FILL_DURATION, ease: FILL_EASE }}
+        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          left: origin.x,
+          top: origin.y,
+          width: coverSize,
+          height: coverSize,
+          background: ORIGIN_HOVER,
+        }}
+      />
+      <div
+        className="overflow-hidden shrink-0 relative z-10"
+        style={{
+          width: 120,
+          height: 120,
+          borderRadius: 9999,
+          background: "rgba(0,0,0,0.06)",
+        }}
+      >
+        {CITY_PHOTO[c.id] && (
+          <img
+            src={CITY_PHOTO[c.id]}
+            alt={c.displayName}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        )}
+      </div>
+      <div
+        className="font-display text-center relative z-10"
+        style={{
+          fontWeight: 700,
+          fontSize: 16,
+          lineHeight: 1.2,
+          letterSpacing: "-0.45px",
+          color: hovered ? "#ffffff" : "#241c12",
+          transition: "color 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        {c.displayName}
+      </div>
+    </motion.button>
+  );
+}
 
 export function CityPicker({ value, onChange, query = "", animatingId = null }: Props) {
   const reduce = useReducedMotion();
@@ -86,73 +242,17 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
         const stagger =
           pressedIndex >= 0 ? Math.min(Math.abs(i - pressedIndex) * 0.06, 0.24) : 0;
 
-        let animate: Record<string, number> = { opacity: 1, scale: 1 };
-        let transition: Record<string, unknown> = { duration: 0.25, ease: EASE };
-
-        if (reduce) {
-          if (animatingId) animate = { opacity: 0, scale: 1 };
-          transition = { duration: 0.15, ease: "linear" };
-        } else if (isPressed) {
-          animate = { opacity: 0, scale: 1.1 };
-          transition = {
-            scale: { duration: 0.35, ease: EASE },
-            opacity: { duration: 0.2, delay: 0.35, ease: EASE },
-          };
-        } else if (others) {
-          animate = { opacity: 0, scale: 0.98 };
-          transition = { duration: 0.3, delay: stagger, ease: EASE };
-        }
-
         return (
-          <motion.button
+          <CityCard
             key={c.id}
-            type="button"
-            aria-pressed={value === c.id}
-            onClick={() => onChange(c.id)}
-            className="ob-city-card shrink-0 flex flex-col items-center justify-center"
-            style={{
-              width: 188,
-              height: 219,
-              borderRadius: 24,
-              padding: "32px 24px",
-              gap: 16,
-              background: CITY_TINT[c.id],
-              zIndex: isPressed ? 2 : 1,
-            }}
-            animate={animate}
-            transition={transition}
-          >
-            <div
-              className="overflow-hidden shrink-0"
-              style={{
-                width: 120,
-                height: 120,
-                borderRadius: 9999,
-                background: "rgba(0,0,0,0.06)",
-              }}
-            >
-              {CITY_PHOTO[c.id] && (
-                <img
-                  src={CITY_PHOTO[c.id]}
-                  alt={c.displayName}
-                  loading="lazy"
-                  className="h-full w-full object-cover"
-                />
-              )}
-            </div>
-            <div
-              className="font-display text-center"
-              style={{
-                fontWeight: 700,
-                fontSize: 16,
-                lineHeight: 1.2,
-                letterSpacing: "-0.45px",
-                color: "#241c12",
-              }}
-            >
-              {c.displayName}
-            </div>
-          </motion.button>
+            c={c}
+            isPressed={isPressed}
+            others={others}
+            stagger={stagger}
+            value={value}
+            onChange={onChange}
+            reduce={reduce}
+          />
         );
       })}
       {cities.length === 0 && (
