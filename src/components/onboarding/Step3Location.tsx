@@ -293,7 +293,7 @@ export function Step3Location() {
                       </div>
                     )}
 
-                    <div className="flex flex-wrap" style={{ gap: 8 }}>
+                    <div className="flex flex-wrap px-3" style={{ gap: 8 }}>
                       {restVisible.map(({ name, price }) => {
                         const selected = neighborhoods.includes(name);
                         return (
