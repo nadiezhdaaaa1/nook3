@@ -17,7 +17,7 @@ export function TriStateToggle({ label, state, onCycle }: Props) {
     <div className="flex items-center gap-2">
       <ObChip
         selected={isNice || isRequired}
-        selectedVariant={isRequired ? "dark" : "secondary"}
+        selectedVariant={isRequired ? "dark" : isNice ? "nice" : "secondary"}
         onClick={onCycle}
         aria-label={`${label}: ${state ?? "no preference"} — click to cycle`}
         className="flex-1"
