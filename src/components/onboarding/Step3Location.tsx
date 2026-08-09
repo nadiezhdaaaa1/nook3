@@ -263,7 +263,7 @@ export function Step3Location() {
                     </div>
 
                     {bestFits.length > 0 && (
-                      <div className="mb-3 p-3 rounded-card" style={{ backgroundColor: "#EBF0D5" }}>
+                      <div className="mb-3 p-3 rounded-card" style={{ backgroundColor: "#EBF0D5", border: "1px solid rgba(0,0,0,0.1)" }}>
                         <div className="flex items-center gap-1.5 mb-2 text-[10px] font-mono uppercase tracking-[0.18em] text-sage-900">
                           <Sparkles className="h-3 w-3" />
                           Best fit for your budget
