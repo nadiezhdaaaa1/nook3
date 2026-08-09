@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useOnboardingStore, getReferralCode } from "@/lib/onboarding/store";
 import { MoveOutModal } from "@/components/onboarding/MoveOutModal";
+import { OB_H1, OB_SUB } from "@/components/onboarding/stepStyles";
 import { SEARCH_LIMITS, useAppStore, syncOnboardingToUser, syncOnboardingToActiveSearch } from "@/lib/store";
 import { Plus, Lock } from "lucide-react";
 
@@ -71,10 +72,10 @@ function Success() {
           <Check className="h-7 w-7 text-sage-700" />
         </div>
         <div>
-          <h1 className="font-display text-3xl lg:text-5xl font-bold text-charcoal-950">
+          <h1 className="font-display ob-h1" style={OB_H1}>
             You're all <span className="accent-italic">set</span>.
           </h1>
-          <p className="mt-3 text-charcoal-600 max-w-md mx-auto text-sm lg:text-base">
+          <p className="max-w-md mx-auto" style={OB_SUB}>
             We're monitoring 100+ sources for you right now. First alerts usually arrive within 24 hours.
           </p>
         </div>
