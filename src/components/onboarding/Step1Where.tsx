@@ -114,12 +114,12 @@ export function Step1Where() {
             style={{ marginTop: 32 }}
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 1 }}
-            transition={
+            exit={
               reduce
-                ? { duration: 0.15 }
-                : { duration: 0.35, ease: EASE, exit: { duration: 0.55 } }
+                ? { opacity: 0, transition: { duration: 0.15 } }
+                : { opacity: 1, transition: { duration: 0.55 } }
             }
+            transition={{ duration: reduce ? 0.15 : 0.35, ease: EASE }}
           >
             <CityPicker
               value={city}
