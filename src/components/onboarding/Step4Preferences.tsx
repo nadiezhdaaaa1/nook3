@@ -8,7 +8,6 @@ import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
-import { cn } from "@/lib/utils";
 
 const LEGEND = (
   <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.14em] text-charcoal-500">
