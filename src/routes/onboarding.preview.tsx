@@ -31,7 +31,7 @@ function SamplePreview() {
   const reduce = useReducedMotion();
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>("nyc-2");
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
