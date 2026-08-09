@@ -86,6 +86,7 @@ export function OnboardingShell() {
           <div className="flex items-center" style={{ gap: 4 }}>
             <button
               type="button"
+              disabled={step === 1}
               onClick={onBack}
               className="ob-ghost inline-flex items-center"
               style={{
@@ -95,6 +96,8 @@ export function OnboardingShell() {
                 fontWeight: 600,
                 fontSize: 14,
                 color: "#241c12",
+                opacity: step === 1 ? 0.35 : 1,
+                cursor: step === 1 ? "not-allowed" : "pointer",
               }}
             >
               <ArrowLeft style={{ width: 20, height: 20 }} /> Back
