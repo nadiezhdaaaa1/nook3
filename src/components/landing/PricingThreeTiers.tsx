@@ -167,9 +167,13 @@ export function PricingThreeTiers({
   };
 
   return (
-    <section id="pricing" className="pr-section">
+    <section
+      id="pricing"
+      className="pr-section"
+      style={{ padding: compactTop ? "0 24px" : undefined }}
+    >
       <style>{`
-        .pr-section { background: #faf6ee; padding: ${compactTop ? 48 : 104}px 24px; }
+        .pr-section { background: #faf6ee; padding: 104px 24px; }
         .pr-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
         .pr-h2 { font-size: 48px; line-height: 54px; letter-spacing: -1.2px; }
         .pr-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
