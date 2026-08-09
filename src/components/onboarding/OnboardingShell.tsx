@@ -86,7 +86,7 @@ export function OnboardingShell() {
           <button
             type="button"
             onClick={() => setExitOpen(true)}
-            className="ob-ghost inline-flex items-center justify-center"
+            className="ob-ghost inline-flex items-center justify-center ml-auto"
             style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
             aria-label="Exit onboarding"
           >
