@@ -26,6 +26,7 @@ export function PillGroup({ options, value, onChange, multi }: Props) {
         return (
           <ObChip key={opt.id} selected={selected} onClick={() => onChange(opt.id)}>
             <span className="inline-flex items-center gap-2">
+              {selected && <IconCheck size={16} stroke={2.5} aria-hidden />}
               <span>{opt.label}</span>
               {opt.sub && <span className="text-[13px] opacity-70">{opt.sub}</span>}
             </span>
