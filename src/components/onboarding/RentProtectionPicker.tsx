@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 import type { RentProtection } from "@/lib/onboarding/store";
 import type { CityConfig } from "@/data/cities";
-import { Shield, Check } from "lucide-react";
+import { IconShield } from "@tabler/icons-react";
+import { Check } from "lucide-react";
 
 interface Props {
   city: CityConfig;
@@ -62,8 +63,8 @@ export function RentProtectionPicker({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Shield className="h-4 w-4 text-charcoal-700" />
-        <h3 className="font-display text-base font-semibold text-charcoal-950">
+        <IconShield className="shrink-0" size={20} stroke={2} />
+        <h3 className="font-display text-lg font-semibold text-charcoal-950">
           {city.rentProtection.label}
         </h3>
       </div>
