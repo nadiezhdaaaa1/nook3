@@ -29,6 +29,9 @@ const BATHS = [
 
 export function Step2Place() {
   const navigate = useNavigate();
+  const reduce = useReducedMotion();
+  const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
+  const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
   const {
     city, bedrooms, bathrooms, rentProtection, includeBrokerFee, neighborhoods,
     set, toggleBedroom,
@@ -42,7 +45,7 @@ export function Step2Place() {
   const canContinue = bedrooms.length > 0;
 
   return (
-    <div className="space-y-12">
+    <motion.div className="space-y-12" variants={stepVariants} initial="hidden" animate="visible">
       <header>
         <h1 className="font-display ob-h1" style={OB_H1}>
           What kind of place?
