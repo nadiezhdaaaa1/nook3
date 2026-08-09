@@ -17,7 +17,7 @@ const CSS = `
 .rel-back {
   font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
-  font-weight:700; font-size:16px; line-height:24px; color:#D04305; text-decoration:none;
+  font-weight:700; font-size:16px; line-height:24px; color:#d66c38; text-decoration:none;
 }
 .rel-back:hover { text-decoration:underline; }
 .rel-back:focus-visible { outline:2px solid #241c12; outline-offset:3px; }

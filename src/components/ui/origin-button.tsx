@@ -188,14 +188,14 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           "relative inline-flex cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden font-medium tracking-[-0.02em]",
           variant === "main"
             ? cn(
-                "rounded-[12px] border border-transparent bg-[#D04305] font-medium text-white",
+                "rounded-[12px] border border-transparent bg-[#D66C38] font-medium text-white",
                 size === "medium"
                   ? "h-[48px] px-5 text-[15px]"
                   : "h-[56px] px-6 text-[16px]",
               )
             : variant === "secondary"
               ? cn(
-                  "rounded-[12px] border-[1.5px] border-[#D04305] bg-transparent font-medium text-[#D04305]",
+                  "rounded-[12px] border-[1.5px] border-[#D66C38] bg-transparent font-medium text-[#D66C38]",
                   size === "medium"
                     ? "h-[48px] px-5 text-[15px]"
                     : "h-[56px] px-6 text-[16px]",
@@ -322,7 +322,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           aria-hidden
           className={cn(
             "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-            variant === "dark" ? "bg-[#000000]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : "bg-[#9E2F11]",
+            variant === "dark" ? "bg-[#000000]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : "bg-[#CE4F12]",
           )}
           initial={false}
           style={{
