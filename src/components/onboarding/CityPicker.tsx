@@ -15,7 +15,6 @@ interface Props {
 const EASE = [0.22, 1, 0.36, 1] as const;
 const FILL_DURATION = 0.85;
 const FILL_EASE = [0.16, 1, 0.3, 1] as const;
-const ORIGIN_HOVER = "#CE4F12";
 
 function getCoverDiameter(width: number, height: number, x: number, y: number) {
   return Math.ceil(
