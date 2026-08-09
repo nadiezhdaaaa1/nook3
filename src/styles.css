@@ -538,10 +538,10 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 .ob-ghost-dark { background: transparent; transition: background-color .2s ease-out; }
 .ob-ghost-dark:hover { background: rgba(0,0,0,0.06); }
 .ob-next:not(:disabled):hover { background: #c25e2d !important; }
-.ob-progress-fill { transition: width .3s ease-out; }
+.ob-progress-fill { transition: background-color .3s ease-out; }
 
 .ob-thumb {
-  display: block; height: 20px; width: 20px; border-radius: 999px;
+  display: block; height: 24px; width: 24px; border-radius: 999px;
   background: #d66c38; border: 2px solid #f4f1ea;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
   cursor: grab;
