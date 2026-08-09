@@ -3,6 +3,8 @@ import { Search, MapPin, X } from "lucide-react";
 import { useGoogleMaps } from "@/lib/maps/useGoogleMaps";
 import type { CityConfig } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
+import { CITY_TINT } from "@/data/cities/cards";
+import { loadCityBoundaries } from "@/data/cities/boundaries";
 import { cn } from "@/lib/utils";
 
 interface Props {
