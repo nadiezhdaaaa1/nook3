@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Pencil, Search, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CityPicker } from "@/components/onboarding/CityPicker";
