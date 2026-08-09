@@ -27,7 +27,6 @@ const STEP_MS = [1200, 1600, 1400] as const;
 const ALMOST_THERE_DELAY = 3000;
 
 function SearchSetupLoader() {
-  const navigate = useNavigate();
   const reduce = useReducedMotion();
   // active = index currently in-progress; equals STEPS.length when all done
   const [active, advance] = useReducer((n: number) => n + 1, 0);
