@@ -195,7 +195,7 @@ export function SampleListingsMap({
 
     const inner = document.createElement("div");
     inner.style.position = "absolute";
-    inner.style.transform = "translate(-50%, calc(-100% - 26px))";
+      inner.style.transform = "translate(-50%, calc(-100% - 22px))";
     inner.style.pointerEvents = "auto";
     container.appendChild(inner);
 
