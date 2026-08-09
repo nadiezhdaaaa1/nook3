@@ -208,7 +208,8 @@ export function TiredOfSection() {
             Start free — see what comes in this week.
           </div>
           <OriginButton
-            variant="main"
+            variant="tertiary"
+            className="bg-white"
             onClick={() => navigate({ to: "/onboarding" })}
           >
             Get started →
