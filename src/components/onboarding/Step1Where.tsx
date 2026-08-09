@@ -298,11 +298,28 @@ export function Step1Where() {
               </motion.p>
 
               <motion.div
-                className="flex justify-end ob-next-row"
+                className="flex items-center justify-between ob-next-row"
                 initial={{ opacity: 0, y: reduce ? 0 : 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.7), ease: EASE }}
               >
+                <button
+                  type="button"
+                  onClick={() => navigate({ to: "/" })}
+                  className="ob-ghost inline-flex items-center"
+                  style={{
+                    height: 56,
+                    gap: 8,
+                    padding: "0 16px",
+                    borderRadius: 12,
+                    fontWeight: 600,
+                    fontSize: 14,
+                    color: "#241c12",
+                  }}
+                >
+                  <ArrowLeft style={{ width: 20, height: 20 }} />
+                  <span className="hidden sm:inline">Back</span>
+                </button>
                 <OriginButton
                   type="button"
                   variant="main"
