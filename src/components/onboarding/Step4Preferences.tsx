@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { ObChip } from "@/components/onboarding/ObChip";
+import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
 import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
-import { cn } from "@/lib/utils";
 
 const LEGEND = (
   <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.14em] text-charcoal-500">
@@ -66,11 +66,10 @@ export function Step4Preferences() {
   return (
     <div className="space-y-12">
       <header>
-        <Eyebrow>Step 4 · Preferences · optional</Eyebrow>
-        <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
-          Any specific <span className="accent-italic">preferences</span>?
+        <h1 className="font-display ob-h1" style={OB_H1}>
+          Any specific preferences?
         </h1>
-        <p className="mt-4 text-base text-charcoal-600">
+        <p style={OB_SUB}>
           Tap once for "Nice to have", twice for "Must have", three times to clear.
         </p>
         <div className="mt-4">{LEGEND}</div>
@@ -82,16 +81,11 @@ export function Step4Preferences() {
         <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
           Quick presets
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap" style={{ gap: 12 }}>
           {AMENITY_PRESETS.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => applyPreset(p.id)}
-              className="h-9 px-4 inline-flex items-center rounded-pill border border-charcoal-200 bg-surface-elevated text-sm font-medium text-charcoal-800 hover:border-charcoal-950 hover:text-charcoal-950 transition-colors"
-            >
+            <ObChip key={p.id} onClick={() => applyPreset(p.id)}>
               + {p.label}
-            </button>
+            </ObChip>
           ))}
         </div>
       </section>
@@ -99,7 +93,7 @@ export function Step4Preferences() {
       {/* Amenities groups */}
       {AMENITY_GROUPS.map((g) => (
         <section key={g.id} className="space-y-4">
-          <h2 className="font-display text-lg font-semibold text-charcoal-950">
+          <h2 className="font-display" style={OB_H2}>
             {g.label}
           </h2>
           <div className="grid sm:grid-cols-2 gap-2">
@@ -118,7 +112,7 @@ export function Step4Preferences() {
       {/* Transit / Commute */}
       <section className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-display text-lg font-semibold text-charcoal-950">
+          <h2 className="font-display" style={OB_H2}>
             {cityConfig.transit.label}
           </h2>
           {!isCommuteCity && hiddenCount > 0 && (
@@ -139,33 +133,21 @@ export function Step4Preferences() {
             <p className="text-sm text-charcoal-600">
               {cityConfig.displayName} is a driving city. Set the max commute you'll tolerate from your neighborhoods.
             </p>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
+            <div className="flex flex-wrap" style={{ gap: 12 }}>
+              <ObChip
+                selected={commute.maxMinutes === null}
                 onClick={() => patch({ commute: { maxMinutes: null } })}
-                className={cn(
-                  "h-11 px-4 rounded-pill border-2 text-sm font-semibold transition-colors",
-                  commute.maxMinutes === null
-                    ? "border-charcoal-950 bg-charcoal-950 text-paper"
-                    : "border-charcoal-200 bg-surface-elevated text-charcoal-700 hover:border-charcoal-400",
-                )}
               >
                 No preference
-              </button>
+              </ObChip>
               {COMMUTE_OPTIONS.map((m) => (
-                <button
+                <ObChip
                   key={m}
-                  type="button"
+                  selected={commute.maxMinutes === m}
                   onClick={() => patch({ commute: { maxMinutes: m } })}
-                  className={cn(
-                    "h-11 px-4 rounded-pill border-2 text-sm font-semibold transition-colors",
-                    commute.maxMinutes === m
-                      ? "border-charcoal-950 bg-charcoal-950 text-paper"
-                      : "border-charcoal-200 bg-surface-elevated text-charcoal-700 hover:border-charcoal-400",
-                  )}
                 >
                   ≤ {m} min
-                </button>
+                </ObChip>
               ))}
             </div>
           </div>
@@ -176,46 +158,41 @@ export function Step4Preferences() {
                 Filtered to {smartLines.length} lines that serve your selected neighborhoods.
               </p>
             )}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap" style={{ gap: 12 }}>
               {visibleLines.map((line) => {
                 const state = transit.lines[line.id];
                 const isNice = state === "nice";
                 const isRequired = state === "required";
                 return (
-                  <button
+                  <ObChip
                     key={line.id}
-                    type="button"
+                    selected={isNice || isRequired}
+                    selectedVariant={isRequired ? "dark" : "secondary"}
                     onClick={() => {
                       cycleTransit(line.id);
                       if (!transit.hasPreference) set("transit", { ...transit, hasPreference: true });
                     }}
                     aria-label={`${line.label} line: ${state ?? "no preference"}`}
-                    className={cn(
-                      "h-12 min-w-12 px-3 inline-flex items-center gap-2 rounded-pill border-2 text-sm font-bold transition-all",
-                      isRequired
-                        ? "border-charcoal-950 bg-charcoal-950 text-paper ring-2 ring-offset-2 ring-offset-paper ring-charcoal-950"
-                        : isNice
-                          ? "border-charcoal-950 bg-paper"
-                          : "border-charcoal-200 bg-surface-elevated text-charcoal-700 hover:border-charcoal-400 opacity-90",
-                    )}
                   >
-                    <span
-                      className="h-6 w-6 inline-flex items-center justify-center rounded-full text-[11px] font-bold text-white"
-                      style={{ background: line.color }}
-                    >
-                      {line.label}
+                    <span className="inline-flex items-center gap-2">
+                      <span
+                        className="h-6 w-6 inline-flex items-center justify-center rounded-full text-[11px] font-bold text-white"
+                        style={{ background: line.color }}
+                      >
+                        {line.label}
+                      </span>
+                      {isRequired && (
+                        <span className="inline-flex items-center gap-1 text-[13px] opacity-80">
+                          <Star className="h-3.5 w-3.5 fill-current" /> Must
+                        </span>
+                      )}
+                      {isNice && (
+                        <span className="inline-flex items-center gap-1 text-[13px] opacity-80">
+                          <Heart className="h-3.5 w-3.5 fill-current" /> Nice
+                        </span>
+                      )}
                     </span>
-                    {isRequired && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-[0.14em] text-paper/90">
-                        <Star className="h-3 w-3 fill-current" /> Must
-                      </span>
-                    )}
-                    {isNice && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-[0.14em] text-charcoal-700">
-                        <Heart className="h-3 w-3 fill-current" /> Nice
-                      </span>
-                    )}
-                  </button>
+                  </ObChip>
                 );
               })}
             </div>
