@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
+import { IconList, IconMap } from "@tabler/icons-react";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { ViewSwitcher } from "@/components/onboarding/ViewSwitcher";
