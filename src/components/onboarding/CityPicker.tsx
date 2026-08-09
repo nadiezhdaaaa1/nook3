@@ -1,5 +1,5 @@
 import { useMemo, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { CITY_LIST, type CityId } from "@/data/cities";
 import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
 
@@ -12,7 +12,10 @@ interface Props {
   animatingId?: CityId | null;
 }
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function CityPicker({ value, onChange, query = "", animatingId = null }: Props) {
+  const reduce = useReducedMotion();
   const cities = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return CITY_LIST;
@@ -60,7 +63,8 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
       ref={rowRef}
       role="group"
       aria-label="Pick your city"
-      className="ob-cards-row flex gap-3 overflow-x-auto pb-2"
+      className="ob-cards-row flex gap-4 overflow-x-auto pb-2"
+      style={animatingId ? { pointerEvents: "none" } : undefined}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
@@ -76,6 +80,7 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
     >
       {cities.map((c) => {
         const isAnimating = animatingId === c.id;
+        const others = Boolean(animatingId) && !isAnimating;
         return (
           <motion.button
             key={c.id}
@@ -89,14 +94,16 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
               padding: 12,
               background: CITY_TINT[c.id],
             }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            layoutId={isAnimating ? `city-card-${c.id}` : undefined}
+            animate={others ? { opacity: 0, scale: 0.98 } : { opacity: 1, scale: 1 }}
+            transition={{ duration: reduce ? 0.15 : 0.15, ease: EASE }}
+            layoutId={isAnimating && !reduce ? `city-card-${c.id}` : undefined}
           >
             <motion.div
-              className="overflow-hidden mx-auto"
-              style={{ width: 120, height: 120, borderRadius: 9999, background: "rgba(0,0,0,0.06)" }}
-              layoutId={isAnimating ? `city-photo-${c.id}` : undefined}
+              className="overflow-hidden"
+              style={{ width: "100%", height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
+              animate={{ opacity: isAnimating ? 0 : 1 }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
+              layoutId={isAnimating && !reduce ? `city-photo-${c.id}` : undefined}
             >
               {CITY_PHOTO[c.id] && (
                 <img
@@ -110,15 +117,16 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
             <motion.div
               className="font-display text-center"
               style={{
-                marginTop: 14,
-                padding: "4px 0",
-                fontWeight: 600,
-                fontSize: 14,
-                lineHeight: 1.25,
-                letterSpacing: "-0.2px",
+                marginTop: 8,
+                padding: "8px 0",
+                fontWeight: 700,
+                fontSize: 18,
+                lineHeight: 1.2,
+                letterSpacing: "-0.45px",
                 color: "#241c12",
               }}
-              layoutId={isAnimating ? `city-name-${c.id}` : undefined}
+              animate={{ opacity: isAnimating ? 0 : 1 }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
             >
               {c.displayName}
             </motion.div>
