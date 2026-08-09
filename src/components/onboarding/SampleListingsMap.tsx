@@ -108,11 +108,6 @@ export function SampleListingsMap({
         { featureType: "transit", stylers: [{ visibility: "off" }] },
       ],
     });
-
-    // Debug: expose map and markers for preview testing.
-    if (typeof window !== "undefined") {
-      (window as any).__nookMap = mapRef.current;
-    }
   }, [ready, city.id]);
 
   // Clicking the map base clears the active selection.
