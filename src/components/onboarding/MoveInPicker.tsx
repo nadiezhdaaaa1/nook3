@@ -1,4 +1,5 @@
-import { format, parseISO } from "date-fns";
+import { useState } from "react";
+import { format, parseISO, startOfDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -19,11 +20,14 @@ const CHIP: React.CSSProperties = {
   padding: "0 24px",
   fontWeight: 500,
   fontSize: 14,
-  border: "1px solid rgba(0,0,0,0.2)",
+  borderWidth: 1,
+  borderStyle: "solid",
+  borderColor: "rgba(0,0,0,0.2)",
   transition: "background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out",
 };
 
 export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const selectedDate = date ? parseISO(date) : undefined;
   const specificOn = chosen && mode === "specific" && Boolean(selectedDate);
   const flexibleOn = chosen && mode === "flexible";
@@ -35,7 +39,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
 
   return (
     <div className="ob-chips flex" style={{ gap: 12 }}>
-      <Popover>
+      <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
         <PopoverTrigger asChild>
           <Button
             type="button"
@@ -55,9 +59,11 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
             mode="single"
             selected={selectedDate}
             onSelect={(value) => {
-              if (value) onChange("specific", format(value, "yyyy-MM-dd"));
+              if (!value) return;
+              onChange("specific", format(value, "yyyy-MM-dd"));
+              setCalendarOpen(false);
             }}
-            disabled={{ before: new Date() }}
+            disabled={{ before: startOfDay(new Date()) }}
             initialFocus
             className={cn("pointer-events-auto p-3")}
           />
@@ -68,7 +74,10 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
         type="button"
         variant="outline"
         aria-pressed={flexibleOn}
-        onClick={() => onChange("flexible")}
+        onClick={() => {
+          setCalendarOpen(false);
+          onChange("flexible");
+        }}
         style={selStyle(flexibleOn)}
       >
         Flexible
