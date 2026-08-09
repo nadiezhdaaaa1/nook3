@@ -109,8 +109,8 @@ export function Step1Where() {
             style={{ marginTop: 32 }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            exit={reduce ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: reduce ? 0.15 : 0.25, ease: EASE }}
           >
             <CityPicker
               value={city}
@@ -120,28 +120,37 @@ export function Step1Where() {
             />
           </motion.div>
         ) : (
-          <motion.div
-            key="selected"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <motion.div key="selected">
             <motion.div
-              className="ob-fade-up flex items-center"
+              className="flex items-center"
               style={{
                 marginTop: 32,
                 background: CITY_TINT[cityConfig.id],
                 borderRadius: 24,
                 padding: "12px 24px 12px 12px",
                 gap: 20,
+                pointerEvents: animatingId ? "none" : "auto",
               }}
-              layoutId={`city-card-${cityConfig.id}`}
+              layoutId={reduce ? undefined : `city-card-${cityConfig.id}`}
+              initial={reduce ? { opacity: 0 } : undefined}
+              animate={reduce ? { opacity: 1 } : undefined}
+              transition={
+                reduce
+                  ? { duration: 0.15 }
+                  : { layout: { duration: 0.28, delay: 0.12, ease: EASE } }
+              }
             >
               <motion.div
                 className="overflow-hidden shrink-0 ob-banner-photo"
                 style={{ width: 100, height: 72, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
-                layoutId={`city-photo-${cityConfig.id}`}
+                layoutId={reduce ? undefined : `city-photo-${cityConfig.id}`}
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={
+                  reduce
+                    ? { duration: 0.15 }
+                    : { duration: 0.12, delay: 0.4, ease: EASE, layout: { duration: 0.28, delay: 0.12, ease: EASE } }
+                }
               >
                 {CITY_PHOTO[cityConfig.id] && (
                   <img
@@ -154,7 +163,9 @@ export function Step1Where() {
               <motion.div
                 className="font-display flex-1 ob-banner-name"
                 style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.45px", color: "#241c12" }}
-                layoutId={`city-name-${cityConfig.id}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.12, delay: reduce ? 0 : 0.46, ease: EASE }}
               >
                 {cityConfig.displayName}
               </motion.div>
@@ -163,15 +174,21 @@ export function Step1Where() {
                 onClick={handleClearCity}
                 className="ob-ghost-dark inline-flex items-center shrink-0"
                 style={{ gap: 8, padding: "12px 16px", borderRadius: 12, fontWeight: 600, fontSize: 14, color: "#241c12" }}
-                initial={{ opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.15, duration: 0.25 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.12, delay: reduce ? 0 : 0.46, ease: EASE }}
               >
                 <Pencil style={{ width: 20, height: 20 }} /> Change
               </motion.button>
             </motion.div>
 
-            <div className="ob-fade-up" style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}>
+            <motion.div
+              style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}
+              initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduce ? 0.15 : 0.2, delay: reduce ? 0 : 0.48, ease: EASE }}
+            >
+
               <div>
                 <h2 className="font-display ob-h1" style={H1}>
                   Let's narrow down <span style={{ color: "#5a5a55" }}>{cityConfig.displayName}</span>
