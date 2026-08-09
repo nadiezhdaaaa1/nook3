@@ -68,6 +68,8 @@ export function Step1Where() {
 
   const handleSelectCity = (id: CityId) => {
     setAnimatingId(id);
+    setMoveInChosen(false);
+    set("moveIn", { mode: "flexible" });
     set("city", id);
   };
 
