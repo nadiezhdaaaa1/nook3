@@ -33,6 +33,7 @@ function CityCard({
   isPressed,
   others,
   stagger,
+  mountDelay,
   value,
   onChange,
   reduce,
@@ -41,6 +42,7 @@ function CityCard({
   isPressed: boolean;
   others: boolean;
   stagger: number;
+  mountDelay: number;
   value: CityId | null;
   onChange: (id: CityId) => void;
   reduce: boolean | null;
@@ -80,8 +82,13 @@ function CityCard({
     setHovered(false);
   }, []);
 
-  let animate: Record<string, number> = { opacity: 1, scale: 1 };
-  let transition: Record<string, unknown> = { duration: 0.25, ease: EASE };
+  let initial: Record<string, number> = reduce ? { opacity: 0 } : { opacity: 0, y: 12 };
+  let animate: Record<string, number> = { opacity: 1, y: 0, scale: 1 };
+  let transition: Record<string, unknown> = {
+    duration: reduce ? 0.15 : 0.3,
+    delay: mountDelay,
+    ease: EASE,
+  };
 
   if (reduce) {
     if (isPressed || others) animate = { opacity: 0, scale: 1 };
@@ -114,6 +121,7 @@ function CityCard({
         background: CITY_TINT[c.id],
         zIndex: isPressed ? 2 : 1,
       }}
+      initial={initial}
       animate={animate}
       transition={transition}
       onPointerEnter={handlePointerEnter}
@@ -240,6 +248,7 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
         const others = Boolean(animatingId) && !isPressed;
         const stagger =
           pressedIndex >= 0 ? Math.min(Math.abs(i - pressedIndex) * 0.06, 0.24) : 0;
+        const mountDelay = reduce ? 0 : i * 0.06;
 
         return (
           <CityCard
@@ -248,6 +257,7 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
             isPressed={isPressed}
             others={others}
             stagger={stagger}
+            mountDelay={mountDelay}
             value={value}
             onChange={onChange}
             reduce={reduce}

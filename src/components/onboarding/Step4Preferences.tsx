@@ -1,13 +1,19 @@
 import { useMemo, useState } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { ObChip } from "@/components/onboarding/ObChip";
-import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
+import { OB_H1, OB_SUB, OB_H2, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
+
+const reduceMotion = (reduce: boolean | null) =>
+  reduce
+    ? ({ hidden: { opacity: 1 }, visible: { opacity: 1 } } as const)
+    : null;
 
 const LEGEND = (
   <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.14em] text-charcoal-500">
@@ -26,6 +32,9 @@ const LEGEND = (
 
 export function Step4Preferences() {
   const navigate = useNavigate();
+  const reduce = useReducedMotion();
+  const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
+  const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
   const {
     city, neighborhoods, amenities, transit, commute, cycleAmenity, cycleTransit, setTransit, patch, set,
   } = useOnboardingStore();
@@ -64,8 +73,8 @@ export function Step4Preferences() {
   };
 
   return (
-    <div className="space-y-12">
-      <header>
+    <motion.div className="space-y-12" variants={stepVariants} initial="hidden" animate="visible">
+      <motion.header variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
           Any specific preferences?
         </h1>
@@ -73,11 +82,11 @@ export function Step4Preferences() {
           Tap once for "Nice to have", twice for "Must have", three times to clear.
         </p>
         <div className="mt-4">{LEGEND}</div>
-      </header>
+      </motion.header>
 
 
       {/* Presets */}
-      <section className="space-y-3">
+      <motion.section className="space-y-3" variants={sectionVariants}>
         <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
           Quick presets
         </div>
@@ -97,11 +106,11 @@ export function Step4Preferences() {
             </button>
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* Amenities groups */}
       {AMENITY_GROUPS.map((g) => (
-        <section key={g.id} className="space-y-4">
+        <motion.section key={g.id} className="space-y-4" variants={sectionVariants}>
           <h2 className="font-display" style={OB_H2}>
             {g.label}
           </h2>
@@ -115,11 +124,11 @@ export function Step4Preferences() {
               />
             ))}
           </div>
-        </section>
+        </motion.section>
       ))}
 
       {/* Transit / Commute */}
-      <section className="space-y-4">
+      <motion.section className="space-y-4" variants={sectionVariants}>
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="font-display" style={OB_H2}>
             {cityConfig.transit.label}
@@ -233,22 +242,22 @@ export function Step4Preferences() {
             </div>
           </>
         )}
-      </section>
+      </motion.section>
 
-
-      <OnboardingFooter
-        nextLabel="Find apartments"
-        onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "3" } })}
-        onSkip={() => {
-          set("lastStep", 4);
-          navigate({ to: "/onboarding/loading" });
-        }}
-        onNext={() => {
-          set("lastStep", 4);
-          navigate({ to: "/onboarding/loading" });
-        }}
-      />
-
-    </div>
+      <motion.div variants={sectionVariants}>
+        <OnboardingFooter
+          nextLabel="Find apartments"
+          onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "3" } })}
+          onSkip={() => {
+            set("lastStep", 4);
+            navigate({ to: "/onboarding/loading" });
+          }}
+          onNext={() => {
+            set("lastStep", 4);
+            navigate({ to: "/onboarding/loading" });
+          }}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

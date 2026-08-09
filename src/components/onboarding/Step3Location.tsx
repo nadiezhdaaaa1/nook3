@@ -2,10 +2,11 @@ import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
 import { IconList, IconMap } from "@tabler/icons-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { ViewSwitcher } from "@/components/onboarding/ViewSwitcher";
-import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
+import { OB_H1, OB_SUB, OB_H2, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
@@ -13,8 +14,16 @@ import { getNeighborhoodPrice, scoreNeighborhood } from "@/data/cities/neighborh
 import { getCityPresets, resolvePreset } from "@/data/cities/presets";
 import { cn } from "@/lib/utils";
 
+const reduceMotion = (reduce: boolean | null) =>
+  reduce
+    ? ({ hidden: { opacity: 1 }, visible: { opacity: 1 } } as const)
+    : null;
+
 export function Step3Location() {
   const navigate = useNavigate();
+  const reduce = useReducedMotion();
+  const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
+  const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
   const { city, neighborhoods, budget, set, toggleNeighborhood } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [query, setQuery] = useState("");
@@ -67,30 +76,32 @@ export function Step3Location() {
   const tooMany = neighborhoods.length >= 15;
 
   return (
-    <div className="space-y-10">
-      <header>
+    <motion.div className="space-y-10" variants={stepVariants} initial="hidden" animate="visible">
+      <motion.header variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
           Where specifically?
         </h1>
         <p style={OB_SUB}>
           Pick neighborhoods in {cityConfig.displayName}. Add as many as you want.
         </p>
-      </header>
+      </motion.header>
 
       {/* View toggle */}
-      <ViewSwitcher
-        value={view}
-        onChange={(v) => setView(v)}
-        options={[
-          { value: "list", label: "List", icon: IconList },
-          { value: "map", label: "Map", icon: IconMap },
-        ]}
-        ariaLabel="Neighborhood view"
-      />
+      <motion.div variants={sectionVariants}>
+        <ViewSwitcher
+          value={view}
+          onChange={(v) => setView(v)}
+          options={[
+            { value: "list", label: "List", icon: IconList },
+            { value: "map", label: "Map", icon: IconMap },
+          ]}
+          ariaLabel="Neighborhood view"
+        />
+      </motion.div>
 
       {/* Quick presets */}
       {presets.length > 0 && (
-        <div>
+        <motion.div variants={sectionVariants}>
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-3">
             Quick picks · tap to add a bundle
           </div>
@@ -131,23 +142,23 @@ export function Step3Location() {
               );
             })}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* 15+ warning */}
       {tooMany && (
-        <div className="flex items-start gap-3 p-4 rounded-[12px] bg-peach-100/50 border border-peach-300/60">
+        <motion.div variants={sectionVariants} className="flex items-start gap-3 p-4 rounded-[12px] bg-peach-100/50 border border-peach-300/60">
           <AlertTriangle className="h-4 w-4 text-peach-700 mt-0.5 shrink-0" />
           <div className="text-sm text-charcoal-800">
             <strong className="text-charcoal-950">{neighborhoods.length} neighborhoods selected.</strong>{" "}
             That's a wide net — you may get more alerts than you want. Consider trimming to your top 5–10.
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Selected chips */}
       {neighborhoods.length > 0 && (
-        <div>
+        <motion.div variants={sectionVariants}>
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
             Selected · {neighborhoods.length}
           </div>
@@ -171,162 +182,164 @@ export function Step3Location() {
               Clear all
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
 
-      {view === "map" ? (
-        <NeighborhoodMap
-          city={cityConfig}
-          selected={neighborhoods}
-          onToggle={toggleNeighborhood}
-        />
-      ) : (
-        <>
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-400" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search neighborhoods..."
-              className="w-full h-12 pl-11 pr-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium placeholder:text-charcoal-400"
-            />
-          </div>
-
-          {/* Results */}
-          {matchedByQuery !== null ? (
-            <div className="space-y-2">
-              {matchedByQuery.length === 0 ? (
-                <p className="text-sm text-charcoal-500 py-6 text-center">
-                  No matches in {cityConfig.displayName}.
-                </p>
-              ) : (
-                matchedByQuery.map(({ group, name }) => {
-                  const selected = neighborhoods.includes(name);
-                  return (
-                    <button
-                      key={`${group}-${name}`}
-                      type="button"
-                      onClick={() => toggleNeighborhood(name)}
-                      className={cn(
-                        "w-full px-4 py-3 flex items-center gap-3 rounded-md border transition-colors text-left",
-                        selected
-                          ? "bg-charcoal-950 text-paper border-charcoal-950"
-                          : "bg-surface-elevated border-border hover:border-charcoal-400",
-                      )}
-                    >
-                      <MapPin className="h-4 w-4 opacity-70" />
-                      <span className="text-sm font-medium">{name}</span>
-                      <span className={cn("ml-auto text-[11px] font-mono", selected ? "text-paper/70" : "text-charcoal-400")}>
-                        {group}
-                      </span>
-                    </button>
-                  );
-                })
-              )}
+      <motion.div variants={sectionVariants}>
+        {view === "map" ? (
+          <NeighborhoodMap
+            city={cityConfig}
+            selected={neighborhoods}
+            onToggle={toggleNeighborhood}
+          />
+        ) : (
+          <>
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-400" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search neighborhoods..."
+                className="w-full h-12 pl-11 pr-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium placeholder:text-charcoal-400"
+              />
             </div>
-          ) : (
-            <div className="space-y-8">
-              {groups.map(([group, items]) => {
-                const isExpanded = expandedGroup === group;
-                const selectedInGroup = items.filter((n) => neighborhoods.includes(n)).length;
 
-                // Rank items by budget fit (when we have prices + range)
-                const ranked = items
-                  .map((name) => {
-                    const price = city ? getNeighborhoodPrice(city, name) : null;
-                    const { score, fit } = scoreNeighborhood(price, budget);
-                    return { name, price, score, fit };
-                  })
-                  .sort((a, b) => b.score - a.score);
-
-                const bestFits = ranked.filter((r) => r.fit === "in").slice(0, 3);
-                const bestFitNames = new Set(bestFits.map((r) => r.name));
-                const rest = ranked.filter((r) => !bestFitNames.has(r.name));
-                const restVisible = isExpanded ? rest : rest.slice(0, Math.max(0, 10 - bestFits.length));
-
-                return (
-                  <section key={group}>
-                    <div className="flex items-baseline justify-between mb-3 px-3">
-                      <h3 className="font-display" style={OB_H2}>
-                        {group}
-                        {selectedInGroup > 0 && (
-                          <span className="ml-2 text-xs font-mono text-sage-700">
-                            · {selectedInGroup} selected
-                          </span>
+            {/* Results */}
+            {matchedByQuery !== null ? (
+              <div className="space-y-2 mt-4">
+                {matchedByQuery.length === 0 ? (
+                  <p className="text-sm text-charcoal-500 py-6 text-center">
+                    No matches in {cityConfig.displayName}.
+                  </p>
+                ) : (
+                  matchedByQuery.map(({ group, name }) => {
+                    const selected = neighborhoods.includes(name);
+                    return (
+                      <button
+                        key={`${group}-${name}`}
+                        type="button"
+                        onClick={() => toggleNeighborhood(name)}
+                        className={cn(
+                          "w-full px-4 py-3 flex items-center gap-3 rounded-md border transition-colors text-left",
+                          selected
+                            ? "bg-charcoal-950 text-paper border-charcoal-950"
+                            : "bg-surface-elevated border-border hover:border-charcoal-400",
                         )}
-                      </h3>
-                      <span className="text-[11px] font-mono text-charcoal-400">
-                        {items.length} areas
-                      </span>
-                    </div>
+                      >
+                        <MapPin className="h-4 w-4 opacity-70" />
+                        <span className="text-sm font-medium">{name}</span>
+                        <span className={cn("ml-auto text-[11px] font-mono", selected ? "text-paper/70" : "text-charcoal-400")}>
+                          {group}
+                        </span>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            ) : (
+              <div className="space-y-8 mt-4">
+                {groups.map(([group, items]) => {
+                  const isExpanded = expandedGroup === group;
+                  const selectedInGroup = items.filter((n) => neighborhoods.includes(n)).length;
 
-                    {bestFits.length > 0 && (
-                      <div className="mb-3 p-3 rounded-card" style={{ backgroundColor: "#EBF0D5", border: "1px solid rgba(0,0,0,0.1)" }}>
-                        <div className="flex items-center gap-1.5 mb-2 text-[10px] font-mono uppercase tracking-[0.18em] text-sage-900">
-                          <Sparkles className="h-3 w-3" />
-                          Best fit for your budget
-                        </div>
-                        <div className="flex flex-wrap" style={{ gap: 8 }}>
-                          {bestFits.map(({ name, price }) => {
-                            const selected = neighborhoods.includes(name);
-                            return (
-                              <ObChip
-                                key={name}
-                                selected={selected}
-                                onClick={() => toggleNeighborhood(name)}
-                                size="small"
-                              >
-                                <span className="inline-flex items-center gap-2">
-                                  {name}
-                                  {price !== null && (
-                                    <span className="text-[13px] tabular-nums opacity-70">
-                                      ~${(price / 1000).toFixed(price >= 10000 ? 0 : 1)}k
-                                    </span>
-                                  )}
-                                </span>
-                              </ObChip>
-                            );
-                          })}
-                        </div>
+                  // Rank items by budget fit (when we have prices + range)
+                  const ranked = items
+                    .map((name) => {
+                      const price = city ? getNeighborhoodPrice(city, name) : null;
+                      const { score, fit } = scoreNeighborhood(price, budget);
+                      return { name, price, score, fit };
+                    })
+                    .sort((a, b) => b.score - a.score);
+
+                  const bestFits = ranked.filter((r) => r.fit === "in").slice(0, 3);
+                  const bestFitNames = new Set(bestFits.map((r) => r.name));
+                  const rest = ranked.filter((r) => !bestFitNames.has(r.name));
+                  const restVisible = isExpanded ? rest : rest.slice(0, Math.max(0, 10 - bestFits.length));
+
+                  return (
+                    <section key={group}>
+                      <div className="flex items-baseline justify-between mb-3 px-3">
+                        <h3 className="font-display" style={OB_H2}>
+                          {group}
+                          {selectedInGroup > 0 && (
+                            <span className="ml-2 text-xs font-mono text-sage-700">
+                              · {selectedInGroup} selected
+                            </span>
+                          )}
+                        </h3>
+                        <span className="text-[11px] font-mono text-charcoal-400">
+                          {items.length} areas
+                        </span>
                       </div>
-                    )}
 
-                    <div className="flex flex-wrap px-3" style={{ gap: 8 }}>
-                      {restVisible.map(({ name, price }) => {
-                        const selected = neighborhoods.includes(name);
-                        return (
-                          <ObChip
-                            key={name}
-                            selected={selected}
-                            onClick={() => toggleNeighborhood(name)}
-                            title={price !== null ? `~$${price.toLocaleString()}/mo` : undefined}
-                            size="small"
-                          >
-                            {name}
+                      {bestFits.length > 0 && (
+                        <div className="mb-3 p-3 rounded-card" style={{ backgroundColor: "#EBF0D5", border: "1px solid rgba(0,0,0,0.1)" }}>
+                          <div className="flex items-center gap-1.5 mb-2 text-[10px] font-mono uppercase tracking-[0.18em] text-sage-900">
+                            <Sparkles className="h-3 w-3" />
+                            Best fit for your budget
+                          </div>
+                          <div className="flex flex-wrap" style={{ gap: 8 }}>
+                            {bestFits.map(({ name, price }) => {
+                              const selected = neighborhoods.includes(name);
+                              return (
+                                <ObChip
+                                  key={name}
+                                  selected={selected}
+                                  onClick={() => toggleNeighborhood(name)}
+                                  size="small"
+                                >
+                                  <span className="inline-flex items-center gap-2">
+                                    {name}
+                                    {price !== null && (
+                                      <span className="text-[13px] tabular-nums opacity-70">
+                                        ~${(price / 1000).toFixed(price >= 10000 ? 0 : 1)}k
+                                      </span>
+                                    )}
+                                  </span>
+                                </ObChip>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex flex-wrap px-3" style={{ gap: 8 }}>
+                        {restVisible.map(({ name, price }) => {
+                          const selected = neighborhoods.includes(name);
+                          return (
+                            <ObChip
+                              key={name}
+                              selected={selected}
+                              onClick={() => toggleNeighborhood(name)}
+                              title={price !== null ? `~$${price.toLocaleString()}/mo` : undefined}
+                              size="small"
+                            >
+                              {name}
+                            </ObChip>
+                          );
+                        })}
+                        {rest.length > restVisible.length && !isExpanded && (
+                          <ObChip onClick={() => setExpandedGroup(group)} size="small">
+                            + {rest.length - restVisible.length} more
                           </ObChip>
-                        );
-                      })}
-                      {rest.length > restVisible.length && !isExpanded && (
-                        <ObChip onClick={() => setExpandedGroup(group)} size="small">
-                          + {rest.length - restVisible.length} more
-                        </ObChip>
-                      )}
-                      {isExpanded && rest.length > 10 - bestFits.length && (
-                      <ObChip onClick={() => setExpandedGroup(null)} size="small">Show less</ObChip>
-                      )}
-                    </div>
-                  </section>
-                );
-              })}
-            </div>
-          )}
-        </>
-      )}
+                        )}
+                        {isExpanded && rest.length > 10 - bestFits.length && (
+                        <ObChip onClick={() => setExpandedGroup(null)} size="small">Show less</ObChip>
+                        )}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+      </motion.div>
 
       {/* Trust signal */}
-      <div className="flex items-start gap-3 p-4 rounded-[12px] bg-charcoal-950/[0.03] border border-charcoal-200/60">
+      <motion.div variants={sectionVariants} className="flex items-start gap-3 p-4 rounded-[12px] bg-charcoal-950/[0.03] border border-charcoal-200/60">
         <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
         <div className="text-xs text-charcoal-600 leading-relaxed">
           Nook monitors every new listing in your selected {cityConfig.displayName} neighborhoods
@@ -335,17 +348,18 @@ export function Step3Location() {
           )}
           . You can change this anytime in your dashboard.
         </div>
-      </div>
+      </motion.div>
 
-
-      <OnboardingFooter
-        canContinue={canContinue}
-        onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "2" } })}
-        onNext={() => {
-          set("lastStep", 4);
-          navigate({ to: "/onboarding/step/$step", params: { step: "4" } });
-        }}
-      />
-    </div>
+      <motion.div variants={sectionVariants}>
+        <OnboardingFooter
+          canContinue={canContinue}
+          onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "2" } })}
+          onNext={() => {
+            set("lastStep", 4);
+            navigate({ to: "/onboarding/step/$step", params: { step: "4" } });
+          }}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

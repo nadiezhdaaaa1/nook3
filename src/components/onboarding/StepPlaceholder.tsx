@@ -1,5 +1,7 @@
+import { motion, useReducedMotion } from "framer-motion";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 
 interface Props {
   stepLabel: string;
@@ -11,6 +13,11 @@ interface Props {
   nextLabel?: string;
 }
 
+const reduceMotion = (reduce: boolean | null) =>
+  reduce
+    ? ({ hidden: { opacity: 1 }, visible: { opacity: 1 } } as const)
+    : null;
+
 export function StepPlaceholder({
   stepLabel,
   title,
@@ -20,17 +27,21 @@ export function StepPlaceholder({
   onSkip,
   nextLabel,
 }: Props) {
+  const reduce = useReducedMotion();
+  const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
+  const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
+
   return (
-    <div className="space-y-10">
-      <header>
+    <motion.div className="space-y-10" variants={stepVariants} initial="hidden" animate="visible">
+      <motion.header variants={sectionVariants}>
         <Eyebrow>{stepLabel}</Eyebrow>
         <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
           {title}
         </h1>
         <p className="mt-4 text-base text-charcoal-600">{subtitle}</p>
-      </header>
+      </motion.header>
 
-      <div className="p-8 rounded-card bg-surface-elevated border border-border">
+      <motion.div variants={sectionVariants} className="p-8 rounded-card bg-surface-elevated border border-border">
         <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-700 mb-2">
           In progress
         </div>
@@ -38,14 +49,16 @@ export function StepPlaceholder({
           This step's full UI is being built in the next phase. Continue to verify
           the flow end-to-end, or come back later — your progress is saved.
         </p>
-      </div>
+      </motion.div>
 
-      <OnboardingFooter
-        onBack={onBack}
-        onNext={onNext}
-        onSkip={onSkip}
-        nextLabel={nextLabel}
-      />
-    </div>
+      <motion.div variants={sectionVariants}>
+        <OnboardingFooter
+          onBack={onBack}
+          onNext={onNext}
+          onSkip={onSkip}
+          nextLabel={nextLabel}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

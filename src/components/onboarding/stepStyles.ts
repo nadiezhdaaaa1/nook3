@@ -1,6 +1,27 @@
 import type React from "react";
+import { Variants } from "framer-motion";
 
-/** Shared typographic tokens so every onboarding step matches Step 1. */
+export const OB_EASE = [0.22, 1, 0.36, 1] as const;
+
+export const OB_STEP_VARIANTS: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+export const OB_SECTION_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: OB_EASE },
+  },
+};
 export const OB_H1: React.CSSProperties = {
   fontWeight: 700,
   fontSize: 32,
