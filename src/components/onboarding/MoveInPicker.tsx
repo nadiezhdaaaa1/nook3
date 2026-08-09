@@ -38,7 +38,6 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
   const flexibleOn = chosen && mode === "flexible";
 
   const openPicker = () => {
-    onChange("specific", effective);
     const el = inputRef.current;
     if (el) {
       try {
@@ -49,6 +48,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
       }
     }
   };
+
 
   const selStyle = (on: boolean): React.CSSProperties =>
     on
