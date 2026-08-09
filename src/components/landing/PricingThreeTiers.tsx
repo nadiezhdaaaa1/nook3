@@ -28,7 +28,7 @@ interface FeatureItem {
   included: boolean;
 }
 
-interface Tier {
+export interface Tier {
   id: string;
   name: string;
   tagline: string;
@@ -136,10 +136,33 @@ const COOL_BG = [
 const DARK_SHADOW =
   "0 2px 2px rgba(36,28,18,0.08), 0 24px 28px rgba(36,28,18,0.28)";
 
-export function PricingThreeTiers() {
-  const [cycle, setCycle] = useState<Cycle>("monthly");
+interface PricingThreeTiersProps {
+  cycle?: Cycle;
+  defaultCycle?: Cycle;
+  onCycleChange?: (c: Cycle) => void;
+  onTierSelect?: (tier: Tier) => void;
+  tierCta?: Partial<Record<string, string>>;
+}
+
+export function PricingThreeTiers({
+  cycle: controlledCycle,
+  defaultCycle,
+  onCycleChange,
+  onTierSelect,
+  tierCta,
+}: PricingThreeTiersProps) {
+  const [internalCycle, setInternalCycle] = useState<Cycle>(defaultCycle ?? "monthly");
+  const cycle = controlledCycle ?? internalCycle;
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
+
+  const setCycle = (c: Cycle) => {
+    if (onCycleChange) {
+      onCycleChange(c);
+    } else {
+      setInternalCycle(c);
+    }
+  };
 
   return (
     <section id="pricing" className="pr-section">
@@ -273,7 +296,7 @@ export function PricingThreeTiers() {
         {/* Cards */}
         <div className="pr-grid">
           {TIERS.map((t) => (
-            <PlanCard key={t.id} tier={t} cycle={cycle} dur={dur} />
+            <PlanCard key={t.id} tier={t} cycle={cycle} dur={dur} onSelect={onTierSelect} ctaText={tierCta?.[t.id]} />
           ))}
         </div>
 
@@ -304,12 +327,34 @@ function badgeFor(tierId: string, cycle: Cycle) {
 }
 
 
-function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number }) {
+function PlanCard({
+  tier,
+  cycle,
+  dur,
+  onSelect,
+  ctaText,
+}: {
+  tier: Tier;
+  cycle: Cycle;
+  dur: number;
+  onSelect?: (tier: Tier) => void;
+  ctaText?: string;
+}) {
   const dark = tier.variant !== "light";
   const navigate = useNavigate();
   const badge = badgeFor(tier.id, cycle);
   const text = dark ? CREAM : "#241c12";
   const checkColor = dark ? "#c2dd93" : LEAF;
+
+  const handleCta = () => {
+    if (onSelect) {
+      onSelect(tier);
+    } else {
+      navigate({ to: tier.ctaTo });
+    }
+  };
+
+  const cta = ctaText ?? tier.cta;
 
   const cardStyle: React.CSSProperties = dark
     ? {
@@ -419,9 +464,9 @@ function PlanCard({ tier, cycle, dur }: { tier: Tier; cycle: Cycle; dur: number 
                 : "main"
         }
         style={{ borderRadius: 12 }}
-        onClick={() => navigate({ to: tier.ctaTo })}
+        onClick={handleCta}
       >
-        {tier.cta}
+        {cta}
       </OriginButton>
 
       {tier.finePrint && (
