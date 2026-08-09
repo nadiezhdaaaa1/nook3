@@ -95,14 +95,14 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
               background: CITY_TINT[c.id],
             }}
             animate={others ? { opacity: 0, scale: 0.98 } : { opacity: 1, scale: 1 }}
-            transition={{ duration: reduce ? 0.15 : 0.15, ease: EASE }}
+            transition={{ duration: reduce ? 0.15 : 0.25, ease: EASE }}
             layoutId={isAnimating && !reduce ? `city-card-${c.id}` : undefined}
           >
             <motion.div
               className="overflow-hidden"
               style={{ width: "100%", height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
               animate={{ opacity: isAnimating ? 0 : 1 }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
               layoutId={isAnimating && !reduce ? `city-photo-${c.id}` : undefined}
             >
               {CITY_PHOTO[c.id] && (
