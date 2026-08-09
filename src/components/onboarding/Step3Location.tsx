@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Search, X, MapPin, Map as MapIcon, List, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { ObChip } from "@/components/onboarding/ObChip";
+import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
@@ -66,37 +67,26 @@ export function Step3Location() {
   return (
     <div className="space-y-10">
       <header>
-        <Eyebrow>Step 3 · Location</Eyebrow>
-        <h1 className="font-display text-4xl lg:text-5xl font-bold text-charcoal-950 leading-[1.05] tracking-[-0.02em]">
-          Where <span className="accent-italic">specifically</span>?
+        <h1 className="font-display ob-h1" style={OB_H1}>
+          Where specifically?
         </h1>
-        <p className="mt-4 text-base text-charcoal-600">
+        <p style={OB_SUB}>
           Pick neighborhoods in {cityConfig.displayName}. Add as many as you want.
         </p>
       </header>
 
       {/* View toggle */}
-      <div className="inline-flex p-1 rounded-pill bg-surface-elevated border border-border">
-        <button
-          type="button"
-          onClick={() => setView("list")}
-          className={cn(
-            "h-9 px-4 inline-flex items-center gap-2 rounded-pill text-xs font-semibold transition-colors",
-            view === "list" ? "bg-charcoal-950 text-paper" : "text-charcoal-600",
-          )}
-        >
-          <List className="h-3.5 w-3.5" /> List
-        </button>
-        <button
-          type="button"
-          onClick={() => setView("map")}
-          className={cn(
-            "h-9 px-4 inline-flex items-center gap-2 rounded-pill text-xs font-semibold transition-colors",
-            view === "map" ? "bg-charcoal-950 text-paper" : "text-charcoal-600",
-          )}
-        >
-          <MapIcon className="h-3.5 w-3.5" /> Map
-        </button>
+      <div className="flex" style={{ gap: 12 }}>
+        <ObChip selected={view === "list"} onClick={() => setView("list")}>
+          <span className="inline-flex items-center gap-2">
+            <List className="h-4 w-4" /> List
+          </span>
+        </ObChip>
+        <ObChip selected={view === "map"} onClick={() => setView("map")}>
+          <span className="inline-flex items-center gap-2">
+            <MapIcon className="h-4 w-4" /> Map
+          </span>
+        </ObChip>
       </div>
 
       {/* Quick presets */}
@@ -154,7 +144,7 @@ export function Step3Location() {
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
             Selected · {neighborhoods.length}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap" style={{ gap: 12 }}>
             {neighborhoods.map((n) => (
               <button
                 key={n}
@@ -252,7 +242,7 @@ export function Step3Location() {
                 return (
                   <section key={group}>
                     <div className="flex items-baseline justify-between mb-3">
-                      <h3 className="font-display text-base font-semibold text-charcoal-950">
+                      <h3 className="font-display" style={OB_H2}>
                         {group}
                         {selectedInGroup > 0 && (
                           <span className="ml-2 text-xs font-mono text-sage-700">
@@ -271,79 +261,51 @@ export function Step3Location() {
                           <Sparkles className="h-3 w-3" />
                           Best fit for your budget
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap" style={{ gap: 12 }}>
                           {bestFits.map(({ name, price }) => {
                             const selected = neighborhoods.includes(name);
                             return (
-                              <button
+                              <ObChip
                                 key={name}
-                                type="button"
+                                selected={selected}
                                 onClick={() => toggleNeighborhood(name)}
-                                className={cn(
-                                  "h-9 pl-3.5 pr-2.5 inline-flex items-center gap-2 rounded-pill border text-sm font-medium transition-colors",
-                                  selected
-                                    ? "bg-charcoal-950 text-paper border-charcoal-950"
-                                    : "bg-paper border-sage-400/60 text-charcoal-900 hover:border-charcoal-950",
-                                )}
                               >
-                                {name}
-                                {price !== null && (
-                                  <span
-                                    className={cn(
-                                      "text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded",
-                                      selected ? "bg-paper/15 text-paper/90" : "bg-sage-200/60 text-sage-900",
-                                    )}
-                                  >
-                                    ~${(price / 1000).toFixed(price >= 10000 ? 0 : 1)}k
-                                  </span>
-                                )}
-                              </button>
+                                <span className="inline-flex items-center gap-2">
+                                  {name}
+                                  {price !== null && (
+                                    <span className="text-[13px] tabular-nums opacity-70">
+                                      ~${(price / 1000).toFixed(price >= 10000 ? 0 : 1)}k
+                                    </span>
+                                  )}
+                                </span>
+                              </ObChip>
                             );
                           })}
                         </div>
                       </div>
                     )}
 
-                    <div className="flex flex-wrap gap-2">
-                      {restVisible.map(({ name, price, fit }) => {
+                    <div className="flex flex-wrap" style={{ gap: 12 }}>
+                      {restVisible.map(({ name, price }) => {
                         const selected = neighborhoods.includes(name);
-                        const above = fit === "above";
                         return (
-                          <button
+                          <ObChip
                             key={name}
-                            type="button"
+                            selected={selected}
                             onClick={() => toggleNeighborhood(name)}
                             title={price !== null ? `~$${price.toLocaleString()}/mo` : undefined}
-                            className={cn(
-                              "h-9 px-3.5 inline-flex items-center rounded-pill border text-sm font-medium transition-colors",
-                              selected
-                                ? "bg-charcoal-950 text-paper border-charcoal-950"
-                                : above
-                                  ? "bg-transparent border-charcoal-200 text-charcoal-400 hover:border-charcoal-950 hover:text-charcoal-950"
-                                  : "bg-transparent border-charcoal-200 text-charcoal-800 hover:border-charcoal-950",
-                            )}
                           >
                             {name}
-                          </button>
+                          </ObChip>
                         );
                       })}
                       {rest.length > restVisible.length && !isExpanded && (
-                        <button
-                          type="button"
-                          onClick={() => setExpandedGroup(group)}
-                          className="h-9 px-3.5 inline-flex items-center rounded-pill border border-dashed border-charcoal-300 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950 hover:text-charcoal-950"
-                        >
+                        <ObChip onClick={() => setExpandedGroup(group)}>
                           + {rest.length - restVisible.length} more
-                        </button>
+                        </ObChip>
                       )}
                       {isExpanded && rest.length > 10 - bestFits.length && (
-                        <button
-                          type="button"
-                          onClick={() => setExpandedGroup(null)}
-                          className="h-9 px-3.5 inline-flex items-center rounded-pill border border-dashed border-charcoal-300 text-sm font-semibold text-charcoal-700 hover:border-charcoal-950 hover:text-charcoal-950"
-                        >
-                          Show less
-                        </button>
+                        <ObChip onClick={() => setExpandedGroup(null)}>Show less</ObChip>
                       )}
                     </div>
                   </section>
