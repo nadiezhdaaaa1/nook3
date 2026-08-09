@@ -61,7 +61,7 @@ export function RentProtectionPicker({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div className="flex items-center gap-2">
         <IconShield className="shrink-0" size={20} stroke={2} />
         <h3 className="font-display text-lg font-semibold text-charcoal-950">
