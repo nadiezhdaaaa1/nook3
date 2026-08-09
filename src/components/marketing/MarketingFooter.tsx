@@ -23,7 +23,7 @@ const CSS = `
 
 .ftr-email { font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:500; font-size:24px; line-height:1.2;
-  color:#d66c38; text-decoration:none; transition:color .2s ease; }
+  color:#B94613; text-decoration:none; transition:color .2s ease; }
 .ftr-email:hover { color:#CE4F12; }
 .ftr-divider { height:1px; background:rgba(0,0,0,0.20); }
 .ftr-cols { display:flex; gap:40px; flex-wrap:wrap; }
