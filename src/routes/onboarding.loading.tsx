@@ -74,7 +74,8 @@ function SearchSetupLoader() {
       role="status"
       aria-live="polite"
       aria-label={activeLabel ?? "Finishing up"}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-paper px-5 sm:px-6"
+      className="fixed inset-0 z-50 flex items-center justify-center px-5 sm:px-6"
+      style={{ background: "#faf6ee" }}
     >
       <div className="w-full max-w-[520px] flex flex-col items-center text-center">
         {/* Icon badge */}
