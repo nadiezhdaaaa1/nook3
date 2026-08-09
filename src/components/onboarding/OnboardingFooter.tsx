@@ -26,7 +26,7 @@ export function OnboardingFooter({
           style={{
             height: 56,
             gap: 8,
-            padding: "0 24px",
+            padding: "0 20px",
             borderRadius: 12,
             fontWeight: 600,
             fontSize: 14,
