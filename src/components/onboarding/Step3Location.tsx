@@ -136,7 +136,7 @@ export function Step3Location() {
 
       {/* 15+ warning */}
       {tooMany && (
-        <div className="flex items-start gap-3 p-4 rounded-card bg-peach-100/50 border border-peach-300/60">
+        <div className="flex items-start gap-3 p-4 rounded-[12px] bg-peach-100/50 border border-peach-300/60">
           <AlertTriangle className="h-4 w-4 text-peach-700 mt-0.5 shrink-0" />
           <div className="text-sm text-charcoal-800">
             <strong className="text-charcoal-950">{neighborhoods.length} neighborhoods selected.</strong>{" "}
