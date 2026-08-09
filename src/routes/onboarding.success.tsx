@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useOnboardingStore, getReferralCode } from "@/lib/onboarding/store";
 import { MoveOutModal } from "@/components/onboarding/MoveOutModal";
+import { OB_H1, OB_SUB } from "@/components/onboarding/stepStyles";
 import { SEARCH_LIMITS, useAppStore, syncOnboardingToUser, syncOnboardingToActiveSearch } from "@/lib/store";
 import { Plus, Lock } from "lucide-react";
 
