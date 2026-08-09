@@ -7,7 +7,7 @@ import { CityPicker } from "@/components/onboarding/CityPicker";
 import { RentSlider } from "@/components/onboarding/RentSlider";
 import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
-import { getCity } from "@/data/cities";
+import { getCity, type CityId } from "@/data/cities";
 import { CITY_ACTIVE_LISTINGS } from "@/data/cities/icons";
 import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
 
