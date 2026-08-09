@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Check, Circle, Loader2 } from "lucide-react";
