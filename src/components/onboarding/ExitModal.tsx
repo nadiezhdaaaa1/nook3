@@ -57,21 +57,13 @@ export function ExitModal({ open, onStay, onExit }: Props) {
             Your progress is saved on this device. You can come back anytime
             and pick up exactly where you left off.
           </p>
-          <div className="mt-6 flex items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={onExit}
-              className="h-11 px-4 inline-flex items-center text-sm font-semibold text-charcoal-600 hover:text-charcoal-950"
-            >
+          <div className="mt-6 flex items-center justify-end gap-3">
+            <OriginButton variant="secondary" size="medium" onClick={onExit}>
               Exit
-            </button>
-            <button
-              type="button"
-              onClick={onStay}
-              className="h-11 px-5 inline-flex items-center rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800"
-            >
+            </OriginButton>
+            <OriginButton variant="dark" size="medium" onClick={onStay}>
               Stay
-            </button>
+            </OriginButton>
           </div>
         </div>
       </div>
