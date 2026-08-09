@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { format, parseISO, startOfDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { OriginButton } from "@/components/ui/origin-button";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -14,17 +14,8 @@ interface Props {
   onChange: (mode: "specific" | "flexible", date?: string) => void;
 }
 
-const CHIP: React.CSSProperties = {
-  borderRadius: 12,
-  height: 54,
-  padding: "0 24px",
-  fontWeight: 500,
-  fontSize: 14,
-  borderWidth: 1,
-  borderStyle: "solid",
-  borderColor: "rgba(0,0,0,0.2)",
-  transition: "background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out",
-};
+const CHIP_CLASS =
+  "w-full h-[54px] px-6 text-[14px] justify-start text-left";
 
 export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -32,27 +23,26 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
   const specificOn = chosen && mode === "specific" && Boolean(selectedDate);
   const flexibleOn = chosen && mode === "flexible";
 
-  const selStyle = (on: boolean): React.CSSProperties =>
-    on
-      ? { ...CHIP, background: "#d66c38", borderColor: "#d66c38", color: "#ffffff" }
-      : { ...CHIP, background: "transparent", color: "#3a3a37" };
-
   return (
     <div className="ob-chips flex" style={{ gap: 12 }}>
       <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
         <PopoverTrigger asChild>
-          <Button
+          <OriginButton
             type="button"
-            variant="outline"
+            variant={specificOn ? "dark" : "tertiary"}
+            size="big"
+            className={CHIP_CLASS}
             aria-pressed={specificOn}
-            style={selStyle(specificOn)}
-            className="w-full justify-start text-left font-medium"
           >
-            <CalendarIcon aria-hidden="true" />
-            {specificOn && selectedDate
-              ? `Specific date • ${format(selectedDate, "d MMM yyyy")}`
-              : "Specific date"}
-          </Button>
+            <span className="inline-flex w-full items-center gap-2">
+              <CalendarIcon aria-hidden="true" className="shrink-0" />
+              <span className="truncate">
+                {specificOn && selectedDate
+                  ? `Specific date • ${format(selectedDate, "d MMM yyyy")}`
+                  : "Specific date"}
+              </span>
+            </span>
+          </OriginButton>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
@@ -70,18 +60,20 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
         </PopoverContent>
       </Popover>
 
-      <Button
+      <OriginButton
         type="button"
-        variant="outline"
+        variant={flexibleOn ? "dark" : "tertiary"}
+        size="big"
+        className={CHIP_CLASS}
         aria-pressed={flexibleOn}
         onClick={() => {
           setCalendarOpen(false);
           onChange("flexible");
         }}
-        style={selStyle(flexibleOn)}
       >
-        Flexible
-      </Button>
+        <span className="w-full">Flexible</span>
+      </OriginButton>
     </div>
   );
 }
+
