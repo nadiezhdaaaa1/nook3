@@ -194,13 +194,13 @@ export function Step1Where() {
                   right: 12,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
+                  width: 40,
+                  height: 40,
+                  borderRadius: 10,
                   color: "#241c12",
                 }}
               >
-                <Pencil style={{ width: 20, height: 20 }} />
+                <Pencil style={{ width: 18, height: 18 }} />
               </button>
             </motion.div>
 
