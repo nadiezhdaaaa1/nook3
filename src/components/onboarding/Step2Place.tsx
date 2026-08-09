@@ -1,6 +1,7 @@
 import { useNavigate, Navigate } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
-import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
+import { OB_H1, OB_SUB, OB_H2, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { PillGroup } from "@/components/onboarding/PillGroup";
 import { RentProtectionPicker } from "@/components/onboarding/RentProtectionPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
