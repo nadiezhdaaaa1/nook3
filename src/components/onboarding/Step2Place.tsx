@@ -82,20 +82,30 @@ export function Step2Place() {
 
       {cityConfig.brokerFeeDefault && (
         <section>
-          <label className="flex items-start gap-3 p-4 rounded-card border border-border bg-surface-elevated cursor-pointer hover:border-charcoal-400 transition-colors">
+          <label
+            className="flex items-center cursor-pointer"
+            style={{
+              background: "#EAE0CD",
+              border: "1px solid #B5AB98",
+              borderRadius: 16,
+              padding: "16px 20px",
+              gap: 16,
+            }}
+          >
             <input
               type="checkbox"
               checked={includeBrokerFee}
               onChange={(e) => set("includeBrokerFee", e.target.checked)}
-              className="mt-0.5 h-4 w-4 accent-charcoal-950"
+              className="accent-[#767676]"
+              style={{ accentColor: "#767676" }}
             />
             <div>
-              <div className="text-sm font-semibold text-charcoal-950">
+              <div style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2b2521" }}>
                 Include apartments with a broker fee
               </div>
-              <div className="text-xs text-charcoal-600 mt-0.5">
+              <div style={{ fontSize: 14, lineHeight: "24px", color: "#4a4a46" }}>
                 {cityConfig.brokerFeeContext ??
-                  `Common in ${cityConfig.displayName}. Uncheck to see no-fee only.`}
+                  `Broker fees in ${cityConfig.displayName} typically equal 12–15% of annual rent ($3,600–$8,000 on a $4k/mo unit).`}
               </div>
             </div>
           </label>
