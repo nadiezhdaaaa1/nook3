@@ -38,10 +38,17 @@ export function NeighborhoodMap({ city, selected, onToggle }: Props) {
   const markersRef = useRef<Record<string, google.maps.Marker>>({});
   const searchMarkerRef = useRef<google.maps.Marker | null>(null);
   const sessionTokenRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
+  const dataLayerRef = useRef<google.maps.Data | null>(null);
+  const labelsRef = useRef<Record<string, google.maps.Marker>>({});
+  const onToggleRef = useRef(onToggle);
+  onToggleRef.current = onToggle;
 
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
+  /** Names that have a real outline on the map (no dot needed). */
+  const [shaped, setShaped] = useState<Record<string, [number, number] | null>>({});
+  const [hovered, setHovered] = useState<string | null>(null);
   const [nearestHint, setNearestHint] = useState<{
     name: string;
     distanceKm: number;
@@ -49,6 +56,7 @@ export function NeighborhoodMap({ city, selected, onToggle }: Props) {
 
   const map = CITY_MAP[city.id];
   const knownEntries = useMemo(() => Object.entries(map.neighborhoods), [map]);
+  const tint = CITY_TINT[city.id] ?? "#fbe5a3";
 
   // Init map
   useEffect(() => {
@@ -73,7 +81,100 @@ export function NeighborhoodMap({ city, selected, onToggle }: Props) {
     mapInstance.current.setZoom(map.zoom);
   }, [map]);
 
-  // Render / update markers
+  // Load & draw neighborhood outlines for the active city
+  useEffect(() => {
+    if (!ready || !mapInstance.current) return;
+    let cancelled = false;
+
+    // Tear down previous city's layer
+    if (dataLayerRef.current) {
+      dataLayerRef.current.setMap(null);
+      dataLayerRef.current = null;
+    }
+    setShaped({});
+    setHovered(null);
+
+    (async () => {
+      const fc = await loadCityBoundaries(city.id);
+      if (cancelled || !fc || !mapInstance.current) return;
+
+      const layer = new google.maps.Data({ map: mapInstance.current });
+      const centroids: Record<string, [number, number] | null> = {};
+      for (const f of fc.features) {
+        centroids[f.properties.name] = f.properties.c ?? null;
+      }
+      layer.addGeoJson(fc as unknown as object, { idPropertyName: "name" });
+
+      layer.addListener("click", (e: google.maps.Data.MouseEvent) => {
+        const name = e.feature.getProperty("name") as string | undefined;
+        if (name) onToggleRef.current(name);
+      });
+      layer.addListener("mouseover", (e: google.maps.Data.MouseEvent) => {
+        const name = e.feature.getProperty("name") as string | undefined;
+        setHovered(name ?? null);
+      });
+      layer.addListener("mouseout", () => setHovered(null));
+
+      dataLayerRef.current = layer;
+      setShaped(centroids);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, city.id]);
+
+  // Style outlines from selection / hover state
+  useEffect(() => {
+    const layer = dataLayerRef.current;
+    if (!layer) return;
+    const selectedSet = new Set(selected);
+    layer.setStyle((feature) => {
+      const name = feature.getProperty("name") as string | undefined;
+      const isSelected = !!name && selectedSet.has(name);
+      const isHovered = !!name && name === hovered;
+      return {
+        fillColor: isSelected ? tint : "#241C12",
+        fillOpacity: isSelected ? (isHovered ? 0.65 : 0.5) : isHovered ? 0.14 : 0.05,
+        strokeColor: isSelected ? "#241C12" : "rgba(36,37,33,0.45)",
+        strokeWeight: isSelected ? 2 : 1,
+        strokeOpacity: 1,
+        zIndex: isSelected ? 100 : isHovered ? 60 : 10,
+        cursor: "pointer",
+      } as google.maps.Data.StyleOptions;
+    });
+  }, [selected, hovered, tint]);
+
+  // Labels for selected outlines
+  useEffect(() => {
+    if (!ready || !mapInstance.current) return;
+    const selectedSet = new Set(selected);
+    for (const [name, marker] of Object.entries(labelsRef.current)) {
+      if (!selectedSet.has(name) || !(name in shaped)) {
+        marker.setMap(null);
+        delete labelsRef.current[name];
+      }
+    }
+    for (const name of selected) {
+      const c = shaped[name];
+      if (!c || labelsRef.current[name]) continue;
+      labelsRef.current[name] = new google.maps.Marker({
+        position: { lat: c[0], lng: c[1] },
+        map: mapInstance.current,
+        clickable: false,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 0, fillOpacity: 0, strokeOpacity: 0 },
+        label: {
+          text: name,
+          color: "#241C12",
+          fontSize: "11px",
+          fontWeight: "700",
+        },
+        zIndex: 200,
+      });
+    }
+  }, [ready, selected, shaped]);
+
+  // Render / update markers — only for neighborhoods without an outline
   useEffect(() => {
     if (!ready || !mapInstance.current) return;
     // Drop old markers
@@ -81,6 +182,7 @@ export function NeighborhoodMap({ city, selected, onToggle }: Props) {
     markersRef.current = {};
 
     for (const [name, [lat, lng]] of knownEntries) {
+      if (name in shaped) continue;
       const isSelected = selected.includes(name);
       const marker = new google.maps.Marker({
         position: { lat, lng },
@@ -99,10 +201,11 @@ export function NeighborhoodMap({ city, selected, onToggle }: Props) {
           : undefined,
         zIndex: isSelected ? 100 : 10,
       });
-      marker.addListener("click", () => onToggle(name));
+      marker.addListener("click", () => onToggleRef.current(name));
       markersRef.current[name] = marker;
     }
-  }, [ready, knownEntries, selected, onToggle]);
+  }, [ready, knownEntries, selected, shaped]);
+
 
   // Places Autocomplete (New) — debounced
   useEffect(() => {
