@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format, parseISO, startOfDay } from "date-fns";
-import { CalendarIcon, CalendarRange } from "lucide-react";
+import { CalendarIcon, SlidersHorizontal } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { OriginButton } from "@/components/ui/origin-button";
@@ -72,7 +72,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
         }}
       >
         <span className="inline-flex w-full items-center gap-2">
-          <CalendarRange aria-hidden="true" className="shrink-0" />
+          <SlidersHorizontal aria-hidden="true" className="shrink-0" />
           <span className="truncate">Flexible</span>
         </span>
       </OriginButton>
