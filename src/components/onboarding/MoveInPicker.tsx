@@ -24,7 +24,7 @@ const CHIP: React.CSSProperties = {
   transition: "background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out",
 };
 
-export function MoveInPicker({ mode, date, chosen = true, onChange }: Props) {
+export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const defaultDate = (() => {

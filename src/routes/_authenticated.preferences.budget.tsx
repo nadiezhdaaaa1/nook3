@@ -51,6 +51,7 @@ function BudgetTab() {
         <MoveInPicker
           mode={moveIn.mode}
           date={moveIn.date}
+          chosen={true}
           onChange={(mode, date) => set("moveIn", { mode, date })}
         />
       </section>
