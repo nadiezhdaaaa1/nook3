@@ -44,7 +44,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
             </span>
           </OriginButton>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="w-auto p-0 bg-white overflow-hidden" align="start">
           <Calendar
             mode="single"
             selected={selectedDate}
@@ -55,7 +55,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
             }}
             disabled={{ before: startOfDay(new Date()) }}
             initialFocus
-            className={cn("pointer-events-auto p-3")}
+            className={cn("pointer-events-auto p-3 bg-transparent")}
           />
         </PopoverContent>
       </Popover>
