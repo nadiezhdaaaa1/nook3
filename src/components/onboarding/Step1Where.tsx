@@ -312,7 +312,7 @@ export function Step1Where() {
                   style={{
                     height: 56,
                     gap: 8,
-                    padding: "0 16px",
+                    padding: "0 24px",
                     borderRadius: 12,
                     fontWeight: 600,
                     fontSize: 14,
