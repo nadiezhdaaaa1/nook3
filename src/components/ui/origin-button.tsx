@@ -193,7 +193,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
                   ? "h-[48px] px-5 text-[15px]"
                   : "h-[56px] px-6 text-[16px]",
               )
-            : variant === "secondary"
+            : variant === "secondary" || variant === "nice"
               ? cn(
                   "rounded-[12px] border-[1.5px] border-[#D66C38] bg-transparent font-medium text-[#D66C38]",
                   size === "medium"
