@@ -268,7 +268,7 @@ export function Step3Location() {
                                 key={name}
                                 selected={selected}
                                 onClick={() => toggleNeighborhood(name)}
-                                size="medium"
+                                size="small"
                               >
                                 <span className="inline-flex items-center gap-2">
                                   {name}
@@ -294,19 +294,19 @@ export function Step3Location() {
                             selected={selected}
                             onClick={() => toggleNeighborhood(name)}
                             title={price !== null ? `~$${price.toLocaleString()}/mo` : undefined}
-                            size="medium"
+                            size="small"
                           >
                             {name}
                           </ObChip>
                         );
                       })}
                       {rest.length > restVisible.length && !isExpanded && (
-                        <ObChip onClick={() => setExpandedGroup(group)} size="medium">
+                        <ObChip onClick={() => setExpandedGroup(group)} size="small">
                           + {rest.length - restVisible.length} more
                         </ObChip>
                       )}
                       {isExpanded && rest.length > 10 - bestFits.length && (
-                      <ObChip onClick={() => setExpandedGroup(null)} size="medium">Show less</ObChip>
+                      <ObChip onClick={() => setExpandedGroup(null)} size="small">Show less</ObChip>
                       )}
                     </div>
                   </section>
