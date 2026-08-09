@@ -58,26 +58,6 @@ export function OnboardingShell() {
             />
           </div>
 
-          <button
-            type="button"
-            disabled={step === 1}
-            onClick={onBack}
-            className="ob-ghost inline-flex items-center"
-            style={{
-              gap: 8,
-              padding: "12px 16px",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 14,
-              color: "#241c12",
-              opacity: step === 1 ? 0.35 : 1,
-              cursor: step === 1 ? "not-allowed" : "pointer",
-            }}
-          >
-            <ArrowLeft style={{ width: 16, height: 16 }} />
-            <span className="hidden sm:inline">Back</span>
-          </button>
-
           {step !== null && (
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
               <span style={{ ...LABEL, width: 100, flexShrink: 0 }}>Step {step} of 4</span>
