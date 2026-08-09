@@ -8,7 +8,7 @@
 @theme inline {
   --radius-sharp: 0;
   --radius-tight: 4px;
-  --radius-card: 20px;
+  --radius-card: 16px;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
@@ -402,7 +402,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 /* Cards / panels written with the old radii + hairlines */
 .rounded-card,
 .rounded-tight {
-  border-radius: 20px;
+  border-radius: 16px;
 }
 .border-charcoal-200,
 .border-charcoal-100,
