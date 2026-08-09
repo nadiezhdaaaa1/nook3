@@ -279,7 +279,7 @@ export function Step1Where() {
                   Next <ArrowRight style={{ width: 16, height: 16 }} />
                 </button>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
