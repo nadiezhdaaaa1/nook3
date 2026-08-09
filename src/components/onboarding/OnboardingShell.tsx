@@ -45,7 +45,7 @@ export function OnboardingShell() {
         className="ob-pill fixed left-1/2 -translate-x-1/2 z-40"
         style={{
           top: 24,
-          width: "min(824px, calc(100vw - 32px))",
+          width: "min(800px, calc(100vw - 32px))",
           background: "rgba(255,255,255,0.6)",
           backdropFilter: "blur(20px)",
           border: "1px solid rgba(0,0,0,0.2)",
