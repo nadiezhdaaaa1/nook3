@@ -525,8 +525,9 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 }
 
 
-.ob-city-card { transition: transform .3s ease-out, box-shadow .3s ease-out; }
-.ob-city-card:hover { transform: translateY(-2px); }
+.ob-city-card { transition: opacity .2s ease-out; }
+.ob-city-card:hover { opacity: .85; }
+.ob-city-card[aria-pressed="true"] { opacity: 1; }
 .ob-city-card:focus-visible,
 .ob-search:focus-within,
 .ob-next:focus-visible,
