@@ -114,7 +114,8 @@ export function OnboardingShell() {
                 cursor: step === 1 ? "not-allowed" : "pointer",
               }}
             >
-              <ArrowLeft style={{ width: 20, height: 20 }} /> Back
+              <ArrowLeft style={{ width: 20, height: 20 }} />
+              <span className="hidden sm:inline">Back</span>
             </button>
             <button
               type="button"
