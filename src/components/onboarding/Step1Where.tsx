@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Pencil, Search, ArrowRight } from "lucide-react";
+import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import { CityPicker } from "@/components/onboarding/CityPicker";
 import { RentSlider } from "@/components/onboarding/RentSlider";
@@ -302,27 +303,19 @@ export function Step1Where() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.7), ease: EASE }}
               >
-                <button
+                <OriginButton
                   type="button"
+                  variant="main"
+                  size="big"
                   disabled={!canContinue}
                   onClick={() => {
                     set("lastStep", 2);
                     navigate({ to: "/onboarding/step/$step", params: { step: "2" } });
                   }}
-                  className="ob-next inline-flex items-center justify-center"
-                  style={{
-                    gap: 8,
-                    background: canContinue ? "#d66c38" : "#eae0cd",
-                    color: "#ffffff",
-                    borderRadius: 12,
-                    padding: "16px 24px",
-                    fontWeight: 500,
-                    fontSize: 16,
-                    cursor: canContinue ? "pointer" : "not-allowed",
-                  }}
+                  className="ob-next"
                 >
                   Next <ArrowRight style={{ width: 16, height: 16 }} />
-                </button>
+                </OriginButton>
               </motion.div>
             </div>
           </motion.div>
