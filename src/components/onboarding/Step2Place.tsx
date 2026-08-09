@@ -96,8 +96,7 @@ export function Step2Place() {
               type="checkbox"
               checked={includeBrokerFee}
               onChange={(e) => set("includeBrokerFee", e.target.checked)}
-              className="accent-[#767676]"
-              style={{ accentColor: "#767676" }}
+              className="ob-check ob-check--muted"
             />
             <div>
               <div style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2b2521" }}>
