@@ -509,10 +509,21 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 }
 
 /* ── Onboarding wizard (step 1 redesign) ───────────────────────── */
-.ob-cards-row { scrollbar-width: none; -ms-overflow-style: none; scroll-snap-type: x mandatory; scroll-padding-left: 0; overscroll-behavior-x: contain; }
+.ob-cards-row { scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain; cursor: grab; }
+.ob-cards-row.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+.ob-cards-row.is-dragging * { pointer-events: none; }
 .ob-cards-row::-webkit-scrollbar { display: none; }
-.ob-cards-row > button { scroll-snap-align: start; }
+/* Full-bleed to the viewport edges, but scroll start/end stay aligned with the section */
 .ob-bleed { margin-right: 0; }
+.ob-bleed .ob-cards-row {
+  --ob-bleed: calc((100vw - 100%) / 2);
+  margin-left: calc(-1 * var(--ob-bleed));
+  margin-right: calc(-1 * var(--ob-bleed));
+  padding-left: var(--ob-bleed);
+  padding-right: var(--ob-bleed);
+  scroll-padding-inline: var(--ob-bleed);
+}
+
 
 .ob-city-card { transition: transform .3s ease-out, box-shadow .3s ease-out; }
 .ob-city-card:hover { transform: translateY(-2px); }
