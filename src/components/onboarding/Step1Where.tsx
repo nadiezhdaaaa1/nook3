@@ -259,7 +259,7 @@ export function Step1Where() {
               </motion.div>
 
               <motion.label
-                className="flex items-start cursor-pointer"
+                className="flex items-center cursor-pointer"
                 style={{
                   background: "#ebf0d5",
                   border: "1px solid #809917",
