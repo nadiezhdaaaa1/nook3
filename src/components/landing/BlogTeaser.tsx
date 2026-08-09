@@ -17,7 +17,7 @@ const CSS = `
 .blogt-sub { font-family:"Google Sans Flex",system-ui,sans-serif; font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
   font-weight:400; font-size:18px; line-height:1.6; color:#4a4a46; }
 .blogt-all { font-family:"Google Sans Flex",system-ui,sans-serif; font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
-  font-weight:650; font-size:16px; line-height:24px; color:#d66c38; text-decoration:none; white-space:nowrap; }
+  font-weight:650; font-size:16px; line-height:24px; color:#B94613; text-decoration:none; white-space:nowrap; }
 .blogt-all:hover { text-decoration:underline; }
 .blogt-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; align-items:stretch; }
 .blogt-card { display:flex; flex-direction:column; background:#fff; border:1px solid rgba(0,0,0,0.2);

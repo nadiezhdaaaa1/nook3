@@ -38,13 +38,13 @@ const CSS = `
 .dgb-input:focus-visible { outline:2px solid #f8f3e1; outline-offset:2px; }
 .dgb-btn {
   flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center;
-  background:#d66c38; color:#fff; border-radius:12px; padding:16px 24px;
+  background:#B94613; color:#fff; border-radius:12px; padding:16px 24px;
   font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
   font-weight:500; font-size:16px; line-height:1;
   transition:background-color .2s ease-out;
 }
-.dgb-btn:hover { background:#c25e2d; }
+.dgb-btn:hover { background:#9E2F11; }
 .dgb-btn:focus-visible { outline:2px solid #f8f3e1; outline-offset:2px; }
 .dgb-btn:disabled { opacity:.7; }
 .dgb-msg {

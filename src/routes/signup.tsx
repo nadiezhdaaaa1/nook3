@@ -312,8 +312,8 @@ function SignupPage() {
           position: relative;
         }
         .sgn-check input:checked {
-          background: #d66c38;
-          border-color: #d66c38;
+          background: #B94613;
+          border-color: #B94613;
         }
         .sgn-check input:checked::after {
           content: "";
