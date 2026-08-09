@@ -18,15 +18,6 @@ export function OnboardingFooter({
 }: Props) {
   return (
     <div className="flex items-center justify-end gap-2 ob-next-row">
-      {onSkip && (
-        <button
-          type="button"
-          onClick={onSkip}
-          className="h-11 px-4 inline-flex items-center text-sm font-semibold text-charcoal-500 hover:text-charcoal-950"
-        >
-          Skip
-        </button>
-      )}
       {onBack && (
         <button
           type="button"
@@ -44,6 +35,24 @@ export function OnboardingFooter({
         >
           <ArrowLeft style={{ width: 16, height: 16 }} />
           <span>Back</span>
+        </button>
+      )}
+      {onSkip && (
+        <button
+          type="button"
+          onClick={onSkip}
+          className="ob-ghost inline-flex items-center"
+          style={{
+            height: 56,
+            gap: 8,
+            padding: "0 24px",
+            borderRadius: 12,
+            fontWeight: 600,
+            fontSize: 14,
+            color: "#241c12",
+          }}
+        >
+          Skip
         </button>
       )}
       <OriginButton
