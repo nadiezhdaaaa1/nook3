@@ -37,3 +37,17 @@ export const CITY_PHOTO: Partial<Record<CityId, string>> = {
   austin: austinCard.url,
   philadelphia: phillyCard.url,
 };
+
+/** Heading accent per city — tuned for contrast on the cream background. */
+export const CITY_ACCENT: Record<CityId, string> = {
+  nyc: "#a07f1a",
+  la: "#c06a10",
+  "sf-bay": "#da4724",
+  chicago: "#3878b4",
+  dc: "#5757a7",
+  boston: "#b25048",
+  seattle: "#349464",
+  miami: "#18938c",
+  austin: "#a3742c",
+  philadelphia: "#58913f",
+};
