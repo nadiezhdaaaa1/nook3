@@ -176,7 +176,7 @@ export function Step4Preferences() {
                   <ObChip
                     key={line.id}
                     selected={isNice || isRequired}
-                    selectedVariant={isRequired ? "dark" : "secondary"}
+                    selectedVariant={isRequired ? "dark" : isNice ? "nice" : "secondary"}
                     onClick={() => {
                       cycleTransit(line.id);
                       if (!transit.hasPreference) set("transit", { ...transit, hasPreference: true });
