@@ -12,16 +12,30 @@ import phillyCard from "@/assets/Philadelphia.png.asset.json";
 
 /** Card background tints per city (from design). */
 export const CITY_TINT: Record<CityId, string> = {
-  nyc: "#f2d98c",
-  la: "#ffbf73",
-  "sf-bay": "#f28c73",
-  chicago: "#8cb8e0",
+  nyc: "#fbe5a3",
+  la: "#ffcd92",
+  "sf-bay": "#ffaa95",
+  chicago: "#add0f0",
   dc: "#d9d9e5",
-  boston: "#e5b8b2",
-  seattle: "#66b28c",
-  miami: "#4dd9d1",
-  austin: "#f2c794",
-  philadelphia: "#c7d9bf",
+  boston: "#efc8c4",
+  seattle: "#a9dfc4",
+  miami: "#9de5e2",
+  austin: "#f3cfa3",
+  philadelphia: "#cddec6",
+};
+
+/** Darker hover shade per city card. */
+export const CITY_TINT_HOVER: Record<CityId, string> = {
+  nyc: "#fddd7e",
+  la: "#ffbd6e",
+  "sf-bay": "#ff8d71",
+  chicago: "#8dbfed",
+  dc: "#c3c3d7",
+  boston: "#e9ada6",
+  seattle: "#8dd7b2",
+  miami: "#7ee0dc",
+  austin: "#f2bf81",
+  philadelphia: "#b9d2af",
 };
 
 /** Card photos. */

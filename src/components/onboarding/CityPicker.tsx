@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CITY_LIST, type CityId } from "@/data/cities";
-import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
+import { CITY_TINT, CITY_TINT_HOVER, CITY_PHOTO } from "@/data/cities/cards";
 
 interface Props {
   value: CityId | null;
@@ -15,7 +15,6 @@ interface Props {
 const EASE = [0.22, 1, 0.36, 1] as const;
 const FILL_DURATION = 0.85;
 const FILL_EASE = [0.16, 1, 0.3, 1] as const;
-const ORIGIN_HOVER = "#CE4F12";
 
 function getCoverDiameter(width: number, height: number, x: number, y: number) {
   return Math.ceil(
@@ -132,7 +131,7 @@ function CityCard({
           top: origin.y,
           width: coverSize,
           height: coverSize,
-          background: ORIGIN_HOVER,
+          background: CITY_TINT_HOVER[c.id],
         }}
       />
       <div
@@ -160,7 +159,7 @@ function CityCard({
           fontSize: 16,
           lineHeight: 1.2,
           letterSpacing: "-0.45px",
-          color: hovered ? "#ffffff" : "#241c12",
+          color: "#241c12",
           transition: "color 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
