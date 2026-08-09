@@ -106,9 +106,7 @@ function SamplePreview() {
     >
       <motion.header variants={itemVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
-          You'd have gotten{" "}
-          <span className="accent-italic">{matched.length} match{matched.length === 1 ? "" : "es"}</span>{" "}
-          in your area this past week.
+          You'd have gotten {matched.length} match{matched.length === 1 ? "" : "es"} in your area this past week.
         </h1>
         <p style={OB_SUB}>
           {budget
