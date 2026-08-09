@@ -54,14 +54,12 @@ export function OnboardingShell() {
         }}
       >
         <div className="flex items-center" style={{ gap: 40 }}>
-          <button
-            type="button"
-            onClick={() => navigate({ to: "/" })}
+          <div
             style={{ padding: "0 8px" }}
-            aria-label="Nook home"
+            aria-label="Nook"
           >
             <img src={nookLogo.url} alt="Nook" style={{ width: 70, height: 24 }} />
-          </button>
+          </div>
 
           {step !== null && (
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
@@ -88,6 +86,7 @@ export function OnboardingShell() {
           <div className="flex items-center" style={{ gap: 4 }}>
             <button
               type="button"
+              disabled={step === 1}
               onClick={onBack}
               className="ob-ghost inline-flex items-center"
               style={{
@@ -97,6 +96,8 @@ export function OnboardingShell() {
                 fontWeight: 600,
                 fontSize: 14,
                 color: "#241c12",
+                opacity: step === 1 ? 0.35 : 1,
+                cursor: step === 1 ? "not-allowed" : "pointer",
               }}
             >
               <ArrowLeft style={{ width: 20, height: 20 }} /> Back
