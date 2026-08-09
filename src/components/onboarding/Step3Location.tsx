@@ -82,8 +82,8 @@ export function Step3Location() {
         value={view}
         onChange={(v) => setView(v)}
         options={[
-          { value: "list", label: "List" },
-          { value: "map", label: "Map" },
+          { value: "list", label: "List", icon: IconList },
+          { value: "map", label: "Map", icon: IconMap },
         ]}
         ariaLabel="Neighborhood view"
       />
