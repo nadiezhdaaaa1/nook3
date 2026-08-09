@@ -1,7 +1,15 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useReducer, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Check, Circle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { OriginButton } from "@/components/ui/origin-button";
+import {
+  OB_H1,
+  OB_SUB,
+  OB_STEP_VARIANTS,
+  OB_SECTION_VARIANTS,
+} from "@/components/onboarding/stepStyles";
 import searchIcon from "@/assets/search-icon.png.asset.json";
 
 export const Route = createFileRoute("/onboarding/loading")({
@@ -21,6 +29,7 @@ const ALMOST_THERE_DELAY = 3000;
 
 function SearchSetupLoader() {
   const navigate = useNavigate();
+  const reduce = useReducedMotion();
   // active = index currently in-progress; equals STEPS.length when all done
   const [active, advance] = useReducer((n: number) => n + 1, 0);
   const [almostThere, setAlmostThere] = useState(false);
@@ -68,6 +77,8 @@ function SearchSetupLoader() {
   }, [active]);
 
   const activeLabel = active < STEPS.length ? STEPS[active] : null;
+  const variants = reduce ? undefined : OB_STEP_VARIANTS;
+  const itemVariants = reduce ? undefined : OB_SECTION_VARIANTS;
 
   return (
     <div
@@ -77,31 +88,49 @@ function SearchSetupLoader() {
       className="fixed inset-0 z-50 flex items-center justify-center px-5 sm:px-6"
       style={{ background: "#faf6ee" }}
     >
-      <div className="w-full max-w-[520px] flex flex-col items-center text-center">
+      <motion.div
+        className="w-full max-w-[520px] flex flex-col items-center text-center"
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+      >
         {/* Icon badge */}
-        <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full flex items-center justify-center overflow-hidden p-3">
+        <motion.div
+          variants={itemVariants}
+          className="h-20 w-20 sm:h-24 sm:w-24 rounded-full flex items-center justify-center overflow-hidden p-3"
+        >
           <img
             src={searchIcon.url}
             alt=""
             className="h-full w-full object-contain"
             aria-hidden="true"
           />
-        </div>
+        </motion.div>
 
         {/* Heading */}
-        <h1 className="mt-8 font-display font-semibold text-[30px] sm:text-[44px] leading-[1.15] text-charcoal-950">
+        <motion.h1
+          variants={itemVariants}
+          className="font-display mt-8"
+          style={OB_H1}
+        >
           Finding your matches
-        </h1>
+        </motion.h1>
 
         {/* Subtitle */}
-        <p className="mt-3 text-base sm:text-lg text-charcoal-500 leading-snug">
+        <motion.p
+          variants={itemVariants}
+          style={OB_SUB}
+        >
           {almostThere
             ? "Almost there — pulling the last few in…"
             : "This usually takes a few seconds…"}
-        </p>
+        </motion.p>
 
         {/* Steps */}
-        <ul className="mt-10 w-full flex flex-col gap-3 text-left">
+        <motion.ul
+          variants={itemVariants}
+          className="mt-10 w-full flex flex-col gap-3 text-left"
+        >
           {STEPS.map((label, i) => {
             const state: "done" | "active" | "pending" =
               i < active ? "done" : i === active ? "active" : "pending";
@@ -149,8 +178,21 @@ function SearchSetupLoader() {
               </li>
             );
           })}
-        </ul>
-      </div>
+        </motion.ul>
+
+        {/* Main Origin Button */}
+        <motion.div variants={itemVariants} className="mt-10 w-full">
+          <OriginButton
+            type="button"
+            variant="main"
+            size="big"
+            className="w-full"
+            onClick={() => navigate({ to: "/onboarding/preview" })}
+          >
+            Continue to preview
+          </OriginButton>
+        </motion.div>
+      </motion.div>
 
       {/* Local keyframes for the done "settle" pop */}
       <style>{`
