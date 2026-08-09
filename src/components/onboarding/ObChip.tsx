@@ -4,13 +4,14 @@ import { OB_CHIP_CLASS } from "@/components/onboarding/stepStyles";
 import { cn } from "@/lib/utils";
 
 interface ObChipProps
-  extends Omit<React.ComponentProps<typeof OriginButton>, "variant"> {
+  extends Omit<React.ComponentProps<typeof OriginButton>, "variant" | "size"> {
   selected?: boolean;
   /** Visual style used when selected. */
   selectedVariant?: "dark" | "secondary";
   fullWidth?: boolean;
-  size?: "big" | "medium";
+  size?: "big" | "medium" | "small";
 }
+
 
 
 /**
