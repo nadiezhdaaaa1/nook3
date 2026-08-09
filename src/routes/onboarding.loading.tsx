@@ -1,9 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Check, Circle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { OriginButton } from "@/components/ui/origin-button";
 import {
   OB_H1,
   OB_SUB,
