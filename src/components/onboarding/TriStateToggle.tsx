@@ -27,7 +27,7 @@ export function TriStateToggle({ label, state, onCycle }: Props) {
           className={cn(
             "inline-flex items-center justify-center gap-1.5 text-[13px] font-medium whitespace-nowrap",
             isRequired
-              ? "text-[#2B2521]"
+              ? "text-white"
               : isNice
                 ? "text-[#D66C38]"
                 : "text-[#2B2521]"
