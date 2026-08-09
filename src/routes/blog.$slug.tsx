@@ -366,7 +366,7 @@ function formatDate(iso: string) {
 
 const PAGE_CSS = `
 .apg-progress { position:fixed; top:0; left:0; right:0; height:3px; z-index:60; background:transparent; }
-.apg-progress-bar { height:100%; background:#B94613; transition:width .15s linear; }
+.apg-progress-bar { height:100%; background:#D04305; transition:width .15s linear; }
 
 .apg { background:#faf6ee; padding:40px 0 104px; }
 .apg-inner { max-width:1280px; margin:0 auto; padding:0 40px; }

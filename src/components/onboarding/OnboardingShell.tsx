@@ -74,7 +74,7 @@ export function OnboardingShell() {
               >
                 <div
                   className="h-full ob-progress-fill"
-                  style={{ width: `${pct}%`, background: "#B94613", borderRadius: 999 }}
+                  style={{ width: `${pct}%`, background: "#D04305", borderRadius: 999 }}
                 />
               </div>
               <span className="ob-pct" style={{ ...LABEL, width: 40, textAlign: "right", flexShrink: 0 }}>

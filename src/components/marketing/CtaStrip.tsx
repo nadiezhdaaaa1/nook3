@@ -20,7 +20,7 @@ const CSS = `
 .ctab-sub { font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:400; font-size:18px; line-height:1.6; color:#f8f3e1; }
 .ctab-btn { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center;
-  background:#B94613; color:#fff; border-radius:12px; padding:16px 24px; text-decoration:none;
+  background:#D04305; color:#fff; border-radius:12px; padding:16px 24px; text-decoration:none;
   font-family:"Google Sans Flex",system-ui,sans-serif; font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
   font-weight:500; font-size:16px; line-height:1; box-shadow:none;
   transition:background-color .2s ease-out, transform .2s ease-out; }

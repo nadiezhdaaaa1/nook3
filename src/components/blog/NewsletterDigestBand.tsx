@@ -38,7 +38,7 @@ const CSS = `
 .dgb-input:focus-visible { outline:2px solid #f8f3e1; outline-offset:2px; }
 .dgb-btn {
   flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center;
-  background:#B94613; color:#fff; border-radius:12px; padding:16px 24px;
+  background:#D04305; color:#fff; border-radius:12px; padding:16px 24px;
   font-family:"Google Sans Flex",system-ui,sans-serif;
   font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100;
   font-weight:500; font-size:16px; line-height:1;

@@ -54,7 +54,7 @@ export function RentSlider({ city, value, onChange }: Props) {
           className="relative w-full grow overflow-hidden"
           style={{ height: 6, borderRadius: 999, background: "#d8d5cd" }}
         >
-          <SliderPrimitive.Range className="absolute h-full" style={{ background: "#B94613" }} />
+          <SliderPrimitive.Range className="absolute h-full" style={{ background: "#D04305" }} />
         </SliderPrimitive.Track>
         <SliderPrimitive.Thumb aria-label="Minimum rent" className="ob-thumb" />
         <SliderPrimitive.Thumb aria-label="Maximum rent" className="ob-thumb" />

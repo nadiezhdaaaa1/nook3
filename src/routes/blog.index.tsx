@@ -255,7 +255,7 @@ function BlogIndexPage() {
           text-transform: uppercase; color: #6a820a;
         }
         .blog-chip {
-          background: #B94613; border-radius: 4px; padding: 4px 8px;
+          background: #D04305; border-radius: 4px; padding: 4px 8px;
           font-family: "Google Sans Flex", system-ui, sans-serif;
           font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
           font-weight: 800; font-size: 10px; letter-spacing: 1.8px;

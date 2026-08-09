@@ -206,7 +206,7 @@ export function Step1Where() {
                 className="ob-next inline-flex items-center justify-center"
                 style={{
                   gap: 8,
-                  background: "#B94613",
+                  background: "#D04305",
                   color: "#ffffff",
                   borderRadius: 12,
                   padding: "16px 24px",
