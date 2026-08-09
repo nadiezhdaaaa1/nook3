@@ -248,7 +248,7 @@ export function Step3Location() {
 
                 return (
                   <section key={group}>
-                    <div className="flex items-baseline justify-between mb-3">
+                    <div className="flex items-baseline justify-between mb-3 px-3">
                       <h3 className="font-display" style={OB_H2}>
                         {group}
                         {selectedInGroup > 0 && (
