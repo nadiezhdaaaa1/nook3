@@ -86,16 +86,16 @@ export function RentProtectionPicker({
               aria-checked={selected}
               onClick={() => onChange(c.id)}
               className={cn(
-                "w-full text-left rounded-card border p-4 transition-all",
+                "w-full text-left rounded-[16px] border p-4 transition-all",
                 selected
-                  ? "border-charcoal-950 bg-charcoal-950/[0.03] shadow-sm"
-                  : "border-border bg-surface-elevated hover:border-charcoal-400",
+                  ? "border-charcoal-950 bg-paper shadow-sm"
+                  : "border-border bg-transparent hover:border-charcoal-400",
               )}
             >
               <div className="flex items-start gap-3">
                 <span
                   className={cn(
-                    "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                    "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
                     selected
                       ? "border-charcoal-950 bg-charcoal-950 text-paper"
                       : "border-charcoal-400 bg-paper",
@@ -105,7 +105,7 @@ export function RentProtectionPicker({
                   {selected && <Check className="h-3 w-3" strokeWidth={3} />}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-charcoal-950">
+                  <div className="text-base font-semibold text-charcoal-950">
                     {c.title}
                   </div>
                   <div className="mt-1 text-xs text-charcoal-600 leading-relaxed">
