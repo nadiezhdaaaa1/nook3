@@ -34,8 +34,11 @@ const H2: React.CSSProperties = {
   color: "#241c12",
 };
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function Step1Where() {
   const navigate = useNavigate();
+  const reduce = useReducedMotion();
   const { city, budget, moveIn, movingOut, set, patch } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [query, setQuery] = useState("");
