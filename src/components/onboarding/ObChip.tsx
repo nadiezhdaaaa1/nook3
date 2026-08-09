@@ -7,7 +7,7 @@ interface ObChipProps
   extends Omit<React.ComponentProps<typeof OriginButton>, "variant" | "size"> {
   selected?: boolean;
   /** Visual style used when selected. */
-  selectedVariant?: "dark" | "secondary";
+  selectedVariant?: "dark" | "secondary" | "nice";
   fullWidth?: boolean;
   size?: "big" | "medium" | "small";
 }
