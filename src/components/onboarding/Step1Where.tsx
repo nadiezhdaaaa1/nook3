@@ -300,7 +300,7 @@ export function Step1Where() {
               </motion.p>
 
               <motion.div
-                className="flex items-center justify-end gap-2 ob-next-row"
+                className="flex items-center justify-between gap-2 ob-next-row"
                 initial={{ opacity: 0, y: reduce ? 0 : 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduce ? 0.15 : 0.3, delay: d(0.7), ease: EASE }}
