@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { format, parseISO, startOfDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { IconArrowsRandom } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { OriginButton } from "@/components/ui/origin-button";
@@ -16,33 +17,6 @@ interface Props {
 
 const CHIP_CLASS =
   "w-full h-[54px] px-6 text-[16px] justify-start text-left";
-
-function ThreeArrowsIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      {/* Arrow pointing up */}
-      <path d="M12 12 L12 5" />
-      <path d="M9 8 L12 5 L15 8" />
-      {/* Arrow pointing down-right */}
-      <path d="M12 12 L18 16" />
-      <path d="M15 16 L18 16 L18 13" />
-      {/* Arrow pointing down-left */}
-      <path d="M12 12 L6 16" />
-      <path d="M9 16 L6 16 L6 13" />
-    </svg>
-  );
-}
 
 export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -99,7 +73,7 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
         }}
       >
         <span className="inline-flex w-full items-center gap-2">
-          <ThreeArrowsIcon className="shrink-0" />
+          <IconArrowsRandom aria-hidden="true" className="shrink-0" size={20} stroke={2} />
           <span className="truncate">Flexible</span>
         </span>
       </OriginButton>
