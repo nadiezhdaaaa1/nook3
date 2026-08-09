@@ -208,7 +208,7 @@ export function PricingThreeTiers({
           </div>
 
           <h2 className="pr-h2" style={{ ...display, fontWeight: 600, color: INK, marginTop: 20 }}>
-            Three ways to use Nook
+            Choose your plan
           </h2>
 
           <p
