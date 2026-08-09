@@ -172,52 +172,47 @@ export function SampleListingsMap({
 
   // Render the card overlay anchored to the active pin.
   useEffect(() => {
-    try {
-      if (!ready || !mapRef.current) return;
+    if (!ready || !mapRef.current) return;
 
+    if (overlayRef.current) {
+      overlayRef.current.root.unmount();
+      overlayRef.current.overlay.setMap(null);
+      overlayRef.current = null;
+    }
+
+    if (!activeId || !card) return;
+
+    const active = listings.find((l) => l.id === activeId);
+    if (!active) return;
+
+    const position = new google.maps.LatLng(active.coords[0], active.coords[1]);
+
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.left = "0";
+    container.style.top = "0";
+    container.style.pointerEvents = "none";
+
+    const inner = document.createElement("div");
+    inner.style.position = "absolute";
+    inner.style.transform = "translate(-50%, calc(-100% - 26px))";
+    inner.style.pointerEvents = "auto";
+    container.appendChild(inner);
+
+    const root = createRoot(inner);
+    root.render(card);
+
+    const overlay = createOverlay(position, container);
+    overlay.setMap(mapRef.current);
+    overlayRef.current = { overlay, root };
+
+    return () => {
       if (overlayRef.current) {
         overlayRef.current.root.unmount();
         overlayRef.current.overlay.setMap(null);
         overlayRef.current = null;
       }
-
-      if (!activeId || !card) return;
-
-      const active = listings.find((l) => l.id === activeId);
-      if (!active) return;
-
-      const position = new google.maps.LatLng(active.coords[0], active.coords[1]);
-
-      const container = document.createElement("div");
-      container.style.position = "absolute";
-      container.style.left = "0";
-      container.style.top = "0";
-      container.style.pointerEvents = "none";
-
-      const inner = document.createElement("div");
-      inner.style.position = "absolute";
-      inner.style.transform = "translate(-50%, calc(-100% - 26px))";
-      inner.style.pointerEvents = "auto";
-      container.appendChild(inner);
-
-      const root = createRoot(inner);
-      root.render(card);
-
-      const overlay = createOverlay(position, container);
-      overlay.setMap(mapRef.current);
-      overlayRef.current = { overlay, root };
-
-      return () => {
-        if (overlayRef.current) {
-          overlayRef.current.root.unmount();
-          overlayRef.current.overlay.setMap(null);
-          overlayRef.current = null;
-        }
-      };
-    } catch (err) {
-      console.error("[overlay effect error]", err);
-      throw err;
-    }
+    };
   }, [ready, activeId, card, listings]);
 
   return (
