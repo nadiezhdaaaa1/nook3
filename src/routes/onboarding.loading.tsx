@@ -83,7 +83,7 @@ function SearchSetupLoader() {
           <img
             src={searchIcon.url}
             alt=""
-            className="h-full w-full object-contain motion-safe:animate-pulse"
+            className="h-full w-full object-contain"
             aria-hidden="true"
           />
         </div>
