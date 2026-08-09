@@ -307,8 +307,8 @@ export function Step1Where() {
               >
                 <button
                   type="button"
-                  disabled
-                  className="ob-ghost inline-flex items-center disabled:opacity-40 disabled:cursor-not-allowed"
+                  onClick={() => navigate({ to: "/" })}
+                  className="ob-ghost inline-flex items-center"
                   style={{
                     height: 56,
                     gap: 8,
