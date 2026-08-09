@@ -111,7 +111,7 @@ export function Step2Place() {
         </section>
       )}
 
-      <div className="rounded-card border border-border bg-surface-muted px-4 py-3 text-xs text-charcoal-600">
+      <div style={{ fontSize: 13, color: "#4A4A46", fontFamily: '"Google Sans Flex", sans-serif' }}>
         {cityConfig.buildingDataAvailable && cityConfig.buildingDataLabel
           ? `Nook checks ${cityConfig.buildingDataLabel} for every ${cityConfig.displayName} listing.`
           : "Nook checks 100+ sources for every listing."}
