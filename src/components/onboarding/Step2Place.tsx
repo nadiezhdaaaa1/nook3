@@ -46,14 +46,14 @@ export function Step2Place() {
 
   return (
     <motion.div className="space-y-12" variants={stepVariants} initial="hidden" animate="visible">
-      <header>
+      <motion.header variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
           What kind of place?
         </h1>
         <p style={OB_SUB}>Pick beds, baths, and your protection preferences.</p>
-      </header>
+      </motion.header>
 
-      <section className="space-y-4">
+      <motion.section className="space-y-4" variants={sectionVariants}>
         <h2 className="font-display" style={OB_H2}>
           1. Bedrooms <span style={{ color: "#5a5a55", fontWeight: 400 }}>· pick any</span>
         </h2>
@@ -64,9 +64,9 @@ export function Step2Place() {
           onChange={toggleBedroom}
           size="lg"
         />
-      </section>
+      </motion.section>
 
-      <section className="space-y-4">
+      <motion.section className="space-y-4" variants={sectionVariants}>
         <h2 className="font-display" style={OB_H2}>
           2. Minimum bathrooms
         </h2>
@@ -76,21 +76,21 @@ export function Step2Place() {
           onChange={(id) => set("bathrooms", id)}
           size="lg"
         />
-      </section>
+      </motion.section>
 
       {cityConfig.rentProtection.enabled && (
-        <section className="space-y-4">
+        <motion.section className="space-y-4" variants={sectionVariants}>
           <RentProtectionPicker
             city={cityConfig}
             value={rentProtection}
             onChange={(v) => set("rentProtection", v)}
             neighborhoodCount={neighborhoods.length}
           />
-        </section>
+        </motion.section>
       )}
 
       {cityConfig.brokerFeeDefault && (
-        <section>
+        <motion.section variants={sectionVariants}>
           <label
             className="flex items-center cursor-pointer"
             style={{
@@ -117,24 +117,25 @@ export function Step2Place() {
               </div>
             </div>
           </label>
-        </section>
+        </motion.section>
       )}
 
-      <div style={{ fontSize: 13, color: "#4A4A46", fontFamily: '"Google Sans Flex", sans-serif' }}>
+      <motion.div variants={sectionVariants} style={{ fontSize: 13, color: "#4A4A46", fontFamily: '"Google Sans Flex", sans-serif' }}>
         {cityConfig.buildingDataAvailable && cityConfig.buildingDataLabel
           ? `Nook checks ${cityConfig.buildingDataLabel} for every ${cityConfig.displayName} listing.`
           : "Nook checks 100+ sources for every listing."}
-      </div>
+      </motion.div>
 
-
-      <OnboardingFooter
-        canContinue={canContinue}
-        onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "1" } })}
-        onNext={() => {
-          set("lastStep", 3);
-          navigate({ to: "/onboarding/step/$step", params: { step: "3" } });
-        }}
-      />
-    </div>
+      <motion.div variants={sectionVariants}>
+        <OnboardingFooter
+          canContinue={canContinue}
+          onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "1" } })}
+          onNext={() => {
+            set("lastStep", 3);
+            navigate({ to: "/onboarding/step/$step", params: { step: "3" } });
+          }}
+        />
+      </motion.div>
+    </motion.div>
   );
 }
