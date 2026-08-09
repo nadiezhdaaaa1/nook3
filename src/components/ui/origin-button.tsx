@@ -188,14 +188,14 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           "relative inline-flex cursor-pointer touch-manipulation select-none items-center justify-center overflow-hidden font-medium tracking-[-0.02em]",
           variant === "main"
             ? cn(
-                "rounded-[12px] border border-transparent bg-[#B94613] font-medium text-white",
+                "rounded-[12px] border border-transparent bg-[#D04305] font-medium text-white",
                 size === "medium"
                   ? "h-[48px] px-5 text-[15px]"
                   : "h-[56px] px-6 text-[16px]",
               )
             : variant === "secondary"
               ? cn(
-                  "rounded-[12px] border-[1.5px] border-[#B94613] bg-transparent font-medium text-[#B94613]",
+                  "rounded-[12px] border-[1.5px] border-[#D04305] bg-transparent font-medium text-[#D04305]",
                   size === "medium"
                     ? "h-[48px] px-5 text-[15px]"
                     : "h-[56px] px-6 text-[16px]",

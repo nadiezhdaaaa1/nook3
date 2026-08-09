@@ -68,7 +68,7 @@ const CSS = `
   margin-top: 4px;
 }
 .art-quote {
-  margin: 0 0 24px; padding-left: 20px; border-left: 2px solid #B94613;
+  margin: 0 0 24px; padding-left: 20px; border-left: 2px solid #D04305;
   font-family: "Google Sans Flex", system-ui, sans-serif;
   font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
   font-weight: 400; font-size: 17px; line-height: 28.9px; color: #4a4a46;

@@ -109,7 +109,7 @@ export function LegalPageLayout({
         .legal-questions-link {
           font-family: "Google Sans Flex", system-ui, sans-serif;
           font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
-          font-weight: 500; font-size: 24px; color: #B94613;
+          font-weight: 500; font-size: 24px; color: #D04305;
           text-decoration: none; transition: color 0.2s ease;
         }
         .legal-questions-link:hover { color: #CE4F12; }

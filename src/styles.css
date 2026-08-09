@@ -126,7 +126,7 @@
   --card-foreground: #241c12;
   --popover: #ffffff;
   --popover-foreground: #241c12;
-  --primary: #B94613;
+  --primary: #D04305;
   --primary-foreground: #ffffff;
   --secondary: #f8f3e1;
   --secondary-foreground: #241c12;
@@ -140,16 +140,16 @@
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.2);
   --input: rgba(0, 0, 0, 0.2);
-  --ring: #B94613;
+  --ring: #D04305;
 
   --sidebar: #FAF6EE;
   --sidebar-foreground: #241c12;
-  --sidebar-primary: #B94613;
+  --sidebar-primary: #D04305;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f8f3e1;
   --sidebar-accent-foreground: #241c12;
   --sidebar-border: rgba(0, 0, 0, 0.2);
-  --sidebar-ring: #B94613;
+  --sidebar-ring: #D04305;
 }
 
 
@@ -368,7 +368,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 /* Primary CTAs written as legacy charcoal pills */
 .rounded-pill.bg-charcoal-950,
 .rounded-pill.bg-charcoal-900 {
-  background-color: #B94613;
+  background-color: #D04305;
   color: #ffffff;
   border-radius: 12px;
 }
@@ -440,7 +440,7 @@ select.rounded-md {
 .rounded-lg.bg-charcoal-950,
 .rounded-xl.bg-charcoal-950,
 .rounded-md.bg-charcoal-900 {
-  background-color: #B94613;
+  background-color: #D04305;
   color: #ffffff;
   border-radius: 12px;
 }
@@ -469,7 +469,7 @@ textarea.bg-transparent {
 
 .focus\:border-charcoal-950:focus,
 .focus-visible\:border-charcoal-950:focus-visible {
-  border-color: #B94613;
+  border-color: #D04305;
 }
 
 /* Selected states, progress fills and dark chips on app screens */
@@ -477,8 +477,8 @@ textarea.bg-transparent {
 .bg-charcoal-950.text-paper,
 .h-full.bg-charcoal-950,
 .bg-sage-700.border-sage-700 {
-  background-color: #B94613;
-  border-color: #B94613;
+  background-color: #D04305;
+  border-color: #D04305;
   color: #ffffff;
 }
 .bg-charcoal-950.border-charcoal-950:hover,
@@ -495,7 +495,7 @@ textarea.bg-transparent {
 /* Sage-era controls and tint panels on app screens → landing ember/cream */
 button.bg-sage-700, a.bg-sage-700, button.bg-sage-500, a.bg-sage-500,
 button.bg-sage-900, a.bg-sage-900 {
-  background-color: #B94613;
+  background-color: #D04305;
   color: #ffffff;
   border-radius: 12px;
 }
@@ -543,7 +543,7 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 
 .ob-thumb {
   display: block; height: 20px; width: 20px; border-radius: 999px;
-  background: #B94613; border: 2px solid #f4f1ea;
+  background: #D04305; border: 2px solid #f4f1ea;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
   cursor: grab;
 }

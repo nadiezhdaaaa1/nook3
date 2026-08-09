@@ -47,7 +47,7 @@ export function MoveInPicker({ mode, date, chosen = true, onChange }: Props) {
 
   const selStyle = (on: boolean): React.CSSProperties =>
     on
-      ? { ...CHIP, background: "#B94613", borderColor: "#B94613", color: "#ffffff" }
+      ? { ...CHIP, background: "#D04305", borderColor: "#D04305", color: "#ffffff" }
       : { ...CHIP, background: "transparent", color: "#3a3a37" };
 
   return (

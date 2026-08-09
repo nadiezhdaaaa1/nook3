@@ -85,7 +85,7 @@ const CSS = `
 .faq15-summary:focus-visible { outline:2px solid #241c12; outline-offset:-2px; border-radius:18px; }
 .faq15-q { font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
   font-weight:560; font-size:18px; line-height:27px; color:#241c12; }
-.faq15-chev { flex:0 0 auto; color:#B94613; transition:transform .25s ease-out; }
+.faq15-chev { flex:0 0 auto; color:#D04305; transition:transform .25s ease-out; }
 .faq15-item[data-open="true"] .faq15-chev { transform:rotate(180deg); }
 .faq15-panel { display:grid; grid-template-rows:0fr; transition:grid-template-rows .25s ease-out; }
 .faq15-item[data-open="true"] .faq15-panel { grid-template-rows:1fr; }
@@ -98,7 +98,7 @@ const CSS = `
 .faq15-foot-t { font-family:Fraunces,Georgia,serif; font-variation-settings:"SOFT" 0,"WONK" 1;
   font-weight:540; font-size:24px; line-height:40px; color:#241c12; }
 .faq15-foot-a { font-family:"Google Sans Flex",system-ui,sans-serif;
-  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:650; font-size:16px; line-height:24px; color:#B94613; text-decoration:none; }
+  font-variation-settings:"GRAD" 0,"ROND" 0,"wdth" 100; font-weight:650; font-size:16px; line-height:24px; color:#D04305; text-decoration:none; }
 @media (max-width:680px) {
   .faq15 { padding:72px 0; }
   .faq15-h2 { font-size:clamp(32px,6vw,40px); line-height:1.12; }

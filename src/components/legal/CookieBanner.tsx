@@ -105,7 +105,7 @@ export function CookieBanner() {
             }
             .ckt-btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
             .ckt-btn-outline:hover { background: rgba(255,255,255,0.1); }
-            .ckt-btn-accept { background: #B94613; border: none; }
+            .ckt-btn-accept { background: #D04305; border: none; }
             .ckt-btn-accept:hover { background: #9E2F11; }
             .ckt-btn:focus-visible { outline: 2px solid #f8f3e1; outline-offset: 2px; }
             @media (max-width: 680px) {

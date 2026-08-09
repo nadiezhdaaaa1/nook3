@@ -172,7 +172,7 @@ export function NewsletterCardDark({ source }: { source?: string }) {
         .bnl-input:focus-visible { outline: 2px solid #f8f3e1; outline-offset: 2px; }
         .bnl-btn {
           width: 100%; padding: 16px 24px; border: none; border-radius: 12px;
-          background: #B94613; color: #ffffff; cursor: pointer;
+          background: #D04305; color: #ffffff; cursor: pointer;
           font-family: "Google Sans Flex", system-ui, sans-serif;
           font-variation-settings: "GRAD" 0,"ROND" 0,"wdth" 100;
           font-weight: 500; font-size: 16px; line-height: 1;
