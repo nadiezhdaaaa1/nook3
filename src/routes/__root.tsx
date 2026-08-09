@@ -163,8 +163,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..900,0,1&family=Google+Sans+Flex:wght@400..700&family=JetBrains+Mono:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..900,0,1&family=Google+Sans+Flex:wght@400..700&display=swap",
       },
+
 
       { rel: "alternate", hrefLang: "en", href: "https://thenook.rent/" },
       { rel: "alternate", hrefLang: "en-US", href: "https://thenook.rent/" },
