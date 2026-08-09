@@ -1,9 +1,8 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import { OriginButton } from "@/components/ui/origin-button";
 
 interface Props {
   canContinue?: boolean;
-  /** Kept for API compatibility — back navigation lives in the top bar. */
   onBack?: () => void;
   onNext: () => void;
   onSkip?: () => void;
@@ -12,31 +11,57 @@ interface Props {
 
 export function OnboardingFooter({
   canContinue = true,
+  onBack,
   onNext,
   onSkip,
   nextLabel = "Next",
 }: Props) {
   return (
-    <div className="flex items-center justify-end gap-3 ob-next-row">
-      {onSkip && (
+    <div className="flex items-center justify-between gap-3 ob-next-row">
+      {onBack ? (
         <button
           type="button"
-          onClick={onSkip}
-          className="h-11 px-4 inline-flex items-center text-sm font-semibold text-charcoal-500 hover:text-charcoal-950"
+          onClick={onBack}
+          className="ob-ghost inline-flex items-center"
+          style={{
+            height: 56,
+            gap: 8,
+            padding: "0 16px",
+            borderRadius: 12,
+            fontWeight: 600,
+            fontSize: 14,
+            color: "#241c12",
+          }}
         >
-          Skip
+          <ArrowLeft style={{ width: 20, height: 20 }} />
+          <span className="hidden sm:inline">Back</span>
         </button>
+      ) : (
+        <div />
       )}
-      <OriginButton
-        type="button"
-        variant="main"
-        size="big"
-        disabled={!canContinue}
-        onClick={onNext}
-        className="ob-next"
-      >
-        {nextLabel} <ArrowRight style={{ width: 16, height: 16 }} />
-      </OriginButton>
+
+      <div className="flex items-center gap-3">
+        {onSkip && (
+          <button
+            type="button"
+            onClick={onSkip}
+            className="h-11 px-4 inline-flex items-center text-sm font-semibold text-charcoal-500 hover:text-charcoal-950"
+          >
+            Skip
+          </button>
+        )}
+        <OriginButton
+          type="button"
+          variant="main"
+          size="big"
+          disabled={!canContinue}
+          onClick={onNext}
+          className="ob-next"
+        >
+          {nextLabel} <ArrowRight style={{ width: 16, height: 16 }} />
+        </OriginButton>
+      </div>
     </div>
   );
 }
+
