@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { OriginButton } from "@/components/ui/origin-button";
 
 interface Props {
   open: boolean;
