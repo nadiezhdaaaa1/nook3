@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useReducer, useRef, useState } from "react";
-import { Check, Circle, Loader2, Search } from "lucide-react";
+import { Check, Circle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import searchIcon from "@/assets/search-icon.png.asset.json";
 
 export const Route = createFileRoute("/onboarding/loading")({
   component: SearchSetupLoader,
@@ -77,10 +78,11 @@ function SearchSetupLoader() {
     >
       <div className="w-full max-w-[520px] flex flex-col items-center text-center">
         {/* Icon badge */}
-        <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-sage-100 flex items-center justify-center">
-          <Search
-            className="h-7 w-7 sm:h-8 sm:w-8 text-sage-700 motion-safe:animate-pulse"
-            strokeWidth={2}
+        <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-sage-100 flex items-center justify-center overflow-hidden p-3">
+          <img
+            src={searchIcon.url}
+            alt=""
+            className="h-full w-full object-contain motion-safe:animate-pulse"
             aria-hidden="true"
           />
         </div>
