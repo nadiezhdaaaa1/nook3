@@ -1,12 +1,19 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck } from "lucide-react";
-import { Eyebrow } from "@/components/marketing/Eyebrow";
+import { motion, useReducedMotion } from "framer-motion";
+import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
 import { cn } from "@/lib/utils";
+import { OriginButton } from "@/components/ui/origin-button";
+import {
+  OB_H1,
+  OB_SUB,
+  OB_STEP_VARIANTS,
+  OB_SECTION_VARIANTS,
+} from "@/components/onboarding/stepStyles";
 
 export const Route = createFileRoute("/onboarding/preview")({
   component: SamplePreview,
@@ -14,10 +21,10 @@ export const Route = createFileRoute("/onboarding/preview")({
 
 function SamplePreview() {
   const navigate = useNavigate();
+  const reduce = useReducedMotion();
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
-  
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
@@ -87,52 +94,65 @@ function SamplePreview() {
     ]);
   };
 
+  const variants = reduce ? undefined : OB_STEP_VARIANTS;
+  const itemVariants = reduce ? undefined : OB_SECTION_VARIANTS;
+
   return (
-    <div className="space-y-8">
-      <header>
-        <Eyebrow>Sample alert</Eyebrow>
-        <h1 className="font-display text-3xl lg:text-4xl font-bold text-charcoal-950 leading-tight">
+    <motion.div
+      className="space-y-8"
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.header variants={itemVariants}>
+        <h1 className="font-display ob-h1" style={OB_H1}>
           You'd have gotten{" "}
           <span className="accent-italic">{matched.length} match{matched.length === 1 ? "" : "es"}</span>{" "}
           in your area this past week.
         </h1>
-        <p className="mt-3 text-charcoal-600">
+        <p style={OB_SUB}>
           {budget
-            ? `Within $${budget[0].toLocaleString()}–$${budget[1].toLocaleString()}/mo`
-            : "Here's what they looked like."}
-          {" "}We'll send these straight to your inbox.
+            ? `Within $${budget[0].toLocaleString()}–$${budget[1].toLocaleString()}/mo. `
+            : "Here's what they looked like. "}
+          We'll send these straight to your inbox.
         </p>
-      </header>
+      </motion.header>
 
       {matched.length === 0 ? (
-        <div className="p-8 rounded-card bg-surface-elevated border border-border text-center space-y-2">
+        <motion.div
+          variants={itemVariants}
+          className="p-8 rounded-card bg-surface-elevated border border-border text-center space-y-2"
+        >
           <p className="text-sm text-charcoal-700">
             No sample matches in {cityConfig?.displayName ?? "your area"} for this budget.
           </p>
           <p className="text-xs text-charcoal-500">
             Real listings hit your inbox the moment they appear — even when our sample pool is thin.
           </p>
-        </div>
+        </motion.div>
       ) : (
         <>
           {cityConfig && pins.length > 0 && (
-            <SampleListingsMap
-              city={cityConfig}
-              listings={pins}
-              activeId={activeId}
-              onSelect={(id) => {
-                setActiveId(id);
-                document.getElementById(`listing-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-            />
+            <motion.div variants={itemVariants}>
+              <SampleListingsMap
+                city={cityConfig}
+                listings={pins}
+                activeId={activeId}
+                onSelect={(id) => {
+                  setActiveId(id);
+                  document.getElementById(`listing-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
+              />
+            </motion.div>
           )}
 
           <div className="space-y-4">
             {matched.map((s) => {
               const isActive = activeId === s.id;
               return (
-                <article
+                <motion.article
                   key={s.id}
+                  variants={itemVariants}
                   id={`listing-${s.id}`}
                   onMouseEnter={() => setActiveId(s.id)}
                   className={cn(
@@ -206,20 +226,25 @@ function SamplePreview() {
 
                     </div>
                   </div>
-                </article>
+                </motion.article>
               );
             })}
           </div>
 
-          <p className="text-center text-xs text-charcoal-500 font-mono uppercase tracking-[0.16em] mt-6">
+          <motion.p
+            variants={itemVariants}
+            className="text-center text-xs text-charcoal-500 font-mono uppercase tracking-[0.16em] mt-6"
+          >
             Sample preview · Real alerts after signup
-          </p>
+          </motion.p>
         </>
       )}
 
-
       {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
-        <div className="rounded-card border border-border bg-surface-elevated p-4 flex gap-3">
+        <motion.div
+          variants={itemVariants}
+          className="rounded-card border border-border bg-surface-elevated p-4 flex gap-3"
+        >
           <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
           <div className="space-y-1">
             <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
@@ -229,16 +254,20 @@ function SamplePreview() {
               Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")} records before it reaches your inbox.
             </p>
           </div>
-        </div>
+        </motion.div>
       )}
 
-      <button
-        type="button"
-        onClick={() => navigate({ to: "/onboarding/pricing" })}
-        className="w-full h-12 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 transition-colors"
-      >
-        See my plan options →
-      </button>
-    </div>
+      <motion.div variants={itemVariants} className="w-full pt-2">
+        <OriginButton
+          type="button"
+          variant="main"
+          size="big"
+          className="w-full"
+          onClick={() => navigate({ to: "/onboarding/pricing" })}
+        >
+          See my plan options <ArrowRight style={{ width: 16, height: 16 }} />
+        </OriginButton>
+      </motion.div>
+    </motion.div>
   );
 }
