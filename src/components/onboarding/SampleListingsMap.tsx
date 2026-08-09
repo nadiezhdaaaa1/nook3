@@ -79,7 +79,7 @@ export function SampleListingsMap({ city, listings, activeId, onSelect }: Props)
   }, [ready, city.id, listings, activeId, onSelect]);
 
   return (
-    <div className="relative w-full h-72 rounded-card overflow-hidden border border-border bg-charcoal-100">
+    <div className="relative w-full h-[420px] md:h-[540px] rounded-card overflow-hidden border border-border bg-charcoal-100">
       <div ref={containerRef} className="absolute inset-0" />
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center text-xs font-mono text-charcoal-500">
