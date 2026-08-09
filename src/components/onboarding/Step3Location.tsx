@@ -147,7 +147,7 @@ export function Step3Location() {
 
       {/* Selected chips */}
       {neighborhoods.length > 0 && (
-        <div className="p-4 rounded-card bg-sage-100/60 border border-sage-300/40">
+        <div className="rounded-card bg-sage-100/60">
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
             Selected · {neighborhoods.length}
           </div>
