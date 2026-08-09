@@ -67,7 +67,6 @@ export function CityPicker({ value, onChange, query = "", animatingId = null }: 
       onPointerCancel={endDrag}
       onDragStart={(e) => e.preventDefault()}
       onClickCapture={(e) => {
-        console.log("CityPicker onClickCapture moved=", drag.current.moved);
         if (drag.current.moved > 4) {
           e.preventDefault();
           e.stopPropagation();
