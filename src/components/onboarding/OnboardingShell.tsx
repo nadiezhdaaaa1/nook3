@@ -26,18 +26,6 @@ export function OnboardingShell() {
 
   const pct = step ? Math.round((step / 4) * 100) : 0;
 
-  const onBack = () => {
-    if (step && step > 1) {
-      set("lastStep", step - 1);
-      navigate({ to: "/onboarding/step/$step", params: { step: String(step - 1) } });
-      return;
-    }
-    if (city) {
-      set("city", null);
-      return;
-    }
-    navigate({ to: "/" });
-  };
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#faf6ee" }}>
