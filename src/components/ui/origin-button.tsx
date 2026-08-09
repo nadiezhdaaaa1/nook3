@@ -66,7 +66,7 @@ function hasTextContent(node: React.ReactNode): boolean {
 type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   children?: React.ReactNode;
   loading?: boolean;
-  variant?: "default" | "main" | "secondary" | "tertiary" | "dark" | "premium" | "max";
+  variant?: "default" | "main" | "secondary" | "nice" | "tertiary" | "dark" | "premium" | "max";
   size?: "big" | "medium";
 };
 
@@ -193,7 +193,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
                   ? "h-[48px] px-5 text-[15px]"
                   : "h-[56px] px-6 text-[16px]",
               )
-            : variant === "secondary"
+            : variant === "secondary" || variant === "nice"
               ? cn(
                   "rounded-[12px] border-[1.5px] border-[#D66C38] bg-transparent font-medium text-[#D66C38]",
                   size === "medium"
@@ -232,7 +232,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           "transition-[color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "disabled:pointer-events-none disabled:opacity-50",
-          showFill && (variant === "main" || variant === "secondary" ? "text-white" : variant === "tertiary" ? "text-[#2B2521]" : variant === "dark" ? "text-white" : "text-[#2B2521]"),
+          showFill && (variant === "main" || variant === "secondary" ? "text-white" : variant === "nice" ? "text-[#D66C38]" : variant === "tertiary" ? "text-[#2B2521]" : variant === "dark" ? "text-white" : "text-[#2B2521]"),
           className,
         )}
         data-pressed={isPressed ? "true" : "false"}
@@ -322,7 +322,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           aria-hidden
           className={cn(
             "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-            variant === "dark" ? "bg-[#000000]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : "bg-[#CE4F12]",
+            variant === "dark" ? "bg-[#000000]" : variant === "nice" ? "bg-[#FED9C7]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : "bg-[#CE4F12]",
           )}
           initial={false}
           style={{
