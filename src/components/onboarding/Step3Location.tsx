@@ -107,16 +107,24 @@ export function Step3Location() {
                   className={cn(
                     "group text-left p-3.5 rounded-card border transition-colors",
                     allSelected
-                      ? "bg-sage-100/60 border-sage-400/60 hover:border-sage-500"
+                      ? "border-transparent hover:border-charcoal-400"
                       : "bg-surface-elevated border-border hover:border-charcoal-950 disabled:opacity-40 disabled:hover:border-border",
                   )}
+                  style={allSelected ? { backgroundColor: "#241C12" } : undefined}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-lg leading-none">{p.emoji}</span>
-                    <span className="text-sm font-semibold text-charcoal-950">{p.label}</span>
+                    <span className={cn("text-sm font-semibold", allSelected ? "text-paper" : "text-charcoal-950")}>
+                      {p.label}
+                    </span>
                   </div>
-                  <div className="text-[11px] text-charcoal-500 leading-snug">{p.description}</div>
-                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5 text-charcoal-400">
+                  <div className={cn("text-[11px] leading-snug", allSelected ? "text-paper/70" : "text-charcoal-500")}>
+                    {p.description}
+                  </div>
+                  <div className={cn(
+                    "text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5",
+                    allSelected ? "text-paper/60" : "text-charcoal-400",
+                  )}>
                     +{resolved.length} areas{allSelected ? " · added · tap to remove" : ""}
                   </div>
                 </button>
