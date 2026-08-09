@@ -89,7 +89,7 @@ function SearchSetupLoader() {
 
         {/* Heading */}
         <h1 className="mt-8 font-display font-semibold text-[30px] sm:text-[44px] leading-[1.15] text-charcoal-950">
-          Finding your <span className="italic text-sage-700">matches</span>
+          Finding your matches
         </h1>
 
         {/* Subtitle */}
