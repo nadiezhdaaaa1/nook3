@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
-import { Search, X, MapPin, Map as MapIcon, List, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
+import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { ObChip } from "@/components/onboarding/ObChip";
+import { ViewSwitcher } from "@/components/onboarding/ViewSwitcher";
 import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -76,18 +77,15 @@ export function Step3Location() {
       </header>
 
       {/* View toggle */}
-      <div className="flex" style={{ gap: 12 }}>
-        <ObChip selected={view === "list"} onClick={() => setView("list")}>
-          <span className="inline-flex items-center gap-2">
-            <List className="h-4 w-4" /> List
-          </span>
-        </ObChip>
-        <ObChip selected={view === "map"} onClick={() => setView("map")}>
-          <span className="inline-flex items-center gap-2">
-            <MapIcon className="h-4 w-4" /> Map
-          </span>
-        </ObChip>
-      </div>
+      <ViewSwitcher
+        value={view}
+        onChange={(v) => setView(v)}
+        options={[
+          { value: "list", label: "List" },
+          { value: "map", label: "Map" },
+        ]}
+        ariaLabel="Neighborhood view"
+      />
 
       {/* Quick presets */}
       {presets.length > 0 && (
