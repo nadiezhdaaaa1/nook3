@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck, ArrowRight, X } from "lucide-react";
+import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck, ArrowRight, X, ChevronDown, ChevronUp } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
