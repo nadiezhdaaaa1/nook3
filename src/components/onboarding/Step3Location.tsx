@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { ObChip } from "@/components/onboarding/ObChip";
 import { ViewSwitcher } from "@/components/onboarding/ViewSwitcher";
 import { OB_H1, OB_SUB, OB_H2 } from "@/components/onboarding/stepStyles";
 import { NeighborhoodMap } from "@/components/onboarding/NeighborhoodMap";
