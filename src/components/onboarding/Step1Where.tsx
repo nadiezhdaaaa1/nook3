@@ -1,12 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Pencil, Search, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CityPicker } from "@/components/onboarding/CityPicker";
 import { RentSlider } from "@/components/onboarding/RentSlider";
 import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
-import { getCity } from "@/data/cities";
+import { getCity, type CityId } from "@/data/cities";
 import { CITY_ACTIVE_LISTINGS } from "@/data/cities/icons";
 import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
 
@@ -41,6 +42,7 @@ export function Step1Where() {
   const [moveInChosen, setMoveInChosen] = useState(
     () => Boolean(moveIn.date) || useOnboardingStore.getState().lastStep > 1,
   );
+  const [animatingId, setAnimatingId] = useState<CityId | null>(null);
 
   useEffect(() => {
     if (cityConfig && budget === null) {
@@ -52,7 +54,24 @@ export function Step1Where() {
     }
   }, [cityConfig, budget, patch]);
 
+  // Reset animation id once the shared-element transition has completed.
+  useEffect(() => {
+    if (!animatingId) return;
+    const t = setTimeout(() => setAnimatingId(null), 450);
+    return () => clearTimeout(t);
+  }, [animatingId, cityConfig]);
+
   const canContinue = Boolean(cityConfig && budget !== null && moveInChosen);
+
+  const handleSelectCity = (id: CityId) => {
+    setAnimatingId(id);
+    set("city", id);
+  };
+
+  const handleClearCity = () => {
+    if (cityConfig) setAnimatingId(cityConfig.id);
+    set("city", null);
+  };
 
   return (
     <div style={{ paddingBottom: 40 }}>
@@ -82,146 +101,171 @@ export function Step1Where() {
         </div>
       </div>
 
-      {!cityConfig && (
-        <div className="ob-fade-up ob-bleed" style={{ marginTop: 32 }}>
-          <CityPicker value={city} onChange={(id) => set("city", id)} query={query} />
-        </div>
-      )}
-
-      {cityConfig && (
-        <>
-          <div
-            className="ob-fade-up flex items-center"
-            style={{
-              marginTop: 32,
-              background: CITY_TINT[cityConfig.id],
-              borderRadius: 24,
-              padding: "12px 24px 12px 12px",
-              gap: 20,
-            }}
+      <AnimatePresence mode="popLayout" initial={false}>
+        {!cityConfig ? (
+          <motion.div
+            key="picker"
+            className="ob-fade-up ob-bleed"
+            style={{ marginTop: 32 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div
-              className="overflow-hidden shrink-0 ob-banner-photo"
-              style={{ width: 100, height: 72, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
+            <CityPicker
+              value={city}
+              onChange={handleSelectCity}
+              animatingId={animatingId}
+              query={query}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="selected"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.div
+              className="ob-fade-up flex items-center"
+              style={{
+                marginTop: 32,
+                background: CITY_TINT[cityConfig.id],
+                borderRadius: 24,
+                padding: "12px 24px 12px 12px",
+                gap: 20,
+              }}
+              layoutId={`city-card-${cityConfig.id}`}
             >
-              {CITY_PHOTO[cityConfig.id] && (
-                <img
-                  src={CITY_PHOTO[cityConfig.id]}
-                  alt={cityConfig.displayName}
-                  className="h-full w-full object-cover"
-                />
+              <motion.div
+                className="overflow-hidden shrink-0 ob-banner-photo"
+                style={{ width: 100, height: 72, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
+                layoutId={`city-photo-${cityConfig.id}`}
+              >
+                {CITY_PHOTO[cityConfig.id] && (
+                  <img
+                    src={CITY_PHOTO[cityConfig.id]}
+                    alt={cityConfig.displayName}
+                    className="h-full w-full object-cover"
+                  />
+                )}
+              </motion.div>
+              <motion.div
+                className="font-display flex-1 ob-banner-name"
+                style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.45px", color: "#241c12" }}
+                layoutId={`city-name-${cityConfig.id}`}
+              >
+                {cityConfig.displayName}
+              </motion.div>
+              <motion.button
+                type="button"
+                onClick={handleClearCity}
+                className="ob-ghost-dark inline-flex items-center shrink-0"
+                style={{ gap: 8, padding: "12px 16px", borderRadius: 12, fontWeight: 600, fontSize: 14, color: "#241c12" }}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15, duration: 0.25 }}
+              >
+                <Pencil style={{ width: 20, height: 20 }} /> Change
+              </motion.button>
+            </motion.div>
+
+            <div className="ob-fade-up" style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}>
+              <div>
+                <h2 className="font-display ob-h1" style={H1}>
+                  Let's narrow down <span style={{ color: "#5a5a55" }}>{cityConfig.displayName}</span>
+                </h2>
+                <p style={SUB}>Tell us your rent range and when you need to move</p>
+              </div>
+
+              {budget !== null && (
+                <div>
+                  <h3 className="font-display" style={H2}>
+                    1. Monthly rent range
+                  </h3>
+                  <div style={{ marginTop: 16 }}>
+                    <RentSlider city={cityConfig} value={budget} onChange={(v) => set("budget", v)} />
+                  </div>
+                </div>
               )}
-            </div>
-            <div
-              className="font-display flex-1 ob-banner-name"
-              style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.45px", color: "#241c12" }}
-            >
-              {cityConfig.displayName}
-            </div>
-            <button
-              type="button"
-              onClick={() => set("city", null)}
-              className="ob-ghost-dark inline-flex items-center shrink-0"
-              style={{ gap: 8, padding: "12px 16px", borderRadius: 12, fontWeight: 600, fontSize: 14, color: "#241c12" }}
-            >
-              <Pencil style={{ width: 20, height: 20 }} /> Change
-            </button>
-          </div>
 
-          <div className="ob-fade-up" style={{ marginTop: 80, display: "flex", flexDirection: "column", gap: 40 }}>
-            <div>
-              <h2 className="font-display ob-h1" style={H1}>
-                Let's narrow down <span style={{ color: "#5a5a55" }}>{cityConfig.displayName}</span>
-              </h2>
-              <p style={SUB}>Tell us your rent range and when you need to move</p>
-            </div>
-
-            {budget !== null && (
               <div>
                 <h3 className="font-display" style={H2}>
-                  1. Monthly rent range
+                  2. Move-in date
                 </h3>
                 <div style={{ marginTop: 16 }}>
-                  <RentSlider city={cityConfig} value={budget} onChange={(v) => set("budget", v)} />
+                  <MoveInPicker
+                    mode={moveIn.mode}
+                    date={moveIn.date}
+                    chosen={moveInChosen}
+                    onChange={(mode, date) => {
+                      setMoveInChosen(true);
+                      set("moveIn", { mode, date });
+                    }}
+                  />
                 </div>
               </div>
-            )}
 
-            <div>
-              <h3 className="font-display" style={H2}>
-                2. Move-in date
-              </h3>
-              <div style={{ marginTop: 16 }}>
-                <MoveInPicker
-                  mode={moveIn.mode}
-                  date={moveIn.date}
-                  chosen={moveInChosen}
-                  onChange={(mode, date) => {
-                    setMoveInChosen(true);
-                    set("moveIn", { mode, date });
-                  }}
-                />
-              </div>
-            </div>
-
-            <label
-              className="flex items-start cursor-pointer"
-              style={{
-                background: "#ebf0d5",
-                border: "1px solid #809917",
-                borderRadius: 16,
-                padding: "16px 20px",
-                gap: 16,
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={movingOut}
-                onChange={(e) => set("movingOut", e.target.checked)}
-                className="ob-check"
-              />
-              <div>
-                <div style={{ fontWeight: 500, fontSize: 18, lineHeight: "24px", color: "#2b2521" }}>
-                  I'm also moving out of my current place
-                </div>
-                <div style={{ marginTop: 4, fontSize: 15, lineHeight: "24px", color: "#4a4a46" }}>
-                  Share your move-out date later for $50 off Premium annual.
-                </div>
-              </div>
-            </label>
-
-            <p style={{ fontSize: 13, lineHeight: "16px", color: "#4a4a46" }}>
-              Today we're monitoring {CITY_ACTIVE_LISTINGS[cityConfig.id].toLocaleString()} active{" "}
-              {cityConfig.displayName} listings
-            </p>
-
-            <div className="flex justify-end ob-next-row">
-              <button
-                type="button"
-                disabled={!canContinue}
-                onClick={() => {
-                  set("lastStep", 2);
-                  navigate({ to: "/onboarding/step/$step", params: { step: "2" } });
-                }}
-                className="ob-next inline-flex items-center justify-center"
+              <label
+                className="flex items-start cursor-pointer"
                 style={{
-                  gap: 8,
-                  background: "#d66c38",
-                  color: "#ffffff",
-                  borderRadius: 12,
-                  padding: "16px 24px",
-                  fontWeight: 500,
-                  fontSize: 16,
-                  opacity: canContinue ? 1 : 0.35,
-                  cursor: canContinue ? "pointer" : "not-allowed",
+                  background: "#ebf0d5",
+                  border: "1px solid #809917",
+                  borderRadius: 16,
+                  padding: "16px 20px",
+                  gap: 16,
                 }}
               >
-                Next <ArrowRight style={{ width: 16, height: 16 }} />
-              </button>
+                <input
+                  type="checkbox"
+                  checked={movingOut}
+                  onChange={(e) => set("movingOut", e.target.checked)}
+                  className="ob-check"
+                />
+                <div>
+                  <div style={{ fontWeight: 500, fontSize: 18, lineHeight: "24px", color: "#2b2521" }}>
+                    I'm also moving out of my current place
+                  </div>
+                  <div style={{ marginTop: 4, fontSize: 15, lineHeight: "24px", color: "#4a4a46" }}>
+                    Share your move-out date later for $50 off Premium annual.
+                  </div>
+                </div>
+              </label>
+
+              <p style={{ fontSize: 13, lineHeight: "16px", color: "#4a4a46" }}>
+                Today we're monitoring {CITY_ACTIVE_LISTINGS[cityConfig.id].toLocaleString()} active{" "}
+                {cityConfig.displayName} listings
+              </p>
+
+              <div className="flex justify-end ob-next-row">
+                <button
+                  type="button"
+                  disabled={!canContinue}
+                  onClick={() => {
+                    set("lastStep", 2);
+                    navigate({ to: "/onboarding/step/$step", params: { step: "2" } });
+                  }}
+                  className="ob-next inline-flex items-center justify-center"
+                  style={{
+                    gap: 8,
+                    background: "#d66c38",
+                    color: "#ffffff",
+                    borderRadius: 12,
+                    padding: "16px 24px",
+                    fontWeight: 500,
+                    fontSize: 16,
+                    opacity: canContinue ? 1 : 0.35,
+                    cursor: canContinue ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Next <ArrowRight style={{ width: 16, height: 16 }} />
+                </button>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

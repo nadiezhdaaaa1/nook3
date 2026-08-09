@@ -1,4 +1,5 @@
 import { useMemo, useRef } from "react";
+import { motion } from "framer-motion";
 import { CITY_LIST, type CityId } from "@/data/cities";
 import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
 
@@ -7,9 +8,11 @@ interface Props {
   onChange: (id: CityId) => void;
   /** Live search query — filters the row. */
   query?: string;
+  /** City id currently animating between picker and selected banner. */
+  animatingId?: CityId | null;
 }
 
-export function CityPicker({ value, onChange, query = "" }: Props) {
+export function CityPicker({ value, onChange, query = "", animatingId = null }: Props) {
   const cities = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return CITY_LIST;
@@ -71,49 +74,57 @@ export function CityPicker({ value, onChange, query = "" }: Props) {
         }
       }}
     >
-      {cities.map((c) => (
-        <button
-          key={c.id}
-          type="button"
-          aria-pressed={value === c.id}
-          onClick={() => onChange(c.id)}
-          className="ob-city-card shrink-0 text-left"
-          style={{
-            width: 188,
-            borderRadius: 24,
-            padding: 12,
-            background: CITY_TINT[c.id],
-          }}
-        >
-          <div
-            className="w-full overflow-hidden"
-            style={{ height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
-          >
-            {CITY_PHOTO[c.id] && (
-              <img
-                src={CITY_PHOTO[c.id]}
-                alt={c.displayName}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            )}
-          </div>
-          <div
-            className="font-display text-center"
+      {cities.map((c) => {
+        const isAnimating = animatingId === c.id;
+        return (
+          <motion.button
+            key={c.id}
+            type="button"
+            aria-pressed={value === c.id}
+            onClick={() => onChange(c.id)}
+            className="ob-city-card shrink-0 text-left"
             style={{
-              marginTop: 8,
-              padding: "8px 0",
-              fontWeight: 700,
-              fontSize: 18,
-              lineHeight: 1.2,
-              letterSpacing: "-0.45px",
-              color: "#241c12",
+              width: 188,
+              borderRadius: 24,
+              padding: 12,
+              background: CITY_TINT[c.id],
             }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            layoutId={isAnimating ? `city-card-${c.id}` : undefined}
           >
-            {c.displayName}
-          </div>
-        </button>
-      ))}
+            <motion.div
+              className="w-full overflow-hidden"
+              style={{ height: 136, borderRadius: 14, background: "rgba(0,0,0,0.06)" }}
+              layoutId={isAnimating ? `city-photo-${c.id}` : undefined}
+            >
+              {CITY_PHOTO[c.id] && (
+                <img
+                  src={CITY_PHOTO[c.id]}
+                  alt={c.displayName}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              )}
+            </motion.div>
+            <motion.div
+              className="font-display text-center"
+              style={{
+                marginTop: 8,
+                padding: "8px 0",
+                fontWeight: 700,
+                fontSize: 18,
+                lineHeight: 1.2,
+                letterSpacing: "-0.45px",
+                color: "#241c12",
+              }}
+              layoutId={isAnimating ? `city-name-${c.id}` : undefined}
+            >
+              {c.displayName}
+            </motion.div>
+          </motion.button>
+        );
+      })}
       {cities.length === 0 && (
         <div className="text-sm" style={{ color: "#5a5a55" }}>
           No cities match that search.
