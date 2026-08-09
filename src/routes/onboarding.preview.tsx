@@ -22,7 +22,7 @@ const HERO_CARD_STYLE = {
   borderRadius: 24,
   border: "1px solid rgba(0,0,0,0.20)",
   background: "#ffffff",
-  padding: 16,
+  padding: 24,
   boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
 } as const;
 
