@@ -54,14 +54,12 @@ export function OnboardingShell() {
         }}
       >
         <div className="flex items-center" style={{ gap: 40 }}>
-          <button
-            type="button"
-            onClick={() => navigate({ to: "/" })}
+          <div
             style={{ padding: "0 8px" }}
-            aria-label="Nook home"
+            aria-label="Nook"
           >
             <img src={nookLogo.url} alt="Nook" style={{ width: 70, height: 24 }} />
-          </button>
+          </div>
 
           {step !== null && (
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
