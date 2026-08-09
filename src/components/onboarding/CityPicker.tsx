@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { CITY_LIST, type CityId } from "@/data/cities";
 import { CITY_TINT, CITY_PHOTO } from "@/data/cities/cards";
 
@@ -21,11 +21,55 @@ export function CityPicker({ value, onChange, query = "" }: Props) {
     );
   }, [query]);
 
+  const rowRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ active: false, startX: 0, startScroll: 0, moved: 0 });
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    const el = rowRef.current;
+    if (!el) return;
+    drag.current = { active: true, startX: e.clientX, startScroll: el.scrollLeft, moved: 0 };
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = rowRef.current;
+    if (!drag.current.active || !el) return;
+    const dx = e.clientX - drag.current.startX;
+    if (Math.abs(dx) > 4) {
+      drag.current.moved = Math.abs(dx);
+      el.classList.add("is-dragging");
+      el.setPointerCapture?.(e.pointerId);
+    }
+    el.scrollLeft = drag.current.startScroll - dx;
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = rowRef.current;
+    drag.current.active = false;
+    if (!el) return;
+    el.releasePointerCapture?.(e.pointerId);
+    // keep the class one frame so the click that follows a drag is swallowed
+    requestAnimationFrame(() => el.classList.remove("is-dragging"));
+  };
+
   return (
     <div
+      ref={rowRef}
       role="group"
       aria-label="Pick your city"
       className="ob-cards-row flex gap-4 overflow-x-auto pb-2"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      onDragStart={(e) => e.preventDefault()}
+      onClickCapture={(e) => {
+        if (drag.current.moved > 4) {
+          e.preventDefault();
+          e.stopPropagation();
+          drag.current.moved = 0;
+        }
+      }}
     >
       {cities.map((c) => (
         <button
