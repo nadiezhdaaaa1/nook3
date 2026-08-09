@@ -78,26 +78,24 @@ export function Step4Preferences() {
 
       {/* Presets */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-            Quick presets
-          </div>
-          {Object.keys(amenities).length > 0 && (
-            <button
-              type="button"
-              onClick={() => patch({ amenities: {} })}
-              className="text-xs font-semibold text-charcoal-500 hover:text-charcoal-950"
-            >
-              Clear all
-            </button>
-          )}
+        <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+          Quick presets
         </div>
-        <div className="flex flex-wrap" style={{ gap: 12 }}>
+        <div className="flex flex-wrap items-center" style={{ gap: 12 }}>
           {AMENITY_PRESETS.map((p) => (
             <ObChip key={p.id} onClick={() => applyPreset(p.id)}>
               + {p.label}
             </ObChip>
           ))}
+          {Object.keys(amenities).length > 0 && (
+            <button
+              type="button"
+              onClick={() => patch({ amenities: {} })}
+              className="inline-flex items-center h-[54px] px-6 text-[16px] font-semibold text-charcoal-500 hover:text-charcoal-950 rounded-[12px] transition-colors"
+            >
+              Clear all
+            </button>
+          )}
         </div>
       </section>
 
