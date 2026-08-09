@@ -27,17 +27,24 @@ export function ObChip({
   children,
   ...props
 }: ObChipProps) {
+  const isSmall = size === "small";
   return (
     <OriginButton
       type="button"
       variant={selected ? selectedVariant : "tertiary"}
-      size={size}
+      size={isSmall ? "medium" : size}
       aria-pressed={selected}
-      className={cn(OB_CHIP_CLASS, fullWidth && "w-full justify-start text-left", className)}
+      className={cn(
+        OB_CHIP_CLASS,
+        fullWidth && "w-full justify-start text-left",
+        isSmall && "h-auto px-3 py-2 text-[14px]",
+        className,
+      )}
       {...props}
     >
       {children}
     </OriginButton>
   );
 }
+
 
