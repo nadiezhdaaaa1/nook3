@@ -1,4 +1,10 @@
-import { useRef } from "react";
+import { useState } from "react";
+import { format, parseISO, startOfDay } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface Props {
   mode: "specific" | "flexible";
@@ -8,47 +14,23 @@ interface Props {
   onChange: (mode: "specific" | "flexible", date?: string) => void;
 }
 
-function fmt(iso: string) {
-  const d = new Date(iso + "T00:00:00");
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-}
-
 const CHIP: React.CSSProperties = {
   borderRadius: 12,
   height: 54,
   padding: "0 24px",
   fontWeight: 500,
   fontSize: 14,
-  border: "1px solid rgba(0,0,0,0.2)",
+  borderWidth: 1,
+  borderStyle: "solid",
+  borderColor: "rgba(0,0,0,0.2)",
   transition: "background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out",
 };
 
 export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const defaultDate = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 30);
-    return d.toISOString().slice(0, 10);
-  })();
-  const effective = date ?? defaultDate;
-
-  const specificOn = chosen && mode === "specific";
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const selectedDate = date ? parseISO(date) : undefined;
+  const specificOn = chosen && mode === "specific" && Boolean(selectedDate);
   const flexibleOn = chosen && mode === "flexible";
-
-  const openPicker = () => {
-    const el = inputRef.current;
-    if (el) {
-      try {
-        if (typeof el.showPicker === "function") el.showPicker();
-        else el.focus();
-      } catch {
-        el.focus();
-      }
-    }
-  };
-
 
   const selStyle = (on: boolean): React.CSSProperties =>
     on
@@ -57,29 +39,49 @@ export function MoveInPicker({ mode, date, chosen = false, onChange }: Props) {
 
   return (
     <div className="ob-chips flex" style={{ gap: 12 }}>
-      <div className="relative">
-        <button type="button" aria-pressed={specificOn} onClick={openPicker} style={selStyle(specificOn)} className="w-full">
-          {specificOn ? `Specific date • ${fmt(effective)}` : "Specific date"}
-        </button>
-        <input
-          ref={inputRef}
-          type="date"
-          value={effective}
-          onChange={(e) => onChange("specific", e.target.value)}
-          aria-label="Move-in date"
-          className="absolute left-3 bottom-0 h-0 w-0 opacity-0 pointer-events-none"
-          tabIndex={-1}
-        />
-      </div>
+      <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            aria-pressed={specificOn}
+            style={selStyle(specificOn)}
+            className="w-full justify-start text-left font-medium"
+          >
+            <CalendarIcon aria-hidden="true" />
+            {specificOn && selectedDate
+              ? `Specific date • ${format(selectedDate, "d MMM yyyy")}`
+              : "Specific date"}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={selectedDate}
+            onSelect={(value) => {
+              if (!value) return;
+              onChange("specific", format(value, "yyyy-MM-dd"));
+              setCalendarOpen(false);
+            }}
+            disabled={{ before: startOfDay(new Date()) }}
+            initialFocus
+            className={cn("pointer-events-auto p-3")}
+          />
+        </PopoverContent>
+      </Popover>
 
-      <button
+      <Button
         type="button"
+        variant="outline"
         aria-pressed={flexibleOn}
-        onClick={() => onChange("flexible")}
+        onClick={() => {
+          setCalendarOpen(false);
+          onChange("flexible");
+        }}
         style={selStyle(flexibleOn)}
       >
         Flexible
-      </button>
+      </Button>
     </div>
   );
 }
