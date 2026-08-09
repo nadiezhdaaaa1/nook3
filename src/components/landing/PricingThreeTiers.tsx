@@ -142,6 +142,7 @@ interface PricingThreeTiersProps {
   onCycleChange?: (c: Cycle) => void;
   onTierSelect?: (tier: Tier) => void;
   tierCta?: Partial<Record<string, string>>;
+  compactTop?: boolean;
 }
 
 export function PricingThreeTiers({
@@ -150,6 +151,7 @@ export function PricingThreeTiers({
   onCycleChange,
   onTierSelect,
   tierCta,
+  compactTop,
 }: PricingThreeTiersProps) {
   const [internalCycle, setInternalCycle] = useState<Cycle>(defaultCycle ?? "monthly");
   const cycle = controlledCycle ?? internalCycle;
