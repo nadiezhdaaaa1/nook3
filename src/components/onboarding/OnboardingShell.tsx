@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { X, ArrowLeft } from "lucide-react";
+import { X } from "lucide-react";
 import { ExitModal } from "@/components/onboarding/ExitModal";
-import { useOnboardingStore } from "@/lib/onboarding/store";
+
 import nookLogo from "@/assets/Nook_Green.svg.asset.json";
 
 const STEP_ROUTE_RE = /^\/onboarding\/step\/(\d)/;
@@ -21,23 +21,9 @@ export function OnboardingShell() {
   const stepMatch = pathname.match(STEP_ROUTE_RE);
   const step = stepMatch ? Number(stepMatch[1]) : null;
   const [exitOpen, setExitOpen] = useState(false);
-  const city = useOnboardingStore((s) => s.city);
-  const set = useOnboardingStore((s) => s.set);
 
   const pct = step ? Math.round((step / 4) * 100) : 0;
 
-  const onBack = () => {
-    if (step && step > 1) {
-      set("lastStep", step - 1);
-      navigate({ to: "/onboarding/step/$step", params: { step: String(step - 1) } });
-      return;
-    }
-    if (city) {
-      set("city", null);
-      return;
-    }
-    navigate({ to: "/" });
-  };
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#faf6ee" }}>
@@ -71,26 +57,6 @@ export function OnboardingShell() {
               }}
             />
           </div>
-
-          <button
-            type="button"
-            disabled={step === 1}
-            onClick={onBack}
-            className="ob-ghost inline-flex items-center"
-            style={{
-              gap: 8,
-              padding: "12px 16px",
-              borderRadius: 12,
-              fontWeight: 600,
-              fontSize: 14,
-              color: "#241c12",
-              opacity: step === 1 ? 0.35 : 1,
-              cursor: step === 1 ? "not-allowed" : "pointer",
-            }}
-          >
-            <ArrowLeft style={{ width: 16, height: 16 }} />
-            <span className="hidden sm:inline">Back</span>
-          </button>
 
           {step !== null && (
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
