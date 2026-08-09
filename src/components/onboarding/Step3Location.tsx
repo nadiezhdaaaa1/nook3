@@ -326,7 +326,7 @@ export function Step3Location() {
       )}
 
       {/* Trust signal */}
-      <div className="flex items-start gap-3 p-4 rounded-card bg-charcoal-950/[0.03] border border-charcoal-200/60">
+      <div className="flex items-start gap-3 p-4 rounded-[12px] bg-charcoal-950/[0.03] border border-charcoal-200/60">
         <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
         <div className="text-xs text-charcoal-600 leading-relaxed">
           Nook monitors every new listing in your selected {cityConfig.displayName} neighborhoods
