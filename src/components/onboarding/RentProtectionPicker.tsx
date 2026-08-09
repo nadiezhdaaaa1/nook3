@@ -75,7 +75,7 @@ export function RentProtectionPicker({
         </p>
       )}
 
-      <div role="radiogroup" aria-label={city.rentProtection.label} className="space-y-2">
+      <div role="radiogroup" aria-label={city.rentProtection.label} className="space-y-2" style={{ marginTop: 20 }}>
         {cards.map((c) => {
           const selected = current === c.id;
           return (
