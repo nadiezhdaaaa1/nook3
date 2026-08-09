@@ -1,12 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { MapPin, TrendingDown, Shield, Sparkles, ShieldCheck, ArrowRight, X } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
-import { cn } from "@/lib/utils";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
   OB_H1,
@@ -18,6 +17,14 @@ import {
 export const Route = createFileRoute("/onboarding/preview")({
   component: SamplePreview,
 });
+
+const HERO_CARD_STYLE = {
+  borderRadius: 24,
+  border: "1px solid rgba(0,0,0,0.20)",
+  background: "#ffffff",
+  padding: 16,
+  boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
+} as const;
 
 function SamplePreview() {
   const navigate = useNavigate();
@@ -44,6 +51,11 @@ function SamplePreview() {
     }
     return pool.sort((a, b) => a.rent - b.rent);
   }, [allListings, budget, neighborhoods]);
+
+  const activeListing = useMemo(
+    () => matched.find((s) => s.id === activeId) || null,
+    [matched, activeId],
+  );
 
   const pins = useMemo(
     () => matched.filter((l) => l.coords).map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
@@ -131,103 +143,93 @@ function SamplePreview() {
       ) : (
         <>
           {cityConfig && pins.length > 0 && (
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="relative">
               <SampleListingsMap
                 city={cityConfig}
                 listings={pins}
                 activeId={activeId}
-                onSelect={(id) => {
-                  setActiveId(id);
-                  document.getElementById(`listing-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-                }}
+                onSelect={(id) => setActiveId(id)}
               />
+
+              <AnimatePresence>
+                {activeListing && (
+                  <motion.article
+                    key={activeListing.id}
+                    initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 16, scale: 0.96 }}
+                    transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-10 w-[280px] max-w-[calc(100%-32px)] sm:max-w-[calc(100%-48px)]"
+                    style={HERO_CARD_STYLE}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h2
+                          className="font-sans text-base font-semibold leading-tight tracking-tight text-[#000000]"
+                          style={{ letterSpacing: "-0.42px" }}
+                        >
+                          {activeListing.address}
+                        </h2>
+                        <p className="mt-1 text-sm text-black/70 inline-flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5" /> {activeListing.neighborhood}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setActiveId(null)}
+                        className="shrink-0 inline-flex items-center justify-center h-7 w-7 rounded-full hover:bg-black/5 transition-colors"
+                        aria-label="Close listing"
+                      >
+                        <X className="h-4 w-4 text-black/60" />
+                      </button>
+                    </div>
+
+                    <div className="mt-3 flex items-baseline gap-3 flex-wrap">
+                      <span className="font-display text-2xl font-medium text-[#000000] tabular-nums leading-none tracking-tight">
+                        ${activeListing.rent.toLocaleString()}
+                        <span className="text-lg font-medium text-black/60">/mo</span>
+                      </span>
+                      {activeListing.belowMedianPct && (
+                        <span className="inline-flex items-center gap-1 text-xs text-sage-700 font-semibold">
+                          <TrendingDown className="h-3 w-3" /> {activeListing.belowMedianPct}% below median
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-2 text-sm text-charcoal-700">
+                      {activeListing.beds === 0 ? "Studio" : `${activeListing.beds} bed`} · {activeListing.baths} bath
+                    </div>
+
+                    {activeListing.tag && (
+                      <div className="mt-3 inline-flex items-center gap-1 px-2 py-1 rounded-pill bg-paper/95 backdrop-blur text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 border border-border">
+                        <Shield className="h-3 w-3" /> {activeListing.tag}
+                      </div>
+                    )}
+
+                    {activeListing.buildingNote && cityConfig?.buildingDataAvailable && (
+                      <div className="mt-2 text-[10px] font-mono text-charcoal-500 uppercase tracking-wider">
+                        {activeListing.buildingNote}
+                      </div>
+                    )}
+
+                    <div className="mt-3 p-3 rounded-md bg-sage-100/70 border border-sage-300/40">
+                      <div className="flex items-start gap-2">
+                        <Sparkles className="h-3.5 w-3.5 text-sage-700 mt-0.5 shrink-0" />
+                        <div>
+                          <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 font-semibold mb-1">
+                            Wren's take
+                          </div>
+                          <p className="text-xs text-charcoal-800 leading-relaxed">
+                            {wrenTake(activeListing)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.article>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
-
-          <div className="space-y-4">
-            {matched.map((s) => {
-              const isActive = activeId === s.id;
-              return (
-                <motion.article
-                  key={s.id}
-                  variants={itemVariants}
-                  id={`listing-${s.id}`}
-                  onMouseEnter={() => setActiveId(s.id)}
-                  className={cn(
-                    "group rounded-card bg-surface-elevated border overflow-hidden transition-all",
-                    isActive ? "border-charcoal-950 shadow-md" : "border-border",
-                  )}
-                >
-                  <div className="flex flex-col sm:flex-row">
-                    {/* Photo */}
-                    <div className="relative sm:w-64 sm:flex-shrink-0 h-48 sm:h-auto bg-charcoal-100 overflow-hidden">
-                      <img
-                        src={s.image}
-                        alt={`${s.address} — ${s.neighborhood}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      {s.tag && (
-                        <div className="absolute top-3 left-3 inline-flex items-center gap-1 px-2 py-1 rounded-pill bg-paper/95 backdrop-blur text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800">
-                          <Shield className="h-3 w-3" /> {s.tag}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Body */}
-                    <div className="flex-1 p-5 space-y-3">
-                      <div>
-                        <div className="font-display text-lg font-bold text-charcoal-950 leading-tight">
-                          {s.address}
-                        </div>
-                        <div className="text-xs text-charcoal-500 inline-flex items-center gap-1 mt-1">
-                          <MapPin className="h-3 w-3" /> {s.neighborhood}
-                        </div>
-                      </div>
-
-                      <div className="flex items-baseline gap-3 flex-wrap">
-                        <span className="font-display text-2xl font-bold text-charcoal-950 tabular-nums">
-                          ${s.rent.toLocaleString()}
-                          <span className="text-sm font-normal text-charcoal-500">/mo</span>
-                        </span>
-                        {s.belowMedianPct && (
-                          <span className="inline-flex items-center gap-1 text-xs text-sage-700 font-semibold">
-                            <TrendingDown className="h-3 w-3" /> {s.belowMedianPct}% below median
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="text-sm text-charcoal-700">
-                        {s.beds === 0 ? "Studio" : `${s.beds} bed`} · {s.baths} bath
-                      </div>
-
-                      {s.buildingNote && cityConfig?.buildingDataAvailable && (
-                        <div className="text-[10px] font-mono text-charcoal-500 uppercase tracking-wider">
-                          {s.buildingNote}
-                        </div>
-                      )}
-
-                      {/* Wren's take */}
-                      <div className="mt-3 p-3 rounded-md bg-sage-100/70 border border-sage-300/40">
-                        <div className="flex items-start gap-2">
-                          <Sparkles className="h-3.5 w-3.5 text-sage-700 mt-0.5 shrink-0" />
-                          <div>
-                            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-sage-800 font-semibold mb-1">
-                              Wren's take
-                            </div>
-                            <p className="text-xs text-charcoal-800 leading-relaxed">
-                              {wrenTake(s)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </div>
 
           <motion.p
             variants={itemVariants}
