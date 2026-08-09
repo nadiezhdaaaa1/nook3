@@ -558,7 +558,7 @@ button.bg-sage-900:hover, a.bg-sage-900:hover {
 .ob-check:checked { background: #809917; border-color: #809917; }
 .ob-check:checked::after {
   content: ""; position: absolute; left: 6px; top: 2px;
-  width: 6px; height: 11px; border: solid #fff; border-width: 0 2px 2px 0;
+  width: 6px; height: 11px; border: solid #fff; border-width: 0 1.75px 1.75px 0;
   transform: rotate(45deg);
 }
 

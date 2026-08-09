@@ -16,7 +16,8 @@ function fmt(iso: string) {
 
 const CHIP: React.CSSProperties = {
   borderRadius: 12,
-  padding: "16px 24px",
+  height: 54,
+  padding: "0 24px",
   fontWeight: 500,
   fontSize: 14,
   border: "1px solid rgba(0,0,0,0.2)",
