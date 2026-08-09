@@ -40,8 +40,12 @@ export function MoveInPicker({ mode, date, chosen = true, onChange }: Props) {
     onChange("specific", effective);
     const el = inputRef.current;
     if (el) {
-      if (typeof el.showPicker === "function") el.showPicker();
-      else el.focus();
+      try {
+        if (typeof el.showPicker === "function") el.showPicker();
+        else el.focus();
+      } catch {
+        el.focus();
+      }
     }
   };
 
