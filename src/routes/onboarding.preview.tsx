@@ -53,10 +53,10 @@ function SamplePreview() {
   }, []);
 
   const allListings: SampleListing[] = useMemo(
-
     () => (city && SAMPLE_LISTINGS[city]) || [],
     [city],
   );
+
 
 
   // Filter by budget range; if no neighborhoods picked, ignore the area filter.
