@@ -50,6 +50,7 @@ import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthenticatedWrenRouteImport } from './routes/_authenticated.wren'
 import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated.saved'
 import { Route as AuthenticatedReferralsRouteImport } from './routes/_authenticated.referrals'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated.account'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
 import { Route as AuthenticatedSearchSearchIdRouteImport } from './routes/_authenticated.search.$searchId'
@@ -264,6 +265,11 @@ const AuthenticatedReferralsRoute = AuthenticatedReferralsRouteImport.update({
   path: '/referrals',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -341,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/home': typeof AuthenticatedHomeRoute
   '/referrals': typeof AuthenticatedReferralsRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/wren': typeof AuthenticatedWrenRoute
@@ -391,6 +398,7 @@ export interface FileRoutesByTo {
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/home': typeof AuthenticatedHomeRoute
   '/referrals': typeof AuthenticatedReferralsRoute
   '/saved': typeof AuthenticatedSavedRoute
   '/wren': typeof AuthenticatedWrenRoute
@@ -443,6 +451,7 @@ export interface FileRoutesById {
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/referrals': typeof AuthenticatedReferralsRoute
   '/_authenticated/saved': typeof AuthenticatedSavedRoute
   '/_authenticated/wren': typeof AuthenticatedWrenRoute
@@ -496,6 +505,7 @@ export interface FileRouteTypes {
     | '/subprocessors'
     | '/terms'
     | '/account'
+    | '/home'
     | '/referrals'
     | '/saved'
     | '/wren'
@@ -546,6 +556,7 @@ export interface FileRouteTypes {
     | '/subprocessors'
     | '/terms'
     | '/account'
+    | '/home'
     | '/referrals'
     | '/saved'
     | '/wren'
@@ -597,6 +608,7 @@ export interface FileRouteTypes {
     | '/subprocessors'
     | '/terms'
     | '/_authenticated/account'
+    | '/_authenticated/home'
     | '/_authenticated/referrals'
     | '/_authenticated/saved'
     | '/_authenticated/wren'
@@ -949,6 +961,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReferralsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/account': {
       id: '/_authenticated/account'
       path: '/account'
@@ -1044,6 +1063,7 @@ const AuthenticatedSearchSearchIdRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedReferralsRoute: typeof AuthenticatedReferralsRoute
   AuthenticatedSavedRoute: typeof AuthenticatedSavedRoute
   AuthenticatedWrenRoute: typeof AuthenticatedWrenRoute
@@ -1052,6 +1072,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedReferralsRoute: AuthenticatedReferralsRoute,
   AuthenticatedSavedRoute: AuthenticatedSavedRoute,
   AuthenticatedWrenRoute: AuthenticatedWrenRoute,
