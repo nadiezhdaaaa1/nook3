@@ -128,22 +128,29 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
 
 
 
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          onClick={onToggleSave}
-          disabled={saving}
-          aria-pressed={saved}
-          aria-label={saved ? "Remove from saved listings" : "Save listing"}
-          className={compactSave ? "ml-1 h-9 w-9 rounded-[8px] px-0" : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
-        >
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Heart className="h-4 w-4" fill={saved ? "#D66C38" : "none"} color={saved ? "#D66C38" : "#6e6459"} />
-          )}
-          {!compactSave && (saved ? "Saved" : "Save")}
-        </OriginButton>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <OriginButton
+              variant="tertiary"
+              size="medium"
+              onClick={onToggleSave}
+              disabled={saving}
+              aria-pressed={saved}
+              aria-label={saved ? "Remove from saved listings" : "Save listing"}
+              className={compactSave ? "ml-1 h-9 w-9 rounded-[8px] px-0" : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
+            >
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Heart className="h-4 w-4" fill={saved ? "#D66C38" : "none"} color={saved ? "#D66C38" : "#6e6459"} />
+              )}
+              {!compactSave && (saved ? "Saved" : "Save")}
+            </OriginButton>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" sideOffset={6}>
+            <p>{saved ? "Remove from saved" : "Save listing"}</p>
+          </TooltipContent>
+        </Tooltip>
 
 
         <Dialog open={reason !== null} onOpenChange={(o) => !o && close()}>
