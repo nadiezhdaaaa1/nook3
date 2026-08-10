@@ -97,12 +97,10 @@ function SamplePreview() {
   return (
     <div className="flex h-full min-h-[calc(100vh-96px)] flex-col overflow-y-auto md:flex-row md:overflow-y-visible" style={{ background: "#faf6ee" }}>
       {/* Mobile top header */}
-      <div className="md:hidden">
-        <div className="h-6" />
-        <div className="sticky top-6 z-40 px-6">
-          <OnboardingHeader fixed={false} />
-        </div>
+      <div className="sticky top-0 z-40 px-6 pt-6 md:hidden">
+        <OnboardingHeader fixed={false} />
       </div>
+
 
 
 
