@@ -149,53 +149,6 @@ function NotificationsTab() {
             </div>
           </div>
 
-          <div className="rounded-card border border-charcoal-950/8 bg-surface-elevated px-5 py-4">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-sm text-charcoal-800">
-                Use a different email for this search only
-              </span>
-              <ToggleSwitch
-                checked={emailOverrideOn || !!override.emailOverride}
-                onChange={handleEmailOverrideToggle}
-              />
-            </div>
-            {(emailOverrideOn || override.emailOverride) && (
-              <div className="mt-4 space-y-2">
-                <label htmlFor="ovr-email" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-                  Override email for this search
-                </label>
-                <input
-                  id="ovr-email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  value={overrideEmail || override.emailOverride || ""}
-                  onChange={(e) => {
-                    setOverrideEmail(e.target.value);
-                    commitEmailOverride(e.target.value || null);
-                  }}
-                  onBlur={() => setOverrideEmailTouched(true)}
-                  placeholder="alerts@example.com"
-                  aria-invalid={!!(overrideEmailTouched && overrideEmailErr)}
-                  className={cn(
-                    "w-full h-11 px-4 rounded-md bg-paper border focus:outline-none text-sm font-medium",
-                    overrideEmailTouched && overrideEmailErr
-                      ? "border-danger focus:border-danger"
-                      : "border-border focus:border-charcoal-950",
-                  )}
-                />
-                {overrideEmailTouched && overrideEmailErr ? (
-                  <p className="text-xs text-danger inline-flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" /> {overrideEmailErr}
-                  </p>
-                ) : (
-                  <p className="text-[11px] text-charcoal-500">
-                    We'll only send <span className="font-medium text-charcoal-700">{searchName}</span> alerts here. Other searches keep your main email.
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
         </div>
       </section>
 
