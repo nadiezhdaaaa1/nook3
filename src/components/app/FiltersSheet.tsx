@@ -33,7 +33,7 @@ interface Props {
   onReset: () => void;
   onEditSearch: () => void;
   resultCount: number;
-  searchName?: string;
+  search?: Search;
 }
 
 const LABEL: React.CSSProperties = {
@@ -65,6 +65,41 @@ function Section({
 
 function toggle(list: string[], id: string): string[] {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
+}
+
+function cityLabel(cityId: string) {
+  return getCity(cityId as never)?.shortName ?? cityId;
+}
+
+function statusLabel(s: Search) {
+  return s.status === "active" ? "Live" : s.status === "paused" ? "Paused" : "Archived";
+}
+
+function summary(s: Search) {
+  const bits: string[] = [];
+  if (s.budget) {
+    bits.push(`$${Math.round(s.budget[0] / 100) / 10}k–$${Math.round(s.budget[1] / 100) / 10}k`);
+  }
+  if (s.bedrooms.length) bits.push(s.bedrooms.join("/"));
+  bits.push(
+    s.neighborhoods.length
+      ? `${s.neighborhoods.length} area${s.neighborhoods.length === 1 ? "" : "s"}`
+      : "Anywhere",
+  );
+  if (s.totalAlertsReceived > 0) bits.push(`${s.totalAlertsReceived} alerts`);
+  return bits.join(" · ");
+}
+
+function StatusDot({ status }: { status: Search["status"] }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "h-2 w-2 rounded-full shrink-0",
+        status === "active" ? "bg-sage-700" : status === "paused" ? "bg-peach-700" : "bg-charcoal-300",
+      )}
+    />
+  );
 }
 
 /**
