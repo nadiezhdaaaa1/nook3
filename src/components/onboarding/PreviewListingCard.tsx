@@ -116,6 +116,10 @@ export function PreviewListingCard({
       >
         <MapPin style={{ width: 12, height: 12 }} />
         {listing.neighborhood}
+        <span style={{ margin: "0 4px" }}>·</span>
+        {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
+        <span style={{ margin: "0 4px" }}>·</span>
+        {listing.baths} bath
       </div>
 
       <div className="flex flex-wrap items-baseline gap-3" style={{ marginTop: 8 }}>
@@ -135,10 +139,6 @@ export function PreviewListingCard({
             {listing.belowMedianPct}% below median
           </span>
         )}
-      </div>
-
-      <div style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}>
-        {listing.beds === 0 ? "Studio" : `${listing.beds} bed`} · {listing.baths} bath
       </div>
 
       <div
