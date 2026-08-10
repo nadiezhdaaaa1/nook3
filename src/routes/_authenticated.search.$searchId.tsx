@@ -211,12 +211,26 @@ function PageHeader({
         <OriginButton
           variant="tertiary"
           size="medium"
+          onClick={() => setCityDialogOpen(true)}
+        >
+          <MapPin className="h-4 w-4" /> Change city
+        </OriginButton>
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() => setIsEditing(true)}
         >
           <Pencil className="h-4 w-4" /> Rename
         </OriginButton>
         <DeleteSearchButton searchId={searchId} name={name} />
       </div>
+
+      <ChangeCityDialog
+        searchId={searchId}
+        currentCityId={cityId}
+        open={cityDialogOpen}
+        onOpenChange={setCityDialogOpen}
+      />
     </div>
   );
 }
