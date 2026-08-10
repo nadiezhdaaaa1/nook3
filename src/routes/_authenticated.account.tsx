@@ -1452,13 +1452,9 @@ function PlanCard({
         color: text,
       };
 
-  const ctaVariant = isCurrent || isDowngrade
-    ? "tertiary"
-    : plan.id === "premium"
-      ? "premium"
-      : plan.id === "max"
-        ? "max"
-        : "tertiary";
+  // Each tier keeps its own established button style, regardless of up/downgrade
+  const ctaVariant =
+    plan.id === "premium" ? "premium" : plan.id === "max" ? "max" : "tertiary";
 
   return (
     <div
