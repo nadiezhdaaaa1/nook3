@@ -4,6 +4,7 @@ import {
   Archive,
   Check,
   ChevronDown,
+  MapPin,
   Pencil,
   Plus,
   RotateCcw,
@@ -119,10 +120,11 @@ export function SearchSelector() {
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className="inline-flex max-w-[260px] items-center gap-2 h-10 px-3 rounded-[10px] border border-black/10 bg-white hover:border-charcoal-950 transition-colors"
+          className="inline-flex max-w-[280px] items-center gap-2 rounded-[12px] border border-black/20 bg-white/45 px-4 py-3 backdrop-blur-sm transition-colors hover:bg-white/70"
         >
           {active ? (
             <>
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-charcoal-500" aria-hidden />
               <StatusDot status={active.status} />
               <span
                 className={cn(
@@ -152,13 +154,13 @@ export function SearchSelector() {
         {open && (
           <div
             role="listbox"
-            className="absolute left-0 z-50 mt-2 w-[340px] overflow-hidden rounded-card border border-black/10 bg-paper shadow-xl"
+            className="absolute left-0 z-50 mt-2 w-[340px] overflow-hidden rounded-[12px] border border-black/20 bg-white/60 shadow-[0_16px_32px_rgba(36,28,18,0.12)] backdrop-blur-md"
           >
             {/* New search — pinned on top */}
             <button
               type="button"
               onClick={handleNew}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-charcoal-950/[0.04]"
+              className="mx-1.5 mt-1.5 flex w-[calc(100%-12px)] items-center gap-3 rounded-[8px] px-3 py-2.5 text-left hover:bg-charcoal-950/[0.04]"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-pill bg-charcoal-950 text-paper">
                 <Plus className="h-4 w-4" />
