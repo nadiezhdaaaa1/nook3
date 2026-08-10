@@ -437,6 +437,18 @@ select.rounded-md {
   border-radius: 12px;
 }
 
+/* Time inputs: keep the native clock picker on the right */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+input[type="time"] {
+  position: relative;
+}
+
 /* Legacy app-screen buttons/fields written with rounded-md + charcoal utilities */
 .rounded-md.bg-charcoal-950,
 .rounded-lg.bg-charcoal-950,
