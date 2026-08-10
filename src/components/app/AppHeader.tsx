@@ -116,6 +116,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
                 <DropdownMenuItem
                   key={to}
                   asChild
+                  onClick={() => setOpen(false)}
                   className="p-0 focus:bg-transparent data-[active]:bg-transparent"
                 >
                   <NavHoverItem
