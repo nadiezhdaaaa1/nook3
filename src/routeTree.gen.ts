@@ -22,7 +22,6 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
@@ -124,11 +123,6 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -333,7 +327,6 @@ export interface FileRoutesByFullPath {
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/preferences': typeof PreferencesRouteWithChildren
@@ -385,7 +378,6 @@ export interface FileRoutesByTo {
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/pricing': typeof PricingRoute
@@ -437,7 +429,6 @@ export interface FileRoutesById {
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/preferences': typeof PreferencesRouteWithChildren
@@ -491,7 +482,6 @@ export interface FileRouteTypes {
     | '/do-not-sell'
     | '/fair-housing'
     | '/forgot-password'
-    | '/home'
     | '/login'
     | '/onboarding'
     | '/preferences'
@@ -543,7 +533,6 @@ export interface FileRouteTypes {
     | '/do-not-sell'
     | '/fair-housing'
     | '/forgot-password'
-    | '/home'
     | '/login'
     | '/onboarding'
     | '/pricing'
@@ -594,7 +583,6 @@ export interface FileRouteTypes {
     | '/do-not-sell'
     | '/fair-housing'
     | '/forgot-password'
-    | '/home'
     | '/login'
     | '/onboarding'
     | '/preferences'
@@ -648,7 +636,6 @@ export interface RootRouteChildren {
   DoNotSellRoute: typeof DoNotSellRoute
   FairHousingRoute: typeof FairHousingRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
   PreferencesRoute: typeof PreferencesRouteWithChildren
@@ -764,13 +751,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -1129,7 +1109,6 @@ const rootRouteChildren: RootRouteChildren = {
   DoNotSellRoute: DoNotSellRoute,
   FairHousingRoute: FairHousingRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
   PreferencesRoute: PreferencesRouteWithChildren,
