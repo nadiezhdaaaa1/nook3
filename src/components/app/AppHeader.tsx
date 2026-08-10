@@ -43,10 +43,12 @@ function MobileNavItem({
   to,
   label,
   Icon,
+  disabled,
 }: {
   to: string;
   label: string;
   Icon: (typeof NAV_ITEMS)[number]["Icon"];
+  disabled?: boolean;
 }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
