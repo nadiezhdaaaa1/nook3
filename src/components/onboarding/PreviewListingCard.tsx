@@ -118,13 +118,12 @@ function WrenTakeButton({
       <motion.span
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         initial={false}
-        animate={{ scale: [1, 1.1, 1] }}
+        animate={{ scale: [1, 1.12, 1] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
         style={{
           background:
-            "radial-gradient(circle at 35% 35%, rgba(214,108,56,0.55) 0%, transparent 50%), radial-gradient(circle at 65% 70%, rgba(167,139,250,0.50) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(74,222,128,0.40) 0%, transparent 55%)",
-          filter: "blur(8px)",
-          mixBlendMode: "soft-light",
+            "radial-gradient(circle at 35% 35%, rgba(214,108,56,0.65) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(167,139,250,0.55) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(74,222,128,0.45) 0%, transparent 55%)",
+          filter: "blur(6px)",
         }}
       />
       {children}
