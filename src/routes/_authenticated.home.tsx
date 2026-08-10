@@ -245,10 +245,11 @@ function HomeScreen() {
     saveSnapshot.mutate({ searchId: search.id, listing: toSnapshot(l) });
   };
 
-  const handleDislike = (l: SampleListing) => {
+  const handleDislike = (l: SampleListing, reason?: string) => {
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
-    if (alert) updateStatus.mutate({ id: alert.id, status: "dismissed" });
+    if (alert)
+      updateStatus.mutate({ id: alert.id, status: "dismissed", dismissReason: reason ?? null });
     if (activeId === l.id) setActiveId(null);
     toast("Hidden from your matches", { description: "We'll show fewer listings like this." });
   };
@@ -256,7 +257,8 @@ function HomeScreen() {
   const handleReport = (l: SampleListing, reason: ReportReason, details: string) => {
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
-    if (alert) updateStatus.mutate({ id: alert.id, status: "dismissed" });
+    if (alert)
+      updateStatus.mutate({ id: alert.id, status: "dismissed", dismissReason: `Reported: ${reason}` });
     if (activeId === l.id) setActiveId(null);
     reportMutation.mutate({
       listingRef: l.id,
@@ -302,7 +304,7 @@ function HomeScreen() {
           selected
           compactSave
           onToggleSave={() => handleToggleSave(activeListing)}
-          onDislike={() => handleDislike(activeListing)}
+          onDislike={(reason) => handleDislike(activeListing, reason)}
           onReport={(reason, details) => handleReport(activeListing, reason, details)}
         />
       }
@@ -448,7 +450,7 @@ function HomeScreen() {
                           }
                           selected={listing.id === activeId}
                           onToggleSave={() => handleToggleSave(listing)}
-                          onDislike={() => handleDislike(listing)}
+                          onDislike={(reason) => handleDislike(listing, reason)}
                           onReport={(reason, details) => handleReport(listing, reason, details)}
                         />
                       }
