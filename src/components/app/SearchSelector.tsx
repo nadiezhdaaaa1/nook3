@@ -124,20 +124,11 @@ export function SearchSelector() {
           {active ? (
             <>
               <StatusDot status={active.status} />
-              <span
-                className={cn(
-                  "text-[11px] font-semibold uppercase tracking-[0.08em]",
-                  active.status === "active" ? "text-sage-700" : "text-peach-700",
-                )}
-              >
-                {statusLabel(active)}
-              </span>
-              <span aria-hidden className="h-3.5 w-px bg-black/10" />
               <span className="min-w-0 truncate text-sm font-semibold text-charcoal-950">
-                {cityLabel(active.cityId)}
-              </span>
-              <span className="hidden min-w-0 truncate text-sm text-charcoal-500 sm:inline">
                 {active.name}
+              </span>
+              <span className="min-w-0 truncate text-sm text-charcoal-500">
+                {cityLabel(active.cityId)}
               </span>
             </>
           ) : (
