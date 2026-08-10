@@ -68,7 +68,7 @@ function MobileNavItem({
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.matches(":focus-visible")) return;
+    if (disabled || !event.currentTarget.matches(":focus-visible")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = rect.width / 2;
     const y = rect.height / 2;
