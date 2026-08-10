@@ -52,7 +52,7 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-black/[0.08] bg-paper/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-5">
           <Link to="/home" className="flex shrink-0 items-center gap-2.5" aria-label="Nook home">
             <Logo className="hidden text-2xl sm:block" />
           </Link>
@@ -61,7 +61,7 @@ export function AppHeader() {
         </div>
 
         <TooltipProvider delayDuration={150}>
-          <nav aria-label="Account sections" className="flex shrink-0 items-center gap-1.5">
+          <nav aria-label="Account sections" className="flex shrink-0 items-center gap-3">
             {actions.map((a) => {
               const Icon = a.icon;
               return (
