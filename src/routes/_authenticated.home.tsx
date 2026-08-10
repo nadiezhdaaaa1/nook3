@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
+
 
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -20,7 +21,16 @@ import {
   useSaveListingSnapshotMutation,
 } from "@/lib/queries/listingReports";
 import { ListingActions } from "@/components/app/ListingActions";
+import { FiltersSheet } from "@/components/app/FiltersSheet";
+import {
+  activeFilterCount,
+  applyFilters,
+  defaultFilters,
+  deriveFilterScope,
+  type MatchFilters,
+} from "@/lib/app/filters";
 import type { ReportReason } from "@/lib/listingReports.functions";
+
 
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -90,6 +100,7 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 
 function HomeScreen() {
   const search = useActiveSearch();
+  const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
   const cityConfig = getCity(cityId);
   const alertsQ = useAlertsQuery();
@@ -98,13 +109,22 @@ function HomeScreen() {
   const [page, setPage] = useState(1);
   const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
 
+  const scope = useMemo(() => deriveFilterScope(search), [search]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filters, setFilters] = useState<MatchFilters>(() => defaultFilters(scope));
+  const filterCount = useMemo(() => activeFilterCount(filters, scope), [filters, scope]);
+  const filtersActive = filterCount > 0;
+
   useEffect(() => {
     setPage(1);
+    setFilters(defaultFilters(deriveFilterScope(search)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search?.id]);
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
+
 
   const updateStatus = useUpdateAlertStatusMutation();
   const saveSnapshot = useSaveListingSnapshotMutation();
@@ -148,17 +168,26 @@ function HomeScreen() {
   }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods]);
 
   const visibleListings = useMemo(
-    () => listings.filter((l) => !hiddenIds.includes(l.id)),
-    [listings, hiddenIds],
+    () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
+    [listings, hiddenIds, filters, scope],
   );
 
-  const pagedVisibleListings = useMemo(
-    () => pagedListings.filter((l) => !hiddenIds.includes(l.id)),
-    [pagedListings, hiddenIds],
-  );
+  const pagedVisibleListings = useMemo(() => {
+    if (filtersActive) {
+      const start = (page - 1) * PAGE_SIZE;
+      return visibleListings.slice(start, start + PAGE_SIZE);
+    }
+    return pagedListings.filter((l) => !hiddenIds.includes(l.id));
+  }, [filtersActive, page, visibleListings, pagedListings, hiddenIds]);
 
-  const totalMatches = isSample ? visibleListings.length : (paginatedQ.data?.total ?? 0);
+  const totalMatches =
+    isSample || filtersActive ? visibleListings.length : (paginatedQ.data?.total ?? 0);
   const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
+
+  useEffect(() => {
+    setPage(1);
+  }, [filterCount]);
+
 
   /** Snapshot shape used when a market/sample listing has no alert row yet. */
   const toSnapshot = (l: SampleListing): AlertListing => ({
@@ -297,14 +326,22 @@ function HomeScreen() {
                     type="button"
                     variant="tertiary"
                     size="medium"
+                    aria-haspopup="dialog"
+                    onClick={() => setFiltersOpen(true)}
                     className="inline-flex h-11 shrink-0 items-center gap-2 px-3 text-sm font-semibold"
                   >
                     <ListFilter className="h-4 w-4" aria-hidden />
                     Filters
+                    {filterCount > 0 && (
+                      <span className="ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-pill bg-charcoal-950 px-1.5 text-[11px] font-semibold text-paper">
+                        {filterCount}
+                      </span>
+                    )}
                   </OriginButton>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">Filter matches</TooltipContent>
               </Tooltip>
+
             </div>
             <h1 className="font-display" style={H1}>
               {search
@@ -427,6 +464,22 @@ function HomeScreen() {
 
         </div>
       </section>
+
+      <FiltersSheet
+        open={filtersOpen}
+        onOpenChange={setFiltersOpen}
+        scope={scope}
+        filters={filters}
+        onChange={setFilters}
+        onReset={() => setFilters(defaultFilters(scope))}
+        onEditSearch={() => {
+          setFiltersOpen(false);
+          if (search) navigate({ to: "/search/$searchId/budget", params: { searchId: search.id } });
+        }}
+        resultCount={visibleListings.length}
+        searchName={search?.name}
+      />
     </div>
   );
+
 }
