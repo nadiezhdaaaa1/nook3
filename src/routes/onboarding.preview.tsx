@@ -213,7 +213,14 @@ function SamplePreview() {
             </motion.div>
           )}
 
-          <motion.div variants={itemVariants} className="w-full" style={{ marginTop: 24 }}>
+          <div
+            className="sticky bottom-0 z-20 -mx-6 mt-6"
+            style={{
+              padding: "40px 20px 24px",
+              background:
+                "linear-gradient(180deg, rgba(250,246,238,0) 0%, #FAF6EE 16%, #FAF6EE 100%)",
+            }}
+          >
             <OriginButton
               type="button"
               variant="main"
@@ -223,7 +230,7 @@ function SamplePreview() {
             >
               See my plan options <ArrowRight style={{ width: 16, height: 16 }} />
             </OriginButton>
-          </motion.div>
+          </div>
         </div>
       </motion.section>
     </div>
