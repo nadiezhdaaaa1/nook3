@@ -4,6 +4,7 @@ export const chicago: CityConfig = {
   id: "chicago",
   name: "chicago",
   displayName: "Chicago",
+  shortName: "CHI",
   state: "IL",
   iconEmoji: "🏙️",
   budget: { min: 900, max: 6000, default: 2200, median1BR: 1900, step: 100 },

@@ -4,6 +4,7 @@ export const seattle: CityConfig = {
   id: "seattle",
   name: "seattle",
   displayName: "Seattle",
+  shortName: "SEA",
   state: "WA",
   iconEmoji: "🌲",
   budget: { min: 1200, max: 6500, default: 2500, median1BR: 2300, step: 100 },

@@ -21,7 +21,7 @@ import { NewSearchModal } from "@/components/preferences/NewSearchModal";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 
 function cityLabel(cityId: string) {
-  return getCity(cityId as never)?.displayName ?? cityId;
+  return getCity(cityId as never)?.shortName ?? cityId;
 }
 
 function statusLabel(s: Search) {

@@ -5,6 +5,7 @@ export const dc: CityConfig = {
   id: "dc",
   name: "dc",
   displayName: "Washington D.C.",
+  shortName: "DC",
   state: "DC",
   iconEmoji: "🏛️",
   budget: { min: 1300, max: 7500, default: 2800, median1BR: 2500, step: 100 },

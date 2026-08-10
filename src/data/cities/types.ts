@@ -27,6 +27,7 @@ export interface CityConfig {
   id: CityId;
   name: string;
   displayName: string;
+  shortName: string;
   state: string;
   iconEmoji?: string;
   /** Inline SVG string, 24x24, single-color (uses currentColor). Optional — fallback to lucide Building icon. */

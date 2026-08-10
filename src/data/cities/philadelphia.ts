@@ -4,6 +4,7 @@ export const philadelphia: CityConfig = {
   id: "philadelphia",
   name: "philadelphia",
   displayName: "Philadelphia",
+  shortName: "PHL",
   state: "PA",
   iconEmoji: "🔔",
   budget: { min: 900, max: 5000, default: 1900, median1BR: 1650, step: 100 },

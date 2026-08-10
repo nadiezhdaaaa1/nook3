@@ -55,6 +55,7 @@ export const nyc: CityConfig = {
   id: "nyc",
   name: "nyc",
   displayName: "New York City",
+  shortName: "NYC",
   state: "NY",
   iconEmoji: "🗽",
   budget: { min: 1500, max: 15000, default: 4000, median1BR: 4200, step: 100 },
