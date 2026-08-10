@@ -141,6 +141,11 @@ class PinOverlay {
     this.overlay.draw();
   }
 
+  bringToFront() {
+    if (this.pin.parentNode) {
+      this.pin.parentNode.appendChild(this.pin);
+    }
+  }
 
   panTo(map: google.maps.Map) {
     map.panTo(this.position);
@@ -281,6 +286,7 @@ export function SampleListingsMap({
       const isHovered = id === hoveredId;
       const isActive = id === activeId;
       m.setActive(isHovered || isActive);
+      if (isHovered || isActive) m.bringToFront();
       if (isActive && !hoveredId) m.panTo(mapRef.current!);
     });
   }, [ready, activeId, hoveredId]);
