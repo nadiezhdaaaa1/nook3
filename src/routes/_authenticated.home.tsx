@@ -257,6 +257,7 @@ function HomeScreen() {
   };
 
   const handleReport = (l: SampleListing, reason: ReportReason, details: string) => {
+    mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
     if (alert)
