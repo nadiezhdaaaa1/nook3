@@ -39,7 +39,7 @@ export function OnboardingShell() {
             padding: 12,
           }}
         >
-          <div className="flex items-center" style={{ gap: 32 }}>
+          <div className="flex items-center justify-between" style={{ gap: 32 }}>
             <div style={{ padding: "0 8px" }} aria-label="Nook" role="img">
               <div
                 style={{
