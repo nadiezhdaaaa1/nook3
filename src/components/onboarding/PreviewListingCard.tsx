@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { MapPin, TrendingDown, Sparkles, ChevronDown, X } from "lucide-react";
 import type { SampleListing } from "@/data/sampleListings";
 
@@ -43,6 +44,79 @@ export function wrenTake(s: SampleListing) {
     `Fair listing. The ${bedLabel}s in this pocket move in under a week, so book a tour in the next 48h.`,
     `Nothing flashy, but the fundamentals check out. Bring your application docs to the showing.`,
   ]);
+}
+
+function getCoverDiameter(width: number, height: number, x: number, y: number) {
+  return Math.ceil(
+    2 *
+      Math.max(
+        Math.hypot(x, y),
+        Math.hypot(width - x, y),
+        Math.hypot(x, height - y),
+        Math.hypot(width - x, height - y),
+      ),
+  );
+}
+
+function WrenTakeButton({
+  open,
+  onClick,
+  children,
+}: {
+  open: boolean;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  children: React.ReactNode;
+}) {
+  const ref = React.useRef<HTMLButtonElement>(null);
+  const [hovered, setHovered] = React.useState(false);
+  const [origin, setOrigin] = React.useState({ x: 0, y: 0 });
+  const [coverSize, setCoverSize] = React.useState(0);
+
+  const updateOrigin = React.useCallback((x: number, y: number) => {
+    const node = ref.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    setOrigin({ x, y });
+    setCoverSize(getCoverDiameter(rect.width, rect.height, x, y));
+  }, []);
+
+  React.useLayoutEffect(() => {
+    const node = ref.current;
+    if (!(node && hovered)) return;
+    const measure = () => {
+      const rect = node.getBoundingClientRect();
+      setCoverSize(getCoverDiameter(rect.width, rect.height, origin.x, origin.y));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hovered, origin.x, origin.y]);
+
+  return (
+    <motion.button
+      type="button"
+      ref={ref}
+      aria-expanded={open}
+      onClick={onClick}
+      onPointerEnter={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        updateOrigin(e.clientX - rect.left, e.clientY - rect.top);
+        setHovered(true);
+      }}
+      onPointerLeave={() => setHovered(false)}
+      className="group relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] p-3"
+    >
+      <motion.span
+        animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
+        initial={false}
+        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#241C12]"
+        style={{ left: origin.x, top: origin.y, width: coverSize, height: coverSize }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      />
+      {children}
+    </motion.button>
+  );
 }
 
 interface Props {
@@ -151,47 +225,40 @@ export function PreviewListingCard({
       <div
         style={{
           marginTop: 8,
-          background: "rgba(225,230,216,0.7)",
-          border: "1px solid rgba(168,184,154,0.4)",
-          borderRadius: 14,
-          padding: 12,
+          background: "#ffffff",
+          border: "1px solid rgba(0,0,0,0.10)",
+          borderRadius: 10,
+          overflow: "hidden",
         }}
       >
-        <button
-          type="button"
-          aria-expanded={open}
+        <WrenTakeButton
+          open={open}
           onClick={(e) => {
             e.stopPropagation();
             setOpen((v) => !v);
           }}
-          className="flex w-full items-center justify-between gap-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] rounded-[8px]"
         >
-          <span className="flex items-center gap-2">
-            <Sparkles style={{ width: 14, height: 14, color: "#5a6e50" }} />
+          <span className="relative z-10 flex items-center gap-2">
+            <Sparkles
+              className="h-3.5 w-3.5 text-[#D66C38] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
+            />
             <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: "1.1px",
-                textTransform: "uppercase",
-                color: "#241c12",
-              }}
+              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className="transition-transform duration-150 motion-reduce:transition-none"
+            className="relative z-10 text-[#241C12] transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white"
             style={{
               width: 16,
               height: 16,
-              color: "#5a6e50",
               transform: open ? "rotate(180deg)" : "none",
             }}
           />
-        </button>
+        </WrenTakeButton>
         {open && (
-          <p style={{ marginTop: 8, fontSize: 13, lineHeight: 1.5, color: "#4a4a46" }}>
+          <p className="px-3 pb-3 text-[#4a4a46]" style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
