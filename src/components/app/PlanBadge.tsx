@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export type PlanKey = "free" | "premium" | "max";
 
 const LABEL_CLASS =
-  "text-[12px] font-bold leading-4 tracking-[1.82px] uppercase";
+  "text-[11px] font-bold leading-[14px] tracking-[1.5px] uppercase";
 
 /** 4-glow aurora layers (top-left, top-right, bottom-right, bottom-left). */
 function aurora(c1: string, c2: string, c3: string, c4: string) {
@@ -37,14 +37,14 @@ export function PlanBadge({
   className?: string;
 }) {
   const base =
-    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-3 py-2";
+    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-2 py-1";
 
   if (plan === "free") {
     return (
       <span
         className={cn(
           base,
-          "w-[61px] border border-black/20 bg-white text-[#241C12]",
+          "w-[54px] border border-black/20 bg-white text-[#241C12]",
           className,
         )}
       >
@@ -57,7 +57,7 @@ export function PlanBadge({
 
   return (
     <span
-      className={cn(base, isMax ? "w-[58px]" : "w-[96px]", "text-white", className)}
+      className={cn(base, isMax ? "w-[50px]" : "w-[84px]", "text-white", className)}
       style={{ backgroundColor: "#2C2415" }}
     >
       <span
