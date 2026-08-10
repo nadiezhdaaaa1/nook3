@@ -358,7 +358,7 @@ export function FiltersSheet({
           )}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-black/[0.08] bg-white p-6">
+        <div className="flex items-center gap-3 border-t border-black/[0.08] bg-white pt-4 pr-6 pb-6 pl-6">
           <OriginButton
             type="button"
             variant="tertiary"
