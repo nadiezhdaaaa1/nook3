@@ -126,14 +126,19 @@ class PinOverlay {
     this.active = isActive;
     this.scale = isActive ? 1.05 : 1;
     if (isActive) {
-      this.pin.style.background = "#FAF6EE";
-      this.pin.style.boxShadow = "0 0 0 2px #6A820A, 0 1px 1px -0.25px rgba(0,0,0,0.08), 0 1px 1px -0.25px rgba(0,0,0,0.04)";
+      this.pin.style.background = "#6A820A";
+      this.pin.style.color = "#FFFFFF";
+      this.pin.style.borderColor = "#6A820A";
+      this.pin.style.boxShadow = "0 0 0 2px rgba(106, 130, 10, 0.25), 0 1px 1px -0.25px rgba(0,0,0,0.08), 0 1px 1px -0.25px rgba(0,0,0,0.04)";
     } else {
       this.pin.style.background = "#FFF";
+      this.pin.style.color = "#1C1C1E";
+      this.pin.style.borderColor = "rgba(0, 0, 0, 0.20)";
       this.pin.style.boxShadow = PIN_STYLES.boxShadow as string;
     }
     this.overlay.draw();
   }
+
 
   panTo(map: google.maps.Map) {
     map.panTo(this.position);
