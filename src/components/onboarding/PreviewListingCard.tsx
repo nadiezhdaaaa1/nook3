@@ -109,22 +109,22 @@ function WrenTakeButton({
       className="group relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] p-3"
     >
       <motion.span
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        initial={false}
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          background:
+            "radial-gradient(circle at 40% 40%, rgba(214,108,56,0.35) 0%, transparent 55%), radial-gradient(circle at 70% 70%, rgba(167,139,250,0.28) 0%, transparent 55%), radial-gradient(circle at 50% 50%, rgba(74,222,128,0.22) 0%, transparent 60%)",
+          filter: "blur(12px)",
+        }}
+      />
+      <motion.span
         animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
         initial={false}
         className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFF1EA]"
         style={{ left: origin.x, top: origin.y, width: coverSize, height: coverSize }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      />
-      <motion.span
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        initial={false}
-        animate={{ scale: [1, 1.12, 1] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          background:
-            "radial-gradient(circle at 35% 35%, rgba(214,108,56,0.65) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(167,139,250,0.55) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(74,222,128,0.45) 0%, transparent 55%)",
-          filter: "blur(6px)",
-        }}
       />
       {children}
     </motion.button>
