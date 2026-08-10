@@ -198,7 +198,7 @@ function AccountPage() {
       <SecuritySection />
 
       {/* Subscription */}
-      <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} />
+      <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} activeCycle={user?.billingCycle ?? "monthly"} />
 
 
       {/* Communications */}
@@ -1387,12 +1387,13 @@ function BillingToggle({
 }
 
 function PlanCard({
-  plan, currentPlan, cycle, onCancelRequest,
+  plan, currentPlan, cycle, activeCycle, onCancelRequest,
 }: {
-  plan: PlanDef; currentPlan: Plan; cycle: BillingCycle;
+  plan: PlanDef; currentPlan: Plan; cycle: BillingCycle; activeCycle: BillingCycle;
   onCancelRequest: () => void;
 }) {
-  const isCurrent = plan.id === currentPlan;
+  const isCurrent =
+    plan.id === currentPlan && (plan.id === "free" || cycle === activeCycle);
   const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
   const priceLabel = plan.id === "free" ? "$0" : `$${price}`;
   const suffix = plan.id === "free" ? "forever" : cycle === "annual" ? "/month" : "/month";
@@ -1401,20 +1402,28 @@ function PlanCard({
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
 
-  const planRank: Record<Plan, number> = { free: 0, premium: 1, max: 2 };
-  const isUpgrade = planRank[plan.id] > planRank[currentPlan];
-  const isDowngrade = planRank[plan.id] < planRank[currentPlan];
+  // Gradation: Free < Premium monthly < Premium annual < Max monthly < Max annual
+  const rankOf = (p: Plan, c: BillingCycle) =>
+    p === "free" ? 0 : (p === "premium" ? 1 : 3) + (c === "annual" ? 1 : 0);
+  const targetRank = rankOf(plan.id, cycle);
+  const currentRank = rankOf(currentPlan, activeCycle);
+  const isUpgrade = targetRank > currentRank;
+  const isDowngrade = targetRank < currentRank;
   const isCancelPath = isDowngrade && plan.id === "free";
+  const cycleWord = cycle === "annual" ? "annual" : "monthly";
+  const sameTier = plan.id === currentPlan && plan.id !== "free";
 
   const ctaLabel = isCurrent
     ? "Current plan"
-    : isUpgrade
-      ? `Upgrade to ${plan.label}`
-      : isDowngrade
-        ? plan.id === "free"
+    : sameTier
+      ? isUpgrade
+        ? `Upgrade to ${cycleWord}`
+        : `Switch to ${cycleWord}`
+      : isUpgrade
+        ? `Upgrade to ${plan.label}${plan.id === "free" ? "" : ` ${cycleWord}`}`
+        : plan.id === "free"
           ? "Switch to Free"
-          : `Downgrade to ${plan.label}`
-        : `Switch to ${plan.label}`;
+          : `Switch to ${plan.label} ${cycleWord}`;
 
   const handleClick = () => {
     if (isCancelPath) onCancelRequest();
@@ -1547,7 +1556,7 @@ function PlanCard({
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                {isDowngrade ? `Downgrade to ${plan.label}?` : `Switch to ${plan.label}?`}
+                {ctaLabel}?
               </AlertDialogTitle>
               <AlertDialogDescription>
                 {isDowngrade ? (
@@ -1709,13 +1718,14 @@ function CurrentPlanCard({
 }
 
 function SubscriptionSection({
-  plan, cycle, setCycle, trialActive, currentPlan,
+  plan, cycle, setCycle, trialActive, currentPlan, activeCycle,
 }: {
   plan: Plan;
   cycle: BillingCycle;
   setCycle: (c: BillingCycle) => void;
   trialActive: boolean;
   currentPlan: PlanDef;
+  activeCycle: BillingCycle;
 }) {
   const [cancelOpen, setCancelOpen] = useState(false);
   const periodEnd = useMemo(() => {
@@ -1764,6 +1774,7 @@ function SubscriptionSection({
               plan={p}
               currentPlan={plan}
               cycle={cycle}
+              activeCycle={activeCycle}
               onCancelRequest={() => setCancelOpen(true)}
             />
           ))}
