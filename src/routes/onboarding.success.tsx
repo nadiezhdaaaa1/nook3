@@ -288,7 +288,7 @@ function Success() {
       {/* Summary */}
       <motion.div
         variants={sectionVariants}
-        className="mt-4 overflow-hidden rounded-[16px] border border-black/20 bg-white"
+        className="mt-12 overflow-hidden rounded-[16px] border border-black/20 bg-white"
       >
         <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
           <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
