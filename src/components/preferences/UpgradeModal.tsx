@@ -49,7 +49,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
           <X className="h-4 w-4" />
         </button>
 
-        <div className="flex flex-col gap-6 px-6 pt-8 pb-6">
+        <div className="flex flex-col gap-4 px-6 pt-8 pb-6">
           {/* Header */}
           <div className="flex flex-col gap-3">
             <div className="inline-flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.18em] text-peach-900">
