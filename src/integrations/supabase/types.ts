@@ -384,6 +384,7 @@ export type Database = {
       saved_alerts: {
         Row: {
           created_at: string
+          dismiss_reason: string | null
           id: string
           listing: Json
           search_id: string
@@ -393,6 +394,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          dismiss_reason?: string | null
           id?: string
           listing: Json
           search_id: string
@@ -402,6 +404,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          dismiss_reason?: string | null
           id?: string
           listing?: Json
           search_id?: string

@@ -1,0 +1,1 @@
+ALTER TABLE public.saved_alerts ADD COLUMN IF NOT EXISTS dismiss_reason text;
