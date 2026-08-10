@@ -3,6 +3,7 @@ import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { useStepFlow } from "@/components/onboarding/stepFlow";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { OB_H1, OB_SUB, OB_H2, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
@@ -31,7 +32,7 @@ const LEGEND = (
 
 
 export function Step4Preferences() {
-  const navigate = useNavigate();
+  const { goStep, finish, finalLabel, allowSkip } = useStepFlow();
   const reduce = useReducedMotion();
   const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
   const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
@@ -246,15 +247,19 @@ export function Step4Preferences() {
 
       <motion.div variants={sectionVariants}>
         <OnboardingFooter
-          nextLabel="Find apartments"
-          onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "3" } })}
-          onSkip={() => {
-            set("lastStep", 4);
-            navigate({ to: "/onboarding/loading" });
-          }}
+          nextLabel={finalLabel}
+          onBack={() => goStep(3)}
+          onSkip={
+            allowSkip
+              ? () => {
+                  set("lastStep", 4);
+                  finish();
+                }
+              : undefined
+          }
           onNext={() => {
             set("lastStep", 4);
-            navigate({ to: "/onboarding/loading" });
+            finish();
           }}
         />
       </motion.div>
