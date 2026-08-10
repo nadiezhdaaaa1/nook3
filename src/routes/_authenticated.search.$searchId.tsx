@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Play, Trash2, ArrowLeft, Menu } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAppStore, switchActiveSearch } from "@/lib/store";
@@ -109,90 +109,13 @@ function PageHeader({
 }) {
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
-  const renameSearch = useAppStore((s) => s.renameSearch);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(name);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus();
-      inputRef.current?.select();
-    }
-  }, [isEditing]);
-
-  const handleSave = () => {
-    const trimmed = editName.trim();
-    if (!trimmed) {
-      setEditName(name);
-      setIsEditing(false);
-      return;
-    }
-    if (trimmed !== name) {
-      renameSearch(searchId, trimmed);
-      toast.success("Search name updated");
-    }
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditName(name);
-    setIsEditing(false);
-  };
 
   return (
     <div className="mt-4 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
       <div className="min-w-0">
-        {isEditing ? (
-          <div className="flex items-center gap-2">
-            <input
-              ref={inputRef}
-              type="text"
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSave();
-                if (e.key === "Escape") handleCancel();
-              }}
-              onBlur={handleSave}
-              className="w-full max-w-[420px] rounded-lg border border-charcoal-200 bg-white px-3 py-2 font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 outline-none ring-charcoal-950 focus-visible:ring-2 lg:text-[44px]"
-              aria-label="Edit search name"
-            />
-            <OriginButton
-              variant="dark"
-              size="medium"
-              onClick={handleSave}
-              className="shrink-0"
-              aria-label="Save search name"
-            >
-              <Check className="h-4 w-4" />
-            </OriginButton>
-            <OriginButton
-              variant="tertiary"
-              size="medium"
-              onClick={handleCancel}
-              className="shrink-0"
-              aria-label="Cancel editing search name"
-            >
-              <X className="h-4 w-4" />
-            </OriginButton>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <h1 className="break-words font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
-              {name}
-            </h1>
-            <OriginButton
-              variant="tertiary"
-              size="medium"
-              onClick={() => setIsEditing(true)}
-              className="h-11 w-11 shrink-0 p-0"
-              aria-label="Edit search name"
-            >
-              <Pencil className="h-4 w-4" />
-            </OriginButton>
-          </div>
-        )}
+        <h1 className="break-words font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
+          {name}
+        </h1>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
