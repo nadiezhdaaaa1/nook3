@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
-import { CreditCard, Mail, Pencil } from "lucide-react";
+import { CreditCard, Mail } from "lucide-react";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
 import {
   COOL_BG,
