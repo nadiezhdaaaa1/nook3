@@ -135,9 +135,6 @@ export function FiltersSheet({
               >
                 Filters
               </SheetTitle>
-              <SheetDescription className="mt-1 text-sm text-charcoal-600">
-                Narrow within {search?.name ?? "this search"}. To widen it, edit the search.
-              </SheetDescription>
             </div>
           </div>
 
@@ -187,6 +184,10 @@ export function FiltersSheet({
               Edit this search
             </OriginButton>
           )}
+
+          <SheetDescription className="mt-3 text-xs text-charcoal-600">
+            Narrow within {search?.name ?? "this search"}. To widen it, edit the search.
+          </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 space-y-5 overflow-y-auto p-6">
