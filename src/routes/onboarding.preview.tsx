@@ -34,7 +34,9 @@ function SamplePreview() {
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
+
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
