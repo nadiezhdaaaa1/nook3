@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Heart,
   Inbox,
@@ -18,7 +18,8 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
 import { cn } from "@/lib/utils";
-import { useAppStore, type Search } from "@/lib/store";
+import { useAppStore, type Search, SEARCH_LIMITS } from "@/lib/store";
+import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import type { SampleListing } from "@/data/sampleListings";
@@ -296,8 +297,19 @@ function summaryBits(s: Search): string[] {
 
 function SearchesTab({ searches }: { searches: Search[] }) {
   const navigate = useNavigate();
+  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
+  const max = SEARCH_LIMITS[plan];
+  const canCreate = live.length < max;
+  const handleNew = () => {
+    if (!canCreate) {
+      setUpgradeOpen(true);
+      return;
+    }
+    navigate({ to: "/onboarding" });
+  };
 
   if (live.length === 0 && archived.length === 0) {
     return (
@@ -314,7 +326,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
         <li>
           <button
             type="button"
-            onClick={() => navigate({ to: "/onboarding" })}
+            onClick={handleNew}
             className="flex h-full min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-[16px] border-2 border-dashed border-black/20 bg-white/50 transition-colors hover:bg-white hover:border-black/30"
           >
             <Plus className="h-6 w-6 text-[#241c12]" />
@@ -374,6 +386,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
           </li>
         ))}
       </ul>
+      {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </div>
   );
 }
