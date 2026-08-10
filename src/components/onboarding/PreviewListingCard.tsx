@@ -205,7 +205,7 @@ export function PreviewListingCard({
           className="pointer-events-none absolute inset-0 rounded-[10px] blur-[8px] transform-gpu motion-reduce:hidden"
           initial={false}
           animate={{
-            opacity: wrenHovered ? 0.85 : 0,
+            opacity: wrenHovered ? 0.51 : 0,
             scale: wrenHovered ? 1.025 : 1,
             background: [
               "conic-gradient(from 0deg at 50% 50%, #FA8B55, #D66C38, #8B5CF6, #4ADE80, #FA8B55)",
