@@ -116,10 +116,6 @@ function PageHeader({
         <h1 className="break-words font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
           {name}
         </h1>
-        <div className="mt-2 font-display text-xl font-medium italic text-sage-800 lg:text-2xl">
-          {sectionLabel}
-        </div>
-        <p className="mt-2 text-xs text-charcoal-500">Changes apply to this search only.</p>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
