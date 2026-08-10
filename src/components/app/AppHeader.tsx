@@ -113,29 +113,21 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
             className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF8F3] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
           >
             <nav aria-label="Mobile" className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ to, label, Icon }) => {
-                const isActive = pathname === to;
-                return (
-                  <DropdownMenuItem
-                    key={to}
-                    asChild
-                    className={cn(
-                      "flex cursor-pointer items-center gap-2 rounded-[8px] px-3 py-2.5 transition-colors hover:bg-[#EBE2CF] focus:bg-[#EBE2CF] focus:text-[#241C12] data-[active]:bg-[#241C12]",
-                      isActive && "bg-[#241C12]"
-                    )}
+              {NAV_ITEMS.map(({ to, label, Icon }) => (
+                <DropdownMenuItem
+                  key={to}
+                  asChild
+                  className="p-0 focus:bg-transparent data-[active]:bg-transparent"
+                >
+                  <NavHoverItem
+                    to={to}
+                    className="w-full justify-start gap-3 rounded-[12px] border border-black/20 bg-transparent px-3 py-2.5 hover:bg-transparent"
                   >
-                    <Link to={to} onClick={() => setOpen(false)}>
-                      <Icon
-                        size={20}
-                        stroke={1.5}
-                        className={cn("shrink-0", isActive ? "text-white" : "text-[#4A4A46]")}
-                        aria-hidden
-                      />
-                      <span className={cn(LABEL_CLASS, isActive && "text-white")}>{label}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
+                    <Icon size={20} stroke={1.5} className="shrink-0" aria-hidden />
+                    <span className={LABEL_CLASS}>{label}</span>
+                  </NavHoverItem>
+                </DropdownMenuItem>
+              ))}
             </nav>
           </DropdownMenuContent>
         </DropdownMenu>
