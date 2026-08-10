@@ -17,9 +17,9 @@ import {
 } from "@/components/onboarding/stepStyles";
 
 export const Route = createFileRoute("/onboarding/preview")({
-
   component: SamplePreview,
 });
+
 
 const PREVIEW_H1: React.CSSProperties = {
   fontWeight: 700,
