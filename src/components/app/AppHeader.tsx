@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Bookmark, Gift, Lock, LogOut, Sparkles, UserCircle } from "lucide-react";
 import { toast } from "sonner";
-import { Logo, LogoMark } from "@/components/brand/Logo";
+import { Logo } from "@/components/brand/Logo";
 import { SearchSelector } from "@/components/app/SearchSelector";
 import { useAppStore } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,7 +54,6 @@ export function AppHeader() {
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-3">
           <Link to="/home" className="flex shrink-0 items-center gap-2.5" aria-label="Nook home">
-            <LogoMark size={28} />
             <Logo className="hidden text-lg sm:block" />
           </Link>
           <span aria-hidden className="h-6 w-px shrink-0 bg-black/10" />
