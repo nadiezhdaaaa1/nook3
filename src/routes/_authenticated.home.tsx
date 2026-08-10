@@ -46,18 +46,33 @@ const H1: React.CSSProperties = {
 function alertToListing(a: AlertRow, cityId: CityId): SampleListing {
   const l = a.listing;
   const coords = CITY_MAP[cityId]?.neighborhoods[l.neighborhood];
-  return {
-    id: a.id,
-    address: l.title,
-    rent: l.price,
-    beds: l.beds,
-    baths: l.baths,
-    neighborhood: l.neighborhood,
-    tag: l.tags?.[0],
-    image: l.imageUrl ?? `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
-    coords,
-  };
+/** Build a compact page-number/ellipsis list for pagination.
+ *  Pattern: first, last, current, and one neighbor on each side; ellipsis fills gaps.
+ */
+function getPaginationItems(page: number, totalPages: number): (number | "ellipsis")[] {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  if (page <= 4) {
+    return [1, 2, 3, 4, 5, "ellipsis", totalPages];
+  }
+
+  if (page >= totalPages - 3) {
+    return [
+      1,
+      "ellipsis",
+      totalPages - 4,
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
+  }
+
+  return [1, "ellipsis", page - 1, page, page + 1, "ellipsis", totalPages];
 }
+
 
 function HomeScreen() {
   const search = useActiveSearch();
