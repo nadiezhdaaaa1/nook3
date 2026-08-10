@@ -6,7 +6,7 @@ import { Step2Place } from "@/components/onboarding/Step2Place";
 import { Step3Location } from "@/components/onboarding/Step3Location";
 import { Step4Preferences } from "@/components/onboarding/Step4Preferences";
 import { StepFlowProvider } from "@/components/onboarding/stepFlow";
-import { UpgradeModal } from "@/components/app/UpgradeModal";
+import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { useOnboardingStore, type OnboardingState } from "@/lib/onboarding/store";
 import { useAppStore, hydrateActiveSearchIntoOnboarding } from "@/lib/store";
 import { useCreateSearchMutation } from "@/lib/queries/searches";
@@ -140,7 +140,7 @@ function NewSearchStep() {
       {n === 2 && <Step2Place />}
       {n === 3 && <Step3Location />}
       {n === 4 && <Step4Preferences />}
-      <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
+      {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </StepFlowProvider>
   );
 }
