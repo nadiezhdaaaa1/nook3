@@ -138,80 +138,82 @@ function SamplePreview() {
 
 
         <div className="mx-auto flex min-h-full max-w-[760px] flex-col">
-          <motion.header variants={itemVariants} className="p-2">
-            <h1 className="font-display" style={PREVIEW_H1}>
-              You'd have gotten{" "}
-              <span className="text-brand-logo">{matched.length}</span> match
-              {matched.length === 1 ? "" : "es"} in your area this past week.
-            </h1>
-            <p style={OB_SUB}>
-              {budget
-                ? `Within $${budget[0].toLocaleString()}–$${budget[1].toLocaleString()}/mo. `
-                : "Here's what they looked like. "}
-              We'll send these straight to your inbox.
-            </p>
-          </motion.header>
+          <div className="flex-1">
+            <motion.header variants={itemVariants} className="p-2">
+              <h1 className="font-display" style={PREVIEW_H1}>
+                You'd have gotten{" "}
+                <span className="text-brand-logo">{matched.length}</span> match
+                {matched.length === 1 ? "" : "es"} in your area this past week.
+              </h1>
+              <p style={OB_SUB}>
+                {budget
+                  ? `Within $${budget[0].toLocaleString()}–$${budget[1].toLocaleString()}/mo. `
+                  : "Here's what they looked like. "}
+                We'll send these straight to your inbox.
+              </p>
+            </motion.header>
 
 
-          {matched.length === 0 ? (
-            <motion.div
-              variants={itemVariants}
-              style={{ marginTop: 24 }}
-              className="rounded-[16px] border border-black/[0.08] bg-white p-6 text-center"
-            >
-              <p className="text-sm text-charcoal-700">
-                No sample matches in {cityConfig?.displayName ?? "your area"} for this budget.
-              </p>
-              <p className="mt-2 text-xs text-charcoal-500">
-                Real listings hit your inbox the moment they appear — even when our sample pool is thin.
-              </p>
-            </motion.div>
-          ) : (
-            <>
+            {matched.length === 0 ? (
               <motion.div
                 variants={itemVariants}
-                className="grid grid-cols-1 gap-3 min-[1200px]:grid-cols-2"
                 style={{ marginTop: 24 }}
+                className="rounded-[16px] border border-black/[0.08] bg-white p-6 text-center"
               >
-                {matched.map((listing) => (
-                  <PreviewListingCard
-                    key={listing.id}
-                    listing={listing}
-                    selected={listing.id === activeId}
-                    onSelect={() => setActiveId(listing.id)}
-                    onHover={setHoveredId}
-                  />
-
-                ))}
-              </motion.div>
-
-              <motion.p
-                variants={itemVariants}
-                className="text-xs uppercase tracking-[0.16em] text-charcoal-500"
-                style={{ marginTop: 24 }}
-              >
-                Sample preview · Real alerts after signup
-              </motion.p>
-            </>
-          )}
-
-          {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
-            <motion.div
-              variants={itemVariants}
-              style={{ marginTop: 24 }}
-              className="flex gap-3 rounded-[16px] border border-black/[0.08] bg-white p-4"
-            >
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-sage-700" />
-              <div className="space-y-1">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-charcoal-500">
-                  How we vet {cityConfig.displayName} listings
-                </div>
                 <p className="text-sm text-charcoal-700">
-                  Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")} records before it reaches your inbox.
+                  No sample matches in {cityConfig?.displayName ?? "your area"} for this budget.
                 </p>
-              </div>
-            </motion.div>
-          )}
+                <p className="mt-2 text-xs text-charcoal-500">
+                  Real listings hit your inbox the moment they appear — even when our sample pool is thin.
+                </p>
+              </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  variants={itemVariants}
+                  className="grid grid-cols-1 gap-3 min-[1200px]:grid-cols-2"
+                  style={{ marginTop: 24 }}
+                >
+                  {matched.map((listing) => (
+                    <PreviewListingCard
+                      key={listing.id}
+                      listing={listing}
+                      selected={listing.id === activeId}
+                      onSelect={() => setActiveId(listing.id)}
+                      onHover={setHoveredId}
+                    />
+
+                  ))}
+                </motion.div>
+
+                <motion.p
+                  variants={itemVariants}
+                  className="text-xs uppercase tracking-[0.16em] text-charcoal-500"
+                  style={{ marginTop: 24 }}
+                >
+                  Sample preview · Real alerts after signup
+                </motion.p>
+              </>
+            )}
+
+            {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
+              <motion.div
+                variants={itemVariants}
+                style={{ marginTop: 24 }}
+                className="flex gap-3 rounded-[16px] border border-black/[0.08] bg-white p-4"
+              >
+                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-sage-700" />
+                <div className="space-y-1">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-charcoal-500">
+                    How we vet {cityConfig.displayName} listings
+                  </div>
+                  <p className="text-sm text-charcoal-700">
+                    Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")} records before it reaches your inbox.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </div>
 
           <div
             className="sticky bottom-0 z-20 -mx-6 mt-6"
