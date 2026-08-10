@@ -12,23 +12,25 @@ export function OnboardingShell() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#faf6ee" }}>
-      <header className="flex items-center justify-between px-6 py-4">
-        <img
-          src={nookLogo.url}
-          alt="Nook"
-          className="h-6 w-auto"
-          style={{ width: 70, height: 24, objectFit: "contain" }}
-        />
+      <header className="flex items-center justify-center px-6 py-4">
+        <div className="flex w-full items-center justify-between" style={{ maxWidth: 1200 }}>
+          <img
+            src={nookLogo.url}
+            alt="Nook"
+            className="h-6 w-auto"
+            style={{ width: 70, height: 24, objectFit: "contain" }}
+          />
 
-        <button
-          type="button"
-          onClick={() => setExitOpen(true)}
-          className="inline-flex items-center justify-center"
-          style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
-          aria-label="Exit onboarding"
-        >
-          <X style={{ width: 20, height: 20 }} />
-        </button>
+          <button
+            type="button"
+            onClick={() => setExitOpen(true)}
+            className="inline-flex items-center justify-center"
+            style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
+            aria-label="Exit onboarding"
+          >
+            <X style={{ width: 20, height: 20 }} />
+          </button>
+        </div>
       </header>
 
       <main
