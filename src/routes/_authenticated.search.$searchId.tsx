@@ -345,7 +345,7 @@ function ChangeCityDialog({
             Cancel
           </OriginButton>
           <OriginButton
-            variant="primary"
+            variant="dark"
             size="medium"
             onClick={handleConfirm}
             disabled={isSubmitting || selected === currentCityId}
