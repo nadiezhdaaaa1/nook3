@@ -290,8 +290,16 @@ function Success() {
         variants={sectionVariants}
         className="mt-4 overflow-hidden rounded-[16px] border border-black/20 bg-white"
       >
-        <div className="border-b border-black/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
-          Your search
+        <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
+            Your search
+          </div>
+          <Link
+            to="/onboarding/step/1"
+            className="text-[13px] font-semibold text-charcoal-500 underline decoration-black/20 hover:text-charcoal-950"
+          >
+            Edit
+          </Link>
         </div>
         <dl className="divide-y divide-black/10">
           {rows.map((r) => (
@@ -301,13 +309,6 @@ function Success() {
             >
               <dt className="w-[168px] shrink-0 text-[14px] text-charcoal-500">{r.label}</dt>
               <dd className="m-0 flex-1 text-[16px] text-charcoal-950">{r.value}</dd>
-              <Link
-                to="/onboarding/step/$step"
-                params={{ step: r.step }}
-                className="text-[13px] font-semibold text-charcoal-500 underline decoration-black/20 hover:text-charcoal-950"
-              >
-                Edit
-              </Link>
             </div>
           ))}
         </dl>
