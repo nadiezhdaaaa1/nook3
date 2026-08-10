@@ -212,11 +212,12 @@ function Success() {
   }
 
   return (
+    <>
     <motion.div
       variants={stepVariants}
       initial={stepVariants ? "hidden" : undefined}
       animate={stepVariants ? "visible" : undefined}
-      className="mx-auto w-full max-w-[800px] pb-16"
+      className="mx-auto w-full max-w-[800px] pb-[104px]"
     >
       <motion.div variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
