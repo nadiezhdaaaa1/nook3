@@ -84,7 +84,7 @@ function MobileNavItem({
       onFocus={handleFocus}
       onBlur={() => setHovered(false)}
       className={cn(
-        "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] bg-[#FAF8F3] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
+        "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] bg-[#FAF6EE] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
         isActive && "bg-[#241C12] text-white focus:bg-[#241C12] focus:text-white",
       )}
     >
@@ -150,7 +150,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
   return (
     <header
       className="sticky top-0 z-40 w-full border-b border-black/[0.08] backdrop-blur font-['Google_Sans_Flex',sans-serif]"
-      style={{ backgroundColor: "#FAF8F3" }}
+      style={{ backgroundColor: "#FAF6EE" }}
     >
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-2 sm:gap-5">
@@ -210,7 +210,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           <DropdownMenuContent
             align="end"
             sideOffset={8}
-            className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF8F3] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
+            className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF6EE] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
           >
             <nav aria-label="Mobile" className="flex flex-col gap-1">
               {NAV_ITEMS.map(({ to, label, Icon }) => (
