@@ -231,7 +231,7 @@ export function PreviewListingCard({
           className="relative"
           style={{
             background: open ? "#FFF1EA" : "#ffffff",
-            border: open ? "1px solid transparent" : "1px solid rgba(0,0,0,0.10)",
+            border: "1px solid rgba(0,0,0,0.10)",
             borderRadius: 10,
             overflow: "hidden",
           }}
