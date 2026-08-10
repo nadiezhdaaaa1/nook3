@@ -168,17 +168,26 @@ function HomeScreen() {
   }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods]);
 
   const visibleListings = useMemo(
-    () => listings.filter((l) => !hiddenIds.includes(l.id)),
-    [listings, hiddenIds],
+    () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
+    [listings, hiddenIds, filters, scope],
   );
 
-  const pagedVisibleListings = useMemo(
-    () => pagedListings.filter((l) => !hiddenIds.includes(l.id)),
-    [pagedListings, hiddenIds],
-  );
+  const pagedVisibleListings = useMemo(() => {
+    if (filtersActive) {
+      const start = (page - 1) * PAGE_SIZE;
+      return visibleListings.slice(start, start + PAGE_SIZE);
+    }
+    return pagedListings.filter((l) => !hiddenIds.includes(l.id));
+  }, [filtersActive, page, visibleListings, pagedListings, hiddenIds]);
 
-  const totalMatches = isSample ? visibleListings.length : (paginatedQ.data?.total ?? 0);
+  const totalMatches =
+    isSample || filtersActive ? visibleListings.length : (paginatedQ.data?.total ?? 0);
   const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
+
+  useEffect(() => {
+    setPage(1);
+  }, [filterCount]);
+
 
   /** Snapshot shape used when a market/sample listing has no alert row yet. */
   const toSnapshot = (l: SampleListing): AlertListing => ({
