@@ -147,8 +147,9 @@ interface Props {
   onSelect?: () => void;
   onClose?: () => void;
   onHover?: (id: string | null) => void;
+  openId?: string | null;
+  setOpenId?: (id: string | null) => void;
 }
-
 
 export function PreviewListingCard({
   listing,
@@ -157,8 +158,10 @@ export function PreviewListingCard({
   onSelect,
   onClose,
   onHover,
+  openId,
+  setOpenId,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const open = openId === listing.id;
 
   return (
     <article
