@@ -105,16 +105,19 @@ function PageHeader({
   searchId,
   name,
   status,
+  cityId,
   sectionLabel,
 }: {
   searchId: string;
   name: string;
   status: "active" | "paused" | "archived";
+  cityId: CityId;
   sectionLabel: string;
 }) {
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
+  const [cityDialogOpen, setCityDialogOpen] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(name);
