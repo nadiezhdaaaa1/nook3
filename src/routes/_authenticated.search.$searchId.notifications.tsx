@@ -118,16 +118,6 @@ function NotificationsTab() {
         )}
       </div>
 
-      {/* Scope banner */}
-      {activeSearchId && (
-        <div className="flex items-start gap-3 px-5 py-3 rounded-card bg-sage-100/60 border border-sage-200/70">
-          <Info className="h-4 w-4 text-sage-800 mt-0.5 shrink-0" />
-          <p className="text-xs text-charcoal-700 leading-relaxed">
-            Editing <span className="font-semibold text-charcoal-950">{searchName}</span>
-            <span className="text-charcoal-500"> · Settings here apply only to this search.</span>
-          </p>
-        </div>
-      )}
 
       {/* Email — read-only + per-search override */}
       <section className="space-y-4">
