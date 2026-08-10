@@ -368,7 +368,7 @@ export function FiltersSheet({
             onClick={onReset}
             disabled={count === 0}
           >
-            <Brush className="mr-1.5 h-4 w-4" aria-hidden />
+            <IconArrowBackUp className="mr-1.5 h-4 w-4" aria-hidden />
             Reset
           </OriginButton>
           <OriginButton
