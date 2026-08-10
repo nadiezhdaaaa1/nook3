@@ -1,10 +1,9 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ShieldCheck, ArrowRight, X } from "lucide-react";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
-import { ExitModal } from "@/components/onboarding/ExitModal";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
@@ -14,7 +13,6 @@ import {
   OB_STEP_VARIANTS,
   OB_SECTION_VARIANTS,
 } from "@/components/onboarding/stepStyles";
-import nookLogo from "@/assets/Nook_Green.svg.asset.json";
 
 export const Route = createFileRoute("/onboarding/preview")({
   component: SamplePreview,
@@ -36,8 +34,6 @@ function SamplePreview() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [openWrenId, setOpenWrenId] = useState<string | null>(null);
-  const [exitOpen, setExitOpen] = useState(false);
-
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
@@ -85,31 +81,12 @@ function SamplePreview() {
   const variants = reduce ? undefined : OB_STEP_VARIANTS;
   const itemVariants = reduce ? undefined : OB_SECTION_VARIANTS;
 
-  const logoRow = (
-    <div className="flex items-center justify-between gap-4">
-      <Link to="/" aria-label="Nook home" className="inline-flex">
-        <img src={nookLogo.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28 }} />
-      </Link>
-      <button
-        type="button"
-        onClick={() => setExitOpen(true)}
-        aria-label="Exit onboarding"
-        className="inline-flex items-center justify-center rounded-[12px] p-2 text-[#241c12] transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
-      >
-        <X style={{ width: 20, height: 20 }} />
-      </button>
-    </div>
-  );
-
   return (
-    <div className="flex min-h-screen flex-col md:h-screen md:flex-row" style={{ background: "#faf6ee" }}>
-      {/* Mobile-only header row (above the map) */}
-      <div className="order-1 px-5 pt-6 md:hidden">{logoRow}</div>
-
+    <div className="flex h-full min-h-[calc(100vh-96px)] flex-col md:flex-row" style={{ background: "#faf6ee" }}>
       {/* Map panel */}
       <aside
         aria-label="Map of sample matches"
-        className="order-2 h-[320px] w-full shrink-0 p-6 md:order-2 md:h-screen md:w-1/2 md:pl-0"
+        className="order-2 h-[320px] w-full shrink-0 p-6 md:order-2 md:h-full md:w-1/2 md:pl-0"
       >
         {cityConfig && (
           <SampleListingsMap
@@ -131,12 +108,10 @@ function SamplePreview() {
         variants={variants}
         initial="hidden"
         animate="visible"
-        className="order-3 w-full px-5 pb-8 pt-6 md:order-1 md:h-screen md:w-1/2 md:overflow-y-auto md:px-10 md:py-6"
+        className="order-3 w-full px-5 pb-8 pt-6 md:order-1 md:h-full md:w-1/2 md:overflow-y-auto md:px-10 md:py-6"
       >
         <div className="mx-auto flex max-w-[760px] flex-col">
-          <div className="hidden md:block">{logoRow}</div>
-
-          <motion.header variants={itemVariants} style={{ marginTop: 32 }}>
+          <motion.header variants={itemVariants}>
             <h1 className="font-display" style={PREVIEW_H1}>
               You'd have gotten{" "}
               <span className="text-brand-logo">{matched.length}</span> match
@@ -225,15 +200,6 @@ function SamplePreview() {
           </motion.div>
         </div>
       </motion.section>
-
-      <ExitModal
-        open={exitOpen}
-        onStay={() => setExitOpen(false)}
-        onExit={() => {
-          setExitOpen(false);
-          navigate({ to: "/" });
-        }}
-      />
     </div>
   );
 }
