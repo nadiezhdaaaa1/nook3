@@ -119,7 +119,7 @@ function HomeScreen() {
             hoveredId={hoveredId}
             onSelect={(id) => setActiveId(id)}
             card={popupCard}
-            className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/20 bg-[#f5f2ea]"
+            className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/10 bg-[#f5f2ea]"
           />
         )}
       </aside>
