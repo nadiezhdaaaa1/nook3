@@ -138,8 +138,8 @@ export function Step3Location() {
             className="w-full flex items-center justify-between p-3.5 rounded-card border transition-colors text-left bg-surface-elevated border-border hover:border-charcoal-950"
           >
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-charcoal-950">Quick picks</span>
-              <span className="text-[11px] font-mono text-charcoal-400">
+              <span className="text-base font-semibold text-charcoal-950">Quick picks</span>
+              <span className="text-xs font-mono text-charcoal-400">
                 {presets.length} bundles
               </span>
             </div>
