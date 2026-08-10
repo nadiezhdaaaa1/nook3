@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { Brush, Pencil } from "lucide-react";
+import { IconArrowBackUp } from "@tabler/icons-react";
+import { Pencil } from "lucide-react";
 
 import {
   Sheet,
