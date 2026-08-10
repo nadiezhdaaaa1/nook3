@@ -53,7 +53,7 @@ function WrenGlow() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute -inset-[1px] rounded-[11px] blur-md opacity-0 transition-opacity duration-300 group-hover/glow:opacity-50 motion-reduce:hidden"
+      className="pointer-events-none absolute inset-0 rounded-[10px] blur-sm opacity-0 transition-opacity duration-300 group-hover/glow:opacity-50 motion-reduce:hidden"
       animate={{
         background: [
           `conic-gradient(from 0deg at 50% 50%, ${GLOW_COLORS.join(", ")})`,
