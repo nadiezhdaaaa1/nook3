@@ -188,10 +188,12 @@ export function SampleListingsMap({
   city,
   listings,
   activeId,
+  hoveredId,
   onSelect,
   card,
   className,
 }: Props) {
+
   const ready = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
