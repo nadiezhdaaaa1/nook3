@@ -5,6 +5,8 @@ import { profileQueryOptions } from "./profile";
 import { useAppStore, getDefaultSearchName } from "@/lib/store";
 import type { Search } from "@/lib/store";
 import { useOnboardingStore } from "@/lib/onboarding/store";
+import { useHasSession } from "./useHasSession";
+
 
 /**
  * Hydrates the zustand store from Supabase on mount and pushes per-search
@@ -19,10 +21,12 @@ import { useOnboardingStore } from "@/lib/onboarding/store";
  *    the account's first Search.
  */
 export function useDbSync() {
-  const searchesQ = useQuery(searchesQueryOptions());
-  const profileQ = useQuery(profileQueryOptions());
+  const hasSession = useHasSession();
+  const searchesQ = useQuery({ ...searchesQueryOptions(), enabled: hasSession, retry: false });
+  const profileQ = useQuery({ ...profileQueryOptions(), enabled: hasSession, retry: false });
   const updateMutation = useUpdateSearchMutation();
   const createMutation = useCreateSearchMutation();
+
 
   const hydratedRef = useRef(false);
   const handoffRef = useRef(false);
@@ -138,7 +142,9 @@ export function useDbSync() {
   }, [hydratedRef.current]);
 
   return {
-    isHydrating: !hydratedRef.current && (searchesQ.isLoading || profileQ.isLoading),
+    isHydrating:
+      hasSession && !hydratedRef.current && (searchesQ.isLoading || profileQ.isLoading),
+
     error: searchesQ.error ?? profileQ.error,
   };
 }
