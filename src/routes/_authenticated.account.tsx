@@ -2,12 +2,13 @@ import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
-  Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
+  Check, X, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Globe, Lock, KeyRound, Eye, EyeOff, ShieldCheck, AlertTriangle, ChevronRight,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft,
 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { motion, useReducedMotion } from "framer-motion";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { useAppStore, type Plan, type BillingCycle } from "@/lib/store";
 import { SEARCH_LIMITS } from "@/lib/store/types";
@@ -23,6 +24,8 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
+import { OriginButton } from "@/components/ui/origin-button";
+import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
 export const Route = createFileRoute("/_authenticated/account")({
   component: () => (
