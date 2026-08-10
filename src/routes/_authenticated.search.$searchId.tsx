@@ -292,7 +292,7 @@ function SidebarNav({ searchId, pathname }: { searchId: string; pathname: string
             params={{ searchId }}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "inline-flex h-11 w-full items-center gap-3 whitespace-nowrap rounded-2xl px-3 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30",
+              "inline-flex h-11 w-full items-center gap-3 whitespace-nowrap rounded-xl px-3 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30",
               active ? "bg-charcoal-950 text-paper hover:bg-charcoal-950" : "text-charcoal-700 hover:bg-[#EBE2CF]",
             )}
           >
