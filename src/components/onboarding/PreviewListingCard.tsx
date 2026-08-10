@@ -260,7 +260,7 @@ export function PreviewListingCard({
           open={open}
           onClick={(e) => {
             e.stopPropagation();
-            setOpen((v) => !v);
+            setOpenId?.(open ? null : listing.id);
           }}
         >
           <span className="relative z-10 flex items-center gap-2">
