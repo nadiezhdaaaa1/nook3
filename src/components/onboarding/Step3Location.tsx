@@ -1,12 +1,10 @@
-import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
-import { OB_H1, OB_SUB, OB_H2, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
+import { OB_H1, OB_SUB, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { NeighborhoodPicker } from "@/components/onboarding/NeighborhoodPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
-import { cn } from "@/lib/utils";
 
 const reduceMotion = (reduce: boolean | null) =>
   reduce
@@ -18,46 +16,13 @@ export function Step3Location() {
   const reduce = useReducedMotion();
   const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
   const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
-  const { city, neighborhoods, budget, set, toggleNeighborhood } = useOnboardingStore();
+  const { neighborhoods, set } = useOnboardingStore();
   const cityConfig = getCity(city);
-  const [query, setQuery] = useState("");
-  const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
-  const [view, setView] = useState<"list" | "map">("map");
-  const [quickPicksOpen, setQuickPicksOpen] = useState(false);
-
-  const groups = useMemo(
-    () => (cityConfig ? Object.entries(cityConfig.neighborhoodGroups) : []),
-    [cityConfig],
-  );
-
-  const matchedByQuery = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return null;
-    const all: { group: string; name: string }[] = [];
-    for (const [g, items] of groups) {
-      for (const n of items) {
-        if (n.toLowerCase().includes(q)) all.push({ group: g, name: n });
-      }
-    }
-    return all;
-  }, [query, groups]);
-
-  const allKnown = useMemo(() => {
-    const s = new Set<string>();
-    if (!cityConfig) return s;
-    for (const items of Object.values(cityConfig.neighborhoodGroups)) {
-      for (const n of items) s.add(n);
-    }
-    return s;
-  }, [cityConfig]);
-  const presets = useMemo(() => (cityConfig ? getCityPresets(cityConfig.id) : []), [cityConfig]);
-
   if (!cityConfig) {
     return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
   }
 
   const canContinue = neighborhoods.length > 0;
-  const tooMany = neighborhoods.length >= 15;
 
   return (
     <motion.div className="space-y-10" variants={stepVariants} initial="hidden" animate="visible">
