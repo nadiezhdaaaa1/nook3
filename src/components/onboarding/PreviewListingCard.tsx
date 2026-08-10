@@ -10,6 +10,8 @@ interface Props {
   onSelect?: () => void;
   onClose?: () => void;
   onHover?: (id: string | null) => void;
+  /** Optional action row rendered at the bottom of the card. */
+  actions?: React.ReactNode;
 }
 
 export function PreviewListingCard({
@@ -19,6 +21,7 @@ export function PreviewListingCard({
   onSelect,
   onClose,
   onHover,
+  actions,
 }: Props) {
   return (
     <article
@@ -101,6 +104,8 @@ export function PreviewListingCard({
           </span>
         )}
       </div>
+
+      {actions}
     </article>
   );
 }

@@ -133,3 +133,32 @@ export const createAlert = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return rowToAlert(inserted);
   });
+
+/**
+ * Save a listing that has no alert row yet (e.g. a sample/market listing shown
+ * on the home screen). Creates the row directly in the "saved" state.
+ */
+export const saveListingSnapshot = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        searchId: z.string().uuid(),
+        listing: listingSchema,
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: inserted, error } = await context.supabase
+      .from("saved_alerts")
+      .insert({
+        user_id: context.userId,
+        search_id: data.searchId,
+        listing: data.listing as never,
+        status: "saved",
+      })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return rowToAlert(inserted);
+  });
