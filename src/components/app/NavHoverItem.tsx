@@ -121,6 +121,7 @@ export function NavHoverItem({
       "relative inline-flex cursor-pointer select-none items-center justify-center overflow-hidden bg-transparent outline-none",
       "focus-visible:ring-2 focus-visible:ring-black/20",
       isActive && "bg-[#241C12] text-white",
+      disabled && "cursor-not-allowed opacity-50",
       className,
     ),
     ...rest,
@@ -142,7 +143,7 @@ export function NavHoverItem({
     },
   };
 
-  if (to) {
+  if (to && !disabled) {
     return (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       <Link to={to as any} ref={nodeRef as never} {...shared}>
@@ -152,7 +153,7 @@ export function NavHoverItem({
   }
 
   return (
-    <button type="button" onClick={onClick} {...shared}>
+    <button type="button" disabled={disabled} onClick={disabled ? undefined : onClick} ref={nodeRef as never} {...shared}>
       {inner}
     </button>
   );
