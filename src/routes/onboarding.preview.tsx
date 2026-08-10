@@ -104,7 +104,7 @@ function SamplePreview() {
       {/* Map panel */}
       <aside
         aria-label="Map of sample matches"
-        className="order-2 h-[320px] w-full shrink-0 p-4 md:order-2 md:h-screen md:w-1/2 md:p-6 md:pl-0"
+        className="order-2 h-[320px] w-full shrink-0 p-6 md:order-2 md:h-screen md:w-1/2 md:pl-0"
       >
         {cityConfig && (
           <SampleListingsMap
@@ -113,7 +113,7 @@ function SamplePreview() {
             activeId={activeId}
             onSelect={(id) => setActiveId(id)}
             card={popupCard}
-            className="relative h-full w-full overflow-hidden rounded-[24px] bg-[#f5f2ea]"
+            className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/20 bg-[#f5f2ea]"
           />
         )}
       </aside>
