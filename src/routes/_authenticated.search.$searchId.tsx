@@ -230,7 +230,7 @@ function DeleteSearchButton({ searchId, name }: { searchId: string; name: string
         size="medium"
         onClick={() => setOpen(true)}
       >
-        <Trash2 className="h-4 w-4" /> Delete search
+        <Trash2 className="h-4 w-4" /> delete
       </OriginButton>
       <AlertDialogContent>
         <AlertDialogHeader>
