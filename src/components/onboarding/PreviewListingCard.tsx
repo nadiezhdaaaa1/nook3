@@ -18,6 +18,8 @@ interface Props {
   onHover?: (id: string | null) => void;
   /** Optional action row rendered at the bottom of the card. */
   actions?: React.ReactNode;
+  /** Render the title as plain text without an external link. */
+  disableTitleLink?: boolean;
 }
 
 export function PreviewListingCard({
@@ -28,6 +30,7 @@ export function PreviewListingCard({
   onClose,
   onHover,
   actions,
+  disableTitleLink = false,
 }: Props) {
   return (
     <TooltipProvider>
