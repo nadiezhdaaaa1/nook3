@@ -1,0 +1,71 @@
+import { cn } from "@/lib/utils";
+
+export type PlanKey = "free" | "premium" | "max";
+
+const LABEL_CLASS =
+  "text-[12px] font-bold leading-4 tracking-[1.82px] uppercase";
+
+/** 4-glow aurora layers (top-left, top-right, bottom-right, bottom-left). */
+function aurora(c1: string, c2: string, c3: string, c4: string) {
+  return [
+    `radial-gradient(60% 120% at 0% 0%, ${c1} 0%, rgba(0,0,0,0) 60%)`,
+    `radial-gradient(60% 120% at 100% 0%, ${c2} 0%, rgba(0,0,0,0) 60%)`,
+    `radial-gradient(60% 120% at 100% 100%, ${c3} 0%, rgba(0,0,0,0) 60%)`,
+    `radial-gradient(60% 120% at 0% 100%, ${c4} 0%, rgba(0,0,0,0) 60%)`,
+  ].join(", ");
+}
+
+const PREMIUM_AURORA = aurora(
+  "rgba(255, 205, 0, 0.14)",
+  "rgba(203, 74, 10, 0.26)",
+  "rgba(122, 143, 55, 0.30)",
+  "rgba(120, 165, 200, 0.12)",
+);
+
+const MAX_AURORA = aurora(
+  "rgba(38, 0, 255, 0.14)",
+  "rgba(203, 10, 94, 0.26)",
+  "rgba(81, 55, 143, 0.30)",
+  "rgba(149, 120, 200, 0.12)",
+);
+
+export function PlanBadge({
+  plan,
+  className,
+}: {
+  plan: PlanKey;
+  className?: string;
+}) {
+  const base =
+    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-3 py-2";
+
+  if (plan === "free") {
+    return (
+      <span
+        className={cn(
+          base,
+          "w-[61px] border border-black/20 bg-white text-[#241C12]",
+          className,
+        )}
+      >
+        <span className={LABEL_CLASS}>Free</span>
+      </span>
+    );
+  }
+
+  const isMax = plan === "max";
+
+  return (
+    <span
+      className={cn(base, isMax ? "w-[58px]" : "w-[96px]", "text-white", className)}
+      style={{ backgroundColor: "#2C2415" }}
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{ backgroundImage: isMax ? MAX_AURORA : PREMIUM_AURORA }}
+      />
+      <span className={cn(LABEL_CLASS, "relative")}>{isMax ? "Max" : "Premium"}</span>
+    </span>
+  );
+}
