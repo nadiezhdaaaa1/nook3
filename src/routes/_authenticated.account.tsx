@@ -1484,18 +1484,6 @@ function PlanCard({
         >
           {plan.label}
         </div>
-        {isCurrent && (
-          <span
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[0.14em]"
-            style={{
-              fontFamily: "'Google Sans Flex', sans-serif",
-              background: dark ? "rgba(248,243,225,0.20)" : "#e3e6d8",
-              color: dark ? "#f8f3e1" : "#4a4d3a",
-            }}
-          >
-            <Check className="h-3 w-3" /> Your plan
-          </span>
-        )}
       </div>
 
       <div
