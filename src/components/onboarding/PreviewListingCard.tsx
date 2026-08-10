@@ -111,7 +111,7 @@ function WrenTakeButton({
       <motion.span
         animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
         initial={false}
-        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#241C12]"
+        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFF1EA]"
         style={{ left: origin.x, top: origin.y, width: coverSize, height: coverSize }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       />
