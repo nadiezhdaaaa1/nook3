@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { OriginButton } from "@/components/ui/origin-button";
 import type { ReportReason } from "@/lib/listingReports.functions";
 
 const REASON_LABELS: { value: ReportReason; label: string }[] = [
@@ -32,6 +33,8 @@ const REASON_LABELS: { value: ReportReason; label: string }[] = [
 
 const BTN =
   "inline-flex h-9 items-center gap-1.5 rounded-[8px] border border-black/10 bg-white px-3 text-[13px] font-semibold text-[#241c12] transition-colors hover:border-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] disabled:opacity-60";
+
+const ICON_BTN = "h-9 w-9 rounded-[8px] border-transparent px-0";
 
 interface Props {
   saved: boolean;
@@ -52,43 +55,29 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
 
   return (
     <div
-      className="mt-4 flex flex-wrap items-center gap-2 border-t border-black/[0.06] pt-3"
+      className="mt-4 flex items-center justify-end gap-1 pt-3"
       onClick={(e) => e.stopPropagation()}
     >
-      <button
-        type="button"
-        onClick={onToggleSave}
-        disabled={saving}
-        aria-pressed={saved}
-        aria-label={saved ? "Remove from saved listings" : "Save listing"}
-        className={BTN}
-        style={saved ? { borderColor: "#6a820a", color: "#4d5f07" } : undefined}
-      >
-        {saving ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Heart className="h-4 w-4" fill={saved ? "#6a820a" : "none"} color={saved ? "#6a820a" : "#6e6459"} />
-        )}
-        {saved ? "Saved" : "Save"}
-      </button>
-
-      <button
-        type="button"
+      <OriginButton
+        variant="tertiary"
+        size="medium"
         onClick={onDislike}
         aria-label="Not interested in this listing"
-        className={BTN}
+        className={ICON_BTN}
       >
-        <ThumbsDown className="h-4 w-4" color="#6e6459" />
-        Not for me
-      </button>
+        <ThumbsDown className="h-[18px] w-[18px]" color="#6e6459" />
+      </OriginButton>
 
       <DropdownMenu>
-        <DropdownMenuTrigger
-          aria-label="Report this listing"
-          className={`${BTN} ml-auto`}
-        >
-          <Flag className="h-4 w-4" color="#6e6459" />
-          Report
+        <DropdownMenuTrigger asChild>
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            aria-label="Report this listing"
+            className={ICON_BTN}
+          >
+            <Flag className="h-[18px] w-[18px]" color="#6e6459" />
+          </OriginButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-64">
           <DropdownMenuLabel>What's wrong with this listing?</DropdownMenuLabel>
@@ -106,6 +95,24 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <OriginButton
+        variant="tertiary"
+        size="medium"
+        onClick={onToggleSave}
+        disabled={saving}
+        aria-pressed={saved}
+        aria-label={saved ? "Remove from saved listings" : "Save listing"}
+        className="ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"
+      >
+        {saving ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Heart className="h-4 w-4" fill={saved ? "#6a820a" : "none"} color={saved ? "#6a820a" : "#6e6459"} />
+        )}
+        {saved ? "Saved" : "Save"}
+      </OriginButton>
+
 
       <Dialog open={reason !== null} onOpenChange={(o) => !o && close()}>
         <DialogContent className="sm:max-w-[440px]">
