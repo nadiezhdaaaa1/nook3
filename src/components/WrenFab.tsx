@@ -14,9 +14,9 @@ export function WrenFab() {
       <img
         src={aiAsset.url}
         alt=""
-        width={24}
-        height={24}
-        className="h-6 w-6 object-contain pointer-events-none"
+        width={40}
+        height={40}
+        className="h-10 w-10 object-contain pointer-events-none"
       />
     </Link>
   );
