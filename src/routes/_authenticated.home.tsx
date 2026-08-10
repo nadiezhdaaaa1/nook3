@@ -9,8 +9,14 @@ import { useActiveSearch } from "@/lib/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
-import { useAlertsQuery } from "@/lib/queries/alerts";
-import type { AlertRow } from "@/lib/alerts.functions";
+import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
+import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
+import {
+  useReportListingMutation,
+  useSaveListingSnapshotMutation,
+} from "@/lib/queries/listingReports";
+import { ListingActions } from "@/components/app/ListingActions";
+import type { ReportReason } from "@/lib/listingReports.functions";
 
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -57,6 +63,17 @@ function HomeScreen() {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [hiddenIds, setHiddenIds] = useState<string[]>([]);
+
+  const updateStatus = useUpdateAlertStatusMutation();
+  const saveSnapshot = useSaveListingSnapshotMutation();
+  const reportMutation = useReportListingMutation();
+
+  const alertById = useMemo(() => {
+    const map = new Map<string, AlertRow>();
+    for (const a of alertsQ.data ?? []) map.set(a.id, a);
+    return map;
+  }, [alertsQ.data]);
 
   const realListings = useMemo(() => {
     const rows = (alertsQ.data ?? []).filter(
@@ -81,15 +98,85 @@ function HomeScreen() {
     return [...pool].sort((a, b) => a.rent - b.rent);
   }, [isSample, realListings, cityId, search?.budget, search?.neighborhoods]);
 
-  const pins = useMemo(
-    () =>
-      listings
-        .filter((l) => l.coords)
-        .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
-    [listings],
+  const visibleListings = useMemo(
+    () => listings.filter((l) => !hiddenIds.includes(l.id)),
+    [listings, hiddenIds],
   );
 
-  const activeListing = listings.find((l) => l.id === activeId) ?? null;
+  /** Snapshot shape used when a market/sample listing has no alert row yet. */
+  const toSnapshot = (l: SampleListing): AlertListing => ({
+    title: l.address,
+    neighborhood: l.neighborhood,
+    beds: l.beds,
+    baths: l.baths,
+    price: l.rent,
+    receivedAt: new Date().toISOString(),
+    source: "nook",
+    tags: l.tag ? [l.tag] : [],
+    imageHue: 30,
+    imageUrl: l.image,
+  });
+
+  const savedIds = useMemo(
+    () =>
+      new Set(
+        (alertsQ.data ?? [])
+          .filter((a) => a.status === "saved")
+          .map((a) => a.id),
+      ),
+    [alertsQ.data],
+  );
+
+  const handleToggleSave = (l: SampleListing) => {
+    const alert = alertById.get(l.id);
+    if (alert) {
+      updateStatus.mutate({ id: alert.id, status: alert.status === "saved" ? "new" : "saved" });
+      return;
+    }
+    if (!search) {
+      toast.error("Create a search first", {
+        description: "Saved listings are attached to one of your searches.",
+      });
+      return;
+    }
+    saveSnapshot.mutate({ searchId: search.id, listing: toSnapshot(l) });
+  };
+
+  const handleDislike = (l: SampleListing) => {
+    const alert = alertById.get(l.id);
+    setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
+    if (alert) updateStatus.mutate({ id: alert.id, status: "dismissed" });
+    if (activeId === l.id) setActiveId(null);
+    toast("Hidden from your matches", { description: "We'll show fewer listings like this." });
+  };
+
+  const handleReport = (l: SampleListing, reason: ReportReason, details: string) => {
+    const alert = alertById.get(l.id);
+    reportMutation.mutate({
+      listingRef: l.id,
+      reason,
+      details,
+      searchId: search?.id ?? null,
+      alertId: alert?.id ?? null,
+      listing: {
+        title: l.address,
+        neighborhood: l.neighborhood,
+        price: l.rent,
+        beds: l.beds,
+        baths: l.baths,
+      },
+    });
+  };
+
+  const pins = useMemo(
+    () =>
+      visibleListings
+        .filter((l) => l.coords)
+        .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
+    [visibleListings],
+  );
+
+  const activeListing = visibleListings.find((l) => l.id === activeId) ?? null;
 
   const popupCard = activeListing ? (
     <PreviewListingCard
@@ -168,7 +255,7 @@ function HomeScreen() {
             </div>
           </header>
 
-          {listings.length === 0 ? (
+          {visibleListings.length === 0 ? (
             <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
               <p className="text-sm text-charcoal-700">
                 Nothing to show for {cityConfig?.displayName ?? "your city"} yet.
@@ -180,13 +267,26 @@ function HomeScreen() {
           ) : (
             <>
               <div className="mt-6 flex flex-col gap-3">
-                {listings.map((listing) => (
+                {visibleListings.map((listing) => (
                   <PreviewListingCard
                     key={listing.id}
                     listing={listing}
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
                     onHover={setHoveredId}
+                    actions={
+                      <ListingActions
+                        saved={savedIds.has(listing.id)}
+                        saving={
+                          (saveSnapshot.isPending &&
+                            saveSnapshot.variables?.listing.title === listing.address) ||
+                          (updateStatus.isPending && updateStatus.variables?.id === listing.id)
+                        }
+                        onToggleSave={() => handleToggleSave(listing)}
+                        onDislike={() => handleDislike(listing)}
+                        onReport={(reason, details) => handleReport(listing, reason, details)}
+                      />
+                    }
                   />
                 ))}
               </div>
