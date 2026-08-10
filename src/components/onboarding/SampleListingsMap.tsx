@@ -550,7 +550,7 @@ export function SampleListingsMap({
     >
       <div ref={containerRef} className="absolute inset-0" />
       {topLeftControls && (
-        <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-2 rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm sm:flex-row sm:items-center">
+        <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-2 sm:flex-row sm:items-center">
           {topLeftControls}
         </div>
       )}
