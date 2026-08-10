@@ -120,10 +120,11 @@ export function SearchSelector() {
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className="inline-flex max-w-[260px] items-center gap-2 h-10 px-3 rounded-[10px] border border-black/10 bg-white hover:border-charcoal-950 transition-colors"
+          className="inline-flex max-w-[280px] items-center gap-2 rounded-[12px] border border-black/20 bg-white/45 px-4 py-3 backdrop-blur-sm transition-colors hover:bg-white/70"
         >
           {active ? (
             <>
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-charcoal-500" aria-hidden />
               <StatusDot status={active.status} />
               <span
                 className={cn(
