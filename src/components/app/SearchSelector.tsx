@@ -168,7 +168,7 @@ export function SearchSelector() {
             <ul className="max-h-[320px] overflow-y-auto py-1">
               {live.map((s) => (
                 <li key={s.id}>
-                  <div className="flex items-center gap-2 rounded-[8px] px-3 py-2 hover:bg-charcoal-950/[0.04]">
+                  <div className="mx-1.5 w-[calc(100%-12px)] flex items-center gap-2 rounded-[8px] px-3 py-2 hover:bg-charcoal-950/[0.04]">
                     <button
                       type="button"
                       role="option"
