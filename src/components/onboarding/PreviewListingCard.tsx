@@ -262,7 +262,7 @@ export function PreviewListingCard({
         >
           <span className="relative z-10 flex items-center gap-2">
             <Sparkles
-              className="h-3.5 w-3.5 text-[#D66C38] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
+              className="h-3.5 w-3.5 text-[#D66C38]"
             />
             <span
               className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
