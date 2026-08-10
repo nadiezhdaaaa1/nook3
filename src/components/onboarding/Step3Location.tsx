@@ -16,7 +16,7 @@ export function Step3Location() {
   const reduce = useReducedMotion();
   const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
   const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
-  const { neighborhoods, set } = useOnboardingStore();
+  const { city, neighborhoods, set } = useOnboardingStore();
   const cityConfig = getCity(city);
   if (!cityConfig) {
     return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
