@@ -70,6 +70,7 @@ export interface OnboardingState {
 export interface OnboardingActions {
   set: <K extends keyof OnboardingState>(key: K, val: OnboardingState[K]) => void;
   patch: (p: Partial<OnboardingState>) => void;
+  setCity: (id: CityId | null) => void;
   toggleBedroom: (id: string) => void;
   toggleNeighborhood: (id: string) => void;
   cycleAmenity: (id: string) => void;
@@ -109,6 +110,27 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
       ...initial,
       set: (key, val) => set({ [key]: val } as Partial<OnboardingState>),
       patch: (p) => set(p),
+      setCity: (id) => {
+        const cur = get().city;
+        if (cur === id) {
+          set({ city: id });
+          return;
+        }
+        // Changing (or clearing) the city invalidates every city-specific choice.
+        set({
+          city: id,
+          budget: null,
+          neighborhoods: [],
+          bedrooms: [],
+          bathrooms: initial.bathrooms,
+          rentProtection: initial.rentProtection,
+          includeBrokerFee: initial.includeBrokerFee,
+          amenities: {},
+          transit: { hasPreference: false, lines: {} },
+          commute: { maxMinutes: null },
+          moveIn: { mode: "flexible" },
+        });
+      },
       toggleBedroom: (id) =>
         set((s) => ({
           bedrooms: s.bedrooms.includes(id)
