@@ -20,7 +20,9 @@ interface OnboardingHeaderProps {
 }
 
 export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
+  const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   const stepMatch = pathname.match(STEP_ROUTE_RE);
   const step = stepMatch ? Number(stepMatch[1]) : null;
   const [exitOpen, setExitOpen] = useState(false);
