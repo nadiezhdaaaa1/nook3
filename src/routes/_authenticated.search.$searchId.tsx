@@ -109,13 +109,75 @@ function PageHeader({
 }) {
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
+  const renameSearch = useAppStore((s) => s.renameSearch);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(name);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
 
   return (
     <div className="mt-4 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
       <div className="min-w-0">
-        <h1 className="break-words font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
-          {name}
-        </h1>
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <input
+              ref={inputRef}
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const trimmed = editName.trim();
+                  if (trimmed) {
+                    renameSearch(searchId, trimmed);
+                    toast.success("Search renamed");
+                  }
+                  setIsEditing(false);
+                } else if (e.key === "Escape") {
+                  setEditName(name);
+                  setIsEditing(false);
+                }
+              }}
+              className="font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px] bg-transparent border-b-2 border-charcoal-950 outline-none min-w-0"
+            />
+            <OriginButton
+              variant="tertiary"
+              size="icon"
+              className="h-11 w-11"
+              onClick={() => {
+                const trimmed = editName.trim();
+                if (trimmed) {
+                  renameSearch(searchId, trimmed);
+                  toast.success("Search renamed");
+                }
+                setIsEditing(false);
+              }}
+            >
+              <Check className="h-4 w-4" />
+            </OriginButton>
+            <OriginButton
+              variant="tertiary"
+              size="icon"
+              className="h-11 w-11"
+              onClick={() => {
+                setEditName(name);
+                setIsEditing(false);
+              }}
+            >
+              <X className="h-4 w-4" />
+            </OriginButton>
+          </div>
+        ) : (
+          <h1 className="break-words font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
+            {name}
+          </h1>
+        )}
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
@@ -133,10 +195,17 @@ function PageHeader({
           }}
         >
           {status === "paused" ? (
-            <><Play className="h-4 w-4" /> Resume search</>
+            <><Play className="h-4 w-4" /> Resume</>
           ) : (
-            <><Pause className="h-4 w-4" /> Pause search</>
+            <><Pause className="h-4 w-4" /> Pause</>
           )}
+        </OriginButton>
+        <OriginButton
+          variant="tertiary"
+          size="medium"
+          onClick={() => setIsEditing(true)}
+        >
+          <Pencil className="h-4 w-4" /> Rename
         </OriginButton>
         <DeleteSearchButton searchId={searchId} name={name} />
       </div>
