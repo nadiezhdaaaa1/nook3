@@ -264,6 +264,7 @@ export function PreviewListingCard({
             {wrenTake(listing)}
           </p>
         )}
+        </div>
       </div>
     </article>
   );
