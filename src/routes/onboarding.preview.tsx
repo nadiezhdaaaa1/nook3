@@ -124,7 +124,7 @@ function SamplePreview() {
         variants={variants}
         initial="hidden"
         animate="visible"
-        className="order-3 w-full px-5 pb-8 pt-6 md:order-1 md:h-screen md:w-1/2 md:overflow-y-auto md:px-10 md:py-16 lg:px-20"
+        className="order-3 w-full px-5 pb-8 pt-6 md:order-1 md:h-screen md:w-1/2 md:overflow-y-auto md:px-10 md:py-6"
       >
         <div className="mx-auto flex max-w-[760px] flex-col">
           <div className="hidden md:block">{logoRow}</div>
