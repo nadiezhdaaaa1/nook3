@@ -249,6 +249,7 @@ function Success() {
                 style={{ fontWeight: 700, fontSize: 26, color: ink }}
               >
                 {planMeta.name}
+                {isPaid && billingCycle === "annual" ? " (annual)" : ""}
               </span>
               <span
                 className="text-[16px] font-semibold"
