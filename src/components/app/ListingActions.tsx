@@ -28,13 +28,18 @@ import {
 import type { ReportReason } from "@/lib/listingReports.functions";
 
 const REASON_LABELS: { value: ReportReason; label: string }[] = [
-  { value: "spam", label: "Spam or advertising" },
   { value: "fraud", label: "Scam or fraud" },
-  { value: "duplicate", label: "Duplicate listing" },
+  { value: "spam", label: "Spam or advertising" },
   { value: "wrong_price", label: "Wrong price or details" },
-  { value: "unavailable", label: "No longer available" },
-  { value: "offensive", label: "Offensive or discriminatory" },
   { value: "other", label: "Something else" },
+];
+
+/** Why the listing isn't a fit — recorded with the dismissal. */
+const DISLIKE_REASONS = [
+  "Too expensive",
+  "Wrong location",
+  "Layout doesn't work",
+  "Already seen it",
 ];
 
 const BTN =
@@ -48,7 +53,7 @@ interface Props {
   selected?: boolean;
   compactSave?: boolean;
   onToggleSave: () => void;
-  onDislike: () => void;
+  onDislike: (reason?: string) => void;
   onReport: (reason: ReportReason, details: string) => void;
 }
 
@@ -108,22 +113,35 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <OriginButton
-                variant="tertiary"
-                size="medium"
-                onClick={onDislike}
-                aria-label="Not interested in this listing"
-                className={ICON_BTN}
-              >
-                <ThumbsDown className="h-4 w-4" color="#6e6459" />
-              </OriginButton>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>
-              <p>Not interested</p>
-            </TooltipContent>
-          </Tooltip>
+          <DropdownMenu>
+            <Tooltip>
+              <DropdownMenuTrigger asChild>
+                <TooltipTrigger asChild>
+                  <OriginButton
+                    variant="tertiary"
+                    size="medium"
+                    aria-label="Not interested in this listing"
+                    className={ICON_BTN}
+                  >
+                    <ThumbsDown className="h-4 w-4" color="#6e6459" />
+                  </OriginButton>
+                </TooltipTrigger>
+              </DropdownMenuTrigger>
+              <TooltipContent side="bottom" sideOffset={6}>
+                <p>Not interested</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel>Why isn't this a fit?</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {DISLIKE_REASONS.map((r) => (
+                <DropdownMenuItem key={r} onSelect={() => onDislike(r)}>
+                  {r}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
 
