@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { useMemo, useState } from "react";
 import { ListFilter, ShieldCheck } from "lucide-react";
 
+import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
@@ -239,13 +240,15 @@ function HomeScreen() {
               <SearchSelector />
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button
+                  <OriginButton
                     type="button"
-                    className="inline-flex h-11 shrink-0 items-center gap-2 rounded-[12px] border border-black/10 bg-white px-3 text-sm font-semibold text-charcoal-700 transition-colors hover:bg-charcoal-950/[0.04] hover:text-charcoal-950"
+                    variant="tertiary"
+                    size="medium"
+                    className="inline-flex h-11 shrink-0 items-center gap-2 px-3 text-sm font-semibold"
                   >
                     <ListFilter className="h-4 w-4" aria-hidden />
                     Filters
-                  </button>
+                  </OriginButton>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">Filter matches</TooltipContent>
               </Tooltip>
