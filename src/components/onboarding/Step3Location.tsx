@@ -340,6 +340,9 @@ export function Step3Location() {
         )}
       </motion.div>
 
+      {/* Selected chips under map in map mode */}
+      {view === "map" && selectedChipsEl}
+
       {/* Trust signal */}
       <motion.div variants={sectionVariants} className="flex items-start gap-3 p-4 rounded-[12px] bg-charcoal-950/[0.03] border border-charcoal-200/60">
         <ShieldCheck className="h-4 w-4 text-sage-700 mt-0.5 shrink-0" />
