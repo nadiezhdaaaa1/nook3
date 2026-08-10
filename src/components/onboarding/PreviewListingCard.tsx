@@ -62,6 +62,7 @@ export function PreviewListingCard({
   popup = false,
   onSelect,
   onClose,
+  onHover,
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -71,9 +72,12 @@ export function PreviewListingCard({
         e.stopPropagation();
         onSelect?.();
       }}
+      onMouseEnter={() => onHover?.(listing.id)}
+      onMouseLeave={() => onHover?.(null)}
       className={`text-left transition-[border-color,box-shadow] duration-150 ${
         popup ? "w-[320px] max-w-[calc(100vw-64px)]" : "w-full"
       } ${onSelect ? "cursor-pointer" : ""}`}
+
       style={{
         background: "#ffffff",
         borderRadius: 16,
