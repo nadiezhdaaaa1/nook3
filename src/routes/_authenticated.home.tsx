@@ -57,7 +57,6 @@ function HomeScreen() {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [openWrenId, setOpenWrenId] = useState<string | null>(null);
 
   const realListings = useMemo(() => {
     const rows = (alertsQ.data ?? []).filter(
@@ -98,8 +97,6 @@ function HomeScreen() {
       popup
       selected
       onClose={() => setActiveId(null)}
-      openId={openWrenId}
-      setOpenId={setOpenWrenId}
     />
   ) : null;
 
@@ -190,8 +187,6 @@ function HomeScreen() {
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
                     onHover={setHoveredId}
-                    openId={openWrenId}
-                    setOpenId={setOpenWrenId}
                   />
                 ))}
               </div>
