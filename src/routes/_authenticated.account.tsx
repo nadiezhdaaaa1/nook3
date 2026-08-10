@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { motion, useReducedMotion } from "framer-motion";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { useAppStore, type Plan, type BillingCycle } from "@/lib/store";
 import { SEARCH_LIMITS } from "@/lib/store/types";
@@ -23,6 +24,8 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
+import { OriginButton } from "@/components/ui/origin-button";
+import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
 export const Route = createFileRoute("/_authenticated/account")({
   component: () => (
@@ -1342,22 +1345,45 @@ function CancelOffer({
 function BillingToggle({
   cycle, onChange,
 }: { cycle: BillingCycle; onChange: (c: BillingCycle) => void }) {
+  const reduce = useReducedMotion();
+  const dur = reduce ? 0 : 0.25;
   return (
-    <div className="inline-flex items-center bg-paper-warm border border-charcoal-950/10 rounded-pill p-1">
-      {(["monthly", "annual"] as const).map((c) => (
-        <button
-          key={c}
-          type="button"
-          onClick={() => onChange(c)}
-          className={cn(
-            "h-8 px-4 rounded-pill text-xs font-semibold transition-colors capitalize",
-            cycle === c ? "bg-charcoal-950 text-paper" : "text-charcoal-700",
-          )}
-        >
-          {c}
-          {c === "annual" && <span className="ml-1 text-sage-400">−2mo</span>}
-        </button>
-      ))}
+    <div
+      role="radiogroup"
+      aria-label="Billing cycle"
+      className="inline-flex items-center gap-0.5 p-1 rounded-[16px] bg-black/8"
+      style={{ height: 52 }}
+    >
+      {(["monthly", "annual"] as const).map((c) => {
+        const active = cycle === c;
+        return (
+          <button
+            key={c}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(c)}
+            className="relative inline-flex items-center gap-1.5 px-5 py-3 rounded-[12px] text-sm font-semibold transition-colors"
+            style={{ color: active ? "#2b2521" : "#4a4a46" }}
+          >
+            {active && (
+              <motion.span
+                layoutId="account-billing-pill"
+                transition={{ duration: dur, ease: "easeOut" }}
+                className="absolute inset-0 rounded-[12px] bg-white"
+                style={{
+                  boxShadow: "0 1px 2px rgba(12,12,13,0.10), 0 1px 2px rgba(12,12,13,0.05)",
+                }}
+                aria-hidden
+              />
+            )}
+            <span className="relative">{c === "monthly" ? "Monthly" : "Annual"}</span>
+            {c === "annual" && (
+              <span className="relative text-[#6a820a]">-2mo</span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -1369,18 +1395,17 @@ function PlanCard({
   onCancelRequest: () => void;
 }) {
   const isCurrent = plan.id === currentPlan;
-  const Icon = plan.icon;
   const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
-  const priceLabel =
-    plan.id === "free" ? "Free" : `$${price}${cycle === "annual" ? "/yr" : "/mo"}`;
+  const priceLabel = plan.id === "free" ? "$0" : `$${price}`;
+  const suffix = plan.id === "free" ? "forever" : cycle === "annual" ? "/month" : "/month";
   const updatePlanMut = useUpdatePlanMutation();
   const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
+  const dur = reduce ? 0 : 0.25;
 
   const planRank: Record<Plan, number> = { free: 0, premium: 1, max: 2 };
   const isUpgrade = planRank[plan.id] > planRank[currentPlan];
   const isDowngrade = planRank[plan.id] < planRank[currentPlan];
-
-  // Downgrade to Free from a paid plan = cancel-via-retention flow.
   const isCancelPath = isDowngrade && plan.id === "free";
 
   const ctaLabel = isCurrent
@@ -1393,72 +1418,134 @@ function PlanCard({
           : `Downgrade to ${plan.label}`
         : `Switch to ${plan.label}`;
 
-  // Switch-to-Free skips the confirm AlertDialog and opens retention flow directly.
   const handleClick = () => {
     if (isCancelPath) onCancelRequest();
     else setOpen(true);
   };
 
-  const buttonClasses = cn(
-    "mt-auto h-10 rounded-pill text-sm font-semibold transition-colors",
-    isCurrent
-      ? "bg-paper-warm text-charcoal-500 cursor-default border border-charcoal-950/10"
-      : isDowngrade
-        ? "border border-charcoal-950/15 text-charcoal-950 hover:bg-paper"
-        : "bg-charcoal-950 text-paper hover:bg-charcoal-800",
-  );
+  const dark = plan.id !== "free";
+  const text = dark ? "#f8f3e1" : "#241c12";
+  const checkColor = dark ? "#c2dd93" : "#6a820a";
+  const badge = cycle === "annual" && plan.id === "premium"
+    ? { text: "-47% off", bg: "#6a820a" }
+    : cycle === "annual" && plan.id === "max"
+      ? { text: "-34% off", bg: "#7040c1" }
+      : null;
+
+  const cardStyle: React.CSSProperties = dark
+    ? {
+        backgroundColor: "#2c2415",
+        backgroundImage: plan.id === "premium" ? WARM_BG : COOL_BG,
+        boxShadow: DARK_SHADOW,
+        color: text,
+      }
+    : {
+        background: "#ffffff",
+        border: "1px solid rgba(0,0,0,0.20)",
+        color: text,
+      };
+
+  const ctaVariant = isCurrent || isDowngrade
+    ? "tertiary"
+    : plan.id === "premium"
+      ? "premium"
+      : plan.id === "max"
+        ? "max"
+        : "tertiary";
 
   return (
     <div
       className={cn(
-        "rounded-card border p-6 flex flex-col gap-4 transition-colors",
-        isCurrent ? "border-charcoal-950 bg-paper-warm" : "border-charcoal-950/12 bg-paper hover:border-charcoal-400",
+        "relative p-8 rounded-[24px] flex flex-col gap-4",
+        isCurrent && !dark && "bg-paper-warm",
       )}
+      style={cardStyle}
     >
-      <div className="flex items-center gap-2">
-        <Icon className="h-4 w-4 text-sage-700" />
-        <div className="font-display text-lg font-bold text-charcoal-950">{plan.label}</div>
+      {/* badge slot */}
+      <div
+        className="absolute -top-4 left-0 right-8 flex justify-end pointer-events-none"
+        aria-hidden={!badge}
+      >
+        {badge && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={dur === 0 ? { duration: 0 } : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }}
+            className="inline-block rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[1.32px] text-white"
+            style={{ background: badge.bg, fontFamily: "'Google Sans Flex', sans-serif" }}
+          >
+            {badge.text}
+          </motion.span>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div
+          className="text-[13px] font-bold uppercase tracking-[1.82px]"
+          style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
+        >
+          {plan.label}
+        </div>
         {isCurrent && (
-          <span className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-sage-200 text-[9px] font-mono uppercase tracking-[0.16em] text-sage-900">
-            <Check className="h-2.5 w-2.5" /> Your plan
+          <span
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[0.14em]"
+            style={{
+              fontFamily: "'Google Sans Flex', sans-serif",
+              background: dark ? "rgba(248,243,225,0.20)" : "#e3e6d8",
+              color: dark ? "#f8f3e1" : "#4a4d3a",
+            }}
+          >
+            <Check className="h-3 w-3" /> Your plan
           </span>
         )}
       </div>
 
-      <div>
-        <div className="font-display text-3xl font-bold text-charcoal-950 tabular-nums">
-          {priceLabel}
-        </div>
-        <div className="text-xs text-charcoal-600 mt-1">{plan.tagline}</div>
+      <div
+        className="text-sm opacity-80"
+        style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
+      >
+        {plan.tagline}
       </div>
 
-      <ul className="space-y-1.5 text-sm text-charcoal-700">
-        {plan.features.map((f) => (
-          <li key={f} className="flex items-start gap-2">
-            <Check className="h-3.5 w-3.5 text-sage-700 mt-0.5 shrink-0" />
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="flex items-baseline gap-2 pb-2">
+        <motion.span
+          key={priceLabel}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: dur, ease: "easeOut" }}
+          className="font-display text-[46px] leading-[46px] font-semibold"
+        >
+          {priceLabel}
+        </motion.span>
+        <span
+          className="text-sm font-medium opacity-70"
+          style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
+        >
+          {suffix}
+        </span>
+      </div>
 
       {isCancelPath ? (
-        <button
-          type="button"
+        <OriginButton
+          className="w-full"
+          variant={ctaVariant}
+          style={{ borderRadius: 12 }}
           onClick={handleClick}
-          className={buttonClasses}
         >
           {ctaLabel}
-        </button>
+        </OriginButton>
       ) : (
         <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
-            <button
-              type="button"
+            <OriginButton
+              className="w-full"
+              variant={ctaVariant}
+              style={{ borderRadius: 12 }}
               disabled={isCurrent || updatePlanMut.isPending}
-              className={buttonClasses}
             >
               {ctaLabel}
-            </button>
+            </OriginButton>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -1469,12 +1556,12 @@ function PlanCard({
                 {isDowngrade ? (
                   <>
                     Your plan will change to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                    ({priceLabel}) at the end of your current billing period.
+                    ({priceLabel}{suffix}) at the end of your current billing period.
                   </>
                 ) : (
                   <>
                     You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                    ({priceLabel}). This will auto-renew at the same price until cancelled.
+                    ({priceLabel}{suffix}). This will auto-renew at the same price until cancelled.
                   </>
                 )}{" "}
                 <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
@@ -1498,6 +1585,19 @@ function PlanCard({
           </AlertDialogContent>
         </AlertDialog>
       )}
+
+      <ul className="flex flex-col gap-3 pt-2">
+        {plan.features.map((f) => (
+          <li
+            key={f}
+            className="flex items-start gap-2.5 text-sm"
+            style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 1 }}
+          >
+            <Check size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: checkColor }} />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
