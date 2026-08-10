@@ -37,14 +37,14 @@ export function PlanBadge({
   className?: string;
 }) {
   const base =
-    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-3 py-2";
+    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-2 py-1";
 
   if (plan === "free") {
     return (
       <span
         className={cn(
           base,
-          "w-[61px] border border-black/20 bg-white text-[#241C12]",
+          "w-[54px] border border-black/20 bg-white text-[#241C12]",
           className,
         )}
       >
