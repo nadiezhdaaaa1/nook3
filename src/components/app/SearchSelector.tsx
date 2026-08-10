@@ -4,6 +4,7 @@ import {
   Archive,
   Check,
   ChevronDown,
+  MapPin,
   Pencil,
   Plus,
   RotateCcw,
