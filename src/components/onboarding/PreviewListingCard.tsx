@@ -140,5 +140,6 @@ export function PreviewListingCard({
         {actions}
       </div>
     </article>
+    </TooltipProvider>
   );
 }
