@@ -24,6 +24,14 @@ export function OnboardingShell() {
 
   const pct = step ? Math.round((step / 4) * 100) : 0;
 
+  // The preview screen owns its own full-bleed split layout (logo + close inline).
+  if (pathname.startsWith("/onboarding/preview")) {
+    return (
+      <div className="min-h-screen" style={{ background: "#faf6ee" }}>
+        <Outlet />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#faf6ee" }}>

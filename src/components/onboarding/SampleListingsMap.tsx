@@ -17,6 +17,7 @@ interface Props {
   activeId?: string | null;
   onSelect?: (id: string | null) => void;
   card?: ReactNode;
+  className?: string;
 }
 
 function createMarker(listing: ListingPin): google.maps.Marker {
@@ -81,6 +82,7 @@ export function SampleListingsMap({
   activeId,
   onSelect,
   card,
+  className,
 }: Props) {
   const ready = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -102,10 +104,19 @@ export function SampleListingsMap({
       center: { lat: data.center[0], lng: data.center[1] },
       zoom: data.zoom,
       disableDefaultUI: true,
-      zoomControl: true,
+      gestureHandling: "greedy",
+      clickableIcons: false,
+      zoomControl: false,
       styles: [
         { featureType: "poi", stylers: [{ visibility: "off" }] },
         { featureType: "transit", stylers: [{ visibility: "off" }] },
+        { elementType: "geometry", stylers: [{ color: "#f5f2ea" }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#6e6459" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#ffffff" }] },
+        { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+        { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+        { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#f7f4ec" }] },
+        { featureType: "water", elementType: "geometry", stylers: [{ color: "#cfe3ef" }] },
       ],
     });
   }, [ready, city.id]);
@@ -166,7 +177,16 @@ export function SampleListingsMap({
         strokeColor: "#6A820A",
         strokeWeight: 2,
       });
+      m.setIcon({
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: isActive ? 25 : 22,
+        fillColor: isActive ? "#fffdf7" : "#6A820A",
+        fillOpacity: 1,
+        strokeColor: "#6A820A",
+        strokeWeight: 2,
+      });
       m.setLabel(label);
+      if (isActive) mapRef.current?.panTo(m.getPosition()!);
     });
   }, [ready, activeId]);
 
@@ -216,7 +236,12 @@ export function SampleListingsMap({
   }, [ready, activeId, card, listings]);
 
   return (
-    <div className="relative w-full h-[420px] md:h-[540px] rounded-card overflow-hidden border border-border bg-charcoal-100">
+    <div
+      className={
+        className ??
+        "relative w-full h-[420px] md:h-[540px] rounded-card overflow-hidden border border-border bg-charcoal-100"
+      }
+    >
       <div ref={containerRef} className="absolute inset-0" />
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center text-xs font-mono text-charcoal-500">
