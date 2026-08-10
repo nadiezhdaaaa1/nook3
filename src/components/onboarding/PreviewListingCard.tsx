@@ -1,6 +1,11 @@
 import React from "react";
 import { ArrowUpRight, MapPin, TrendingDown, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { SampleListing } from "@/data/sampleListings";
 
 interface Props {
