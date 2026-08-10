@@ -107,7 +107,13 @@ function HomeScreen() {
 
   const PAGE_SIZE = 20;
   const [page, setPage] = useState(1);
+  const listSectionRef = useRef<HTMLElement>(null);
   const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
+
+  const handleSetPage = (next: number) => {
+    setPage(next);
+    listSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const scope = useMemo(() => deriveFilterScope(search), [search]);
   const [filtersOpen, setFiltersOpen] = useState(false);
