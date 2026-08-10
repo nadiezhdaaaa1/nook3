@@ -2,7 +2,7 @@ import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
-  Check, X, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
+  Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Globe, Lock, KeyRound, Eye, EyeOff, ShieldCheck, AlertTriangle, ChevronRight,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft,
 } from "lucide-react";
