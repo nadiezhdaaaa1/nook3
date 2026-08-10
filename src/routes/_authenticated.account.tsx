@@ -434,11 +434,6 @@ function SecuritySection() {
         </div>
 
         <LockedRow
-          icon={ShieldCheck}
-          label="Two-factor authentication"
-          desc="Add a second step at sign-in. Coming soon."
-        />
-        <LockedRow
           icon={Globe}
           label="Active sessions"
           desc="See where you're signed in and revoke devices. Coming soon."
