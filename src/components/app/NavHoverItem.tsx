@@ -60,6 +60,7 @@ export function NavHoverItem({
   const isActive = to ? pathname === to : false;
 
   const handleEnter = (event: React.PointerEvent<HTMLElement>) => {
+    if (disabled) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -69,7 +70,7 @@ export function NavHoverItem({
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLElement>) => {
-    if (!event.currentTarget.matches(":focus-visible")) return;
+    if (disabled || !event.currentTarget.matches(":focus-visible")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = rect.width / 2;
     const y = rect.height / 2;
