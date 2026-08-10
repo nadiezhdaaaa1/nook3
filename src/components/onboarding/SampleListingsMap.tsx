@@ -23,6 +23,8 @@ interface Props {
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
   topLeftControls?: ReactNode;
+  /** Listing ids the user has saved — rendered with a heart on their pin. */
+  savedIds?: Set<string>;
 }
 
 
@@ -144,6 +146,7 @@ class PinOverlay {
     label: string,
     variant: PinVariant = "price",
     animate = false,
+    saved = false,
   ) {
     this.position = position;
     this.variant = variant;
@@ -159,7 +162,29 @@ class PinOverlay {
       this.pin.style.cursor = "default";
       this.pin.style.pointerEvents = "none";
     } else {
-      this.pin.textContent = label;
+      if (variant === "price" && saved) {
+        this.pin.style.flexDirection = "row";
+        this.pin.style.gap = "4px";
+        const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        heart.setAttribute("viewBox", "0 0 24 24");
+        heart.setAttribute("width", "14");
+        heart.setAttribute("height", "14");
+        heart.setAttribute("aria-hidden", "true");
+        heart.style.flex = "0 0 auto";
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute(
+          "d",
+          "M12 21s-7.5-4.7-9.3-9.1C1.3 8.4 3.2 5 6.6 5c2 0 3.4 1.1 4.2 2.2C11.6 6.1 13 5 15 5c3.4 0 5.3 3.4 3.9 6.9C19.5 16.3 12 21 12 21z",
+        );
+        path.setAttribute("fill", "#D66C38");
+        heart.appendChild(path);
+        this.pin.appendChild(heart);
+        const text = document.createElement("span");
+        text.textContent = label;
+        this.pin.appendChild(text);
+      } else {
+        this.pin.textContent = label;
+      }
       if (variant === "count") {
         this.pin.style.padding = "10px 16px";
         this.pin.style.fontSize = "17px";
@@ -303,6 +328,7 @@ export function SampleListingsMap({
   isFullscreen,
   onToggleFullscreen,
   topLeftControls,
+  savedIds,
 }: Props) {
 
 
@@ -434,7 +460,7 @@ export function SampleListingsMap({
       const radius = count > 1 ? 40 + count * 2 : 0;
       cluster.members.forEach((l, index) => {
         const position = new google.maps.LatLng(l.coords[0], l.coords[1]);
-        const pin = new PinOverlay(position, formatRent(l.rent), "price", count > 1);
+        const pin = new PinOverlay(position, formatRent(l.rent), "price", count > 1, savedIds?.has(l.id) ?? false);
         if (count > 1) {
           const angle = -Math.PI / 2 + (index * 2 * Math.PI) / count;
           pin.setOffset(Math.cos(angle) * radius, Math.sin(angle) * radius);
@@ -447,7 +473,7 @@ export function SampleListingsMap({
         markersRef.current.set(l.id, pin);
       });
     });
-  }, [ready, clusters, expandedId]);
+  }, [ready, clusters, expandedId, savedIds]);
 
   // Update marker active state without re-fitting bounds.
   // Hover takes visual priority over the selected pin.

@@ -350,6 +350,7 @@ function HomeScreen() {
             listings={pins}
             activeId={activeId}
             hoveredId={hoveredId}
+            savedIds={savedIds}
             onSelect={(id) => setActiveId(id)}
             card={popupCard}
             isFullscreen={mapFullscreen}
