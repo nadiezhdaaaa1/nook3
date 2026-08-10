@@ -333,7 +333,7 @@ function HomeScreen() {
                     <ListFilter className="h-4 w-4" aria-hidden />
                     Filters
                     {filterCount > 0 && (
-                      <span className="absolute right-0 top-0 z-10 inline-flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-pill bg-charcoal-950 px-1.5 text-[11px] font-semibold text-paper">
+                      <span className="absolute left-1/2 top-0 z-10 inline-flex h-5 min-w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-pill bg-charcoal-950 px-1.5 text-[11px] font-semibold text-paper">
                         {filterCount}
                       </span>
                     )}
