@@ -363,7 +363,7 @@ export function FiltersSheet({
             type="button"
             variant="tertiary"
             size="medium"
-            className="flex-1"
+            className="shrink-0"
             onClick={onReset}
             disabled={count === 0}
           >
@@ -374,7 +374,7 @@ export function FiltersSheet({
             type="button"
             variant="main"
             size="medium"
-            className="flex-1"
+            className="min-w-0 flex-1"
             onClick={() => onOpenChange(false)}
           >
             Show {resultCount} match{resultCount === 1 ? "" : "es"}
