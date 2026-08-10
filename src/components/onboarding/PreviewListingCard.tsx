@@ -66,30 +66,40 @@ export function PreviewListingCard({
             fontFamily: "var(--font-sans)",
           }}
         >
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href={
-                  listing.url ||
-                  `https://www.google.com/search?q=${encodeURIComponent(listing.address)}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Open listing in new tab"
-                className="group/title inline-flex w-full min-w-0 items-center gap-1.5 text-[#241c12] no-underline transition-colors duration-200 hover:text-[#5a5a55]"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ArrowUpRight
-                  className="h-4 w-4 shrink-0 opacity-100 transition-all duration-200 lg:w-0 lg:opacity-0 lg:group-hover:w-4 lg:group-hover:opacity-100"
-                  aria-hidden="true"
-                />
-                <span className="truncate">{listing.address}</span>
-              </a>
-            </TooltipTrigger>
-            <TooltipContent side="top" sideOffset={4}>
-              Open original listing
-            </TooltipContent>
-          </Tooltip>
+          {disableTitleLink ? (
+            <span className="inline-flex w-full min-w-0 items-center gap-1.5 text-[#241c12]">
+              <ArrowUpRight
+                className="h-4 w-4 shrink-0 opacity-100 transition-all duration-200 lg:w-0 lg:opacity-0 lg:group-hover:w-4 lg:group-hover:opacity-100"
+                aria-hidden="true"
+              />
+              <span className="truncate">{listing.address}</span>
+            </span>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  href={
+                    listing.url ||
+                    `https://www.google.com/search?q=${encodeURIComponent(listing.address)}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open listing in new tab"
+                  className="group/title inline-flex w-full min-w-0 items-center gap-1.5 text-[#241c12] no-underline transition-colors duration-200 hover:text-[#5a5a55]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ArrowUpRight
+                    className="h-4 w-4 shrink-0 opacity-100 transition-all duration-200 lg:w-0 lg:opacity-0 lg:group-hover:w-4 lg:group-hover:opacity-100"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">{listing.address}</span>
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={4}>
+                Open original listing
+              </TooltipContent>
+            </Tooltip>
+          )}
         </h3>
 
         {onClose && (
