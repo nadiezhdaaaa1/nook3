@@ -57,45 +57,13 @@ function NotificationsTab() {
   const plan = useAppStore((s) => s.user?.plan ?? "free");
   const activeSearchId = useAppStore((s) => s.activeSearchId);
   const activeSearch = useAppStore((s) => s.searches.find((x) => x.id === s.activeSearchId));
-  const { quietHours, perSearch, setQuiet, setPerSearch } = usePreferencesStore();
-
-  const [emailOverrideOn, setEmailOverrideOn] = useState(false);
-  const [overrideEmail, setOverrideEmail] = useState<string>("");
-  const [overrideEmailTouched, setOverrideEmailTouched] = useState(false);
-
-  const overrideEmailErr = emailOverrideOn && overrideEmail
-    ? (emailSchema.safeParse(overrideEmail).success ? null : "Enter a valid email.")
-    : null;
+  const { quietHours, setQuiet } = usePreferencesStore();
 
   const pill = PLAN_PILL[plan] ?? PLAN_PILL.free;
   const userRank = PLAN_RANK[plan];
   const searchName = activeSearch?.name ?? "this search";
 
   const tz = useMemo(() => detectTimezone(), []);
-
-  const override = activeSearchId
-    ? perSearch[activeSearchId] ?? { emailOverride: null, phoneOverride: null }
-    : { emailOverride: null, phoneOverride: null };
-
-  const commitEmailOverride = (next: string | null) => {
-    if (activeSearchId) setPerSearch(activeSearchId, { emailOverride: next });
-  };
-
-  const handleEmailOverrideToggle = (on: boolean) => {
-    if (!on && (override.emailOverride || overrideEmail)) {
-      const ok = window.confirm(
-        "Discard override email? Future alerts will go to your main email.",
-      );
-      if (!ok) return;
-    }
-    setEmailOverrideOn(on);
-    if (on) {
-      setOverrideEmail(override.emailOverride ?? "");
-    } else {
-      setOverrideEmail("");
-      commitEmailOverride(null);
-    }
-  };
 
   return (
     <div className="space-y-10 pb-32">
