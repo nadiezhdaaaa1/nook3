@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Check, Sparkles, X, Zap } from "lucide-react";
+import { Check, Sparkles, X } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { OriginButton } from "@/components/ui/origin-button";
 
