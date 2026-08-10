@@ -171,7 +171,7 @@ export function PreviewListingCard({
       }}
       onMouseEnter={() => onHover?.(listing.id)}
       onMouseLeave={() => onHover?.(null)}
-      className={`text-left border transition-[border-color,box-shadow] duration-150 ${
+      className={`text-left border flex flex-col transition-[border-color,box-shadow] duration-150 ${
         selected ? "border-[#6a820a]" : "border-black/[0.08] hover:border-black/20"
       } ${popup ? "w-[320px] max-w-[calc(100vw-64px)]" : "w-full"} ${
         onSelect ? "cursor-pointer" : ""
@@ -245,7 +245,7 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div className="group/glow relative" style={{ marginTop: 12 }}>
+      <div className="group/glow relative mt-auto">
         <WrenGlow />
         <div
           className="relative"
