@@ -333,39 +333,53 @@ function Success() {
         </p>
       </motion.div>
 
-      {/* Account creation */}
-      <motion.div variants={sectionVariants} className="mt-8 flex flex-col gap-3">
-        <OriginButton
-          type="button"
-          variant="tertiary"
-          size="big"
-          className="w-full"
-          onClick={onGoogle}
-          disabled={busy}
-        >
-          <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
-          <span>Continue with Google</span>
-        </OriginButton>
-
-        <OriginButton
-          type="button"
-          variant="main"
-          size="big"
-          className="w-full"
-          disabled={busy}
-          onClick={() => navigate({ to: "/signup", search: { redirect: "/home" } })}
-        >
-          <Mail className="h-4 w-4" />
-          <span>Continue with email</span>
-        </OriginButton>
-
-        <p className="m-0 text-center text-[14px] text-charcoal-500">
-          Already have an account?{" "}
-          <Link to="/login" search={{ redirect: "/home" }} className="text-charcoal-950 underline">
-            Sign in
-          </Link>
-        </p>
       </motion.div>
-    </motion.div>
+
+      {/* Account creation — sticky bottom bar */}
+      <div
+        className="fixed bottom-0 left-1/2 z-40 w-full max-w-[800px] -translate-x-1/2"
+        style={{
+          padding: "40px 20px 24px",
+          background:
+            "linear-gradient(180deg, rgba(250,246,238,0) 0%, #FAF6EE 16%, #FAF6EE 100%)",
+        }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex w-full gap-3">
+            <OriginButton
+              type="button"
+              variant="tertiary"
+              size="big"
+              className="flex-1"
+              onClick={onGoogle}
+              disabled={busy}
+            >
+              <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
+              <span>Continue with Google</span>
+            </OriginButton>
+
+            <OriginButton
+              type="button"
+              variant="main"
+              size="big"
+              className="flex-1"
+              disabled={busy}
+              onClick={() => navigate({ to: "/signup", search: { redirect: "/home" } })}
+            >
+              <Mail className="h-4 w-4" />
+              <span>Continue with email</span>
+            </OriginButton>
+          </div>
+
+          <p className="m-0 text-center text-[14px] text-[#6e6459]">
+            Already have an account?{" "}
+            <Link to="/login" search={{ redirect: "/home" }} className="text-charcoal-950 underline">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
+
