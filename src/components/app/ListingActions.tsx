@@ -55,46 +55,49 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
 
   return (
     <div
-      className="mt-4 flex items-center justify-end gap-1 pt-3"
+      className="flex items-center justify-between gap-1"
       onClick={(e) => e.stopPropagation()}
     >
-      <OriginButton
-        variant="tertiary"
-        size="medium"
-        onClick={onDislike}
-        aria-label="Not interested in this listing"
-        className={ICON_BTN}
-      >
-        <ThumbsDown className="h-[18px] w-[18px]" color="#6e6459" />
-      </OriginButton>
+      <div className="flex items-center gap-1">
+        <OriginButton
+          variant="tertiary"
+          size="medium"
+          onClick={onDislike}
+          aria-label="Not interested in this listing"
+          className={ICON_BTN}
+        >
+          <ThumbsDown className="h-[18px] w-[18px]" color="#6e6459" />
+        </OriginButton>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <OriginButton
-            variant="tertiary"
-            size="medium"
-            aria-label="Report this listing"
-            className={ICON_BTN}
-          >
-            <Flag className="h-[18px] w-[18px]" color="#6e6459" />
-          </OriginButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-64">
-          <DropdownMenuLabel>What's wrong with this listing?</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {REASON_LABELS.map((r) => (
-            <DropdownMenuItem
-              key={r.value}
-              onSelect={() => {
-                setReason(r.value);
-                setDetails("");
-              }}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <OriginButton
+              variant="tertiary"
+              size="medium"
+              aria-label="Report this listing"
+              className={ICON_BTN}
             >
-              {r.label}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+              <Flag className="h-[18px] w-[18px]" color="#6e6459" />
+            </OriginButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuLabel>What's wrong with this listing?</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {REASON_LABELS.map((r) => (
+              <DropdownMenuItem
+                key={r.value}
+                onSelect={() => {
+                  setReason(r.value);
+                  setDetails("");
+                }}
+              >
+                {r.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
 
       <OriginButton
         variant="tertiary"
