@@ -37,6 +37,7 @@ interface AppActions {
   ) => { ok: true; search: Search } | { ok: false; error: string };
   updateSearch: (searchId: string, patch: Partial<Search>) => void;
   renameSearch: (searchId: string, name: string) => void;
+  changeSearchCity: (searchId: string, cityId: CityId) => void;
   pauseSearch: (searchId: string) => void;
   resumeSearch: (searchId: string) => void;
   duplicateSearch: (searchId: string) => { ok: true; search: Search } | { ok: false; error: string };
