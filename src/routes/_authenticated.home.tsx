@@ -109,7 +109,7 @@ function HomeScreen() {
       {/* Map panel */}
       <aside
         aria-label="Map of your matches"
-        className="order-1 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-[calc(100dvh-64px)] md:w-1/2 md:pl-0 md:sticky md:top-16"
+        className="order-1 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-[calc(100dvh-72px)] md:w-[45%] md:pl-0 md:sticky md:top-[72px]"
       >
         {cityConfig && (
           <SampleListingsMap
@@ -127,7 +127,7 @@ function HomeScreen() {
       {/* Listings column */}
       <section
         aria-label="Your matches"
-        className="order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-1/2"
+        className="order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
       >
         <div className="mx-auto flex max-w-[760px] flex-col">
           <header className="p-2">
