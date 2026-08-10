@@ -45,9 +45,11 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
         }}
       >
         <div className="flex items-center justify-between" style={{ gap: 32 }}>
-          <div style={{ padding: "0 8px" }} aria-label="Nook" role="img">
-            <Logo className="h-6 w-auto" />
-          </div>
+          {!isNewSearch && (
+            <div style={{ padding: "0 8px" }} aria-label="Nook" role="img">
+              <Logo className="h-6 w-auto" />
+            </div>
+          )}
 
           {step !== null && (
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
