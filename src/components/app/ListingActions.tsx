@@ -64,25 +64,16 @@ export function ListingActions({ saved, saving, selected = false, onToggleSave, 
         data-selected={selected}
         style={{ opacity: selected ? 1 : undefined }}
       >
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          onClick={onDislike}
-          aria-label="Not interested in this listing"
-          className={ICON_BTN}
-        >
-          <ThumbsDown className="h-4 w-4" color="#6e6459" />
-        </OriginButton>
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <OriginButton
               variant="tertiary"
               size="medium"
-              aria-label="Report this listing"
+              onClick={onDislike}
+              aria-label="Not interested in this listing"
               className={ICON_BTN}
             >
-              <Flag className="h-4 w-4" color="#6e6459" />
+              <ThumbsDown className="h-4 w-4" color="#6e6459" />
             </OriginButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
@@ -101,6 +92,16 @@ export function ListingActions({ saved, saving, selected = false, onToggleSave, 
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <OriginButton
+          variant="tertiary"
+          size="medium"
+          onClick={onDislike}
+          aria-label="Not interested in this listing"
+          className={ICON_BTN}
+        >
+          <ThumbsDown className="h-4 w-4" color="#6e6459" />
+        </OriginButton>
       </div>
 
 
