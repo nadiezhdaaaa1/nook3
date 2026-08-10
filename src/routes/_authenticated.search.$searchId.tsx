@@ -4,14 +4,19 @@ import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAppStore, switchActiveSearch } from "@/lib/store";
-import { useDeleteSearchMutation } from "@/lib/queries/searches";
+import { useDeleteSearchMutation, useUpdateSearchMutation } from "@/lib/queries/searches";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { OriginButton } from "@/components/ui/origin-button";
+import { CITY_LIST } from "@/data/cities";
+import type { CityId } from "@/data/cities";
 
 export const Route = createFileRoute("/_authenticated/search/$searchId")({
   head: () => ({
@@ -79,7 +84,7 @@ function SearchEditLayout() {
         <ArrowLeft className="h-3.5 w-3.5" /> Back to listings
       </Link>
 
-      <PageHeader searchId={search.id} name={search.name} status={search.status} sectionLabel={sectionLabel} />
+      <PageHeader searchId={search.id} name={search.name} status={search.status} cityId={search.cityId} sectionLabel={sectionLabel} />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
         <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
@@ -100,16 +105,19 @@ function PageHeader({
   searchId,
   name,
   status,
+  cityId,
   sectionLabel,
 }: {
   searchId: string;
   name: string;
   status: "active" | "paused" | "archived";
+  cityId: CityId;
   sectionLabel: string;
 }) {
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
+  const [cityDialogOpen, setCityDialogOpen] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(name);
@@ -203,12 +211,26 @@ function PageHeader({
         <OriginButton
           variant="tertiary"
           size="medium"
+          onClick={() => setCityDialogOpen(true)}
+        >
+          <MapPin className="h-4 w-4" /> Change city
+        </OriginButton>
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() => setIsEditing(true)}
         >
           <Pencil className="h-4 w-4" /> Rename
         </OriginButton>
         <DeleteSearchButton searchId={searchId} name={name} />
       </div>
+
+      <ChangeCityDialog
+        searchId={searchId}
+        currentCityId={cityId}
+        open={cityDialogOpen}
+        onOpenChange={setCityDialogOpen}
+      />
     </div>
   );
 }
@@ -264,6 +286,92 @@ function DeleteSearchButton({ searchId, name }: { searchId: string; name: string
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+function ChangeCityDialog({
+  searchId,
+  currentCityId,
+  open,
+  onOpenChange,
+}: {
+  searchId: string;
+  currentCityId: CityId;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  const changeSearchCity = useAppStore((s) => s.changeSearchCity);
+  const updateMut = useUpdateSearchMutation();
+  const [selected, setSelected] = useState<CityId>(currentCityId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (open) setSelected(currentCityId);
+  }, [open, currentCityId]);
+
+  const handleConfirm = () => {
+    if (selected === currentCityId) {
+      onOpenChange(false);
+      return;
+    }
+    setIsSubmitting(true);
+    changeSearchCity(searchId, selected);
+    updateMut.mutate(
+      { id: searchId, patch: { cityId: selected } },
+      {
+        onSuccess: () => {
+          toast.success("City changed");
+          setIsSubmitting(false);
+          onOpenChange(false);
+        },
+        onError: () => {
+          toast.error("Couldn't change city on the server");
+          setIsSubmitting(false);
+        },
+      },
+    );
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[420px]">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl text-charcoal-950">Change search city</DialogTitle>
+          <DialogDescription className="text-sm text-charcoal-600">
+            Neighborhoods, transit lines and commute settings will be reset for the new city.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid max-h-[260px] gap-1 overflow-y-auto py-1">
+          {CITY_LIST.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setSelected(c.id)}
+              className={cn(
+                "flex items-center justify-between rounded-[12px] px-3 py-2.5 text-left transition-colors",
+                selected === c.id ? "bg-charcoal-950 text-paper" : "hover:bg-[#EBE2CF]",
+              )}
+            >
+              <span className="text-sm font-semibold">{c.displayName}</span>
+              {selected === c.id && <Check className="h-4 w-4" />}
+            </button>
+          ))}
+        </div>
+        <DialogFooter>
+          <OriginButton variant="tertiary" size="medium" onClick={() => onOpenChange(false)}>
+            Cancel
+          </OriginButton>
+          <OriginButton
+            variant="dark"
+            size="medium"
+            onClick={handleConfirm}
+            disabled={isSubmitting || selected === currentCityId}
+          >
+            {isSubmitting ? "Saving..." : "Change city"}
+          </OriginButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

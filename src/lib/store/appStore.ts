@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { getCity } from "@/data/cities";
 import type { CityId } from "@/data/cities";
 import type {
   Search,
@@ -37,6 +38,7 @@ interface AppActions {
   ) => { ok: true; search: Search } | { ok: false; error: string };
   updateSearch: (searchId: string, patch: Partial<Search>) => void;
   renameSearch: (searchId: string, name: string) => void;
+  changeSearchCity: (searchId: string, cityId: CityId) => void;
   pauseSearch: (searchId: string) => void;
   resumeSearch: (searchId: string) => void;
   duplicateSearch: (searchId: string) => { ok: true; search: Search } | { ok: false; error: string };
@@ -163,6 +165,28 @@ export const useAppStore = create<AppStore>()(
         const trimmed = name.trim();
         if (trimmed.length < 2 || trimmed.length > 50) return;
         get().updateSearch(id, { name: trimmed });
+      },
+
+      changeSearchCity: (id, cityId) => {
+        const search = get().searches.find((s) => s.id === id);
+        if (!search) return;
+        const defaults = EMPTY_SEARCH_DEFAULTS(cityId);
+        const cityConfig = getCity(cityId);
+        const budget = (() => {
+          if (!search.budget || !cityConfig) return defaults.budget;
+          const [min, max] = search.budget;
+          const { budget: cb } = cityConfig;
+          if (min < cb.min || max > cb.max) return [cb.min, cb.default] as [number, number];
+          return search.budget;
+        })();
+        get().updateSearch(id, {
+          cityId,
+          // Reset city-dependent fields to avoid mismatched neighborhoods / transit lines.
+          neighborhoods: defaults.neighborhoods,
+          transit: defaults.transit,
+          commute: defaults.commute,
+          budget,
+        });
       },
 
       pauseSearch: (id) => get().updateSearch(id, { status: "paused" }),
