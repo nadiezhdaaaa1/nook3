@@ -147,7 +147,6 @@ const NAV_ITEMS = [
 
 export function AppHeader({ plan }: { plan?: PlanKey }) {
   const storePlan = useAppStore((s) => s.user?.plan);
-  const [open, setOpen] = useState(false);
   const resolvedPlan: PlanKey =
     plan ?? (storePlan === "premium" || storePlan === "max" ? storePlan : "free");
 
