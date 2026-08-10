@@ -1,106 +1,71 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Bookmark, Gift, Lock, LogOut, Sparkles, UserCircle } from "lucide-react";
-import { toast } from "sonner";
-import { Logo } from "@/components/brand/Logo";
-import { useAppStore } from "@/lib/store";
-import { supabase } from "@/integrations/supabase/client";
-import { cn } from "@/lib/utils";
+import { Link } from "@tanstack/react-router";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  IconGift,
+  IconHeart,
+  IconHomeSearch,
+  IconMessageChatbot,
+  IconUser,
+} from "@tabler/icons-react";
 
+import { Logo } from "@/components/brand/Logo";
+import { NavHoverItem } from "@/components/app/NavHoverItem";
+import { PlanBadge, type PlanKey } from "@/components/app/PlanBadge";
+import { useAppStore } from "@/lib/store";
 
-type Action = {
-  to: "/saved" | "/wren" | "/referrals" | "/account";
-  label: string;
-  icon: typeof Bookmark;
-  locked?: boolean;
-};
+const ICON_PROPS = {
+  size: 20,
+  stroke: 1.5,
+  color: "#4A4A46",
+} as const;
 
-export function AppHeader() {
-  const navigate = useNavigate();
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
-  const wrenLocked = plan !== "premium" && plan !== "max";
-  const [signingOut, setSigningOut] = useState(false);
+const LABEL_CLASS = "text-[14px] font-semibold leading-5 text-[#241C12]";
+const TEXT_BUTTON_CLASS = "gap-2 rounded-[10px] px-3 py-2";
+const ICON_BUTTON_CLASS = "rounded-[80px] p-2";
 
-  const actions: Action[] = [
-    { to: "/saved", label: "Saved listings", icon: Bookmark },
-    { to: "/wren", label: wrenLocked ? "Wren AI chat (Premium)" : "Wren AI chat", icon: Sparkles, locked: wrenLocked },
-    { to: "/referrals", label: "Referrals", icon: Gift },
-    { to: "/account", label: "Account", icon: UserCircle },
-  ];
-
-  const handleSignOut = async () => {
-    setSigningOut(true);
-    const { error } = await supabase.auth.signOut();
-    setSigningOut(false);
-    if (error) {
-      toast.error("Sign out failed", { description: error.message });
-      return;
-    }
-    toast.success("Signed out");
-    navigate({ to: "/login", replace: true });
-  };
-
-  const iconClasses =
-    "inline-flex h-10 w-10 items-center justify-center rounded-pill border border-black/10 bg-white text-charcoal-700 transition-colors hover:border-charcoal-950 hover:text-charcoal-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30";
+export function AppHeader({ plan }: { plan?: PlanKey }) {
+  const storePlan = useAppStore((s) => s.user?.plan);
+  const resolvedPlan: PlanKey =
+    plan ?? (storePlan === "premium" || storePlan === "max" ? storePlan : "free");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-black/[0.08] bg-paper/95 backdrop-blur">
-      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
-        <div className="flex min-w-0 items-center gap-5">
-          <Link to="/home" className="flex shrink-0 items-center gap-2.5" aria-label="Nook home">
-            <Logo className="hidden text-2xl sm:block" />
+    <header
+      className="sticky top-0 z-40 w-full border-b border-black/[0.08] backdrop-blur font-['Google_Sans_Flex',sans-serif]"
+      style={{ backgroundColor: "rgba(244, 241, 234, 0.95)" }}
+    >
+      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-10">
+        <div className="flex items-center gap-6">
+          <Link to="/home" aria-label="Nook home" className="flex shrink-0 items-center">
+            <Logo className="h-[28px] w-[81.22px]" />
           </Link>
+          <PlanBadge plan={resolvedPlan} />
         </div>
 
-
-        <TooltipProvider delayDuration={150}>
-          <nav aria-label="Account sections" className="flex shrink-0 items-center gap-3">
-            {actions.map((a) => {
-              const Icon = a.icon;
-              return (
-                <Tooltip key={a.to}>
-                  <TooltipTrigger asChild>
-                    <Link
-                      to={a.to}
-                      aria-label={a.label}
-                      className={cn(iconClasses, "relative")}
-                      activeProps={{ className: "border-charcoal-950 bg-charcoal-950 text-paper" }}
-                    >
-                      <Icon className="h-[18px] w-[18px]" aria-hidden />
-                      {a.locked && (
-                        <Lock
-                          className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-paper text-charcoal-500"
-                          aria-hidden
-                        />
-                      )}
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>{a.label}</TooltipContent>
-                </Tooltip>
-              );
-            })}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  disabled={signingOut}
-                  aria-label="Sign out"
-                  className={iconClasses}
-                >
-                  <LogOut className="h-[18px] w-[18px]" aria-hidden />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Sign out</TooltipContent>
-            </Tooltip>
+        <div className="flex items-center gap-4">
+          <nav aria-label="Main" className="flex items-center gap-[2px]">
+            <NavHoverItem to="/home" className={TEXT_BUTTON_CLASS}>
+              <IconHomeSearch {...ICON_PROPS} aria-hidden />
+              <span className={LABEL_CLASS}>Searches</span>
+            </NavHoverItem>
+            <NavHoverItem to="/saved" className={TEXT_BUTTON_CLASS}>
+              <IconHeart {...ICON_PROPS} aria-hidden />
+              <span className={LABEL_CLASS}>Saved</span>
+            </NavHoverItem>
+            <NavHoverItem to="/wren" className={ICON_BUTTON_CLASS} aria-label="Wren AI chat">
+              <IconMessageChatbot {...ICON_PROPS} aria-hidden />
+            </NavHoverItem>
+            <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
+              <IconGift {...ICON_PROPS} aria-hidden />
+            </NavHoverItem>
           </nav>
-        </TooltipProvider>
+
+          <NavHoverItem
+            to="/account"
+            aria-label="Account"
+            className="h-9 w-9 rounded-full border border-black/20"
+          >
+            <IconUser size={18} stroke={1.5} color="#D66C38" aria-hidden />
+          </NavHoverItem>
+        </div>
       </div>
     </header>
   );
