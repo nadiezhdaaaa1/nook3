@@ -100,6 +100,7 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 
 function HomeScreen() {
   const search = useActiveSearch();
+  const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
   const cityConfig = getCity(cityId);
   const alertsQ = useAlertsQuery();
@@ -108,13 +109,22 @@ function HomeScreen() {
   const [page, setPage] = useState(1);
   const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
 
+  const scope = useMemo(() => deriveFilterScope(search), [search]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filters, setFilters] = useState<MatchFilters>(() => defaultFilters(scope));
+  const filterCount = useMemo(() => activeFilterCount(filters, scope), [filters, scope]);
+  const filtersActive = filterCount > 0;
+
   useEffect(() => {
     setPage(1);
+    setFilters(defaultFilters(deriveFilterScope(search)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search?.id]);
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
+
 
   const updateStatus = useUpdateAlertStatusMutation();
   const saveSnapshot = useSaveListingSnapshotMutation();
