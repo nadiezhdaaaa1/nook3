@@ -13,6 +13,42 @@ export interface SampleListing {
   image: string;
   url?: string;
   coords?: [number, number]; // [lat, lng]
+  /** Extra amenities shown behind the "more" toggle on listing cards. */
+  amenities?: string[];
+}
+
+const AMENITY_POOL = [
+  "Pet friendly",
+  "Fully furnished",
+  "Dishwasher",
+  "In-unit laundry",
+  "Elevator",
+  "Doorman",
+  "Central A/C",
+  "Hardwood floors",
+  "Balcony",
+  "Gym in building",
+  "Rooftop access",
+  "Parking included",
+  "Utilities included",
+  "No fee",
+];
+
+/**
+ * Amenities for a listing. Uses explicit `amenities` when present, otherwise
+ * derives a stable set from the listing id so cards stay consistent.
+ */
+export function getListingAmenities(listing: SampleListing): string[] {
+  if (listing.amenities?.length) return listing.amenities;
+  let h = 0;
+  for (let i = 0; i < listing.id.length; i += 1) h = (h * 31 + listing.id.charCodeAt(i)) % 100003;
+  const count = 3 + (h % 3);
+  const out: string[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const item = AMENITY_POOL[(h + i * 5 + i * i) % AMENITY_POOL.length];
+    if (!out.includes(item)) out.push(item);
+  }
+  return out;
 }
 
 // Stable apartment/interior photos from Unsplash
