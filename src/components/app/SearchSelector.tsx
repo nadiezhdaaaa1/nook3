@@ -119,7 +119,7 @@ export function SearchSelector() {
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className="inline-flex max-w-[260px] items-center gap-2 h-10 px-3 rounded-pill border border-black/10 bg-white hover:border-charcoal-950 transition-colors"
+          className="inline-flex max-w-[260px] items-center gap-2 h-10 px-3 rounded-[10px] border border-black/10 bg-white hover:border-charcoal-950 transition-colors"
         >
           {active ? (
             <>
