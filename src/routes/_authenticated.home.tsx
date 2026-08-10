@@ -255,6 +255,9 @@ function HomeScreen() {
 
   const handleReport = (l: SampleListing, reason: ReportReason, details: string) => {
     const alert = alertById.get(l.id);
+    setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
+    if (alert) updateStatus.mutate({ id: alert.id, status: "dismissed" });
+    if (activeId === l.id) setActiveId(null);
     reportMutation.mutate({
       listingRef: l.id,
       reason,
@@ -269,6 +272,7 @@ function HomeScreen() {
         baths: l.baths,
       },
     });
+    toast("Listing removed from your matches", { description: "Thanks for letting us know." });
   };
 
   const pins = useMemo(
