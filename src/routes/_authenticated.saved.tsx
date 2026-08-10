@@ -1,3 +1,4 @@
+import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
@@ -30,7 +31,11 @@ import {
 import type { AlertRow } from "@/lib/alerts.functions";
 
 export const Route = createFileRoute("/_authenticated/saved")({
-  component: SavedAlertsPage,
+  component: () => (
+    <AppPage title="Saved listings" subtitle="Alerts you kept, contacted, or snoozed.">
+      <SavedAlertsPage />
+    </AppPage>
+  ),
 });
 
 type Filter = "all" | "new" | "saved" | "contacted" | "dismissed";

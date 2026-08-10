@@ -1,3 +1,4 @@
+import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -24,7 +25,11 @@ import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 
 export const Route = createFileRoute("/_authenticated/account")({
-  component: AccountPage,
+  component: () => (
+    <AppPage title="Account" subtitle="Contact details, plan and billing.">
+      <AccountPage />
+    </AppPage>
+  ),
 });
 
 type PlanDef = {
