@@ -330,19 +330,26 @@ function createOverlay(
   return new ListingOverlay(position, container);
 }
 
-export function SampleListingsMap({
-  city,
-  listings,
-  activeId,
-  hoveredId,
-  onSelect,
-  card,
-  className,
-  isFullscreen,
-  onToggleFullscreen,
-  topLeftControls,
-  savedIds,
-}: Props) {
+export interface SampleListingsMapRef {
+  skipNextFit: () => void;
+}
+
+export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(function SampleListingsMap(
+  {
+    city,
+    listings,
+    activeId,
+    hoveredId,
+    onSelect,
+    card,
+    className,
+    isFullscreen,
+    onToggleFullscreen,
+    topLeftControls,
+    savedIds,
+  },
+  ref,
+) {
 
 
   const ready = useGoogleMaps();
