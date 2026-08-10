@@ -26,6 +26,7 @@ export type AlertRow = {
   status: AlertStatusDb;
   snoozedUntil: string | null;
   createdAt: string;
+  dismissReason: string | null;
   listing: z.infer<typeof listingSchema>;
 };
 
@@ -36,6 +37,7 @@ function rowToAlert(row: any): AlertRow {
     status: row.status,
     snoozedUntil: row.snoozed_until ?? null,
     createdAt: row.created_at,
+    dismissReason: row.dismiss_reason ?? null,
     listing: row.listing,
   };
 }
@@ -91,13 +93,21 @@ export const updateAlertStatus = createServerFn({ method: "POST" })
       .object({
         id: z.string().uuid(),
         status: z.enum(ALERT_STATUSES),
+        dismissReason: z.string().max(200).nullable().optional(),
       })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
     const { data: updated, error } = await context.supabase
       .from("saved_alerts")
-      .update({ status: data.status })
+      .update({
+        status: data.status,
+        ...(data.dismissReason !== undefined
+          ? { dismiss_reason: data.dismissReason }
+          : data.status !== "dismissed"
+            ? { dismiss_reason: null }
+            : {}),
+      } as never)
       .eq("id", data.id)
       .eq("user_id", context.userId)
       .select("*")

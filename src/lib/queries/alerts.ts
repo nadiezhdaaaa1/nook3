@@ -44,13 +44,22 @@ export function useUpdateAlertStatusMutation() {
   const qc = useQueryClient();
   const fn = useServerFn(updateAlertStatus);
   return useMutation({
-    mutationFn: (vars: { id: string; status: AlertStatusDb }) =>
+    mutationFn: (vars: { id: string; status: AlertStatusDb; dismissReason?: string | null }) =>
       fn({ data: vars }),
     onMutate: async (vars) => {
       await qc.cancelQueries({ queryKey: alertsQueryKey });
       const prev = qc.getQueryData<AlertRow[]>(alertsQueryKey);
       qc.setQueryData<AlertRow[]>(alertsQueryKey, (cur) =>
-        (cur ?? []).map((a) => (a.id === vars.id ? { ...a, status: vars.status } : a)),
+        (cur ?? []).map((a) =>
+          a.id === vars.id
+            ? {
+                ...a,
+                status: vars.status,
+                dismissReason:
+                  vars.dismissReason !== undefined ? vars.dismissReason : a.dismissReason,
+              }
+            : a,
+        ),
       );
       return { prev };
     },
