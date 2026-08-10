@@ -236,7 +236,7 @@ export function PreviewListingCard({
             style={{ left: wrenOrigin.x, top: wrenOrigin.y, width: wrenCoverSize, height: wrenCoverSize }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           />
-          <WrenTakeHeader open={open}>
+          <WrenTakeHeader>
             <span className="relative z-10 flex items-center gap-2">
               <Sparkles className="h-3.5 w-3.5 text-[#FA8B55]" />
               <span className="text-[11px] font-semibold uppercase tracking-[1.1px] text-white">
