@@ -205,7 +205,7 @@ function Success() {
   async function onGoogle() {
     setBusy(true);
     const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/preferences`,
+      redirect_uri: window.location.origin,
     });
     setBusy(false);
     if (res?.error) {
@@ -355,7 +355,7 @@ function Success() {
           size="big"
           className="w-full"
           disabled={busy}
-          onClick={() => navigate({ to: "/signup", search: { redirect: "/preferences" } })}
+          onClick={() => navigate({ to: "/signup", search: { redirect: "/home" } })}
         >
           <Mail className="h-4 w-4" />
           <span>Continue with email</span>
@@ -363,7 +363,7 @@ function Success() {
 
         <p className="m-0 text-center text-[14px] text-charcoal-500">
           Already have an account?{" "}
-          <Link to="/login" search={{ redirect: "/preferences" }} className="text-charcoal-950 underline">
+          <Link to="/login" search={{ redirect: "/home" }} className="text-charcoal-950 underline">
             Sign in
           </Link>
         </p>

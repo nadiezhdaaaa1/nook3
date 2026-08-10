@@ -1,16 +1,17 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { WrenFab } from "@/components/WrenFab";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
+import { AppHeader } from "@/components/app/AppHeader";
+import { useDbSync } from "@/lib/queries/useDbSync";
+import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
 
 /**
  * Pathless layout route that gates every child under `_authenticated`.
  *
  * Supabase persists the session in `localStorage`, so on the SERVER
  * `getUser()` always returns null and would bounce every direct navigation
- * (e.g. OAuth callback landing on /preferences) to /login. We skip the
- * check during SSR and rely on the client-side re-run after hydration —
- * that's when the session is actually available.
+ * to /login. We skip the check during SSR and rely on the client-side re-run
+ * after hydration — that's when the session is actually available.
  */
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -21,11 +22,23 @@ export const Route = createFileRoute("/_authenticated")({
     }
     return { userId: data.user.id };
   },
-  component: () => (
-    <>
-      <EmailVerificationBanner />
-      <Outlet />
-      <WrenFab />
-    </>
-  ),
+  component: AppLayout,
 });
+
+function AppLayout() {
+  const { isHydrating } = useDbSync();
+
+  return (
+    <div className="min-h-dvh bg-paper">
+      <EmailVerificationBanner />
+      <AppHeader />
+      {isHydrating ? (
+        <div className="mx-auto max-w-[1440px] px-6 py-10">
+          <HydrationSkeleton />
+        </div>
+      ) : (
+        <Outlet />
+      )}
+    </div>
+  );
+}

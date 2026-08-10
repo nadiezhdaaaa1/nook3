@@ -38,7 +38,7 @@ export function EmailVerificationBanner() {
     const { error } = await supabase.auth.resend({
       type: "signup",
       email,
-      options: { emailRedirectTo: `${window.location.origin}/preferences` },
+      options: { emailRedirectTo: `${window.location.origin}/home` },
     });
     setSending(false);
     if (error) {

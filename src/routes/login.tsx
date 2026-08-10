@@ -20,7 +20,7 @@ export const Route = createFileRoute("/login")({
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getUser();
     if (data.user) {
-      throw redirect({ to: search.redirect ?? "/preferences" });
+      throw redirect({ to: search.redirect ?? "/home" });
     }
   },
   head: () => ({
@@ -65,13 +65,13 @@ function LoginPage() {
       return;
     }
     toast.success("Welcome back");
-    navigate({ to: redirectTo ?? "/preferences", replace: true });
+    navigate({ to: redirectTo ?? "/home", replace: true });
   }
 
   async function onGoogle() {
     setSubmitting(true);
     const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + (redirectTo ?? "/preferences"),
+      redirect_uri: window.location.origin + (redirectTo ?? "/home"),
     });
     setSubmitting(false);
     if (res?.error) toast.error("Google sign in failed", { description: res.error.message });
