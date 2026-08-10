@@ -63,6 +63,8 @@ class PinOverlay {
   private position: google.maps.LatLng;
   private clickHandlers: Array<() => void> = [];
   private map: google.maps.Map | null = null;
+  private scale = 1;
+  private active = false;
 
   constructor(position: google.maps.LatLng, rent: number) {
     this.position = position;
@@ -82,7 +84,7 @@ class PinOverlay {
       if (!projection) return;
       const pixel = projection.fromLatLngToDivPixel(this.position);
       if (!pixel) return;
-      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%)`;
+      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%) scale(${this.scale})`;
     };
     this.overlay.onRemove = () => {
       if (this.pin.parentNode) {
@@ -121,18 +123,15 @@ class PinOverlay {
   }
 
   setActive(isActive: boolean) {
+    this.active = isActive;
+    this.scale = isActive ? 1.05 : 1;
     if (isActive) {
       this.pin.style.background = "#FAF6EE";
       this.pin.style.boxShadow = "0 0 0 2px #6A820A, 0 1px 1px -0.25px rgba(0,0,0,0.08), 0 1px 1px -0.25px rgba(0,0,0,0.04)";
-      this.pin.style.transform = "translate(-50%, -50%) scale(1.05)";
     } else {
       this.pin.style.background = "#FFF";
       this.pin.style.boxShadow = PIN_STYLES.boxShadow as string;
-      this.pin.style.transform = "translate(-50%, -50%) scale(1)";
     }
-    // Re-apply the pixel transform in the next draw cycle; the overlay draw
-    // is only triggered when the map projection changes. We force a redraw by
-    // calling draw() directly so the translate(-50%, -50%) is preserved.
     this.overlay.draw();
   }
 
@@ -140,6 +139,7 @@ class PinOverlay {
     map.panTo(this.position);
   }
 }
+
 
 function createOverlay(
   position: google.maps.LatLng,
