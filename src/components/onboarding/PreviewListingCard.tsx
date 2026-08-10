@@ -103,6 +103,31 @@ export function PreviewListingCard({
   setOpenId,
 }: Props) {
   const open = openId === listing.id;
+  const wrenBoxRef = React.useRef<HTMLDivElement>(null);
+  const [wrenHovered, setWrenHovered] = React.useState(false);
+  const [wrenOrigin, setWrenOrigin] = React.useState({ x: 0, y: 0 });
+  const [wrenCoverSize, setWrenCoverSize] = React.useState(0);
+
+  const updateWrenOrigin = React.useCallback((x: number, y: number) => {
+    const node = wrenBoxRef.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    setWrenOrigin({ x, y });
+    setWrenCoverSize(getCoverDiameter(rect.width, rect.height, x, y));
+  }, []);
+
+  React.useLayoutEffect(() => {
+    const node = wrenBoxRef.current;
+    if (!(node && wrenHovered)) return;
+    const measure = () => {
+      const rect = node.getBoundingClientRect();
+      setWrenCoverSize(getCoverDiameter(rect.width, rect.height, wrenOrigin.x, wrenOrigin.y));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [wrenHovered, wrenOrigin.x, wrenOrigin.y]);
 
   return (
     <article
@@ -188,6 +213,13 @@ export function PreviewListingCard({
 
       <div className="relative" style={{ marginTop: 16 }}>
         <div
+          ref={wrenBoxRef}
+          onPointerEnter={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            updateWrenOrigin(e.clientX - rect.left, e.clientY - rect.top);
+            setWrenHovered(true);
+          }}
+          onPointerLeave={() => setWrenHovered(false)}
           className="relative"
           style={{
             background: "#2B2521",
@@ -196,6 +228,13 @@ export function PreviewListingCard({
             overflow: "hidden",
           }}
         >
+        <motion.span
+          animate={{ scale: wrenHovered && wrenCoverSize > 0 ? 1 : 0 }}
+          initial={false}
+          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#000000]"
+          style={{ left: wrenOrigin.x, top: wrenOrigin.y, width: wrenCoverSize, height: wrenCoverSize }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        />
         <WrenTakeButton
           open={open}
           onClick={(e) => {
@@ -221,7 +260,7 @@ export function PreviewListingCard({
           />
         </WrenTakeButton>
         {open && (
-          <p className="px-3 pb-3 text-white" style={{ fontSize: 13, lineHeight: 1.5 }}>
+          <p className="relative z-10 px-3 pb-3 text-white" style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
