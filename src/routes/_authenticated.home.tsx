@@ -235,8 +235,20 @@ function HomeScreen() {
       >
         <div className="mx-auto flex max-w-[960px] flex-col">
           <header className="p-2">
-            <div className="mb-4">
+            <div className="mb-4 flex items-start justify-between gap-4">
               <SearchSelector />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="Filter matches"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border border-black/10 bg-white text-charcoal-700 transition-colors hover:bg-charcoal-950/[0.04] hover:text-charcoal-950"
+                  >
+                    <ListFilter className="h-4 w-4" aria-hidden />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Filter matches</TooltipContent>
+              </Tooltip>
             </div>
             <h1 className="font-display" style={H1}>
               {search
