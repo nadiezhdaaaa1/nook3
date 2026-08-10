@@ -4,7 +4,6 @@ import {
   Archive,
   Check,
   ChevronDown,
-  MapPin,
   Pencil,
   Plus,
   RotateCcw,
@@ -124,7 +123,6 @@ export function SearchSelector() {
         >
           {active ? (
             <>
-              <MapPin className="h-3.5 w-3.5 shrink-0 text-charcoal-500" aria-hidden />
               <StatusDot status={active.status} />
               <span
                 className={cn(
