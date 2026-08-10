@@ -11,6 +11,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { OriginButton } from "@/components/ui/origin-button";
 
 export const Route = createFileRoute("/_authenticated/search/$searchId")({
   head: () => ({
@@ -122,8 +123,9 @@ function PageHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <button
-          type="button"
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() => {
             if (status === "paused") {
               resumeSearch(searchId);
@@ -133,14 +135,13 @@ function PageHeader({
               toast.success("Search paused");
             }
           }}
-          className="inline-flex h-10 items-center gap-1.5 rounded-pill border border-charcoal-200 px-4 text-sm font-semibold text-charcoal-700 transition-colors hover:border-charcoal-950"
         >
           {status === "paused" ? (
             <><Play className="h-4 w-4" /> Resume search</>
           ) : (
             <><Pause className="h-4 w-4" /> Pause search</>
           )}
-        </button>
+        </OriginButton>
         <DeleteSearchButton searchId={searchId} name={name} />
       </div>
     </div>
@@ -159,13 +160,13 @@ function DeleteSearchButton({ searchId, name }: { searchId: string; name: string
 
   return (
     <AlertDialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setConfirmText(""); }}>
-      <button
-        type="button"
+      <OriginButton
+        variant="tertiary"
+        size="medium"
         onClick={() => setOpen(true)}
-        className="inline-flex h-10 items-center gap-1.5 rounded-pill border border-transparent px-4 text-sm font-semibold text-danger transition-colors hover:bg-danger/10"
       >
         <Trash2 className="h-4 w-4" /> Delete search
-      </button>
+      </OriginButton>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete "{name}"?</AlertDialogTitle>
