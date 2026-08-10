@@ -213,53 +213,50 @@ function NotificationsTab() {
         <div>
           <h3 className="font-display text-lg font-semibold text-charcoal-950">Frequency</h3>
         </div>
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="ob-chips grid sm:grid-cols-2 gap-3">
           {FREQS.map((f) => {
             const locked = PLAN_RANK[f.minPlan] > userRank;
-            const selected = frequency === f.id;
+            const selected = frequency === f.id && !locked;
             const Icon = f.icon;
             return (
-              <button
+              <OriginButton
                 key={f.id}
                 type="button"
+                variant={selected ? "dark" : "tertiary"}
+                size="big"
                 disabled={locked}
+                aria-pressed={selected}
                 onClick={() => !locked && set("frequency", f.id)}
                 title={locked ? "Upgrade to unlock →" : undefined}
-                className={cn(
-                  "relative p-4 rounded-card border-2 text-left transition-colors flex items-start gap-3 min-h-[110px]",
-                  locked
-                    ? "border-border bg-paper-warm/40 cursor-not-allowed"
-                    : selected
-                      ? "border-charcoal-950 bg-surface-elevated"
-                      : "border-border bg-transparent hover:border-charcoal-400",
-                )}
+                className="w-full h-auto min-h-[110px] px-6 py-4 text-[16px] justify-start items-start text-left"
               >
-                <Icon className={cn("h-4 w-4 mt-0.5 shrink-0", selected && !locked ? "text-sage-700" : "text-charcoal-400")} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-semibold text-charcoal-950">{f.label}</span>
-                    {f.recommended && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] bg-sage-700 text-paper text-[10px] font-semibold uppercase tracking-[0.08em]">
-                        Recommended
-                      </span>
-                    )}
-                    {locked && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-                        <Lock className="h-3 w-3" /> Premium
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-charcoal-600 mt-1">{f.desc}</div>
-                  {locked && plan === "free" && f.freeFallback ? (
-                    <p className="text-[12px] italic text-charcoal-500 leading-snug mt-2">{f.freeFallback}</p>
-                  ) : (
-                    <p className="text-[12px] italic text-sage-700/90 mt-2">{f.bestFor}</p>
-                  )}
-                </div>
-              </button>
+                <span className="flex w-full items-start gap-3">
+                  <Icon aria-hidden="true" className="h-5 w-5 mt-0.5 shrink-0" />
+                  <span className="flex-1 min-w-0">
+                    <span className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold">{f.label}</span>
+                      {f.recommended && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] bg-sage-700 text-paper text-[10px] font-semibold uppercase tracking-[0.08em]">
+                          Recommended
+                        </span>
+                      )}
+                      {locked && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider opacity-70">
+                          <Lock className="h-3 w-3" /> Premium
+                        </span>
+                      )}
+                    </span>
+                    <span className="block text-[13px] opacity-80 mt-1 font-normal whitespace-normal">{f.desc}</span>
+                    <span className="block text-[12px] italic opacity-70 mt-2 font-normal whitespace-normal leading-snug">
+                      {locked && plan === "free" && f.freeFallback ? f.freeFallback : f.bestFor}
+                    </span>
+                  </span>
+                </span>
+              </OriginButton>
             );
           })}
         </div>
+
       </section>
 
       {/* Quiet hours */}
