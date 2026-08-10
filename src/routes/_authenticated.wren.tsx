@@ -81,7 +81,7 @@ function WrenChatPage() {
       .single();
     if (error || !data) { toast.error(error?.message ?? "Failed to start chat"); return null; }
     setConversationId(data.id);
-    navigate({ to: "/preferences/wren", search: { c: data.id }, replace: true });
+    navigate({ to: "/wren", search: { c: data.id }, replace: true });
     return data.id;
   };
 
@@ -200,7 +200,7 @@ function WrenChatPage() {
         </div>
         <button
           type="button"
-          onClick={() => { setMessages([]); setConversationId(null); navigate({ to: "/preferences/wren", search: {}, replace: true }); }}
+          onClick={() => { setMessages([]); setConversationId(null); navigate({ to: "/wren", search: {}, replace: true }); }}
           className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill border border-charcoal-200 text-xs font-semibold text-charcoal-700 hover:border-charcoal-950"
         >
           <Plus className="h-3.5 w-3.5" /> New chat
@@ -350,7 +350,7 @@ function LockedState() {
         <li>· Fair-price reads on any listing</li>
       </ul>
       <div className="mt-6">
-        <a href="/preferences/account" className="inline-flex items-center h-11 px-5 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800">
+        <a href="/account" className="inline-flex items-center h-11 px-5 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800">
           Upgrade to Premium
         </a>
       </div>

@@ -109,7 +109,7 @@ function NotificationsTab() {
         </div>
         {pill.cta && (
           <Link
-            to="/preferences/account"
+            to="/account"
             className="inline-flex items-center gap-1 text-xs font-semibold text-sage-800 hover:text-sage-900 whitespace-nowrap"
           >
             {pill.cta} <ArrowRight className="h-3 w-3" />
@@ -150,7 +150,7 @@ function NotificationsTab() {
                 {email || "Not set"}
               </span>
               <Link
-                to="/preferences/account"
+                to="/account"
                 className="text-xs font-semibold text-sage-800 hover:text-sage-900 whitespace-nowrap inline-flex items-center gap-1"
               >
                 Change in Account <ArrowRight className="h-3 w-3" />
