@@ -177,7 +177,16 @@ export function SampleListingsMap({
         strokeColor: "#6A820A",
         strokeWeight: 2,
       });
+      m.setIcon({
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: isActive ? 25 : 22,
+        fillColor: isActive ? "#fffdf7" : "#6A820A",
+        fillOpacity: 1,
+        strokeColor: "#6A820A",
+        strokeWeight: 2,
+      });
       m.setLabel(label);
+      if (isActive) mapRef.current?.panTo(m.getPosition()!);
     });
   }, [ready, activeId]);
 
