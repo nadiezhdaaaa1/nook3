@@ -415,7 +415,7 @@ function HomeScreen() {
                       size="medium"
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Previous page"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      onClick={() => handleSetPage(Math.max(1, page - 1))}
                       disabled={page === 1 || paginatedQ.isLoading}
                     >
                       <ChevronLeft size={18} strokeWidth={2} />
@@ -439,7 +439,7 @@ function HomeScreen() {
                             className="h-[40px] w-[40px] px-0"
                             aria-label={`Page ${item}`}
                             aria-current={item === page ? "page" : undefined}
-                            onClick={() => setPage(item)}
+                            onClick={() => handleSetPage(item)}
                             disabled={paginatedQ.isLoading}
                           >
                             {item}
@@ -453,7 +453,7 @@ function HomeScreen() {
                       size="medium"
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Next page"
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() => handleSetPage(Math.min(totalPages, page + 1))}
                       disabled={page === totalPages || paginatedQ.isLoading}
                     >
                       <ChevronRight size={18} strokeWidth={2} />
