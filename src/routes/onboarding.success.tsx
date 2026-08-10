@@ -4,11 +4,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
 import { CreditCard, Mail } from "lucide-react";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
-import {
-  COOL_BG,
-  DARK_SHADOW,
-  WARM_BG,
-} from "@/components/landing/PricingThreeTiers";
+import { WARM_BG } from "@/components/landing/PricingThreeTiers";
+
 import {
   OB_H1,
   OB_SUB,
