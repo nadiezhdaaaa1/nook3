@@ -182,7 +182,7 @@ function HomeScreen() {
             </div>
           ) : (
             <>
-              <div className="mt-6 grid grid-cols-1 gap-3 min-[1200px]:grid-cols-2">
+              <div className="mt-6 flex flex-col gap-3">
                 {listings.map((listing) => (
                   <PreviewListingCard
                     key={listing.id}
