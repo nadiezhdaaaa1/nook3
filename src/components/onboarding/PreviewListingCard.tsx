@@ -1,6 +1,11 @@
 import React from "react";
 import { ArrowUpRight, MapPin, TrendingDown, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { SampleListing } from "@/data/sampleListings";
 
 interface Props {
@@ -25,6 +30,7 @@ export function PreviewListingCard({
   actions,
 }: Props) {
   return (
+    <TooltipProvider>
     <article
       onClick={(e) => {
         e.stopPropagation();
@@ -134,5 +140,6 @@ export function PreviewListingCard({
         {actions}
       </div>
     </article>
+    </TooltipProvider>
   );
 }
