@@ -109,7 +109,7 @@ function SavedPage() {
   const rows = alertsQ.data ?? [];
 
   const savedRows = useMemo(
-    () => rows.filter((r) => r.status !== "dismissed"),
+    () => rows.filter((r) => r.status === "saved"),
     [rows],
   );
   const dislikedRows = useMemo(
