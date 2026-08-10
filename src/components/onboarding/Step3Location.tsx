@@ -28,7 +28,7 @@ export function Step3Location() {
   const cityConfig = getCity(city);
   const [query, setQuery] = useState("");
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
-  const [view, setView] = useState<"list" | "map">("list");
+  const [view, setView] = useState<"list" | "map">("map");
   const [quickPicksOpen, setQuickPicksOpen] = useState(false);
 
   const groups = useMemo(
@@ -121,8 +121,8 @@ export function Step3Location() {
           value={view}
           onChange={(v) => setView(v)}
           options={[
-            { value: "list", label: "List", icon: IconList },
             { value: "map", label: "Map", icon: IconMap },
+            { value: "list", label: "List", icon: IconList },
           ]}
           ariaLabel="Neighborhood view"
         />
