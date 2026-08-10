@@ -327,7 +327,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
           <button
             type="button"
             onClick={handleNew}
-            className="flex h-full min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-[16px] border-2 border-dashed border-black/20 bg-white/50 transition-colors hover:bg-white hover:border-black/30"
+            className="flex h-full min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-[16px] border border-dashed border-black/20 bg-white/50 transition-colors hover:bg-white hover:border-black/30"
           >
             <Plus className="h-6 w-6 text-[#241c12]" />
             <span className="text-[15px] font-semibold text-[#241c12]">New search</span>
