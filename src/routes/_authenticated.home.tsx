@@ -231,7 +231,7 @@ function HomeScreen() {
         aria-label="Your matches"
         className="order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
       >
-        <div className="mx-auto flex max-w-[760px] flex-col">
+        <div className="mx-auto flex max-w-[960px] flex-col">
           <header className="p-2">
             <div className="mb-4">
               <SearchSelector />
