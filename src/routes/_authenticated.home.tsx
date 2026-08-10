@@ -283,6 +283,7 @@ function HomeScreen() {
                             saveSnapshot.variables?.listing.title === listing.address) ||
                           (updateStatus.isPending && updateStatus.variables?.id === listing.id)
                         }
+                        selected={listing.id === activeId}
                         onToggleSave={() => handleToggleSave(listing)}
                         onDislike={() => handleDislike(listing)}
                         onReport={(reason, details) => handleReport(listing, reason, details)}

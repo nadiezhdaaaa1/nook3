@@ -39,12 +39,13 @@ const ICON_BTN = "h-9 w-9 rounded-[8px] border-transparent px-0";
 interface Props {
   saved: boolean;
   saving?: boolean;
+  selected?: boolean;
   onToggleSave: () => void;
   onDislike: () => void;
   onReport: (reason: ReportReason, details: string) => void;
 }
 
-export function ListingActions({ saved, saving, onToggleSave, onDislike, onReport }: Props) {
+export function ListingActions({ saved, saving, selected = false, onToggleSave, onDislike, onReport }: Props) {
   const [reason, setReason] = useState<ReportReason | null>(null);
   const [details, setDetails] = useState("");
 
@@ -55,10 +56,14 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
 
   return (
     <div
-      className="flex items-center justify-between gap-1"
+      className="flex items-center justify-end gap-1"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center gap-1">
+      <div
+        className="flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100"
+        data-selected={selected}
+        style={{ opacity: selected ? 1 : undefined }}
+      >
         <OriginButton
           variant="tertiary"
           size="medium"
@@ -66,19 +71,18 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
           aria-label="Not interested in this listing"
           className={ICON_BTN}
         >
-        <ThumbsDown className="h-4 w-4" color="#6e6459" />
-      </OriginButton>
+          <ThumbsDown className="h-4 w-4" color="#6e6459" />
+        </OriginButton>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <OriginButton
-            variant="tertiary"
-            size="medium"
-            aria-label="Report this listing"
-            className={ICON_BTN}
-          >
-            <Flag className="h-4 w-4" color="#6e6459" />
-
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <OriginButton
+              variant="tertiary"
+              size="medium"
+              aria-label="Report this listing"
+              className={ICON_BTN}
+            >
+              <Flag className="h-4 w-4" color="#6e6459" />
             </OriginButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
@@ -98,6 +102,7 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
 
 
       <OriginButton
