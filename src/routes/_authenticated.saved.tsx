@@ -27,9 +27,27 @@ import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/aler
 import { useReportListingMutation } from "@/lib/queries/listingReports";
 
 const TABS = [
-  { key: "saved", label: "Saved listings", icon: Heart },
-  { key: "searches", label: "My searches", icon: SearchIcon },
-  { key: "disliked", label: "Disliked listings", icon: ThumbsDown },
+  {
+    key: "saved",
+    label: "Saved listings",
+    icon: Heart,
+    title: "Saved listings",
+    subtitle: "Listings you kept to revisit later.",
+  },
+  {
+    key: "searches",
+    label: "My searches",
+    icon: SearchIcon,
+    title: "My searches",
+    subtitle: "Active and paused searches across your cities.",
+  },
+  {
+    key: "disliked",
+    label: "Disliked listings",
+    icon: ThumbsDown,
+    title: "Disliked listings",
+    subtitle: "Listings you passed on, in case you change your mind.",
+  },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -108,49 +126,52 @@ function SavedPage() {
   const setTab = (key: TabKey) =>
     navigate({ to: "/saved", search: { tab: key } });
 
+  const activeTabData = TABS.find((t) => t.key === activeTab)!;
+
   return (
     <AppPage
-      title="Your library"
-      subtitle="Listings you kept, the searches behind them, and what you passed on."
-    >
-      <div className="space-y-6">
-        {/* Tabs */}
+      title={activeTabData.title}
+      subtitle={activeTabData.subtitle}
+      tabs={
         <div
           role="tablist"
           aria-label="Library sections"
-          className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1"
+          className="flex flex-wrap gap-3"
         >
           {TABS.map((t) => {
             const Icon = t.icon;
             const active = activeTab === t.key;
             return (
-              <button
+              <OriginButton
                 key={t.key}
-                type="button"
                 role="tab"
                 aria-selected={active}
                 onClick={() => setTab(t.key)}
-                className={cn(
-                  "shrink-0 inline-flex items-center gap-2 h-10 px-4 rounded-[12px] text-[13px] font-semibold transition-colors",
-                  active
-                    ? "bg-[#241c12] text-white"
-                    : "bg-white border border-black/10 text-charcoal-700 hover:border-black/20",
-                )}
+                variant={active ? "dark" : "tertiary"}
+                size="big"
               >
-                <Icon className={cn("h-4 w-4", active && t.key === "saved" && "fill-current")} />
-                {t.label}
+                <Icon
+                  className={cn(
+                    "h-5 w-5",
+                    active && t.key === "saved" && "fill-current",
+                  )}
+                />
+                <span>{t.label}</span>
                 <span
                   className={cn(
-                    "text-[11px] font-mono",
+                    "text-[13px] font-mono",
                     active ? "text-white/70" : "text-charcoal-500",
                   )}
                 >
                   {counts[t.key]}
                 </span>
-              </button>
+              </OriginButton>
             );
           })}
         </div>
+      }
+    >
+      <div className="space-y-6">
 
         {alertsQ.isLoading && activeTab !== "searches" ? (
           <div className="flex items-center justify-center py-16 text-charcoal-500">

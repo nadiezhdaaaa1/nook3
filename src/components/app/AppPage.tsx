@@ -9,13 +9,20 @@ export function AppPage({
   title,
   subtitle,
   children,
+  tabs,
 }: {
   title: string;
   subtitle?: string;
   children: ReactNode;
+  tabs?: ReactNode;
 }) {
   return (
     <div className="mx-auto max-w-6xl px-6 pb-24 pt-8 lg:px-12 lg:pt-10">
+      {tabs && (
+        <div className="mb-6">
+          {tabs}
+        </div>
+      )}
       <header>
         <h1 className="font-display text-[36px] font-bold leading-[1.05] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
           {title}
