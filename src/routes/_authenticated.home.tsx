@@ -340,7 +340,7 @@ function HomeScreen() {
         aria-label="Map of your matches"
         className={
           mapFullscreen
-            ? "order-1 h-[calc(100dvh-72px)] w-full shrink-0 p-6 md:order-2 md:sticky md:top-[72px]"
+            ? "fixed inset-0 z-50 h-dvh w-full p-0 md:order-2 md:sticky md:top-[72px] md:h-[calc(100dvh-72px)] md:w-full md:p-6 md:z-auto"
             : "order-1 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-[calc(100dvh-72px)] md:w-[45%] md:pl-0 md:sticky md:top-[72px]"
         }
       >
@@ -367,7 +367,11 @@ function HomeScreen() {
               ) : null
             }
 
-            className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/10 bg-[#f5f2ea]"
+            className={
+              mapFullscreen
+                ? "relative h-full w-full overflow-hidden rounded-none border-0 bg-[#f5f2ea] md:rounded-[20px] md:border md:border-black/10"
+                : "relative h-full w-full overflow-hidden rounded-[20px] border border-black/10 bg-[#f5f2ea]"
+            }
           />
         )}
       </aside>
