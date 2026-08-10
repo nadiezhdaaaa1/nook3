@@ -149,6 +149,7 @@ function SavedPage() {
                 onClick={() => setTab(t.key)}
                 variant={active ? "dark" : "tertiary"}
                 size="big"
+                className="px-5"
               >
                 <Icon
                   className={cn(
