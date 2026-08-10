@@ -85,10 +85,15 @@ function SamplePreview() {
 
   return (
     <div className="flex h-full min-h-[calc(100vh-96px)] flex-col md:flex-row" style={{ background: "#faf6ee" }}>
+      {/* Mobile top header */}
+      <div className="px-6 pt-6 md:hidden">
+        <OnboardingHeader fixed={false} />
+      </div>
+
       {/* Map panel */}
       <aside
         aria-label="Map of sample matches"
-        className="order-2 h-[320px] w-full shrink-0 p-6 md:order-2 md:h-full md:w-1/2 md:pl-0"
+        className="order-2 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-full md:w-1/2 md:pl-0"
       >
         {cityConfig && (
           <SampleListingsMap
@@ -112,9 +117,10 @@ function SamplePreview() {
         animate="visible"
         className="order-3 w-full px-6 pb-6 pt-6 md:order-1 md:h-full md:w-1/2 md:overflow-y-auto md:px-6 md:pt-6"
       >
-        <div className="sticky top-6 z-10 mb-8 md:top-0">
+        <div className="sticky top-6 z-10 mb-8 hidden md:block md:top-0">
           <OnboardingHeader fixed={false} />
         </div>
+
 
         <div className="mx-auto flex max-w-[760px] flex-col">
           <motion.header variants={itemVariants} className="p-2">
