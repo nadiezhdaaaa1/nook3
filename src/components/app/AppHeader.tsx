@@ -45,7 +45,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
       style={{ backgroundColor: "#FAF8F3" }}
     >
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
-        <div className="flex min-w-0 items-center gap-3 sm:gap-6">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-5">
           <Link to="/home" aria-label="Nook home" className="flex shrink-0 items-center">
             <Logo className="h-[28px] w-[81.22px]" />
           </Link>
