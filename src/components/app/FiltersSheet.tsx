@@ -361,7 +361,7 @@ export function FiltersSheet({
           <OriginButton
             type="button"
             variant="tertiary"
-            size="big"
+            size="medium"
             className="flex-1"
             onClick={onReset}
             disabled={count === 0}
@@ -372,7 +372,7 @@ export function FiltersSheet({
           <OriginButton
             type="button"
             variant="main"
-            size="big"
+            size="medium"
             className="flex-1"
             onClick={() => onOpenChange(false)}
           >
