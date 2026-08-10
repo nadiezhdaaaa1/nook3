@@ -315,20 +315,6 @@ function HomeScreen() {
             </>
           )}
 
-          {cityConfig?.buildingDataSources && cityConfig.buildingDataSources.length > 0 && (
-            <div className="mt-6 flex gap-3 rounded-[16px] border border-black/[0.08] bg-white p-4">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-sage-700" />
-              <div className="space-y-1">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-charcoal-500">
-                  How we vet {cityConfig.displayName} listings
-                </div>
-                <p className="text-sm text-charcoal-700">
-                  Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")} records
-                  before it reaches your inbox.
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </section>
     </div>
