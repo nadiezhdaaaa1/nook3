@@ -226,12 +226,11 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div className="group/glow relative" style={{ marginTop: 16 }}>
-        <WrenGlow />
+      <div className="relative" style={{ marginTop: 16 }}>
         <div
           className="relative"
           style={{
-            background: open ? "#241C12" : "#ffffff",
+            background: open ? "#FFF1EA" : "#ffffff",
             border: open ? "1px solid transparent" : "1px solid rgba(0,0,0,0.10)",
             borderRadius: 10,
             overflow: "hidden",
