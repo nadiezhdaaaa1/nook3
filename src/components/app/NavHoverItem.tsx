@@ -1,8 +1,9 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+
 
 const FILL_DURATION = 0.5;
 const FILL_EASE = [0.16, 1, 0.3, 1] as const;
@@ -41,6 +42,9 @@ export function NavHoverItem({
   const [origin, setOrigin] = React.useState({ x: 0, y: 0 });
   const [coverSize, setCoverSize] = React.useState(0);
 
+  const router = useRouter();
+  const isActive = to ? router.state.location.pathname === to : false;
+
   const handleEnter = (event: React.PointerEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -60,6 +64,21 @@ export function NavHoverItem({
     setHovered(true);
   };
 
+  const styledChildren = React.useMemo(() => {
+    if (!isActive) return children;
+    return React.Children.map(children, (child) => {
+      if (!React.isValidElement(child)) return child;
+      const props = child.props as { className?: string; color?: string };
+      const newProps: Record<string, unknown> = {
+        className: cn(props.className, "text-white"),
+      };
+      if ("color" in props) {
+        newProps.color = "currentColor";
+      }
+      return React.cloneElement(child, newProps);
+    });
+  }, [children, isActive]);
+
   const inner = (
     <>
       <motion.span
@@ -77,7 +96,7 @@ export function NavHoverItem({
         transition={{ duration: FILL_DURATION, ease: FILL_EASE }}
       />
       <span className="relative z-10 inline-flex items-center gap-2 whitespace-nowrap">
-        {children}
+        {styledChildren}
       </span>
     </>
   );
@@ -86,6 +105,7 @@ export function NavHoverItem({
     className: cn(
       "relative inline-flex cursor-pointer select-none items-center justify-center overflow-hidden bg-transparent outline-none",
       "focus-visible:ring-2 focus-visible:ring-black/20",
+      isActive && "bg-[#241C12] text-white",
       className,
     ),
     onPointerEnter: handleEnter,

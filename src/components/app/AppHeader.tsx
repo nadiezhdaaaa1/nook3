@@ -19,8 +19,8 @@ const ICON_PROPS = {
 } as const;
 
 const LABEL_CLASS = "text-[14px] font-semibold leading-5 text-[#241C12]";
-const TEXT_BUTTON_CLASS = "gap-2 rounded-[10px] px-3 py-2";
-const ICON_BUTTON_CLASS = "rounded-[80px] p-2";
+const TEXT_BUTTON_CLASS = "gap-2 rounded-[8px] px-3 py-2";
+const ICON_BUTTON_CLASS = "rounded-[8px] p-2";
 
 export function AppHeader({ plan }: { plan?: PlanKey }) {
   const storePlan = useAppStore((s) => s.user?.plan);
@@ -61,7 +61,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           <NavHoverItem
             to="/account"
             aria-label="Account"
-            className="h-9 w-9 rounded-full border border-black/20"
+            className="h-9 w-9 rounded-[8px] border border-black/20"
           >
             <IconUser size={18} stroke={1.5} color="#D66C38" aria-hidden />
           </NavHoverItem>
