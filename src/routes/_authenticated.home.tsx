@@ -247,6 +247,7 @@ function HomeScreen() {
   };
 
   const handleDislike = (l: SampleListing, reason?: string) => {
+    mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
     if (alert)
