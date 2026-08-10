@@ -21,25 +21,125 @@ interface Props {
   className?: string;
 }
 
-function createMarker(listing: ListingPin): google.maps.Marker {
-  return new google.maps.Marker({
-    position: { lat: listing.coords[0], lng: listing.coords[1] },
-    label: {
-      text: `$${Math.round(listing.rent / 100) / 10}k`,
-      color: "#ffffff",
-      fontSize: "11px",
-      fontWeight: "700",
-    },
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 22,
-      fillColor: "#6A820A",
-      fillOpacity: 1,
-      strokeColor: "#ffffff",
-      strokeWeight: 2,
-    },
-  });
+const PIN_STYLES: Partial<CSSStyleDeclaration> = {
+  position: "absolute",
+  left: "0",
+  top: "0",
+  display: "inline-flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: "8px 12px",
+  fontFamily: "var(--font-sans), 'Google Sans Flex', ui-sans-serif, system-ui, sans-serif",
+  fontSize: "16px",
+  fontStyle: "normal",
+  fontWeight: "600",
+  lineHeight: "120%",
+  color: "#1C1C1E",
+  borderRadius: "24px",
+  border: "1px solid rgba(0, 0, 0, 0.20)",
+  background: "#FFF",
+  boxShadow: "0 1px 1px -0.25px rgba(0,0,0,0.08), 0 1px 1px -0.25px rgba(0,0,0,0.04)",
+  cursor: "pointer",
+  pointerEvents: "auto",
+  whiteSpace: "nowrap",
+  userSelect: "none",
+};
+
+
+function formatRent(rent: number): string {
+  return `$${Math.round(rent / 100) / 10}k`;
 }
+
+function createPinElement(): HTMLDivElement {
+  const pin = document.createElement("div");
+  Object.assign(pin.style, PIN_STYLES);
+  return pin;
+}
+
+class PinOverlay {
+  private overlay: google.maps.OverlayView;
+  private pin: HTMLDivElement;
+  private position: google.maps.LatLng;
+  private clickHandlers: Array<() => void> = [];
+  private map: google.maps.Map | null = null;
+  private scale = 1;
+  private active = false;
+
+  constructor(position: google.maps.LatLng, rent: number) {
+    this.position = position;
+    this.pin = createPinElement();
+    this.pin.textContent = formatRent(rent);
+    this.pin.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.clickHandlers.forEach((h) => h());
+    });
+
+    this.overlay = new google.maps.OverlayView();
+    this.overlay.onAdd = () => {
+      this.getPanes()?.overlayMouseTarget.appendChild(this.pin);
+    };
+    this.overlay.draw = () => {
+      const projection = this.getProjection();
+      if (!projection) return;
+      const pixel = projection.fromLatLngToDivPixel(this.position);
+      if (!pixel) return;
+      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%) scale(${this.scale})`;
+    };
+    this.overlay.onRemove = () => {
+      if (this.pin.parentNode) {
+        this.pin.parentNode.removeChild(this.pin);
+      }
+    };
+  }
+
+  private getPanes() {
+    return this.overlay.getPanes();
+  }
+
+  private getProjection() {
+    return this.overlay.getProjection();
+  }
+
+  setMap(map: google.maps.Map | null) {
+    this.map = map;
+    this.overlay.setMap(map);
+  }
+
+  addListener(event: string, handler: () => void) {
+    if (event === "click") {
+      this.clickHandlers.push(handler);
+      return {
+        remove: () => {
+          this.clickHandlers = this.clickHandlers.filter((h) => h !== handler);
+        },
+      };
+    }
+    return { remove: () => {} };
+  }
+
+  getPosition() {
+    return this.position;
+  }
+
+  setActive(isActive: boolean) {
+    this.active = isActive;
+    this.scale = isActive ? 1.05 : 1;
+    if (isActive) {
+      this.pin.style.background = "#FAF6EE";
+      this.pin.style.boxShadow = "0 0 0 2px #6A820A, 0 1px 1px -0.25px rgba(0,0,0,0.08), 0 1px 1px -0.25px rgba(0,0,0,0.04)";
+    } else {
+      this.pin.style.background = "#FFF";
+      this.pin.style.boxShadow = PIN_STYLES.boxShadow as string;
+    }
+    this.overlay.draw();
+  }
+
+  panTo(map: google.maps.Map) {
+    map.panTo(this.position);
+  }
+}
+
 
 function createOverlay(
   position: google.maps.LatLng,
@@ -88,7 +188,7 @@ export function SampleListingsMap({
   const ready = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
-  const markersRef = useRef<Map<string, google.maps.Marker>>(new Map());
+  const markersRef = useRef<Map<string, PinOverlay>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
 
@@ -144,11 +244,12 @@ export function SampleListingsMap({
 
     const bounds = new google.maps.LatLngBounds();
     listings.forEach((l) => {
-      const m = createMarker(l);
-      m.addListener("click", () => onSelectRef.current?.(l.id));
-      m.setMap(map);
-      markersRef.current.set(l.id, m);
-      bounds.extend({ lat: l.coords[0], lng: l.coords[1] });
+      const position = new google.maps.LatLng(l.coords[0], l.coords[1]);
+      const overlay = new PinOverlay(position, l.rent);
+      overlay.addListener("click", () => onSelectRef.current?.(l.id));
+      overlay.setMap(map);
+      markersRef.current.set(l.id, overlay);
+      bounds.extend(position);
     });
 
     if (listings.length > 1) {
@@ -168,26 +269,8 @@ export function SampleListingsMap({
     if (!ready || !mapRef.current) return;
     markersRef.current.forEach((m, id) => {
       const isActive = id === activeId;
-      const label = m.getLabel() as google.maps.MarkerLabel;
-      label.color = isActive ? "#6A820A" : "#ffffff";
-      m.setIcon({
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 22,
-        fillColor: isActive ? "#ffffff" : "#6A820A",
-        fillOpacity: 1,
-        strokeColor: "#6A820A",
-        strokeWeight: 2,
-      });
-      m.setIcon({
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: isActive ? 25 : 22,
-        fillColor: isActive ? "#fffdf7" : "#6A820A",
-        fillOpacity: 1,
-        strokeColor: "#6A820A",
-        strokeWeight: 2,
-      });
-      m.setLabel(label);
-      if (isActive) mapRef.current?.panTo(m.getPosition()!);
+      m.setActive(isActive);
+      if (isActive) m.panTo(mapRef.current!);
     });
   }, [ready, activeId]);
 
@@ -216,7 +299,9 @@ export function SampleListingsMap({
 
     const inner = document.createElement("div");
     inner.style.position = "absolute";
-      inner.style.transform = "translate(-50%, calc(-100% - 22px))";
+    // The new pill pins are ~34px tall and centered on the location; anchor the
+    // card above the pin with a small gap.
+    inner.style.transform = "translate(-50%, calc(-100% - 24px))";
     inner.style.pointerEvents = "auto";
     container.appendChild(inner);
 
