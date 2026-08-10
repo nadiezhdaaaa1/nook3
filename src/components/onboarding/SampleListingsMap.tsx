@@ -141,6 +141,11 @@ class PinOverlay {
     this.overlay.draw();
   }
 
+  bringToFront() {
+    if (this.pin.parentNode) {
+      this.pin.parentNode.appendChild(this.pin);
+    }
+  }
 
   panTo(map: google.maps.Map) {
     map.panTo(this.position);
