@@ -477,7 +477,7 @@ function HomeScreen() {
           if (search) navigate({ to: "/search/$searchId/budget", params: { searchId: search.id } });
         }}
         resultCount={visibleListings.length}
-        searchName={search?.name}
+        search={search ?? undefined}
       />
     </div>
   );
