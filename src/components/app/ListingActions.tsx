@@ -34,7 +34,7 @@ const REASON_LABELS: { value: ReportReason; label: string }[] = [
 const BTN =
   "inline-flex h-9 items-center gap-1.5 rounded-[8px] border border-black/10 bg-white px-3 text-[13px] font-semibold text-[#241c12] transition-colors hover:border-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] disabled:opacity-60";
 
-const ICON_BTN = "h-9 w-9 rounded-[8px] border-transparent px-0";
+const ICON_BTN = "h-9 w-9 rounded-[8px] border-black/10 px-0";
 
 interface Props {
   saved: boolean;
@@ -59,11 +59,7 @@ export function ListingActions({ saved, saving, selected = false, onToggleSave, 
       className="flex items-center justify-end gap-1"
       onClick={(e) => e.stopPropagation()}
     >
-      <div
-        className="flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100"
-        data-selected={selected}
-        style={{ opacity: selected ? 1 : undefined }}
-      >
+      <div className="flex items-center gap-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <OriginButton
