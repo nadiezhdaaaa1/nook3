@@ -82,7 +82,7 @@ export function NavHoverItem({
   const inner = (
     <>
       <motion.span
-        animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
+        animate={{ scale: hovered && coverSize > 0 && !isActive ? 1 : 0 }}
         aria-hidden
         className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
         initial={false}
