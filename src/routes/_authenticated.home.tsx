@@ -319,6 +319,7 @@ function HomeScreen() {
 
       {/* Listings column */}
       <section
+        ref={listSectionRef}
         aria-label="Your matches"
         className="order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
       >
