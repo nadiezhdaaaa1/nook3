@@ -142,7 +142,9 @@ export function useDbSync() {
   }, [hydratedRef.current]);
 
   return {
-    isHydrating: !hydratedRef.current && (searchesQ.isLoading || profileQ.isLoading),
+    isHydrating:
+      hasSession && !hydratedRef.current && (searchesQ.isLoading || profileQ.isLoading),
+
     error: searchesQ.error ?? profileQ.error,
   };
 }
