@@ -34,6 +34,8 @@ const REASON_LABELS: { value: ReportReason; label: string }[] = [
 const BTN =
   "inline-flex h-9 items-center gap-1.5 rounded-[8px] border border-black/10 bg-white px-3 text-[13px] font-semibold text-[#241c12] transition-colors hover:border-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] disabled:opacity-60";
 
+const ICON_BTN = "h-9 w-9 rounded-[8px] border-transparent px-0";
+
 interface Props {
   saved: boolean;
   saving?: boolean;
