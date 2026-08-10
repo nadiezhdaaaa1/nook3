@@ -16,7 +16,7 @@ export function WrenFab() {
         alt=""
         width={40}
         height={40}
-        className="h-10 w-10 object-contain pointer-events-none"
+        className="h-10 w-10 object-contain pointer-events-none transition-transform duration-200 group-hover:rotate-[-12deg]"
       />
     </Link>
   );
