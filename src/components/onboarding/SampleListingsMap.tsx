@@ -42,11 +42,10 @@ const PIN_STYLES: Partial<CSSStyleDeclaration> = {
   boxShadow: "0 1px 1px -0.25px rgba(0,0,0,0.08), 0 1px 1px -0.25px rgba(0,0,0,0.04)",
   cursor: "pointer",
   pointerEvents: "auto",
-  transform: "translate(-50%, -50%)",
-  transition: "transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease",
   whiteSpace: "nowrap",
   userSelect: "none",
 };
+
 
 function formatRent(rent: number): string {
   return `$${Math.round(rent / 100) / 10}k`;
