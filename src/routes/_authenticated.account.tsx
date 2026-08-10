@@ -1747,7 +1747,7 @@ function SubscriptionSection({
         />
       </section>
 
-      <section>
+      <section id="plan-options">
         <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
           <div>
             <h2 className="font-display text-xl font-semibold text-charcoal-950">
