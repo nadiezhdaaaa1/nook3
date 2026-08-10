@@ -82,11 +82,12 @@ export function PreviewListingCard({
         background: "#ffffff",
         borderRadius: 16,
         border: `1px solid ${selected ? "#6a820a" : "rgba(0,0,0,0.08)"}`,
-        padding: 24,
+        padding: 20,
         boxShadow: popup
           ? "0 16px 32px rgba(12,12,13,0.14), 0 4px 8px rgba(12,12,13,0.06)"
           : "none",
       }}
+
     >
       <div className="flex items-start justify-between gap-3">
         <h3
