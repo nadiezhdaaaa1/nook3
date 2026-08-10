@@ -52,7 +52,9 @@ interface Props {
   popup?: boolean;
   onSelect?: () => void;
   onClose?: () => void;
+  onHover?: (id: string | null) => void;
 }
+
 
 export function PreviewListingCard({
   listing,
