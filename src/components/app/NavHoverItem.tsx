@@ -30,13 +30,25 @@ export function NavHoverItem({
   onClick,
   className,
   children,
+  onPointerEnter,
+  onPointerLeave,
+  onFocus,
+  onBlur,
   ...rest
 }: {
   to?: string;
   onClick?: () => void;
   className?: string;
   children: React.ReactNode;
-} & Pick<React.HTMLAttributes<HTMLElement>, "aria-label" | "title">) {
+} & Pick<
+  React.HTMLAttributes<HTMLElement>,
+  | "aria-label"
+  | "title"
+  | "onPointerEnter"
+  | "onPointerLeave"
+  | "onFocus"
+  | "onBlur"
+>) {
   const nodeRef = React.useRef<HTMLElement | null>(null);
   const [hovered, setHovered] = React.useState(false);
   const [origin, setOrigin] = React.useState({ x: 0, y: 0 });
@@ -108,11 +120,23 @@ export function NavHoverItem({
       isActive && "bg-[#241C12] text-white",
       className,
     ),
-    onPointerEnter: handleEnter,
-    onPointerLeave: () => setHovered(false),
-    onFocus: handleFocus,
-    onBlur: () => setHovered(false),
     ...rest,
+    onPointerEnter: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerEnter?.(event);
+      handleEnter(event);
+    },
+    onPointerLeave: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerLeave?.(event);
+      setHovered(false);
+    },
+    onFocus: (event: React.FocusEvent<HTMLElement>) => {
+      onFocus?.(event);
+      handleFocus(event);
+    },
+    onBlur: (event: React.FocusEvent<HTMLElement>) => {
+      onBlur?.(event);
+      setHovered(false);
+    },
   };
 
   if (to) {
