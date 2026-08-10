@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Mail, Zap, CalendarDays, CalendarRange, Sparkles,
-  ArrowRight, Lock, Moon, Info, Check, AlertCircle,
+  ArrowRight, Lock, Moon, Check, AlertCircle,
 } from "lucide-react";
 import { z } from "zod";
 
