@@ -173,7 +173,9 @@ function SamplePreview() {
                     listing={listing}
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
+                    onHover={setHoveredId}
                   />
+
                 ))}
               </motion.div>
 
