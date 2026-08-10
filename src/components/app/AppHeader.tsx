@@ -43,12 +43,10 @@ function MobileNavItem({
   to,
   label,
   Icon,
-  onNavigate,
 }: {
   to: string;
   label: string;
   Icon: (typeof NAV_ITEMS)[number]["Icon"];
-  onNavigate: () => void;
 }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
