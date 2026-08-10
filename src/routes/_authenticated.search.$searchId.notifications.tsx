@@ -233,7 +233,6 @@ function NotificationsTab() {
         state={{
           frequency, email,
           quietHours,
-          override: activeSearchId ? override : null,
         }}
         successMessage={activeSearchId ? `Settings saved · Applied to ${searchName}` : "Settings saved"}
         getChanges={(b, c) => {
@@ -241,7 +240,6 @@ function NotificationsTab() {
           if (b.frequency !== c.frequency) out.push("frequency");
           if (b.email !== c.email) out.push("email");
           if (JSON.stringify(b.quietHours) !== JSON.stringify(c.quietHours)) out.push("quiet hours");
-          if (JSON.stringify(b.override) !== JSON.stringify(c.override)) out.push("per-search override");
           return out;
         }}
         onDiscard={(snap) => {
@@ -250,11 +248,6 @@ function NotificationsTab() {
           setQuiet("enabled", snap.quietHours.enabled);
           setQuiet("start", snap.quietHours.start);
           setQuiet("end", snap.quietHours.end);
-          if (activeSearchId && snap.override) {
-            setPerSearch(activeSearchId, snap.override);
-            setOverrideEmail(snap.override.emailOverride ?? "");
-            setEmailOverrideOn(!!snap.override.emailOverride);
-          }
         }}
       />
     </div>
