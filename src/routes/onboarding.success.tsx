@@ -5,6 +5,11 @@ import { toast } from "sonner";
 import { CreditCard, Mail, Pencil } from "lucide-react";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
 import {
+  COOL_BG,
+  DARK_SHADOW,
+  WARM_BG,
+} from "@/components/landing/PricingThreeTiers";
+import {
   OB_H1,
   OB_SUB,
   OB_SECTION_VARIANTS,
@@ -17,6 +22,7 @@ import { RENT_PROTECTION_OPTIONS } from "@/data/cities/types";
 import { syncOnboardingToActiveSearch, syncOnboardingToUser } from "@/lib/store";
 import { lovable } from "@/integrations/lovable";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
+
 
 export const Route = createFileRoute("/onboarding/success")({
   head: () => ({
@@ -38,7 +44,14 @@ const PLAN_META: Record<Plan, { name: string; price: Record<"monthly" | "annual"
   max: { name: "Max", price: { monthly: "$29", annual: "$19.08" }, suffix: "/month" },
 };
 
+const PLAN_VARIANT: Record<Plan, "light" | "warm" | "cool"> = {
+  free: "light",
+  premium: "warm",
+  max: "cool",
+};
+
 const AMENITY_LABELS: Record<string, string> = Object.fromEntries(
+
   AMENITY_GROUPS.flatMap((g) => g.items.map((i) => [i.id, i.label])),
 );
 
@@ -78,7 +91,29 @@ function Success() {
   const cityConfig = getCity(city);
   const plan = selectedPlan ?? "free";
   const planMeta = PLAN_META[plan];
+  const planVariant = PLAN_VARIANT[plan];
   const isPaid = plan !== "free";
+  const dark = planVariant !== "light";
+
+  const cardStyle: React.CSSProperties = dark
+    ? {
+        backgroundColor: "#2c2415",
+        backgroundImage: planVariant === "warm" ? WARM_BG : COOL_BG,
+        boxShadow: DARK_SHADOW,
+        color: "#f8f3e1",
+        borderRadius: 24,
+      }
+    : {
+        background: "#ffffff",
+        border: "1px solid rgba(0,0,0,0.20)",
+        color: "#241c12",
+        borderRadius: 24,
+      };
+
+  const ink = dark ? "#f8f3e1" : "#241c12";
+  const muted = dark ? "rgba(248,243,225,0.72)" : "#5a5a55";
+  const subtle = dark ? "rgba(248,243,225,0.70)" : "#5a5a55";
+
 
   const rows = useMemo(() => {
     const out: { label: string; value: string; step: string }[] = [];
@@ -197,27 +232,39 @@ function Success() {
       {/* Chosen plan */}
       <motion.div
         variants={sectionVariants}
-        className="mt-8 rounded-[16px] border border-black/20 bg-white p-6"
+        className="mt-8 p-8"
+        style={cardStyle}
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
+            <div
+              className="text-[11px] font-semibold uppercase tracking-[0.16em]"
+              style={{ color: muted }}
+            >
               Your plan
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span
                 className="font-display"
-                style={{ fontWeight: 700, fontSize: 26, color: "#241c12" }}
+                style={{ fontWeight: 700, fontSize: 26, color: ink }}
               >
                 {planMeta.name}
               </span>
-              <span className="text-[16px] font-semibold text-charcoal-950">
+              <span
+                className="text-[16px] font-semibold"
+                style={{ color: ink }}
+              >
                 {planMeta.price[billingCycle]}
               </span>
-              <span className="text-[14px] text-charcoal-500">{planMeta.suffix}</span>
+              <span className="text-[14px]" style={{ color: subtle }}>
+                {planMeta.suffix}
+              </span>
             </div>
             {isPaid && (
-              <div className="mt-1 text-[14px] text-charcoal-600">
+              <div
+                className="mt-1 text-[14px]"
+                style={{ color: muted }}
+              >
                 {trialActive ? "3-day free trial, then " : ""}
                 billed {billingCycle === "annual" ? "annually" : "monthly"} · cancel anytime
               </div>
@@ -225,12 +272,18 @@ function Success() {
           </div>
           <Link
             to="/onboarding/pricing"
-            className="inline-flex h-[40px] items-center gap-2 rounded-[10px] border border-black/10 px-4 text-[14px] font-semibold text-charcoal-950 transition-colors hover:border-charcoal-950"
+            className="inline-flex h-[48px] items-center gap-2 rounded-[12px] border px-5 text-[15px] font-semibold transition-colors"
+            style={
+              dark
+                ? { borderColor: "rgba(0,0,0,0.20)", background: "#ffffff", color: "#2B2521" }
+                : { borderColor: "rgba(0,0,0,0.10)", color: "#241c12" }
+            }
           >
             <Pencil className="h-3.5 w-3.5" /> Change plan
           </Link>
         </div>
       </motion.div>
+
 
       {/* Summary */}
       <motion.div
