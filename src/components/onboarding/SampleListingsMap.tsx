@@ -339,17 +339,19 @@ export function SampleListingsMap({
     });
   }, [ready, city.id]);
 
-  // Clicking the map base clears the active selection.
+  // Clicking the map base clears the active selection and collapses any stack.
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     const map = mapRef.current;
     const listener = map.addListener("click", () => {
+      setExpandedId(null);
       onSelectRef.current?.(null);
     });
     return () => {
       google.maps.event.removeListener(listener);
     };
   }, [ready]);
+
 
   // Fit the viewport to the listing set (does not depend on clustering).
   useEffect(() => {
