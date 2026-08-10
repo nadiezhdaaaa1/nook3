@@ -367,7 +367,11 @@ function HomeScreen() {
               ) : null
             }
 
-            className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/10 bg-[#f5f2ea]"
+            className={
+              mapFullscreen
+                ? "relative h-full w-full overflow-hidden rounded-none border-0 bg-[#f5f2ea] md:rounded-[20px] md:border md:border-black/10"
+                : "relative h-full w-full overflow-hidden rounded-[20px] border border-black/10 bg-[#f5f2ea]"
+            }
           />
         )}
       </aside>
