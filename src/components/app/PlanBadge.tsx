@@ -57,7 +57,7 @@ export function PlanBadge({
 
   return (
     <span
-      className={cn(base, isMax ? "w-[58px]" : "w-[96px]", "text-white", className)}
+      className={cn(base, isMax ? "w-[50px]" : "w-[84px]", "text-white", className)}
       style={{ backgroundColor: "#2C2415" }}
     >
       <span
