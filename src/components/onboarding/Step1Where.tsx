@@ -70,12 +70,12 @@ export function Step1Where() {
   const handleSelectCity = (id: CityId) => {
     setAnimatingId(id);
     setMoveInChosen(false);
-    set("moveIn", { mode: "flexible" });
-    set("city", id);
+    useOnboardingStore.getState().setCity(id);
   };
 
   const handleClearCity = () => {
-    set("city", null);
+    setMoveInChosen(false);
+    useOnboardingStore.getState().setCity(null);
   };
 
   // Enter delays for the selected state (relative to when it mounts).
