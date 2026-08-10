@@ -142,7 +142,7 @@ export function FiltersSheet({
             <button
               type="button"
               onClick={onEditSearch}
-              className="mt-3 flex w-full items-center gap-3 rounded-[8px] border border-black/[0.08] bg-charcoal-950/[0.02] px-3 py-2.5 text-left transition-colors hover:bg-charcoal-950/[0.04]"
+              className="mt-3 flex w-full items-center gap-3 rounded-[8px] border border-black/[0.20] bg-charcoal-950/[0.02] px-3 py-2.5 text-left transition-colors hover:bg-charcoal-950/[0.04]"
             >
               <StatusDot status={search.status} />
               <div className="min-w-0 flex-1">
