@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ListFilter } from "lucide-react";
 
 import { OriginButton } from "@/components/ui/origin-button";
@@ -13,7 +13,7 @@ import { useActiveSearch } from "@/lib/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
-import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
+import { useAlertsQuery, usePaginatedAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
 import {
   useReportListingMutation,
@@ -65,6 +65,14 @@ function HomeScreen() {
   const cityConfig = getCity(cityId);
   const alertsQ = useAlertsQuery();
 
+  const PAGE_SIZE = 20;
+  const [page, setPage] = useState(1);
+  const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search?.id]);
+
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
@@ -79,17 +87,25 @@ function HomeScreen() {
     return map;
   }, [alertsQ.data]);
 
-  const realListings = useMemo(() => {
+  const allAlertListings = useMemo(() => {
     const rows = (alertsQ.data ?? []).filter(
       (a) => a.status !== "dismissed" && (!search || !a.searchId || a.searchId === search.id),
     );
     return rows.map((a) => alertToListing(a, cityId));
   }, [alertsQ.data, cityId, search?.id]);
 
-  const isSample = realListings.length === 0;
+  const pagedListings = useMemo(
+    () =>
+      (paginatedQ.data?.alerts ?? [])
+        .filter((a) => a.status !== "dismissed" && (!search || !a.searchId || a.searchId === search.id))
+        .map((a) => alertToListing(a, cityId)),
+    [paginatedQ.data, cityId, search?.id],
+  );
+
+  const isSample = allAlertListings.length === 0;
 
   const listings = useMemo(() => {
-    if (!isSample) return realListings;
+    if (!isSample) return allAlertListings;
     let pool = SAMPLE_LISTINGS[cityId] ?? [];
     if (search?.budget) {
       const [lo, hi] = search.budget;
@@ -100,12 +116,20 @@ function HomeScreen() {
       if (wanted.length > 0) pool = wanted;
     }
     return [...pool].sort((a, b) => a.rent - b.rent);
-  }, [isSample, realListings, cityId, search?.budget, search?.neighborhoods]);
+  }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods]);
 
   const visibleListings = useMemo(
     () => listings.filter((l) => !hiddenIds.includes(l.id)),
     [listings, hiddenIds],
   );
+
+  const pagedVisibleListings = useMemo(
+    () => pagedListings.filter((l) => !hiddenIds.includes(l.id)),
+    [pagedListings, hiddenIds],
+  );
+
+  const totalMatches = isSample ? visibleListings.length : (paginatedQ.data?.total ?? 0);
+  const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
 
   /** Snapshot shape used when a market/sample listing has no alert row yet. */
   const toSnapshot = (l: SampleListing): AlertListing => ({
@@ -257,7 +281,7 @@ function HomeScreen() {
               {search
                 ? isSample
                   ? `No new matches yet for ${search.name}.`
-                  : `${listings.length} match${listings.length === 1 ? "" : "es"} for ${search.name}.`
+                  : `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}.`
                 : "Create your first search."}
             </h1>
 
@@ -271,49 +295,89 @@ function HomeScreen() {
 
           </header>
 
-          {visibleListings.length === 0 ? (
-            <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
-              <p className="text-sm text-charcoal-700">
-                Nothing to show for {cityConfig?.displayName ?? "your city"} yet.
-              </p>
-              <p className="mt-2 text-xs text-charcoal-500">
-                Widen your budget or add neighborhoods and we'll start matching.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="mt-6 flex flex-col gap-3">
-                {visibleListings.map((listing) => (
-                  <PreviewListingCard
-                    key={listing.id}
-                    listing={listing}
-                    selected={listing.id === activeId}
-                    onSelect={() => setActiveId(listing.id)}
-                    onHover={setHoveredId}
-                    actions={
-                      <ListingActions
-                        saved={savedIds.has(listing.id)}
-                        saving={
-                          (saveSnapshot.isPending &&
-                            saveSnapshot.variables?.listing.title === listing.address) ||
-                          (updateStatus.isPending && updateStatus.variables?.id === listing.id)
-                        }
-                        selected={listing.id === activeId}
-                        onToggleSave={() => handleToggleSave(listing)}
-                        onDislike={() => handleDislike(listing)}
-                        onReport={(reason, details) => handleReport(listing, reason, details)}
-                      />
-                    }
-                  />
-                ))}
-              </div>
-              {isSample && (
-                <p className="mt-6 text-xs uppercase tracking-[0.16em] text-charcoal-500">
-                  Sample listings · real alerts arrive as they hit the market
+          {(() => {
+            const displayListings = isSample ? visibleListings : pagedVisibleListings;
+            const isEmpty = displayListings.length === 0 && !paginatedQ.isLoading;
+            return isEmpty ? (
+              <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
+                <p className="text-sm text-charcoal-700">
+                  Nothing to show for {cityConfig?.displayName ?? "your city"} yet.
                 </p>
-              )}
-            </>
-          )}
+                <p className="mt-2 text-xs text-charcoal-500">
+                  Widen your budget or add neighborhoods and we'll start matching.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mt-6 flex flex-col gap-3">
+                  {displayListings.map((listing) => (
+                    <PreviewListingCard
+                      key={listing.id}
+                      listing={listing}
+                      selected={listing.id === activeId}
+                      onSelect={() => setActiveId(listing.id)}
+                      onHover={setHoveredId}
+                      actions={
+                        <ListingActions
+                          saved={savedIds.has(listing.id)}
+                          saving={
+                            (saveSnapshot.isPending &&
+                              saveSnapshot.variables?.listing.title === listing.address) ||
+                            (updateStatus.isPending && updateStatus.variables?.id === listing.id)
+                          }
+                          selected={listing.id === activeId}
+                          onToggleSave={() => handleToggleSave(listing)}
+                          onDislike={() => handleDislike(listing)}
+                          onReport={(reason, details) => handleReport(listing, reason, details)}
+                        />
+                      }
+                    />
+                  ))}
+                </div>
+                {!isSample && totalPages > 1 && (
+                  <div className="mt-6 flex items-center justify-center gap-2">
+                    <OriginButton
+                      type="button"
+                      variant="tertiary"
+                      size="medium"
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      disabled={page === 1 || paginatedQ.isLoading}
+                    >
+                      Previous
+                    </OriginButton>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                        <OriginButton
+                          key={p}
+                          type="button"
+                          variant={p === page ? "main" : "tertiary"}
+                          size="medium"
+                          onClick={() => setPage(p)}
+                          disabled={paginatedQ.isLoading}
+                        >
+                          {p}
+                        </OriginButton>
+                      ))}
+                    </div>
+                    <OriginButton
+                      type="button"
+                      variant="tertiary"
+                      size="medium"
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={page === totalPages || paginatedQ.isLoading}
+                    >
+                      Next
+                    </OriginButton>
+                  </div>
+                )}
+                {isSample && (
+                  <p className="mt-6 text-xs uppercase tracking-[0.16em] text-charcoal-500">
+                    Sample listings · real alerts arrive as they hit the market
+                  </p>
+                )}
+              </>
+            );
+          })()}
 
         </div>
       </section>

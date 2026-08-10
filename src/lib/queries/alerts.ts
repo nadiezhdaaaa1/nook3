@@ -3,11 +3,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import {
   listAlerts,
+  listAlertsPage,
   updateAlertStatus,
   snoozeAlert,
   deleteAlert,
   type AlertRow,
   type AlertStatusDb,
+  type PaginatedAlertsResult,
 } from "@/lib/alerts.functions";
 
 export const alertsQueryKey = ["alerts"] as const;
@@ -19,8 +21,23 @@ export const alertsQueryOptions = () =>
     staleTime: 30_000,
   });
 
+export const paginatedAlertsQueryKey = (page: number, pageSize: number) =>
+  ["alerts", "page", page, pageSize] as const;
+
+export const paginatedAlertsQueryOptions = (page: number, pageSize: number) =>
+  queryOptions({
+    queryKey: paginatedAlertsQueryKey(page, pageSize),
+    queryFn: () =>
+      listAlertsPage({ data: { limit: pageSize, offset: (page - 1) * pageSize } }),
+    staleTime: 30_000,
+  });
+
 export function useAlertsQuery() {
   return useQuery(alertsQueryOptions());
+}
+
+export function usePaginatedAlertsQuery(page: number, pageSize: number) {
+  return useQuery(paginatedAlertsQueryOptions(page, pageSize));
 }
 
 export function useUpdateAlertStatusMutation() {
