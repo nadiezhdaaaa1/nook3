@@ -304,6 +304,10 @@ export function SampleListingsMap({
   const markersRef = useRef<Map<string, PinOverlay>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const [clusters, setClusters] = useState<Cluster[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const signatureRef = useRef<string>("");
+
 
   const overlayRef = useRef<{
     overlay: google.maps.OverlayView;
