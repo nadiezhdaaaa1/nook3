@@ -40,32 +40,29 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           <PlanBadge plan={resolvedPlan} />
         </div>
 
-        <div className="flex items-center gap-4">
-          <nav aria-label="Main" className="flex items-center gap-[2px]">
-            <NavHoverItem to="/home" className={TEXT_BUTTON_CLASS}>
-              <IconHomeSearch {...ICON_PROPS} aria-hidden />
-              <span className={LABEL_CLASS}>Searches</span>
-            </NavHoverItem>
-            <NavHoverItem to="/saved" className={TEXT_BUTTON_CLASS}>
-              <IconHeart {...ICON_PROPS} aria-hidden />
-              <span className={LABEL_CLASS}>Saved</span>
-            </NavHoverItem>
-            <NavHoverItem to="/wren" className={ICON_BUTTON_CLASS} aria-label="Wren AI chat">
-              <IconMessageChatbot {...ICON_PROPS} aria-hidden />
-            </NavHoverItem>
-            <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
-              <IconGift {...ICON_PROPS} aria-hidden />
-            </NavHoverItem>
-          </nav>
-
+        <nav aria-label="Main" className="flex items-center gap-[2px]">
+          <NavHoverItem to="/home" className={TEXT_BUTTON_CLASS}>
+            <IconHomeSearch {...ICON_PROPS} aria-hidden />
+            <span className={LABEL_CLASS}>Searches</span>
+          </NavHoverItem>
+          <NavHoverItem to="/saved" className={TEXT_BUTTON_CLASS}>
+            <IconHeart {...ICON_PROPS} aria-hidden />
+            <span className={LABEL_CLASS}>Saved</span>
+          </NavHoverItem>
+          <NavHoverItem to="/wren" className={ICON_BUTTON_CLASS} aria-label="Wren AI chat">
+            <IconMessageChatbot {...ICON_PROPS} aria-hidden />
+          </NavHoverItem>
+          <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
+            <IconGift {...ICON_PROPS} aria-hidden />
+          </NavHoverItem>
           <NavHoverItem
             to="/account"
             aria-label="Account"
-            className="h-9 w-9 rounded-[8px] border border-black/20"
+            className={ICON_BUTTON_CLASS}
           >
-            <IconUser size={18} stroke={1.5} color="#D66C38" aria-hidden />
+            <IconUser {...ICON_PROPS} aria-hidden />
           </NavHoverItem>
-        </div>
+        </nav>
       </div>
     </header>
   );
