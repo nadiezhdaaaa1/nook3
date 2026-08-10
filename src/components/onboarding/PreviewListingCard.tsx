@@ -49,16 +49,35 @@ export function PreviewListingCard({
 
       <div className="flex items-start justify-between gap-3">
         <h3
-          className="min-w-0 flex-1 truncate"
+          className="min-w-0 flex-1"
           style={{
             fontWeight: 600,
             fontSize: 17,
             lineHeight: "24px",
-            color: "#241c12",
             fontFamily: "var(--font-sans)",
           }}
         >
-          {listing.address}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href={listing.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open listing in new tab"
+                className="group/title inline-flex w-full min-w-0 items-center gap-1.5 text-[#241c12] no-underline transition-colors duration-200 hover:text-[#5a5a55]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ArrowUpRight
+                  className="h-4 w-0 shrink-0 opacity-0 transition-all duration-200 group-hover/title:w-4 group-hover/title:opacity-100"
+                  aria-hidden="true"
+                />
+                <span className="truncate">{listing.address}</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={4}>
+              Open in new tab
+            </TooltipContent>
+          </Tooltip>
         </h3>
 
         {onClose && (
