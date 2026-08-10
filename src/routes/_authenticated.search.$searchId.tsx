@@ -148,8 +148,8 @@ function PageHeader({
             />
             <OriginButton
               variant="tertiary"
-              size="icon"
-              className="h-11 w-11"
+              size="medium"
+              className="h-11 w-11 p-0"
               onClick={() => {
                 const trimmed = editName.trim();
                 if (trimmed) {
@@ -163,8 +163,8 @@ function PageHeader({
             </OriginButton>
             <OriginButton
               variant="tertiary"
-              size="icon"
-              className="h-11 w-11"
+              size="medium"
+              className="h-11 w-11 p-0"
               onClick={() => {
                 setEditName(name);
                 setIsEditing(false);
