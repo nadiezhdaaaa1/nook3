@@ -148,7 +148,7 @@ function SavedPage() {
                 aria-selected={active}
                 onClick={() => setTab(t.key)}
                 variant={active ? "dark" : "tertiary"}
-                size="big"
+                size="medium"
                 className="px-5"
               >
                 <Icon
