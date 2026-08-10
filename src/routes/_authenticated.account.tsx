@@ -290,11 +290,10 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ email, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{ email, timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
           setEmail(snap.email);
           setTimezone(snap.timezone);
-          setCycle(snap.cycle);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
           prefs.setPref("productUpdates", snap.prefs.productUpdates);
         }}
