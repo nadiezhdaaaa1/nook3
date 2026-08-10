@@ -4,11 +4,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
 import { CreditCard, Mail } from "lucide-react";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
-import {
-  COOL_BG,
-  DARK_SHADOW,
-  WARM_BG,
-} from "@/components/landing/PricingThreeTiers";
+import { WARM_BG } from "@/components/landing/PricingThreeTiers";
+
 import {
   OB_H1,
   OB_SUB,
@@ -98,8 +95,9 @@ function Success() {
   const cardStyle: React.CSSProperties = dark
     ? {
         backgroundColor: "#2c2415",
-        backgroundImage: planVariant === "warm" ? WARM_BG : COOL_BG,
-        boxShadow: DARK_SHADOW,
+        backgroundImage: WARM_BG,
+        boxShadow:
+          "0px 2px 1px rgba(36,28,18,0.08), 0px 24px 14px rgba(36,28,18,0.28)",
         color: "#f8f3e1",
         borderRadius: 24,
       }
@@ -214,11 +212,12 @@ function Success() {
   }
 
   return (
+    <>
     <motion.div
       variants={stepVariants}
       initial={stepVariants ? "hidden" : undefined}
       animate={stepVariants ? "visible" : undefined}
-      className="mx-auto w-full max-w-[800px] pb-16"
+      className="mx-auto w-full max-w-[800px] pb-[104px]"
     >
       <motion.div variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
@@ -318,8 +317,14 @@ function Success() {
         variants={sectionVariants}
         className="mt-4 flex items-start gap-3 rounded-[16px] border border-black/10 bg-[#ebf0d5] px-5 py-4"
       >
-        <CreditCard className="mt-0.5 h-4 w-4 shrink-0 text-[#6a820a]" />
-        <p className="m-0 text-[14px] leading-[22px] text-charcoal-800">
+        <CreditCard
+          className="mt-0.5 h-4 w-4 shrink-0"
+          style={{ color: "#6a820a" }}
+          strokeWidth={1.33}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <p className="m-0 text-[14px] leading-[22px]" style={{ color: "#3a3a37" }}>
           {isPaid ? (
             <>
               After creating your account you'll be taken to the payment screen to start your{" "}
@@ -335,39 +340,53 @@ function Success() {
         </p>
       </motion.div>
 
-      {/* Account creation */}
-      <motion.div variants={sectionVariants} className="mt-8 flex flex-col gap-3">
-        <OriginButton
-          type="button"
-          variant="tertiary"
-          size="big"
-          className="w-full"
-          onClick={onGoogle}
-          disabled={busy}
-        >
-          <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
-          <span>Continue with Google</span>
-        </OriginButton>
-
-        <OriginButton
-          type="button"
-          variant="main"
-          size="big"
-          className="w-full"
-          disabled={busy}
-          onClick={() => navigate({ to: "/signup", search: { redirect: "/home" } })}
-        >
-          <Mail className="h-4 w-4" />
-          <span>Continue with email</span>
-        </OriginButton>
-
-        <p className="m-0 text-center text-[14px] text-charcoal-500">
-          Already have an account?{" "}
-          <Link to="/login" search={{ redirect: "/home" }} className="text-charcoal-950 underline">
-            Sign in
-          </Link>
-        </p>
       </motion.div>
-    </motion.div>
+
+      {/* Account creation — sticky bottom bar */}
+      <div
+        className="fixed bottom-0 left-1/2 z-40 w-full max-w-[800px] -translate-x-1/2"
+        style={{
+          padding: "40px 20px 24px",
+          background:
+            "linear-gradient(180deg, rgba(250,246,238,0) 0%, #FAF6EE 16%, #FAF6EE 100%)",
+        }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex w-full gap-3">
+            <OriginButton
+              type="button"
+              variant="tertiary"
+              size="big"
+              className="flex-1"
+              onClick={onGoogle}
+              disabled={busy}
+            >
+              <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
+              <span>Continue with Google</span>
+            </OriginButton>
+
+            <OriginButton
+              type="button"
+              variant="main"
+              size="big"
+              className="flex-1"
+              disabled={busy}
+              onClick={() => navigate({ to: "/signup", search: { redirect: "/home" } })}
+            >
+              <Mail className="h-4 w-4" />
+              <span>Continue with email</span>
+            </OriginButton>
+          </div>
+
+          <p className="m-0 text-center text-[14px] text-[#6e6459]">
+            Already have an account?{" "}
+            <Link to="/login" search={{ redirect: "/home" }} className="text-charcoal-950 underline">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
+
