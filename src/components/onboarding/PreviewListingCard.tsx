@@ -68,55 +68,15 @@ function WrenTakeButton({
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
 }) {
-  const ref = React.useRef<HTMLButtonElement>(null);
-  const [hovered, setHovered] = React.useState(false);
-  const [origin, setOrigin] = React.useState({ x: 0, y: 0 });
-  const [coverSize, setCoverSize] = React.useState(0);
-
-  const updateOrigin = React.useCallback((x: number, y: number) => {
-    const node = ref.current;
-    if (!node) return;
-    const rect = node.getBoundingClientRect();
-    setOrigin({ x, y });
-    setCoverSize(getCoverDiameter(rect.width, rect.height, x, y));
-  }, []);
-
-  React.useLayoutEffect(() => {
-    const node = ref.current;
-    if (!(node && hovered)) return;
-    const measure = () => {
-      const rect = node.getBoundingClientRect();
-      setCoverSize(getCoverDiameter(rect.width, rect.height, origin.x, origin.y));
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [hovered, origin.x, origin.y]);
-
   return (
-    <motion.button
+    <button
       type="button"
-      ref={ref}
       aria-expanded={open}
       onClick={onClick}
-      onPointerEnter={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        updateOrigin(e.clientX - rect.left, e.clientY - rect.top);
-        setHovered(true);
-      }}
-      onPointerLeave={() => setHovered(false)}
-      className="group relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 p-3"
+      className="group relative flex w-full items-center justify-between gap-2 rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 p-3"
     >
-      <motion.span
-        animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
-        initial={false}
-        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#000000]"
-        style={{ left: origin.x, top: origin.y, width: coverSize, height: coverSize }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      />
       {children}
-    </motion.button>
+    </button>
   );
 }
 
