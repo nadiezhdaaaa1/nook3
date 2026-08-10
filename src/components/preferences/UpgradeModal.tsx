@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Sparkles, X, Zap } from "lucide-react";
+import { Check, Sparkles, X, Zap } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { OriginButton } from "@/components/ui/origin-button";
 
@@ -84,8 +84,8 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
                     "Priority concierge support",
                   ]
               ).map((f) => (
-                <li key={f} className="flex items-center gap-2">
-                  <span className="inline-flex h-1.5 w-1.5 rounded-full bg-sage-600" />
+                <li key={f} className="flex items-start gap-2">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" aria-hidden />
                   {f}
                 </li>
               ))}
