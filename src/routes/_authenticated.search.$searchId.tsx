@@ -113,7 +113,7 @@ function PageHeader({
   return (
     <div className="mt-4 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
       <div className="min-w-0">
-        <h1 className="truncate font-display text-[36px] font-bold leading-[1.05] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
+        <h1 className="break-words font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px]">
           {name}
         </h1>
         <div className="mt-2 font-display text-xl font-medium italic text-sage-800 lg:text-2xl">
