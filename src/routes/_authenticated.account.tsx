@@ -427,7 +427,7 @@ function SecuritySection() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-1.5 h-10 px-4 rounded border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
+            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
           >
             Change password
           </button>
