@@ -271,17 +271,14 @@ function Success() {
               </div>
             )}
           </div>
-          <Link
-            to="/onboarding/pricing"
-            className="inline-flex h-[48px] items-center gap-2 rounded-[12px] border px-5 text-[15px] font-semibold transition-colors"
-            style={
-              dark
-                ? { borderColor: "rgba(0,0,0,0.20)", background: "#ffffff", color: "#2B2521" }
-                : { borderColor: "rgba(0,0,0,0.10)", color: "#241c12" }
-            }
+          <OriginButton
+            size="medium"
+            variant={plan === "premium" ? "premium" : plan === "max" ? "max" : "tertiary"}
+            style={{ borderRadius: 12 }}
+            onClick={() => navigate({ to: "/onboarding/pricing" })}
           >
-            <Pencil className="h-3.5 w-3.5" /> Change plan
-          </Link>
+            Change plan
+          </OriginButton>
         </div>
       </motion.div>
 
