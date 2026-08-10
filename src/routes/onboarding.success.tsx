@@ -203,7 +203,7 @@ function Success() {
   async function onGoogle() {
     setBusy(true);
     const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: window.location.origin + "/home",
     });
     setBusy(false);
     if (res?.error) {
