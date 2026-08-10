@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { MapPin, TrendingDown, Sparkles, ChevronDown, X } from "lucide-react";
 import type { SampleListing } from "@/data/sampleListings";
 
