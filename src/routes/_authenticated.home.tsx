@@ -252,23 +252,6 @@ function HomeScreen() {
                 : "Set a city, budget and neighborhoods to start receiving alerts."}
             </p>
 
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              {search && (
-                <Link
-                  to="/search/$searchId/budget"
-                  params={{ searchId: search.id }}
-                  className="inline-flex h-10 items-center gap-1.5 rounded-pill border border-black/10 bg-white px-4 text-sm font-semibold text-charcoal-900 hover:border-charcoal-950"
-                >
-                  <Pencil className="h-3.5 w-3.5" /> Edit this search
-                </Link>
-              )}
-              <Link
-                to="/saved"
-                className="inline-flex h-10 items-center gap-1.5 rounded-pill border border-black/10 bg-white px-4 text-sm font-semibold text-charcoal-900 hover:border-charcoal-950"
-              >
-                <Plus className="h-3.5 w-3.5" /> Saved listings
-              </Link>
-            </div>
           </header>
 
           {visibleListings.length === 0 ? (
