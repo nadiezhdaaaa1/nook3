@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { OfflineBanner } from "@/components/system/OfflineBanner";
 import { CookieBanner } from "@/components/legal/CookieBanner";
 import { ConsentScripts } from "@/components/legal/ConsentScripts";
@@ -273,12 +274,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <OfflineBanner />
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <Toaster />
-      <CookieBanner />
-      <ConsentScripts />
+      <TooltipProvider>
+        <OfflineBanner />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <Toaster />
+        <CookieBanner />
+        <ConsentScripts />
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }

@@ -11,6 +11,7 @@ export interface SampleListing {
   tag?: string; // "Likely RS", "Verified RS", etc.
   buildingNote?: string;
   image: string;
+  url?: string;
   coords?: [number, number]; // [lat, lng]
 }
 
