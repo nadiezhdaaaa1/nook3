@@ -47,74 +47,69 @@ export function PreviewListingCard({
     >
 
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <span
-            className="font-display tabular-nums block"
-            style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
-          >
-            ${listing.rent.toLocaleString()}
-            <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
-          </span>
+        <h3
+          className="min-w-0 flex-1 truncate"
+          style={{
+            fontWeight: 600,
+            fontSize: 17,
+            lineHeight: "24px",
+            color: "#241c12",
+            fontFamily: "var(--font-sans)",
+          }}
+        >
+          {listing.address}
+        </h3>
 
-          <h3
-            className="truncate"
-            style={{
-              fontWeight: 600,
-              fontSize: 17,
-              lineHeight: "24px",
-              color: "#241c12",
-              fontFamily: "var(--font-sans)",
-              marginTop: 4,
+        {onClose && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
             }}
+            aria-label="Dismiss listing"
+            className="-mt-1 -mr-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
           >
-            {listing.address}
-          </h3>
-
-          <div
-            className="flex flex-wrap items-center gap-1"
-            style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}
-          >
-            <MapPin style={{ width: 12, height: 12 }} />
-            {listing.neighborhood}
-            <span style={{ margin: "0 4px" }}>·</span>
-            {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
-            <span style={{ margin: "0 4px" }}>·</span>
-            {listing.baths} bath
-            {!!listing.belowMedianPct && (
-              <>
-                <span style={{ margin: "0 4px" }}>·</span>
-                <span
-                  className="inline-flex items-center gap-1"
-                  style={{ color: "#5a6e50" }}
-                >
-                  <TrendingDown style={{ width: 12, height: 12 }} />
-                  {listing.belowMedianPct}% below median
-                </span>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="flex shrink-0 flex-col items-end text-right">
-          {onClose && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
-              aria-label="Dismiss listing"
-              className="-mt-1 -mr-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
-            >
-              <X style={{ width: 16, height: 16, color: "#6e6459" }} />
-            </button>
-          )}
-        </div>
+            <X style={{ width: 16, height: 16, color: "#6e6459" }} />
+          </button>
+        )}
       </div>
 
+      <div
+        className="flex flex-wrap items-center gap-1"
+        style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}
+      >
+        <MapPin style={{ width: 12, height: 12 }} />
+        {listing.neighborhood}
+        <span style={{ margin: "0 4px" }}>·</span>
+        {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
+        <span style={{ margin: "0 4px" }}>·</span>
+        {listing.baths} bath
+        {!!listing.belowMedianPct && (
+          <>
+            <span style={{ margin: "0 4px" }}>·</span>
+            <span
+              className="inline-flex items-center gap-1"
+              style={{ color: "#5a6e50" }}
+            >
+              <TrendingDown style={{ width: 12, height: 12 }} />
+              {listing.belowMedianPct}% below median
+            </span>
+          </>
+        )}
+      </div>
 
+      <div className="mt-4 flex items-end justify-between gap-3">
+        <span
+          className="font-display tabular-nums"
+          style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
+        >
+          ${listing.rent.toLocaleString()}
+          <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
+        </span>
 
-      {actions}
+        {actions}
+      </div>
     </article>
   );
 }
