@@ -140,6 +140,7 @@ class PinOverlay {
   private active = false;
   private variant: PinVariant;
   private offset: { x: number; y: number } = { x: 0, y: 0 };
+  private heartPath: SVGPathElement | null = null;
 
   constructor(
     position: google.maps.LatLng,
@@ -167,17 +168,21 @@ class PinOverlay {
         this.pin.style.gap = "4px";
         const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         heart.setAttribute("viewBox", "0 0 24 24");
-        heart.setAttribute("width", "14");
-        heart.setAttribute("height", "14");
+        heart.setAttribute("width", "15");
+        heart.setAttribute("height", "15");
         heart.setAttribute("aria-hidden", "true");
+        heart.setAttribute("stroke-width", "2");
+        heart.setAttribute("stroke-linecap", "round");
+        heart.setAttribute("stroke-linejoin", "round");
         heart.style.flex = "0 0 auto";
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute(
           "d",
-          "M12 21s-7.5-4.7-9.3-9.1C1.3 8.4 3.2 5 6.6 5c2 0 3.4 1.1 4.2 2.2C11.6 6.1 13 5 15 5c3.4 0 5.3 3.4 3.9 6.9C19.5 16.3 12 21 12 21z",
+          "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z",
         );
-        path.setAttribute("fill", "#D66C38");
         heart.appendChild(path);
+        this.heartPath = path;
+        this.paintHeart();
         this.pin.appendChild(heart);
         const text = document.createElement("span");
         text.textContent = label;
@@ -215,6 +220,13 @@ class PinOverlay {
         this.pin.parentNode.removeChild(this.pin);
       }
     };
+  }
+
+  private paintHeart() {
+    if (!this.heartPath) return;
+    const color = this.active ? "#FFFFFF" : "#D66C38";
+    this.heartPath.setAttribute("fill", color);
+    this.heartPath.setAttribute("stroke", color);
   }
 
   setOffset(x: number, y: number) {
@@ -266,6 +278,7 @@ class PinOverlay {
       this.pin.style.borderColor = "rgba(0, 0, 0, 0.20)";
       this.pin.style.boxShadow = PIN_STYLES.boxShadow as string;
     }
+    this.paintHeart();
     this.overlay.draw();
   }
 
