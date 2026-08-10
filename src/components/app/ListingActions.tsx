@@ -118,7 +118,7 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
         {saving ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          <Heart className="h-4 w-4" fill={saved ? "#6a820a" : "none"} color={saved ? "#6a820a" : "#6e6459"} />
+          <Heart className="h-4 w-4" fill={saved ? "#D66C38" : "none"} color={saved ? "#D66C38" : "#6e6459"} />
         )}
         {!compactSave && (saved ? "Saved" : "Save")}
       </OriginButton>
