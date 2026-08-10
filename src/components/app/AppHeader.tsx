@@ -43,10 +43,12 @@ function MobileNavItem({
   to,
   label,
   Icon,
+  disabled,
 }: {
   to: string;
   label: string;
   Icon: (typeof NAV_ITEMS)[number]["Icon"];
+  disabled?: boolean;
 }) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -56,6 +58,7 @@ function MobileNavItem({
   const [coverSize, setCoverSize] = useState(0);
 
   const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (disabled) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -65,7 +68,7 @@ function MobileNavItem({
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.matches(":focus-visible")) return;
+    if (disabled || !event.currentTarget.matches(":focus-visible")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = rect.width / 2;
     const y = rect.height / 2;
@@ -76,7 +79,9 @@ function MobileNavItem({
 
   return (
     <DropdownMenuItem
+      disabled={disabled}
       onSelect={() => {
+        if (disabled) return;
         navigate({ to });
       }}
       onPointerEnter={handlePointerEnter}
@@ -86,9 +91,10 @@ function MobileNavItem({
       className={cn(
         "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] bg-[#FAF6EE] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
         isActive && "bg-[#241C12] text-white focus:bg-[#241C12] focus:text-white",
+        disabled && "cursor-not-allowed opacity-50",
       )}
     >
-      {!isActive && (
+      {!isActive && !disabled && (
         <motion.span
           animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
           aria-hidden
@@ -111,13 +117,18 @@ function MobileNavItem({
           className={cn("shrink-0", isActive ? "text-white" : "text-[#241C12]")}
           aria-hidden
         />
-        <span
-          className={cn(
-            "text-[14px] font-semibold leading-5",
-            isActive ? "text-white" : "text-[#241C12]",
+        <span className="flex flex-col">
+          <span
+            className={cn(
+              "text-[14px] font-semibold leading-5",
+              isActive ? "text-white" : "text-[#241C12]",
+            )}
+          >
+            {label}
+          </span>
+          {disabled && (
+            <span className="text-[12px] leading-4 opacity-70">(coming soon)</span>
           )}
-        >
-          {label}
         </span>
       </span>
     </DropdownMenuItem>
@@ -135,11 +146,11 @@ const TEXT_BUTTON_CLASS = "gap-2 rounded-[8px] pl-2.5 pr-3 py-2";
 const ICON_BUTTON_CLASS = "rounded-[8px] p-2";
 
 const NAV_ITEMS = [
-  { to: "/home", label: "Searches", Icon: IconHomeSearch },
-  { to: "/saved", label: "Saved", Icon: IconHeart },
-  { to: "/wren", label: "Wren AI chat", Icon: IconMessageChatbot },
-  { to: "/referrals", label: "Referrals", Icon: IconGift },
-  { to: "/account", label: "Account", Icon: IconUser },
+  { to: "/home", label: "Searches", Icon: IconHomeSearch, disabled: false },
+  { to: "/saved", label: "Saved", Icon: IconHeart, disabled: false },
+  { to: "/wren", label: "Wren AI chat", Icon: IconMessageChatbot, disabled: true },
+  { to: "/referrals", label: "Referrals", Icon: IconGift, disabled: false },
+  { to: "/account", label: "Account", Icon: IconUser, disabled: false },
 ] as const;
 
 export function AppHeader({ plan }: { plan?: PlanKey }) {
@@ -172,11 +183,20 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           </NavHoverItem>
           <Tooltip>
             <TooltipTrigger asChild>
-              <NavHoverItem to="/wren" className={ICON_BUTTON_CLASS} aria-label="Wren AI chat">
+              <NavHoverItem
+                disabled
+                className={ICON_BUTTON_CLASS}
+                aria-label="Wren AI chat"
+              >
                 <IconMessageChatbot {...ICON_PROPS} aria-hidden />
               </NavHoverItem>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Wren AI chat</TooltipContent>
+            <TooltipContent side="bottom">
+              <div className="text-center leading-tight">
+                <div>Wren AI chat</div>
+                <div className="text-xs opacity-70">(coming soon)</div>
+              </div>
+            </TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -213,12 +233,13 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
             className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF6EE] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
           >
             <nav aria-label="Mobile" className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ to, label, Icon }) => (
+              {NAV_ITEMS.map(({ to, label, Icon, disabled }) => (
                 <MobileNavItem
                   key={to}
                   to={to}
                   label={label}
                   Icon={Icon}
+                  disabled={disabled}
                 />
               ))}
             </nav>

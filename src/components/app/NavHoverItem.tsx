@@ -28,6 +28,7 @@ function getCoverDiameter(width: number, height: number, x: number, y: number) {
 export function NavHoverItem({
   to,
   onClick,
+  disabled,
   className,
   children,
   onPointerEnter,
@@ -38,6 +39,7 @@ export function NavHoverItem({
 }: {
   to?: string;
   onClick?: () => void;
+  disabled?: boolean;
   className?: string;
   children: React.ReactNode;
 } & Pick<
@@ -58,6 +60,7 @@ export function NavHoverItem({
   const isActive = to ? pathname === to : false;
 
   const handleEnter = (event: React.PointerEvent<HTMLElement>) => {
+    if (disabled) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -67,7 +70,7 @@ export function NavHoverItem({
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLElement>) => {
-    if (!event.currentTarget.matches(":focus-visible")) return;
+    if (disabled || !event.currentTarget.matches(":focus-visible")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = rect.width / 2;
     const y = rect.height / 2;
@@ -118,6 +121,7 @@ export function NavHoverItem({
       "relative inline-flex cursor-pointer select-none items-center justify-center overflow-hidden bg-transparent outline-none",
       "focus-visible:ring-2 focus-visible:ring-black/20",
       isActive && "bg-[#241C12] text-white",
+      disabled && "cursor-not-allowed opacity-50",
       className,
     ),
     ...rest,
@@ -139,7 +143,7 @@ export function NavHoverItem({
     },
   };
 
-  if (to) {
+  if (to && !disabled) {
     return (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       <Link to={to as any} ref={nodeRef as never} {...shared}>
@@ -149,7 +153,7 @@ export function NavHoverItem({
   }
 
   return (
-    <button type="button" onClick={onClick} {...shared}>
+    <button type="button" disabled={disabled} onClick={disabled ? undefined : onClick} ref={nodeRef as never} {...shared}>
       {inner}
     </button>
   );
