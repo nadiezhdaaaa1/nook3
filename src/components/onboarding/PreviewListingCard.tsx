@@ -74,21 +74,21 @@ export function PreviewListingCard({
       }}
       onMouseEnter={() => onHover?.(listing.id)}
       onMouseLeave={() => onHover?.(null)}
-      className={`text-left transition-[border-color,box-shadow] duration-150 ${
-        popup ? "w-[320px] max-w-[calc(100vw-64px)]" : "w-full"
-      } ${onSelect ? "cursor-pointer" : ""}`}
-
+      className={`text-left border transition-[border-color,box-shadow] duration-150 ${
+        selected ? "border-[#6a820a]" : "border-black/[0.08] hover:border-black/20"
+      } ${popup ? "w-[320px] max-w-[calc(100vw-64px)]" : "w-full"} ${
+        onSelect ? "cursor-pointer" : ""
+      }`}
       style={{
         background: "#ffffff",
         borderRadius: 16,
-        border: `1px solid ${selected ? "#6a820a" : "rgba(0,0,0,0.08)"}`,
         padding: 20,
         boxShadow: popup
           ? "0 16px 32px rgba(12,12,13,0.14), 0 4px 8px rgba(12,12,13,0.06)"
           : "none",
       }}
-
     >
+
       <div className="flex items-start justify-between gap-3">
         <h3
           className="min-w-0 flex-1 truncate"
