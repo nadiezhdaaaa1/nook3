@@ -46,7 +46,7 @@ interface Props {
   onReport: (reason: ReportReason, details: string) => void;
 }
 
-export function ListingActions({ saved, saving, selected = false, onToggleSave, onDislike, onReport }: Props) {
+export function ListingActions({ saved, saving, selected = false, compactSave = false, onToggleSave, onDislike, onReport }: Props) {
   const [reason, setReason] = useState<ReportReason | null>(null);
   const [details, setDetails] = useState("");
 
