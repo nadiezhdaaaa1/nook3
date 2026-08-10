@@ -24,16 +24,16 @@ function createMarker(listing: ListingPin): google.maps.Marker {
     position: { lat: listing.coords[0], lng: listing.coords[1] },
     label: {
       text: `$${Math.round(listing.rent / 100) / 10}k`,
-      color: "#0d0d0d",
+      color: "#ffffff",
       fontSize: "11px",
       fontWeight: "700",
     },
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 22,
-      fillColor: "#fafaf7",
+      fillColor: "#6A820A",
       fillOpacity: 1,
-      strokeColor: "#0d0d0d",
+      strokeColor: "#ffffff",
       strokeWeight: 2,
     },
   });
