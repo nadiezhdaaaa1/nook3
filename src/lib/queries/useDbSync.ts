@@ -68,6 +68,40 @@ export function useDbSync() {
     hydratedRef.current = true;
   }, [searchesQ.data, profileQ.data]);
 
+  // 1b) Onboarding handoff: the account has no searches yet, but the browser
+  // still holds the onboarding answers — persist them as the first Search.
+  useEffect(() => {
+    if (handoffRef.current) return;
+    if (!searchesQ.data || !profileQ.data) return;
+    if ((searchesQ.data as Search[]).length > 0) return;
+
+    const o = useOnboardingStore.getState();
+    if (!o.city) return;
+
+    handoffRef.current = true;
+    createMutation.mutate({
+      name: getDefaultSearchName(o.city, []),
+      cityId: o.city,
+      budget: o.budget,
+      moveIn: o.moveIn,
+      bedrooms: o.bedrooms,
+      bathrooms: o.bathrooms,
+      rentProtection: o.rentProtection,
+      includeBrokerFee: o.includeBrokerFee,
+      neighborhoods: o.neighborhoods,
+      amenities: o.amenities,
+      transit: o.transit,
+      commute: o.commute,
+      alertChannel: "email",
+      frequency: o.frequency,
+    });
+    // Re-hydrate from the DB once the insert lands.
+    hydratedRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchesQ.data, profileQ.data]);
+
+
+
   // 2) Debounced auto-save on local search changes.
   useEffect(() => {
     if (!hydratedRef.current) return;
