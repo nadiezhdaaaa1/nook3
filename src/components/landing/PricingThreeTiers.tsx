@@ -119,22 +119,23 @@ const TIERS: Tier[] = [
   },
 ];
 
-const WARM_BG = [
+export const WARM_BG = [
   "radial-gradient(120% 110% at 0% 0%, rgba(255,205,0,0.14) 0%, rgba(255,205,0,0) 60%)",
   "radial-gradient(120% 110% at 100% 0%, rgba(203,74,10,0.26) 0%, rgba(203,74,10,0) 60%)",
   "radial-gradient(130% 120% at 100% 100%, rgba(122,143,55,0.30) 0%, rgba(122,143,55,0) 60%)",
   "radial-gradient(120% 110% at 0% 100%, rgba(120,165,200,0.12) 0%, rgba(120,165,200,0) 60%)",
 ].join(", ");
 
-const COOL_BG = [
+export const COOL_BG = [
   "radial-gradient(120% 110% at 0% 0%, rgba(38,0,255,0.14) 0%, rgba(38,0,255,0) 60%)",
   "radial-gradient(120% 110% at 100% 0%, rgba(203,10,94,0.26) 0%, rgba(203,10,94,0) 60%)",
   "radial-gradient(130% 120% at 100% 100%, rgba(81,55,143,0.30) 0%, rgba(81,55,143,0) 60%)",
   "radial-gradient(120% 110% at 0% 100%, rgba(149,120,200,0.12) 0%, rgba(149,120,200,0) 60%)",
 ].join(", ");
 
-const DARK_SHADOW =
+export const DARK_SHADOW =
   "0 2px 2px rgba(36,28,18,0.08), 0 24px 28px rgba(36,28,18,0.28)";
+
 
 interface PricingThreeTiersProps {
   cycle?: Cycle;
