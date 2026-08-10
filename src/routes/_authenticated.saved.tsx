@@ -27,9 +27,27 @@ import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/aler
 import { useReportListingMutation } from "@/lib/queries/listingReports";
 
 const TABS = [
-  { key: "saved", label: "Saved listings", icon: Heart },
-  { key: "searches", label: "My searches", icon: SearchIcon },
-  { key: "disliked", label: "Disliked listings", icon: ThumbsDown },
+  {
+    key: "saved",
+    label: "Saved listings",
+    icon: Heart,
+    title: "Saved listings",
+    subtitle: "Listings you kept to revisit later.",
+  },
+  {
+    key: "searches",
+    label: "My searches",
+    icon: SearchIcon,
+    title: "My searches",
+    subtitle: "Active and paused searches across your cities.",
+  },
+  {
+    key: "disliked",
+    label: "Disliked listings",
+    icon: ThumbsDown,
+    title: "Disliked listings",
+    subtitle: "Listings you passed on, in case you change your mind.",
+  },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
