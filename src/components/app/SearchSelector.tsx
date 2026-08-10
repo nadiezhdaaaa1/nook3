@@ -110,7 +110,7 @@ export function SearchSelector() {
       setUpgradeOpen(true);
       return;
     }
-    setModalOpen(true);
+    navigate({ to: "/search/new/$step", params: { step: "1" } });
   };
 
   return (

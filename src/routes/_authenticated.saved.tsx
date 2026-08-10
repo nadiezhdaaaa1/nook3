@@ -308,7 +308,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
       setUpgradeOpen(true);
       return;
     }
-    navigate({ to: "/onboarding" });
+    navigate({ to: "/search/new/$step", params: { step: "1" } });
   };
 
   if (live.length === 0 && archived.length === 0) {
