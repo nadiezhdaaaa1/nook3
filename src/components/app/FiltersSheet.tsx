@@ -115,7 +115,7 @@ export function FiltersSheet({
   onReset,
   onEditSearch,
   resultCount,
-  searchName,
+  search,
 }: Props) {
   const count = useMemo(() => activeFilterCount(filters, scope), [filters, scope]);
   const baths = BATH_OPTIONS.filter((b) => scope.bathrooms.includes(b.id));
@@ -136,20 +136,57 @@ export function FiltersSheet({
                 Filters
               </SheetTitle>
               <SheetDescription className="mt-1 text-sm text-charcoal-600">
-                Narrow within {searchName ?? "this search"}. To widen it, edit the search.
+                Narrow within {search?.name ?? "this search"}. To widen it, edit the search.
               </SheetDescription>
             </div>
           </div>
-          <OriginButton
-            type="button"
-            variant="tertiary"
-            size="medium"
-            className="mt-4 inline-flex h-10 items-center gap-2 px-3 text-sm font-semibold"
-            onClick={onEditSearch}
-          >
-            <Pencil className="h-3.5 w-3.5" aria-hidden />
-            Edit this search
-          </OriginButton>
+
+          {search ? (
+            <button
+              type="button"
+              onClick={onEditSearch}
+              className="mt-4 flex w-full items-center gap-3 rounded-[8px] border border-black/[0.08] bg-charcoal-950/[0.02] px-3 py-2.5 text-left transition-colors hover:bg-charcoal-950/[0.04]"
+            >
+              <StatusDot status={search.status} />
+              <div className="min-w-0 flex-1">
+                <span className="flex items-center gap-1.5">
+                  <span className="truncate text-sm font-semibold text-charcoal-950">
+                    {search.name}
+                  </span>
+                  <span className="rounded-pill border border-black/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-charcoal-600">
+                    {statusLabel(search)}
+                  </span>
+                </span>
+                <span className="mt-0.5 block truncate text-[11px] text-charcoal-500">
+                  {cityLabel(search.cityId)} · {summary(search)}
+                </span>
+              </div>
+              <OriginButton
+                type="button"
+                variant="tertiary"
+                size="medium"
+                aria-label={`Edit ${search.name}`}
+                className="h-8 w-8 shrink-0 rounded-[8px] p-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditSearch();
+                }}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </OriginButton>
+            </button>
+          ) : (
+            <OriginButton
+              type="button"
+              variant="tertiary"
+              size="medium"
+              className="mt-4 inline-flex h-10 items-center gap-2 px-3 text-sm font-semibold"
+              onClick={onEditSearch}
+            >
+              <Pencil className="h-3.5 w-3.5" aria-hidden />
+              Edit this search
+            </OriginButton>
+          )}
         </SheetHeader>
 
         <div className="flex-1 space-y-5 overflow-y-auto p-6">
