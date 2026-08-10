@@ -98,8 +98,9 @@ function Success() {
   const cardStyle: React.CSSProperties = dark
     ? {
         backgroundColor: "#2c2415",
-        backgroundImage: planVariant === "warm" ? WARM_BG : COOL_BG,
-        boxShadow: DARK_SHADOW,
+        backgroundImage: WARM_BG,
+        boxShadow:
+          "0px 2px 1px rgba(36,28,18,0.08), 0px 24px 14px rgba(36,28,18,0.28)",
         color: "#f8f3e1",
         borderRadius: 24,
       }
