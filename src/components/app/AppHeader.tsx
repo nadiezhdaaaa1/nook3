@@ -58,6 +58,7 @@ function MobileNavItem({
   const [coverSize, setCoverSize] = useState(0);
 
   const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (disabled) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
