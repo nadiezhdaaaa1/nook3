@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { MapPin, TrendingDown, Sparkles, ChevronDown, X } from "lucide-react";
 import type { SampleListing } from "@/data/sampleListings";
@@ -147,8 +147,9 @@ interface Props {
   onSelect?: () => void;
   onClose?: () => void;
   onHover?: (id: string | null) => void;
+  openId?: string | null;
+  setOpenId?: (id: string | null) => void;
 }
-
 
 export function PreviewListingCard({
   listing,
@@ -157,8 +158,10 @@ export function PreviewListingCard({
   onSelect,
   onClose,
   onHover,
+  openId,
+  setOpenId,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const open = openId === listing.id;
 
   return (
     <article
@@ -247,8 +250,8 @@ export function PreviewListingCard({
         <div
           className="relative"
           style={{
-            background: "#ffffff",
-            border: "1px solid rgba(0,0,0,0.10)",
+            background: open ? "#241C12" : "#ffffff",
+            border: open ? "1px solid transparent" : "1px solid rgba(0,0,0,0.10)",
             borderRadius: 10,
             overflow: "hidden",
           }}
@@ -257,7 +260,7 @@ export function PreviewListingCard({
           open={open}
           onClick={(e) => {
             e.stopPropagation();
-            setOpen((v) => !v);
+            setOpenId?.(open ? null : listing.id);
           }}
         >
           <span className="relative z-10 flex items-center gap-2">
@@ -265,13 +268,13 @@ export function PreviewListingCard({
               className="h-3.5 w-3.5 text-[#D66C38]"
             />
             <span
-              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
+              className={`text-[11px] font-semibold uppercase tracking-[1.1px] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white ${open ? "text-white" : "text-[#241C12]"}`}
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className="relative z-10 text-[#241C12] transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white"
+            className={`relative z-10 transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white ${open ? "text-white" : "text-[#241C12]"}`}
             style={{
               width: 16,
               height: 16,
@@ -280,7 +283,7 @@ export function PreviewListingCard({
           />
         </WrenTakeButton>
         {open && (
-          <p className="px-3 pb-3 text-[#4a4a46]" style={{ fontSize: 13, lineHeight: 1.5 }}>
+          <p className={`px-3 pb-3 ${open ? "text-white" : "text-[#4a4a46]"}`} style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}

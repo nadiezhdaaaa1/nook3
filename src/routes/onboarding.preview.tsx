@@ -35,6 +35,7 @@ function SamplePreview() {
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [openWrenId, setOpenWrenId] = useState<string | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
 
 
@@ -76,6 +77,8 @@ function SamplePreview() {
       popup
       selected
       onClose={() => setActiveId(null)}
+      openId={openWrenId}
+      setOpenId={setOpenWrenId}
     />
   ) : null;
 
@@ -174,6 +177,8 @@ function SamplePreview() {
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
                     onHover={setHoveredId}
+                    openId={openWrenId}
+                    setOpenId={setOpenWrenId}
                   />
 
                 ))}
