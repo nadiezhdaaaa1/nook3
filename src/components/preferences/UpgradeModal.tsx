@@ -56,10 +56,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
               <Sparkles className="h-3 w-3" /> Plan limit reached
             </div>
             <h2 className="font-display text-[28px] font-bold leading-tight tracking-[-0.04em] text-charcoal-950">
-              Track more cities with{" "}
-              <span className="accent-italic">
-                {isPremium ? "Premium" : "Max"}
-              </span>
+              Track more cities with {isPremium ? "Premium" : "Max"}
             </h2>
           </div>
 
