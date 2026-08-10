@@ -268,13 +268,13 @@ export function PreviewListingCard({
               className="h-3.5 w-3.5 text-[#D66C38]"
             />
             <span
-              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
+              className={`text-[11px] font-semibold uppercase tracking-[1.1px] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white ${open ? "text-white" : "text-[#241C12]"}`}
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className="relative z-10 text-[#241C12] transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white"
+            className={`relative z-10 transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white ${open ? "text-white" : "text-[#241C12]"}`}
             style={{
               width: 16,
               height: 16,
