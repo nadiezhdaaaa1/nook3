@@ -185,7 +185,7 @@ function SavedPage() {
               sub="Tap the heart on a listing to keep it here for later."
             />
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               {savedRows.map((r) => {
                 const listing = alertToListing(r, searchCity.get(r.searchId ?? ""));
                 return (
@@ -246,7 +246,7 @@ function SavedPage() {
             sub="Listings you pass on land here, in case you change your mind."
           />
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {dislikedRows.map((r) => (
               <DislikedCard
                 key={r.id}
@@ -310,7 +310,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
   return (
     <div className="space-y-4">
-      <ul className="grid gap-4 sm:grid-cols-2">
+      <ul className="grid gap-3 sm:grid-cols-2">
         <li>
           <button
             type="button"
