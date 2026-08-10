@@ -16,8 +16,8 @@ import {
   OB_SECTION_VARIANTS,
 } from "@/components/onboarding/stepStyles";
 
-
 export const Route = createFileRoute("/onboarding/preview")({
+
   component: SamplePreview,
 });
 
