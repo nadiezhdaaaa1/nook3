@@ -5,6 +5,8 @@ import { profileQueryOptions } from "./profile";
 import { useAppStore, getDefaultSearchName } from "@/lib/store";
 import type { Search } from "@/lib/store";
 import { useOnboardingStore } from "@/lib/onboarding/store";
+import { useHasSession } from "./useHasSession";
+
 
 /**
  * Hydrates the zustand store from Supabase on mount and pushes per-search
