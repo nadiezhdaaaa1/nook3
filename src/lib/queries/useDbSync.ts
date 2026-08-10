@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { searchesQueryOptions, useUpdateSearchMutation } from "./searches";
+import { searchesQueryOptions, useUpdateSearchMutation, useCreateSearchMutation } from "./searches";
 import { profileQueryOptions } from "./profile";
-import { useAppStore } from "@/lib/store";
+import { useAppStore, getDefaultSearchName } from "@/lib/store";
 import type { Search } from "@/lib/store";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 /**
  * Hydrates the zustand store from Supabase on mount and pushes per-search
@@ -14,14 +15,19 @@ import type { Search } from "@/lib/store";
  *  - Zustand remains the in-memory editing buffer (no rewrite of components).
  *  - On hydration: DB rows overwrite local state once.
  *  - On subsequent local changes: debounced patch flushed to DB.
+ *  - First sign-in after onboarding: the onboarding answers are persisted as
+ *    the account's first Search.
  */
 export function useDbSync() {
   const searchesQ = useQuery(searchesQueryOptions());
   const profileQ = useQuery(profileQueryOptions());
   const updateMutation = useUpdateSearchMutation();
+  const createMutation = useCreateSearchMutation();
 
   const hydratedRef = useRef(false);
+  const handoffRef = useRef(false);
   const lastSyncedRef = useRef<Map<string, string>>(new Map());
+
 
   // 1) Hydration: replace zustand state with DB data once both queries resolve.
   useEffect(() => {
