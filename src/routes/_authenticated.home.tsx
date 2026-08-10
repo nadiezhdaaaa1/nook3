@@ -364,7 +364,7 @@ function HomeScreen() {
                   ))}
                 </div>
                 {!isSample && totalPages > 1 && (
-                  <div className="mt-6 flex items-center justify-center gap-2">
+                  <div className="mt-6 flex items-center justify-start gap-2">
                     <OriginButton
                       type="button"
                       variant="tertiary"
