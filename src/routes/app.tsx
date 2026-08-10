@@ -1,9 +1,9 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-// 301 redirect: /app → authenticated alerts dashboard
+// 301 redirect: /app → authenticated home screen
 export const Route = createFileRoute("/app")({
   beforeLoad: () => {
-    throw redirect({ to: "/saved", statusCode: 301 });
+    throw redirect({ to: "/home", statusCode: 301 });
   },
   component: () => null,
 });
