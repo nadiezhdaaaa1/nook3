@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Play, Trash2, ArrowLeft, Menu } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAppStore, switchActiveSearch } from "@/lib/store";
