@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useEffect, useMemo, useState } from "react";
-import { ListFilter } from "lucide-react";
+import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -58,6 +58,35 @@ function alertToListing(a: AlertRow, cityId: CityId): SampleListing {
     coords,
   };
 }
+
+/** Build a compact page-number/ellipsis list for pagination.
+ *  Pattern: first, last, current, and one neighbor on each side; ellipsis fills gaps.
+ */
+function getPaginationItems(page: number, totalPages: number): (number | "ellipsis")[] {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  if (page <= 4) {
+    return [1, 2, 3, 4, 5, "ellipsis", totalPages];
+  }
+
+  if (page >= totalPages - 3) {
+    return [
+      1,
+      "ellipsis",
+      totalPages - 4,
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
+  }
+
+  return [1, "ellipsis", page - 1, page, page + 1, "ellipsis", totalPages];
+}
+
+
 
 function HomeScreen() {
   const search = useActiveSearch();
@@ -340,33 +369,50 @@ function HomeScreen() {
                       type="button"
                       variant="tertiary"
                       size="medium"
+                      className="w-[48px] px-0"
+                      aria-label="Previous page"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1 || paginatedQ.isLoading}
                     >
-                      Previous
+                      <ChevronLeft size={20} strokeWidth={2} />
                     </OriginButton>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                        <OriginButton
-                          key={p}
-                          type="button"
-                          variant={p === page ? "main" : "tertiary"}
-                          size="medium"
-                          onClick={() => setPage(p)}
-                          disabled={paginatedQ.isLoading}
-                        >
-                          {p}
-                        </OriginButton>
-                      ))}
+                      {getPaginationItems(page, totalPages).map((item, idx) =>
+                        item === "ellipsis" ? (
+                          <span
+                            key={`ellipsis-${idx}`}
+                            className="inline-flex h-[48px] w-[48px] items-center justify-center text-[15px] font-medium tracking-[-0.02em] text-[#2B2521]"
+                            aria-hidden="true"
+                          >
+                            …
+                          </span>
+                        ) : (
+                          <OriginButton
+                            key={item}
+                            type="button"
+                            variant={item === page ? "main" : "tertiary"}
+                            size="medium"
+                            className="w-[48px] px-0"
+                            aria-label={`Page ${item}`}
+                            aria-current={item === page ? "page" : undefined}
+                            onClick={() => setPage(item)}
+                            disabled={paginatedQ.isLoading}
+                          >
+                            {item}
+                          </OriginButton>
+                        ),
+                      )}
                     </div>
                     <OriginButton
                       type="button"
                       variant="tertiary"
                       size="medium"
+                      className="w-[48px] px-0"
+                      aria-label="Next page"
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages || paginatedQ.isLoading}
                     >
-                      Next
+                      <ChevronRight size={20} strokeWidth={2} />
                     </OriginButton>
                   </div>
                 )}
