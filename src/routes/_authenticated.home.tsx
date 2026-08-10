@@ -369,33 +369,50 @@ function HomeScreen() {
                       type="button"
                       variant="tertiary"
                       size="medium"
+                      className="w-[48px] px-0"
+                      aria-label="Previous page"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1 || paginatedQ.isLoading}
                     >
-                      Previous
+                      <ChevronLeft size={20} strokeWidth={2} />
                     </OriginButton>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                        <OriginButton
-                          key={p}
-                          type="button"
-                          variant={p === page ? "main" : "tertiary"}
-                          size="medium"
-                          onClick={() => setPage(p)}
-                          disabled={paginatedQ.isLoading}
-                        >
-                          {p}
-                        </OriginButton>
-                      ))}
+                      {getPaginationItems(page, totalPages).map((item, idx) =>
+                        item === "ellipsis" ? (
+                          <span
+                            key={`ellipsis-${idx}`}
+                            className="inline-flex h-[48px] w-[48px] items-center justify-center text-[15px] font-medium tracking-[-0.02em] text-[#2B2521]"
+                            aria-hidden="true"
+                          >
+                            …
+                          </span>
+                        ) : (
+                          <OriginButton
+                            key={item}
+                            type="button"
+                            variant={item === page ? "main" : "tertiary"}
+                            size="medium"
+                            className="w-[48px] px-0"
+                            aria-label={`Page ${item}`}
+                            aria-current={item === page ? "page" : undefined}
+                            onClick={() => setPage(item)}
+                            disabled={paginatedQ.isLoading}
+                          >
+                            {item}
+                          </OriginButton>
+                        ),
+                      )}
                     </div>
                     <OriginButton
                       type="button"
                       variant="tertiary"
                       size="medium"
+                      className="w-[48px] px-0"
+                      aria-label="Next page"
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages || paginatedQ.isLoading}
                     >
-                      Next
+                      <ChevronRight size={20} strokeWidth={2} />
                     </OriginButton>
                   </div>
                 )}
