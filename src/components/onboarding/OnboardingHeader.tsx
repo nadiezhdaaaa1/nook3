@@ -102,9 +102,10 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
         onStay={() => setExitOpen(false)}
         onExit={() => {
           setExitOpen(false);
-          window.location.href = "/";
+          navigate({ to: "/" });
         }}
       />
+
     </>
   );
 }
