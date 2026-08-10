@@ -157,13 +157,13 @@ export function SampleListingsMap({
     markersRef.current.forEach((m, id) => {
       const isActive = id === activeId;
       const label = m.getLabel() as google.maps.MarkerLabel;
-      label.color = isActive ? "#fafaf7" : "#0d0d0d";
+      label.color = isActive ? "#6A820A" : "#ffffff";
       m.setIcon({
         path: google.maps.SymbolPath.CIRCLE,
         scale: 22,
-        fillColor: isActive ? "#0d0d0d" : "#fafaf7",
+        fillColor: isActive ? "#ffffff" : "#6A820A",
         fillOpacity: 1,
-        strokeColor: "#0d0d0d",
+        strokeColor: "#6A820A",
         strokeWeight: 2,
       });
       m.setLabel(label);
