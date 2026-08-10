@@ -299,20 +299,20 @@ function AccountPage() {
         }}
       />
 
-      <SyncProfile email={email} timezone={timezone} cycle={cycle} update={updateProfile} />
+      <SyncProfile email={email} timezone={timezone} update={updateProfile} />
     </div>
   );
 }
 
 function SyncProfile({
-  email, timezone, cycle, update,
+  email, timezone, update,
 }: {
-  email: string; timezone: string; cycle: BillingCycle;
+  email: string; timezone: string;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
   useEffect(() => {
-    update({ email, timezone, billingCycle: cycle });
-  }, [email, timezone, cycle, update]);
+    update({ email, timezone });
+  }, [email, timezone, update]);
   return null;
 }
 
