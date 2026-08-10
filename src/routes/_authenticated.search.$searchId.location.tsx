@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/location"
 function LocationTab() {
   const { city, neighborhoods, transit, cycleTransit, setTransit } = useOnboardingStore();
   const cityConfig = getCity(city);
+  const [showAllLines, setShowAllLines] = useState(false);
   const allLines = cityConfig?.transit.lines ?? [];
   const smartLines = useMemo(() => {
     if (neighborhoods.length === 0) return allLines;
