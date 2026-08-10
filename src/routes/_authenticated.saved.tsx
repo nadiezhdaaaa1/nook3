@@ -261,10 +261,10 @@ function summaryBits(s: Search): string[] {
   );
   if (s.rentProtection !== "all") bits.push("Rent-protected only");
   if (!s.includeBrokerFee) bits.push("No broker fee");
-  const amen = Object.entries(s.amenities).filter(([, v]) => v === "must").length;
+  const amen = Object.entries(s.amenities).filter(([, v]) => v === "required").length;
   if (amen > 0) bits.push(`${amen} must-have amenit${amen === 1 ? "y" : "ies"}`);
   if (s.transit.hasPreference) {
-    const lines = Object.entries(s.transit.lines).filter(([, v]) => v !== "off").length;
+    const lines = Object.keys(s.transit.lines).length;
     if (lines > 0) bits.push(`${lines} transit line${lines === 1 ? "" : "s"}`);
   }
   if (s.commute.maxMinutes) bits.push(`≤${s.commute.maxMinutes} min commute`);
