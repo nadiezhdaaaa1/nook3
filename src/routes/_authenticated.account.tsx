@@ -1602,6 +1602,115 @@ function PlanCard({
   );
 }
 
+function CurrentPlanCard({
+  plan,
+  currentPlan,
+  cycle,
+  trialActive,
+  periodEnd,
+  onCancelRequest,
+}: {
+  plan: Plan;
+  currentPlan: PlanDef;
+  cycle: BillingCycle;
+  trialActive: boolean;
+  periodEnd: string;
+  onCancelRequest: () => void;
+}) {
+  const isPaid = plan !== "free";
+  const dark = isPaid;
+
+  const cardStyle: React.CSSProperties = dark
+    ? {
+        backgroundColor: "#2c2415",
+        backgroundImage: plan === "max" ? COOL_BG : WARM_BG,
+        boxShadow:
+          "0px 2px 1px rgba(36,28,18,0.08), 0px 24px 14px rgba(36,28,18,0.28)",
+        color: "#f8f3e1",
+        borderRadius: 24,
+      }
+    : {
+        background: "#ffffff",
+        border: "1px solid rgba(0,0,0,0.20)",
+        color: "#241c12",
+        borderRadius: 24,
+      };
+
+  const ink = dark ? "#f8f3e1" : "#241c12";
+  const muted = dark ? "rgba(248,243,225,0.72)" : "#5a5a55";
+  const subtle = dark ? "rgba(248,243,225,0.70)" : "#5a5a55";
+
+  const price = isPaid
+    ? (cycle === "annual" ? `$${currentPlan.annual}` : `$${currentPlan.monthly}`)
+    : "$0";
+  const suffix = isPaid
+    ? (cycle === "annual" ? "/year" : "/month")
+    : "forever";
+
+  return (
+    <div className="p-8" style={cardStyle}>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div
+            className="text-[11px] font-semibold uppercase tracking-[0.16em]"
+            style={{ color: muted }}
+          >
+            Current plan
+          </div>
+          <div className="mt-2 flex flex-wrap items-baseline gap-2">
+            <span
+              className="font-display"
+              style={{ fontWeight: 700, fontSize: 26, color: ink }}
+            >
+              {currentPlan.label}
+              {isPaid && cycle === "annual" ? " (annual)" : ""}
+            </span>
+            <span
+              className="text-[16px] font-semibold"
+              style={{ color: ink }}
+            >
+              {price}
+            </span>
+            <span className="text-[14px]" style={{ color: subtle }}>
+              {suffix}
+            </span>
+          </div>
+          {isPaid && (
+            <div className="mt-1 text-[14px]" style={{ color: muted }}>
+              {trialActive ? "3-day free trial, then " : ""}
+              billed {cycle === "annual" ? "annually" : "monthly"} · cancel anytime
+              {periodEnd ? ` · next billing ${periodEnd}` : ""}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById("plan-options");
+              el?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="text-sm font-semibold underline-offset-4 hover:underline"
+            style={{ color: ink }}
+          >
+            Change plan
+          </button>
+          {isPaid && (
+            <button
+              type="button"
+              onClick={onCancelRequest}
+              className="text-sm font-semibold underline-offset-4 hover:underline"
+              style={{ color: ink, opacity: 0.85 }}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SubscriptionSection({
   plan, cycle, setCycle, trialActive, currentPlan,
 }: {
