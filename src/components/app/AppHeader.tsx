@@ -79,7 +79,9 @@ function MobileNavItem({
 
   return (
     <DropdownMenuItem
+      disabled={disabled}
       onSelect={() => {
+        if (disabled) return;
         navigate({ to });
       }}
       onPointerEnter={handlePointerEnter}
@@ -89,9 +91,10 @@ function MobileNavItem({
       className={cn(
         "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] bg-[#FAF6EE] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
         isActive && "bg-[#241C12] text-white focus:bg-[#241C12] focus:text-white",
+        disabled && "cursor-not-allowed opacity-50",
       )}
     >
-      {!isActive && (
+      {!isActive && !disabled && (
         <motion.span
           animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
           aria-hidden
@@ -114,13 +117,18 @@ function MobileNavItem({
           className={cn("shrink-0", isActive ? "text-white" : "text-[#241C12]")}
           aria-hidden
         />
-        <span
-          className={cn(
-            "text-[14px] font-semibold leading-5",
-            isActive ? "text-white" : "text-[#241C12]",
+        <span className="flex flex-col">
+          <span
+            className={cn(
+              "text-[14px] font-semibold leading-5",
+              isActive ? "text-white" : "text-[#241C12]",
+            )}
+          >
+            {label}
+          </span>
+          {disabled && (
+            <span className="text-[12px] leading-4 opacity-70">(coming soon)</span>
           )}
-        >
-          {label}
         </span>
       </span>
     </DropdownMenuItem>
