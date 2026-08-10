@@ -58,7 +58,7 @@ export function PlanBadge({
   return (
     <span
       className={cn(base, isMax ? "w-[50px]" : "w-[84px]", "text-white", className)}
-      style={{ backgroundColor: "#2C2415" }}
+      style={{ backgroundColor: isMax ? "#7040C1" : "#6A820A" }}
     >
       <span
         aria-hidden
