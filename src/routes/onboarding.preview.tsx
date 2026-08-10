@@ -220,7 +220,7 @@ function SamplePreview() {
           <div
             className="sticky bottom-0 z-20 -mx-6 mt-6"
             style={{
-              padding: "40px 20px 0px",
+              padding: "40px 20px 24px",
               background:
                 "linear-gradient(180deg, rgba(250,246,238,0) 0%, #FAF6EE 16%, #FAF6EE 100%)",
             }}
