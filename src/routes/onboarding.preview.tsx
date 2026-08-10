@@ -36,7 +36,6 @@ function SamplePreview() {
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [openWrenId, setOpenWrenId] = useState<string | null>(null);
 
   // Mobile: keep the preview container as the only scrollport so the sticky header behaves.
   useEffect(() => {
@@ -183,8 +182,6 @@ function SamplePreview() {
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
                     onHover={setHoveredId}
-                    openId={openWrenId}
-                    setOpenId={setOpenWrenId}
                   />
 
                 ))}
