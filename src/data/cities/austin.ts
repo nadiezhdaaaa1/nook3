@@ -4,6 +4,7 @@ export const austin: CityConfig = {
   id: "austin",
   name: "austin",
   displayName: "Austin",
+  shortName: "ATX",
   state: "TX",
   iconEmoji: "🎸",
   budget: { min: 1000, max: 5500, default: 2200, median1BR: 1800, step: 100 },

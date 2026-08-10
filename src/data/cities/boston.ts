@@ -4,6 +4,7 @@ export const boston: CityConfig = {
   id: "boston",
   name: "boston",
   displayName: "Boston",
+  shortName: "BOS",
   state: "MA",
   iconEmoji: "⚓",
   budget: { min: 1400, max: 8000, default: 3000, median1BR: 2900, step: 100 },

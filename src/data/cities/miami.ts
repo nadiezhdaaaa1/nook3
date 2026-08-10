@@ -4,6 +4,7 @@ export const miami: CityConfig = {
   id: "miami",
   name: "miami",
   displayName: "Miami",
+  shortName: "MIA",
   state: "FL",
   iconEmoji: "🏖️",
   budget: { min: 1300, max: 7000, default: 2600, median1BR: 2800, step: 100 },

@@ -5,6 +5,7 @@ export const la: CityConfig = {
   id: "la",
   name: "la",
   displayName: "Los Angeles",
+  shortName: "LA",
   state: "CA",
   iconEmoji: "🌴",
   budget: { min: 1200, max: 10000, default: 3200, median1BR: 2800, step: 100 },

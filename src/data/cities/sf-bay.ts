@@ -5,6 +5,7 @@ export const sfBay: CityConfig = {
   id: "sf-bay",
   name: "sf-bay",
   displayName: "San Francisco Bay",
+  shortName: "SF",
   state: "CA",
   iconEmoji: "🌉",
   budget: { min: 1500, max: 12000, default: 3800, median1BR: 3400, step: 100 },
