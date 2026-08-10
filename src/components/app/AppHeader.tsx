@@ -30,7 +30,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
   return (
     <header
       className="sticky top-0 z-40 w-full border-b border-black/[0.08] backdrop-blur font-['Google_Sans_Flex',sans-serif]"
-      style={{ backgroundColor: "rgba(244, 241, 234, 0.95)" }}
+      style={{ backgroundColor: "#FAF8F3" }}
     >
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-10">
         <div className="flex items-center gap-6">
