@@ -66,18 +66,19 @@ export function ListingActions({ saved, saving, onToggleSave, onDislike, onRepor
           aria-label="Not interested in this listing"
           className={ICON_BTN}
         >
-          <ThumbsDown className="h-[18px] w-[18px]" color="#6e6459" />
-        </OriginButton>
+        <ThumbsDown className="h-4 w-4" color="#6e6459" />
+      </OriginButton>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <OriginButton
-              variant="tertiary"
-              size="medium"
-              aria-label="Report this listing"
-              className={ICON_BTN}
-            >
-              <Flag className="h-[18px] w-[18px]" color="#6e6459" />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            aria-label="Report this listing"
+            className={ICON_BTN}
+          >
+            <Flag className="h-4 w-4" color="#6e6459" />
+
             </OriginButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
