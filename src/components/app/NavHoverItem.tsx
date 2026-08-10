@@ -42,8 +42,8 @@ export function NavHoverItem({
   const [origin, setOrigin] = React.useState({ x: 0, y: 0 });
   const [coverSize, setCoverSize] = React.useState(0);
 
-  const router = useRouter();
-  const isActive = to ? router.state.location.pathname === to : false;
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isActive = to ? pathname === to : false;
 
   const handleEnter = (event: React.PointerEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
