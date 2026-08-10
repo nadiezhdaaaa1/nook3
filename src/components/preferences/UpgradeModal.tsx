@@ -52,7 +52,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
         <div className="flex flex-col gap-6 px-6 pt-8 pb-6">
           {/* Header */}
           <div className="flex flex-col gap-3">
-            <div className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-peach-900">
+            <div className="inline-flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.18em] text-peach-900">
               <Sparkles className="h-3 w-3" /> Plan limit reached
             </div>
             <h2 className="font-display text-[28px] font-bold leading-tight tracking-[-0.04em] text-charcoal-950">
