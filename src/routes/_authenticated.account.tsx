@@ -345,8 +345,8 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-        <Icon className="h-3 w-3" /> {label}
+      <label htmlFor={id} className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-700">
+        {Icon && <Icon className="h-3.5 w-3.5" />} {label}
       </label>
       {children}
       {error && <p className="text-xs text-danger">{error}</p>}
