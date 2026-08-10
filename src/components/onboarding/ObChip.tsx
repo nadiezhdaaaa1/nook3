@@ -37,7 +37,7 @@ export function ObChip({
       className={cn(
         OB_CHIP_CLASS,
         fullWidth && "w-full justify-start text-left",
-        isSmall && "h-auto px-3 py-2 text-[14px]",
+        isSmall && "min-w-[40px] px-3 py-2 text-[14px]",
         className,
       )}
       {...props}
