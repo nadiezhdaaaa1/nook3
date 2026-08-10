@@ -232,7 +232,7 @@ function LoggedInState() {
         weeks of Premium, your own link lives on your Referrals page.
       </p>
       <Link
-        to="/preferences/referrals"
+        to="/referrals"
         className="block w-full text-center bg-charcoal-950 text-paper text-[16px] font-semibold py-4 rounded-full hover:bg-charcoal-800 transition-colors"
       >
         Go to my referrals <ArrowRight className="inline h-4 w-4 ml-1 -mt-0.5" strokeWidth={2} />

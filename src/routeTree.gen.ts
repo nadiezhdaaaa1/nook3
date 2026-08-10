@@ -19,9 +19,9 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FairHousingRouteImport } from './routes/fair-housing'
 import { Route as DoNotSellRouteImport } from './routes/do-not-sell'
@@ -33,8 +33,10 @@ import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PreferencesIndexRouteImport } from './routes/preferences.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RCodeRouteImport } from './routes/r.$code'
+import { Route as PreferencesSplatRouteImport } from './routes/preferences.$'
 import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
@@ -45,17 +47,19 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ApiWrenTranscribeRouteImport } from './routes/api/wren-transcribe'
 import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
-import { Route as AuthenticatedPreferencesRouteImport } from './routes/_authenticated.preferences'
-import { Route as AuthenticatedPreferencesIndexRouteImport } from './routes/_authenticated.preferences.index'
+import { Route as AuthenticatedWrenRouteImport } from './routes/_authenticated.wren'
+import { Route as AuthenticatedSavedRouteImport } from './routes/_authenticated.saved'
+import { Route as AuthenticatedReferralsRouteImport } from './routes/_authenticated.referrals'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated.account'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
-import { Route as AuthenticatedPreferencesWrenRouteImport } from './routes/_authenticated.preferences.wren'
-import { Route as AuthenticatedPreferencesReferralsRouteImport } from './routes/_authenticated.preferences.referrals'
-import { Route as AuthenticatedPreferencesLocationRouteImport } from './routes/_authenticated.preferences.location'
-import { Route as AuthenticatedPreferencesBudgetRouteImport } from './routes/_authenticated.preferences.budget'
-import { Route as AuthenticatedPreferencesApartmentRouteImport } from './routes/_authenticated.preferences.apartment'
-import { Route as AuthenticatedPreferencesAlertsRouteImport } from './routes/_authenticated.preferences.alerts'
-import { Route as AuthenticatedPreferencesAccountRouteImport } from './routes/_authenticated.preferences.account'
+import { Route as AuthenticatedSearchSearchIdRouteImport } from './routes/_authenticated.search.$searchId'
+import { Route as AuthenticatedSearchSearchIdIndexRouteImport } from './routes/_authenticated.search.$searchId.index'
 import { Route as ApiPublicRTrackRouteImport } from './routes/api/public/r/track'
+import { Route as AuthenticatedSearchSearchIdNotificationsRouteImport } from './routes/_authenticated.search.$searchId.notifications'
+import { Route as AuthenticatedSearchSearchIdLocationRouteImport } from './routes/_authenticated.search.$searchId.location'
+import { Route as AuthenticatedSearchSearchIdBudgetRouteImport } from './routes/_authenticated.search.$searchId.budget'
+import { Route as AuthenticatedSearchSearchIdApartmentRouteImport } from './routes/_authenticated.search.$searchId.apartment'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -107,6 +111,11 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreferencesRoute = PreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -115,11 +124,6 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -176,6 +180,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreferencesIndexRoute = PreferencesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PreferencesRoute,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -185,6 +194,11 @@ const RCodeRoute = RCodeRouteImport.update({
   id: '/r/$code',
   path: '/r/$code',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PreferencesSplatRoute = PreferencesSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => PreferencesRoute,
 } as any)
 const PostsSlugRoute = PostsSlugRouteImport.update({
   id: '/posts/$slug',
@@ -236,70 +250,77 @@ const ApiContactRoute = ApiContactRouteImport.update({
   path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedPreferencesRoute =
-  AuthenticatedPreferencesRouteImport.update({
-    id: '/preferences',
-    path: '/preferences',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedPreferencesIndexRoute =
-  AuthenticatedPreferencesIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
-  } as any)
+const AuthenticatedWrenRoute = AuthenticatedWrenRouteImport.update({
+  id: '/wren',
+  path: '/wren',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSavedRoute = AuthenticatedSavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReferralsRoute = AuthenticatedReferralsRouteImport.update({
+  id: '/referrals',
+  path: '/referrals',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
   id: '/step/$step',
   path: '/step/$step',
   getParentRoute: () => OnboardingRoute,
 } as any)
-const AuthenticatedPreferencesWrenRoute =
-  AuthenticatedPreferencesWrenRouteImport.update({
-    id: '/wren',
-    path: '/wren',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
+const AuthenticatedSearchSearchIdRoute =
+  AuthenticatedSearchSearchIdRouteImport.update({
+    id: '/search/$searchId',
+    path: '/search/$searchId',
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedPreferencesReferralsRoute =
-  AuthenticatedPreferencesReferralsRouteImport.update({
-    id: '/referrals',
-    path: '/referrals',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
-  } as any)
-const AuthenticatedPreferencesLocationRoute =
-  AuthenticatedPreferencesLocationRouteImport.update({
-    id: '/location',
-    path: '/location',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
-  } as any)
-const AuthenticatedPreferencesBudgetRoute =
-  AuthenticatedPreferencesBudgetRouteImport.update({
-    id: '/budget',
-    path: '/budget',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
-  } as any)
-const AuthenticatedPreferencesApartmentRoute =
-  AuthenticatedPreferencesApartmentRouteImport.update({
-    id: '/apartment',
-    path: '/apartment',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
-  } as any)
-const AuthenticatedPreferencesAlertsRoute =
-  AuthenticatedPreferencesAlertsRouteImport.update({
-    id: '/alerts',
-    path: '/alerts',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
-  } as any)
-const AuthenticatedPreferencesAccountRoute =
-  AuthenticatedPreferencesAccountRouteImport.update({
-    id: '/account',
-    path: '/account',
-    getParentRoute: () => AuthenticatedPreferencesRoute,
+const AuthenticatedSearchSearchIdIndexRoute =
+  AuthenticatedSearchSearchIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSearchSearchIdRoute,
   } as any)
 const ApiPublicRTrackRoute = ApiPublicRTrackRouteImport.update({
   id: '/api/public/r/track',
   path: '/api/public/r/track',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSearchSearchIdNotificationsRoute =
+  AuthenticatedSearchSearchIdNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedSearchSearchIdRoute,
+  } as any)
+const AuthenticatedSearchSearchIdLocationRoute =
+  AuthenticatedSearchSearchIdLocationRouteImport.update({
+    id: '/location',
+    path: '/location',
+    getParentRoute: () => AuthenticatedSearchSearchIdRoute,
+  } as any)
+const AuthenticatedSearchSearchIdBudgetRoute =
+  AuthenticatedSearchSearchIdBudgetRouteImport.update({
+    id: '/budget',
+    path: '/budget',
+    getParentRoute: () => AuthenticatedSearchSearchIdRoute,
+  } as any)
+const AuthenticatedSearchSearchIdApartmentRoute =
+  AuthenticatedSearchSearchIdApartmentRouteImport.update({
+    id: '/apartment',
+    path: '/apartment',
+    getParentRoute: () => AuthenticatedSearchSearchIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -312,9 +333,9 @@ export interface FileRoutesByFullPath {
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/preferences': typeof PreferencesRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
@@ -325,7 +346,11 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
-  '/preferences': typeof AuthenticatedPreferencesRouteWithChildren
+  '/account': typeof AuthenticatedAccountRoute
+  '/home': typeof AuthenticatedHomeRoute
+  '/referrals': typeof AuthenticatedReferralsRoute
+  '/saved': typeof AuthenticatedSavedRoute
+  '/wren': typeof AuthenticatedWrenRoute
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
@@ -336,18 +361,18 @@ export interface FileRoutesByFullPath {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/preferences/$': typeof PreferencesSplatRoute
   '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
-  '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
-  '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
-  '/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
-  '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
-  '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
-  '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
-  '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
+  '/preferences/': typeof PreferencesIndexRoute
+  '/search/$searchId': typeof AuthenticatedSearchSearchIdRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
-  '/preferences/': typeof AuthenticatedPreferencesIndexRoute
+  '/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
+  '/search/$searchId/budget': typeof AuthenticatedSearchSearchIdBudgetRoute
+  '/search/$searchId/location': typeof AuthenticatedSearchSearchIdLocationRoute
+  '/search/$searchId/notifications': typeof AuthenticatedSearchSearchIdNotificationsRoute
   '/api/public/r/track': typeof ApiPublicRTrackRoute
+  '/search/$searchId/': typeof AuthenticatedSearchSearchIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -360,7 +385,6 @@ export interface FileRoutesByTo {
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/pricing': typeof PricingRoute
@@ -373,6 +397,11 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/home': typeof AuthenticatedHomeRoute
+  '/referrals': typeof AuthenticatedReferralsRoute
+  '/saved': typeof AuthenticatedSavedRoute
+  '/wren': typeof AuthenticatedWrenRoute
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
@@ -383,18 +412,17 @@ export interface FileRoutesByTo {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/preferences/$': typeof PreferencesSplatRoute
   '/r/$code': typeof RCodeRoute
   '/blog': typeof BlogIndexRoute
-  '/preferences/account': typeof AuthenticatedPreferencesAccountRoute
-  '/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
-  '/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
-  '/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
-  '/preferences/location': typeof AuthenticatedPreferencesLocationRoute
-  '/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
-  '/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
+  '/preferences': typeof PreferencesIndexRoute
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
-  '/preferences': typeof AuthenticatedPreferencesIndexRoute
+  '/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
+  '/search/$searchId/budget': typeof AuthenticatedSearchSearchIdBudgetRoute
+  '/search/$searchId/location': typeof AuthenticatedSearchSearchIdLocationRoute
+  '/search/$searchId/notifications': typeof AuthenticatedSearchSearchIdNotificationsRoute
   '/api/public/r/track': typeof ApiPublicRTrackRoute
+  '/search/$searchId': typeof AuthenticatedSearchSearchIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -409,9 +437,9 @@ export interface FileRoutesById {
   '/do-not-sell': typeof DoNotSellRoute
   '/fair-housing': typeof FairHousingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
+  '/preferences': typeof PreferencesRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
@@ -422,7 +450,11 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
-  '/_authenticated/preferences': typeof AuthenticatedPreferencesRouteWithChildren
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/referrals': typeof AuthenticatedReferralsRoute
+  '/_authenticated/saved': typeof AuthenticatedSavedRoute
+  '/_authenticated/wren': typeof AuthenticatedWrenRoute
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
@@ -433,18 +465,18 @@ export interface FileRoutesById {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
+  '/preferences/$': typeof PreferencesSplatRoute
   '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
-  '/_authenticated/preferences/account': typeof AuthenticatedPreferencesAccountRoute
-  '/_authenticated/preferences/alerts': typeof AuthenticatedPreferencesAlertsRoute
-  '/_authenticated/preferences/apartment': typeof AuthenticatedPreferencesApartmentRoute
-  '/_authenticated/preferences/budget': typeof AuthenticatedPreferencesBudgetRoute
-  '/_authenticated/preferences/location': typeof AuthenticatedPreferencesLocationRoute
-  '/_authenticated/preferences/referrals': typeof AuthenticatedPreferencesReferralsRoute
-  '/_authenticated/preferences/wren': typeof AuthenticatedPreferencesWrenRoute
+  '/preferences/': typeof PreferencesIndexRoute
+  '/_authenticated/search/$searchId': typeof AuthenticatedSearchSearchIdRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
-  '/_authenticated/preferences/': typeof AuthenticatedPreferencesIndexRoute
+  '/_authenticated/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
+  '/_authenticated/search/$searchId/budget': typeof AuthenticatedSearchSearchIdBudgetRoute
+  '/_authenticated/search/$searchId/location': typeof AuthenticatedSearchSearchIdLocationRoute
+  '/_authenticated/search/$searchId/notifications': typeof AuthenticatedSearchSearchIdNotificationsRoute
   '/api/public/r/track': typeof ApiPublicRTrackRoute
+  '/_authenticated/search/$searchId/': typeof AuthenticatedSearchSearchIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -459,9 +491,9 @@ export interface FileRouteTypes {
     | '/do-not-sell'
     | '/fair-housing'
     | '/forgot-password'
-    | '/home'
     | '/login'
     | '/onboarding'
+    | '/preferences'
     | '/pricing'
     | '/privacy'
     | '/refunds'
@@ -472,7 +504,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
-    | '/preferences'
+    | '/account'
+    | '/home'
+    | '/referrals'
+    | '/saved'
+    | '/wren'
     | '/api/contact'
     | '/api/wren-chat'
     | '/api/wren-transcribe'
@@ -483,18 +519,18 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
+    | '/preferences/$'
     | '/r/$code'
     | '/blog/'
-    | '/preferences/account'
-    | '/preferences/alerts'
-    | '/preferences/apartment'
-    | '/preferences/budget'
-    | '/preferences/location'
-    | '/preferences/referrals'
-    | '/preferences/wren'
-    | '/onboarding/step/$step'
     | '/preferences/'
+    | '/search/$searchId'
+    | '/onboarding/step/$step'
+    | '/search/$searchId/apartment'
+    | '/search/$searchId/budget'
+    | '/search/$searchId/location'
+    | '/search/$searchId/notifications'
     | '/api/public/r/track'
+    | '/search/$searchId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -507,7 +543,6 @@ export interface FileRouteTypes {
     | '/do-not-sell'
     | '/fair-housing'
     | '/forgot-password'
-    | '/home'
     | '/login'
     | '/onboarding'
     | '/pricing'
@@ -520,6 +555,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
+    | '/account'
+    | '/home'
+    | '/referrals'
+    | '/saved'
+    | '/wren'
     | '/api/contact'
     | '/api/wren-chat'
     | '/api/wren-transcribe'
@@ -530,18 +570,17 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
+    | '/preferences/$'
     | '/r/$code'
     | '/blog'
-    | '/preferences/account'
-    | '/preferences/alerts'
-    | '/preferences/apartment'
-    | '/preferences/budget'
-    | '/preferences/location'
-    | '/preferences/referrals'
-    | '/preferences/wren'
-    | '/onboarding/step/$step'
     | '/preferences'
+    | '/onboarding/step/$step'
+    | '/search/$searchId/apartment'
+    | '/search/$searchId/budget'
+    | '/search/$searchId/location'
+    | '/search/$searchId/notifications'
     | '/api/public/r/track'
+    | '/search/$searchId'
   id:
     | '__root__'
     | '/'
@@ -555,9 +594,9 @@ export interface FileRouteTypes {
     | '/do-not-sell'
     | '/fair-housing'
     | '/forgot-password'
-    | '/home'
     | '/login'
     | '/onboarding'
+    | '/preferences'
     | '/pricing'
     | '/privacy'
     | '/refunds'
@@ -568,7 +607,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
-    | '/_authenticated/preferences'
+    | '/_authenticated/account'
+    | '/_authenticated/home'
+    | '/_authenticated/referrals'
+    | '/_authenticated/saved'
+    | '/_authenticated/wren'
     | '/api/contact'
     | '/api/wren-chat'
     | '/api/wren-transcribe'
@@ -579,18 +622,18 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
+    | '/preferences/$'
     | '/r/$code'
     | '/blog/'
-    | '/_authenticated/preferences/account'
-    | '/_authenticated/preferences/alerts'
-    | '/_authenticated/preferences/apartment'
-    | '/_authenticated/preferences/budget'
-    | '/_authenticated/preferences/location'
-    | '/_authenticated/preferences/referrals'
-    | '/_authenticated/preferences/wren'
+    | '/preferences/'
+    | '/_authenticated/search/$searchId'
     | '/onboarding/step/$step'
-    | '/_authenticated/preferences/'
+    | '/_authenticated/search/$searchId/apartment'
+    | '/_authenticated/search/$searchId/budget'
+    | '/_authenticated/search/$searchId/location'
+    | '/_authenticated/search/$searchId/notifications'
     | '/api/public/r/track'
+    | '/_authenticated/search/$searchId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -605,9 +648,9 @@ export interface RootRouteChildren {
   DoNotSellRoute: typeof DoNotSellRoute
   FairHousingRoute: typeof FairHousingRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
+  PreferencesRoute: typeof PreferencesRouteWithChildren
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
@@ -701,6 +744,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preferences': {
+      id: '/preferences'
+      path: '/preferences'
+      fullPath: '/preferences'
+      preLoaderRoute: typeof PreferencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -713,13 +763,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -799,6 +842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preferences/': {
+      id: '/preferences/'
+      path: '/'
+      fullPath: '/preferences/'
+      preLoaderRoute: typeof PreferencesIndexRouteImport
+      parentRoute: typeof PreferencesRoute
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -812,6 +862,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/r/$code'
       preLoaderRoute: typeof RCodeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/preferences/$': {
+      id: '/preferences/$'
+      path: '/$'
+      fullPath: '/preferences/$'
+      preLoaderRoute: typeof PreferencesSplatRouteImport
+      parentRoute: typeof PreferencesRoute
     }
     '/posts/$slug': {
       id: '/posts/$slug'
@@ -883,19 +940,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/preferences': {
-      id: '/_authenticated/preferences'
-      path: '/preferences'
-      fullPath: '/preferences'
-      preLoaderRoute: typeof AuthenticatedPreferencesRouteImport
+    '/_authenticated/wren': {
+      id: '/_authenticated/wren'
+      path: '/wren'
+      fullPath: '/wren'
+      preLoaderRoute: typeof AuthenticatedWrenRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/preferences/': {
-      id: '/_authenticated/preferences/'
-      path: '/'
-      fullPath: '/preferences/'
-      preLoaderRoute: typeof AuthenticatedPreferencesIndexRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
+    '/_authenticated/saved': {
+      id: '/_authenticated/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof AuthenticatedSavedRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/referrals': {
+      id: '/_authenticated/referrals'
+      path: '/referrals'
+      fullPath: '/referrals'
+      preLoaderRoute: typeof AuthenticatedReferralsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/onboarding/step/$step': {
       id: '/onboarding/step/$step'
@@ -904,54 +982,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingStepStepRouteImport
       parentRoute: typeof OnboardingRoute
     }
-    '/_authenticated/preferences/wren': {
-      id: '/_authenticated/preferences/wren'
-      path: '/wren'
-      fullPath: '/preferences/wren'
-      preLoaderRoute: typeof AuthenticatedPreferencesWrenRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
+    '/_authenticated/search/$searchId': {
+      id: '/_authenticated/search/$searchId'
+      path: '/search/$searchId'
+      fullPath: '/search/$searchId'
+      preLoaderRoute: typeof AuthenticatedSearchSearchIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/preferences/referrals': {
-      id: '/_authenticated/preferences/referrals'
-      path: '/referrals'
-      fullPath: '/preferences/referrals'
-      preLoaderRoute: typeof AuthenticatedPreferencesReferralsRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
-    }
-    '/_authenticated/preferences/location': {
-      id: '/_authenticated/preferences/location'
-      path: '/location'
-      fullPath: '/preferences/location'
-      preLoaderRoute: typeof AuthenticatedPreferencesLocationRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
-    }
-    '/_authenticated/preferences/budget': {
-      id: '/_authenticated/preferences/budget'
-      path: '/budget'
-      fullPath: '/preferences/budget'
-      preLoaderRoute: typeof AuthenticatedPreferencesBudgetRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
-    }
-    '/_authenticated/preferences/apartment': {
-      id: '/_authenticated/preferences/apartment'
-      path: '/apartment'
-      fullPath: '/preferences/apartment'
-      preLoaderRoute: typeof AuthenticatedPreferencesApartmentRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
-    }
-    '/_authenticated/preferences/alerts': {
-      id: '/_authenticated/preferences/alerts'
-      path: '/alerts'
-      fullPath: '/preferences/alerts'
-      preLoaderRoute: typeof AuthenticatedPreferencesAlertsRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
-    }
-    '/_authenticated/preferences/account': {
-      id: '/_authenticated/preferences/account'
-      path: '/account'
-      fullPath: '/preferences/account'
-      preLoaderRoute: typeof AuthenticatedPreferencesAccountRouteImport
-      parentRoute: typeof AuthenticatedPreferencesRoute
+    '/_authenticated/search/$searchId/': {
+      id: '/_authenticated/search/$searchId/'
+      path: '/'
+      fullPath: '/search/$searchId/'
+      preLoaderRoute: typeof AuthenticatedSearchSearchIdIndexRouteImport
+      parentRoute: typeof AuthenticatedSearchSearchIdRoute
     }
     '/api/public/r/track': {
       id: '/api/public/r/track'
@@ -960,46 +1003,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicRTrackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/search/$searchId/notifications': {
+      id: '/_authenticated/search/$searchId/notifications'
+      path: '/notifications'
+      fullPath: '/search/$searchId/notifications'
+      preLoaderRoute: typeof AuthenticatedSearchSearchIdNotificationsRouteImport
+      parentRoute: typeof AuthenticatedSearchSearchIdRoute
+    }
+    '/_authenticated/search/$searchId/location': {
+      id: '/_authenticated/search/$searchId/location'
+      path: '/location'
+      fullPath: '/search/$searchId/location'
+      preLoaderRoute: typeof AuthenticatedSearchSearchIdLocationRouteImport
+      parentRoute: typeof AuthenticatedSearchSearchIdRoute
+    }
+    '/_authenticated/search/$searchId/budget': {
+      id: '/_authenticated/search/$searchId/budget'
+      path: '/budget'
+      fullPath: '/search/$searchId/budget'
+      preLoaderRoute: typeof AuthenticatedSearchSearchIdBudgetRouteImport
+      parentRoute: typeof AuthenticatedSearchSearchIdRoute
+    }
+    '/_authenticated/search/$searchId/apartment': {
+      id: '/_authenticated/search/$searchId/apartment'
+      path: '/apartment'
+      fullPath: '/search/$searchId/apartment'
+      preLoaderRoute: typeof AuthenticatedSearchSearchIdApartmentRouteImport
+      parentRoute: typeof AuthenticatedSearchSearchIdRoute
+    }
   }
 }
 
-interface AuthenticatedPreferencesRouteChildren {
-  AuthenticatedPreferencesAccountRoute: typeof AuthenticatedPreferencesAccountRoute
-  AuthenticatedPreferencesAlertsRoute: typeof AuthenticatedPreferencesAlertsRoute
-  AuthenticatedPreferencesApartmentRoute: typeof AuthenticatedPreferencesApartmentRoute
-  AuthenticatedPreferencesBudgetRoute: typeof AuthenticatedPreferencesBudgetRoute
-  AuthenticatedPreferencesLocationRoute: typeof AuthenticatedPreferencesLocationRoute
-  AuthenticatedPreferencesReferralsRoute: typeof AuthenticatedPreferencesReferralsRoute
-  AuthenticatedPreferencesWrenRoute: typeof AuthenticatedPreferencesWrenRoute
-  AuthenticatedPreferencesIndexRoute: typeof AuthenticatedPreferencesIndexRoute
+interface AuthenticatedSearchSearchIdRouteChildren {
+  AuthenticatedSearchSearchIdApartmentRoute: typeof AuthenticatedSearchSearchIdApartmentRoute
+  AuthenticatedSearchSearchIdBudgetRoute: typeof AuthenticatedSearchSearchIdBudgetRoute
+  AuthenticatedSearchSearchIdLocationRoute: typeof AuthenticatedSearchSearchIdLocationRoute
+  AuthenticatedSearchSearchIdNotificationsRoute: typeof AuthenticatedSearchSearchIdNotificationsRoute
+  AuthenticatedSearchSearchIdIndexRoute: typeof AuthenticatedSearchSearchIdIndexRoute
 }
 
-const AuthenticatedPreferencesRouteChildren: AuthenticatedPreferencesRouteChildren =
+const AuthenticatedSearchSearchIdRouteChildren: AuthenticatedSearchSearchIdRouteChildren =
   {
-    AuthenticatedPreferencesAccountRoute: AuthenticatedPreferencesAccountRoute,
-    AuthenticatedPreferencesAlertsRoute: AuthenticatedPreferencesAlertsRoute,
-    AuthenticatedPreferencesApartmentRoute:
-      AuthenticatedPreferencesApartmentRoute,
-    AuthenticatedPreferencesBudgetRoute: AuthenticatedPreferencesBudgetRoute,
-    AuthenticatedPreferencesLocationRoute:
-      AuthenticatedPreferencesLocationRoute,
-    AuthenticatedPreferencesReferralsRoute:
-      AuthenticatedPreferencesReferralsRoute,
-    AuthenticatedPreferencesWrenRoute: AuthenticatedPreferencesWrenRoute,
-    AuthenticatedPreferencesIndexRoute: AuthenticatedPreferencesIndexRoute,
+    AuthenticatedSearchSearchIdApartmentRoute:
+      AuthenticatedSearchSearchIdApartmentRoute,
+    AuthenticatedSearchSearchIdBudgetRoute:
+      AuthenticatedSearchSearchIdBudgetRoute,
+    AuthenticatedSearchSearchIdLocationRoute:
+      AuthenticatedSearchSearchIdLocationRoute,
+    AuthenticatedSearchSearchIdNotificationsRoute:
+      AuthenticatedSearchSearchIdNotificationsRoute,
+    AuthenticatedSearchSearchIdIndexRoute:
+      AuthenticatedSearchSearchIdIndexRoute,
   }
 
-const AuthenticatedPreferencesRouteWithChildren =
-  AuthenticatedPreferencesRoute._addFileChildren(
-    AuthenticatedPreferencesRouteChildren,
+const AuthenticatedSearchSearchIdRouteWithChildren =
+  AuthenticatedSearchSearchIdRoute._addFileChildren(
+    AuthenticatedSearchSearchIdRouteChildren,
   )
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedPreferencesRoute: typeof AuthenticatedPreferencesRouteWithChildren
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedReferralsRoute: typeof AuthenticatedReferralsRoute
+  AuthenticatedSavedRoute: typeof AuthenticatedSavedRoute
+  AuthenticatedWrenRoute: typeof AuthenticatedWrenRoute
+  AuthenticatedSearchSearchIdRoute: typeof AuthenticatedSearchSearchIdRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedPreferencesRoute: AuthenticatedPreferencesRouteWithChildren,
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedReferralsRoute: AuthenticatedReferralsRoute,
+  AuthenticatedSavedRoute: AuthenticatedSavedRoute,
+  AuthenticatedWrenRoute: AuthenticatedWrenRoute,
+  AuthenticatedSearchSearchIdRoute:
+    AuthenticatedSearchSearchIdRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -1026,6 +1104,20 @@ const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
   OnboardingRouteChildren,
 )
 
+interface PreferencesRouteChildren {
+  PreferencesSplatRoute: typeof PreferencesSplatRoute
+  PreferencesIndexRoute: typeof PreferencesIndexRoute
+}
+
+const PreferencesRouteChildren: PreferencesRouteChildren = {
+  PreferencesSplatRoute: PreferencesSplatRoute,
+  PreferencesIndexRoute: PreferencesIndexRoute,
+}
+
+const PreferencesRouteWithChildren = PreferencesRoute._addFileChildren(
+  PreferencesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -1038,9 +1130,9 @@ const rootRouteChildren: RootRouteChildren = {
   DoNotSellRoute: DoNotSellRoute,
   FairHousingRoute: FairHousingRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
+  PreferencesRoute: PreferencesRouteWithChildren,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
@@ -1064,13 +1156,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-// 301 redirect: /app → authenticated home screen
-export const Route = createFileRoute("/app")({
+// Legacy URL: /preferences → new home screen.
+export const Route = createFileRoute("/preferences/")({
   beforeLoad: () => {
     throw redirect({ to: "/home", statusCode: 301 });
   },

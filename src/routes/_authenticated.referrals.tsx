@@ -1,3 +1,4 @@
+import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -8,8 +9,12 @@ import { referralStatsQueryOptions } from "@/lib/queries/referrals";
 import type { ReferralStats } from "@/lib/referrals.functions";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/preferences/referrals")({
-  component: ReferralsPage,
+export const Route = createFileRoute("/_authenticated/referrals")({
+  component: () => (
+    <AppPage title="Referrals" subtitle="Invite friends and earn free trial time.">
+      <ReferralsPage />
+    </AppPage>
+  ),
 });
 
 // 4-week milestone — each signup unlocks +1 week, 4 = 1 free month.

@@ -26,7 +26,7 @@ export const Route = createFileRoute("/signup")({
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getUser();
     if (data.user) {
-      throw redirect({ to: search.redirect ?? "/preferences" });
+      throw redirect({ to: search.redirect ?? "/home" });
     }
   },
   head: () => ({
@@ -81,7 +81,7 @@ function SignupPage() {
       email: emailRes.data!,
       password: pwRes.data!,
       options: {
-        emailRedirectTo: `${window.location.origin}/preferences`,
+        emailRedirectTo: `${window.location.origin}/home`,
         data: metadata,
       },
     });
@@ -95,7 +95,7 @@ function SignupPage() {
     if (data.session) {
       await persistConsentsForCurrentUser(consents);
       toast.success("Account created");
-      navigate({ to: redirectTo ?? "/preferences", replace: true });
+      navigate({ to: redirectTo ?? "/home", replace: true });
     } else {
       stashPendingConsents(consents);
       setSent(true);
@@ -111,7 +111,7 @@ function SignupPage() {
     stashPendingConsents(buildConsents({ marketing, source: "signup_google" }));
     setSubmitting(true);
     const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + (redirectTo ?? "/preferences"),
+      redirect_uri: window.location.origin + (redirectTo ?? "/home"),
     });
     setSubmitting(false);
     if (res?.error) toast.error("Google sign in failed", { description: res.error.message });
