@@ -77,6 +77,60 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_reports: {
+        Row: {
+          alert_id: string | null
+          created_at: string
+          details: string
+          id: string
+          listing: Json
+          listing_ref: string
+          reason: Database["public"]["Enums"]["listing_report_reason"]
+          search_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          alert_id?: string | null
+          created_at?: string
+          details?: string
+          id?: string
+          listing?: Json
+          listing_ref: string
+          reason: Database["public"]["Enums"]["listing_report_reason"]
+          search_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          alert_id?: string | null
+          created_at?: string
+          details?: string
+          id?: string
+          listing?: Json
+          listing_ref?: string
+          reason?: Database["public"]["Enums"]["listing_report_reason"]
+          search_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_reports_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "saved_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_reports_search_id_fkey"
+            columns: ["search_id"]
+            isOneToOne: false
+            referencedRelation: "searches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_subscribers: {
         Row: {
           confirmed_at: string | null
@@ -640,6 +694,14 @@ export type Database = {
         | "investor"
         | "legal"
         | "other"
+      listing_report_reason:
+        | "spam"
+        | "fraud"
+        | "duplicate"
+        | "wrong_price"
+        | "unavailable"
+        | "offensive"
+        | "other"
       search_status: "active" | "paused" | "archived"
     }
     CompositeTypes: {
@@ -781,6 +843,15 @@ export const Constants = {
         "partnership",
         "investor",
         "legal",
+        "other",
+      ],
+      listing_report_reason: [
+        "spam",
+        "fraud",
+        "duplicate",
+        "wrong_price",
+        "unavailable",
+        "offensive",
         "other",
       ],
       search_status: ["active", "paused", "archived"],
