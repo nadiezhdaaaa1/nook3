@@ -386,6 +386,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
           </li>
         ))}
       </ul>
+      {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </div>
   );
 }
