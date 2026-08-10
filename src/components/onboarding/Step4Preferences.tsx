@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { useNavigate, Navigate } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
-import { useStepFlow } from "@/components/onboarding/stepFlow";
+import { useStepFlow, StepRedirect } from "@/components/onboarding/stepFlow";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { OB_H1, OB_SUB, OB_H2, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
@@ -55,7 +54,7 @@ export function Step4Preferences() {
   }, [allLines, neighborhoods]);
 
   if (!cityConfig) {
-    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
+    return <StepRedirect step={1} />;
   }
 
 
