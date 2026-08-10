@@ -130,6 +130,17 @@ function HomeScreen() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
+  const [mapFullscreen, setMapFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (!mapFullscreen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMapFullscreen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mapFullscreen]);
+
 
 
   const updateStatus = useUpdateAlertStatusMutation();
