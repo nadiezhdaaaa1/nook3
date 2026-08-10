@@ -29,7 +29,7 @@ import {
 } from "@/lib/queries/alerts";
 import type { AlertRow } from "@/lib/alerts.functions";
 
-export const Route = createFileRoute("/_authenticated/preferences/alerts")({
+export const Route = createFileRoute("/_authenticated/saved")({
   component: SavedAlertsPage,
 });
 

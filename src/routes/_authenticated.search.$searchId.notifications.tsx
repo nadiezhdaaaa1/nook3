@@ -12,7 +12,7 @@ import { usePreferencesStore } from "@/lib/preferences/store";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/preferences/")({
+export const Route = createFileRoute("/_authenticated/search/$searchId/notifications")({
   component: NotificationsTab,
 });
 

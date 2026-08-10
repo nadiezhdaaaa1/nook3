@@ -15,7 +15,7 @@ const searchSchema = z.object({
   ids: z.string().optional(),
 });
 
-export const Route = createFileRoute("/_authenticated/preferences/wren")({
+export const Route = createFileRoute("/_authenticated/wren")({
   validateSearch: (s) => searchSchema.parse(s),
   component: WrenChatPage,
 });

@@ -8,7 +8,7 @@ import { referralStatsQueryOptions } from "@/lib/queries/referrals";
 import type { ReferralStats } from "@/lib/referrals.functions";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/preferences/referrals")({
+export const Route = createFileRoute("/_authenticated/referrals")({
   component: ReferralsPage,
 });
 

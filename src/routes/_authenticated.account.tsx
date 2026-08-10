@@ -23,7 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 
-export const Route = createFileRoute("/_authenticated/preferences/account")({
+export const Route = createFileRoute("/_authenticated/account")({
   component: AccountPage,
 });
 
