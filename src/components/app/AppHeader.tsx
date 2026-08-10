@@ -13,6 +13,7 @@ import { Logo } from "@/components/brand/Logo";
 import { NavHoverItem } from "@/components/app/NavHoverItem";
 import { PlanBadge, type PlanKey } from "@/components/app/PlanBadge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAppStore } from "@/lib/store";
 
 const ICON_PROPS = {
