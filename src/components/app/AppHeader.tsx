@@ -54,7 +54,7 @@ export function AppHeader() {
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-3">
           <Link to="/home" className="flex shrink-0 items-center gap-2.5" aria-label="Nook home">
-            <Logo className="hidden text-lg sm:block" />
+            <Logo className="hidden text-2xl sm:block" />
           </Link>
           <span aria-hidden className="h-6 w-px shrink-0 bg-black/10" />
           <SearchSelector />
