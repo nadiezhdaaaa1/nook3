@@ -24,16 +24,16 @@ function createMarker(listing: ListingPin): google.maps.Marker {
     position: { lat: listing.coords[0], lng: listing.coords[1] },
     label: {
       text: `$${Math.round(listing.rent / 100) / 10}k`,
-      color: "#0d0d0d",
+      color: "#ffffff",
       fontSize: "11px",
       fontWeight: "700",
     },
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 22,
-      fillColor: "#fafaf7",
+      fillColor: "#6A820A",
       fillOpacity: 1,
-      strokeColor: "#0d0d0d",
+      strokeColor: "#ffffff",
       strokeWeight: 2,
     },
   });
@@ -157,13 +157,13 @@ export function SampleListingsMap({
     markersRef.current.forEach((m, id) => {
       const isActive = id === activeId;
       const label = m.getLabel() as google.maps.MarkerLabel;
-      label.color = isActive ? "#fafaf7" : "#0d0d0d";
+      label.color = isActive ? "#6A820A" : "#ffffff";
       m.setIcon({
         path: google.maps.SymbolPath.CIRCLE,
         scale: 22,
-        fillColor: isActive ? "#0d0d0d" : "#fafaf7",
+        fillColor: isActive ? "#ffffff" : "#6A820A",
         fillOpacity: 1,
-        strokeColor: "#0d0d0d",
+        strokeColor: "#6A820A",
         strokeWeight: 2,
       });
       m.setLabel(label);
