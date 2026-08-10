@@ -423,6 +423,10 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
     if (!ready || !mapRef.current) return;
     if (fitKeyRef.current === fitKey) return;
     fitKeyRef.current = fitKey;
+    if (skipNextFitRef.current) {
+      skipNextFitRef.current = false;
+      return;
+    }
     const map = mapRef.current;
     if (listings.length > 1) {
       const bounds = new google.maps.LatLngBounds();
