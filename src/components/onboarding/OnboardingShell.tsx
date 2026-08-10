@@ -20,6 +20,7 @@ export function OnboardingShell() {
   const stepMatch = pathname.match(STEP_ROUTE_RE);
   const step = stepMatch ? Number(stepMatch[1]) : null;
   const [exitOpen, setExitOpen] = useState(false);
+  const isPreview = pathname === "/onboarding/preview";
 
   const pct = step ? Math.round((step / 4) * 100) : 0;
 
