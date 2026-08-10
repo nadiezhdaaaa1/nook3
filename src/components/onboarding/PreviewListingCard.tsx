@@ -30,6 +30,7 @@ export function PreviewListingCard({
   actions,
 }: Props) {
   return (
+    <TooltipProvider>
     <article
       onClick={(e) => {
         e.stopPropagation();
