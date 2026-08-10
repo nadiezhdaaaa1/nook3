@@ -19,7 +19,7 @@ export function AppPage({
   return (
     <div className="mx-auto max-w-6xl px-6 pb-24 pt-8 lg:px-12 lg:pt-10">
       {tabs && (
-        <div className="mb-6">
+        <div className="mb-8">
           {tabs}
         </div>
       )}
