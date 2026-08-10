@@ -369,19 +369,19 @@ function HomeScreen() {
                       type="button"
                       variant="tertiary"
                       size="medium"
-                      className="w-[48px] px-0"
+                      className="h-[40px] w-[40px] px-0"
                       aria-label="Previous page"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1 || paginatedQ.isLoading}
                     >
-                      <ChevronLeft size={20} strokeWidth={2} />
+                      <ChevronLeft size={18} strokeWidth={2} />
                     </OriginButton>
                     <div className="flex items-center gap-1">
                       {getPaginationItems(page, totalPages).map((item, idx) =>
                         item === "ellipsis" ? (
                           <span
                             key={`ellipsis-${idx}`}
-                            className="inline-flex h-[48px] w-[48px] items-center justify-center text-[15px] font-medium tracking-[-0.02em] text-[#2B2521]"
+                            className="inline-flex h-[40px] w-[40px] items-center justify-center text-[14px] font-medium tracking-[-0.02em] text-[#2B2521]"
                             aria-hidden="true"
                           >
                             …
@@ -392,7 +392,7 @@ function HomeScreen() {
                             type="button"
                             variant={item === page ? "main" : "tertiary"}
                             size="medium"
-                            className="w-[48px] px-0"
+                            className="h-[40px] w-[40px] px-0"
                             aria-label={`Page ${item}`}
                             aria-current={item === page ? "page" : undefined}
                             onClick={() => setPage(item)}
@@ -407,12 +407,12 @@ function HomeScreen() {
                       type="button"
                       variant="tertiary"
                       size="medium"
-                      className="w-[48px] px-0"
+                      className="h-[40px] w-[40px] px-0"
                       aria-label="Next page"
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages || paginatedQ.isLoading}
                     >
-                      <ChevronRight size={20} strokeWidth={2} />
+                      <ChevronRight size={18} strokeWidth={2} />
                     </OriginButton>
                   </div>
                 )}
