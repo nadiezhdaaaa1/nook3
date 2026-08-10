@@ -53,9 +53,11 @@ import { Route as AuthenticatedReferralsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated.account'
 import { Route as OnboardingStepStepRouteImport } from './routes/onboarding.step.$step'
+import { Route as AuthenticatedSearchNewRouteImport } from './routes/_authenticated.search.new'
 import { Route as AuthenticatedSearchSearchIdRouteImport } from './routes/_authenticated.search.$searchId'
 import { Route as AuthenticatedSearchSearchIdIndexRouteImport } from './routes/_authenticated.search.$searchId.index'
 import { Route as ApiPublicRTrackRouteImport } from './routes/api/public/r/track'
+import { Route as AuthenticatedSearchNewStepRouteImport } from './routes/_authenticated.search.new.$step'
 import { Route as AuthenticatedSearchSearchIdNotificationsRouteImport } from './routes/_authenticated.search.$searchId.notifications'
 import { Route as AuthenticatedSearchSearchIdLocationRouteImport } from './routes/_authenticated.search.$searchId.location'
 import { Route as AuthenticatedSearchSearchIdBudgetRouteImport } from './routes/_authenticated.search.$searchId.budget'
@@ -280,6 +282,11 @@ const OnboardingStepStepRoute = OnboardingStepStepRouteImport.update({
   path: '/step/$step',
   getParentRoute: () => OnboardingRoute,
 } as any)
+const AuthenticatedSearchNewRoute = AuthenticatedSearchNewRouteImport.update({
+  id: '/search/new',
+  path: '/search/new',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedSearchSearchIdRoute =
   AuthenticatedSearchSearchIdRouteImport.update({
     id: '/search/$searchId',
@@ -297,6 +304,12 @@ const ApiPublicRTrackRoute = ApiPublicRTrackRouteImport.update({
   path: '/api/public/r/track',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSearchNewStepRoute =
+  AuthenticatedSearchNewStepRouteImport.update({
+    id: '/$step',
+    path: '/$step',
+    getParentRoute: () => AuthenticatedSearchNewRoute,
+  } as any)
 const AuthenticatedSearchSearchIdNotificationsRoute =
   AuthenticatedSearchSearchIdNotificationsRouteImport.update({
     id: '/notifications',
@@ -366,11 +379,13 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/preferences/': typeof PreferencesIndexRoute
   '/search/$searchId': typeof AuthenticatedSearchSearchIdRouteWithChildren
+  '/search/new': typeof AuthenticatedSearchNewRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
   '/search/$searchId/budget': typeof AuthenticatedSearchSearchIdBudgetRoute
   '/search/$searchId/location': typeof AuthenticatedSearchSearchIdLocationRoute
   '/search/$searchId/notifications': typeof AuthenticatedSearchSearchIdNotificationsRoute
+  '/search/new/$step': typeof AuthenticatedSearchNewStepRoute
   '/api/public/r/track': typeof ApiPublicRTrackRoute
   '/search/$searchId/': typeof AuthenticatedSearchSearchIdIndexRoute
 }
@@ -416,11 +431,13 @@ export interface FileRoutesByTo {
   '/r/$code': typeof RCodeRoute
   '/blog': typeof BlogIndexRoute
   '/preferences': typeof PreferencesIndexRoute
+  '/search/new': typeof AuthenticatedSearchNewRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
   '/search/$searchId/budget': typeof AuthenticatedSearchSearchIdBudgetRoute
   '/search/$searchId/location': typeof AuthenticatedSearchSearchIdLocationRoute
   '/search/$searchId/notifications': typeof AuthenticatedSearchSearchIdNotificationsRoute
+  '/search/new/$step': typeof AuthenticatedSearchNewStepRoute
   '/api/public/r/track': typeof ApiPublicRTrackRoute
   '/search/$searchId': typeof AuthenticatedSearchSearchIdIndexRoute
 }
@@ -470,11 +487,13 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/preferences/': typeof PreferencesIndexRoute
   '/_authenticated/search/$searchId': typeof AuthenticatedSearchSearchIdRouteWithChildren
+  '/_authenticated/search/new': typeof AuthenticatedSearchNewRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/_authenticated/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
   '/_authenticated/search/$searchId/budget': typeof AuthenticatedSearchSearchIdBudgetRoute
   '/_authenticated/search/$searchId/location': typeof AuthenticatedSearchSearchIdLocationRoute
   '/_authenticated/search/$searchId/notifications': typeof AuthenticatedSearchSearchIdNotificationsRoute
+  '/_authenticated/search/new/$step': typeof AuthenticatedSearchNewStepRoute
   '/api/public/r/track': typeof ApiPublicRTrackRoute
   '/_authenticated/search/$searchId/': typeof AuthenticatedSearchSearchIdIndexRoute
 }
@@ -524,11 +543,13 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/preferences/'
     | '/search/$searchId'
+    | '/search/new'
     | '/onboarding/step/$step'
     | '/search/$searchId/apartment'
     | '/search/$searchId/budget'
     | '/search/$searchId/location'
     | '/search/$searchId/notifications'
+    | '/search/new/$step'
     | '/api/public/r/track'
     | '/search/$searchId/'
   fileRoutesByTo: FileRoutesByTo
@@ -574,11 +595,13 @@ export interface FileRouteTypes {
     | '/r/$code'
     | '/blog'
     | '/preferences'
+    | '/search/new'
     | '/onboarding/step/$step'
     | '/search/$searchId/apartment'
     | '/search/$searchId/budget'
     | '/search/$searchId/location'
     | '/search/$searchId/notifications'
+    | '/search/new/$step'
     | '/api/public/r/track'
     | '/search/$searchId'
   id:
@@ -627,11 +650,13 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/preferences/'
     | '/_authenticated/search/$searchId'
+    | '/_authenticated/search/new'
     | '/onboarding/step/$step'
     | '/_authenticated/search/$searchId/apartment'
     | '/_authenticated/search/$searchId/budget'
     | '/_authenticated/search/$searchId/location'
     | '/_authenticated/search/$searchId/notifications'
+    | '/_authenticated/search/new/$step'
     | '/api/public/r/track'
     | '/_authenticated/search/$searchId/'
   fileRoutesById: FileRoutesById
@@ -982,6 +1007,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingStepStepRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/_authenticated/search/new': {
+      id: '/_authenticated/search/new'
+      path: '/search/new'
+      fullPath: '/search/new'
+      preLoaderRoute: typeof AuthenticatedSearchNewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/search/$searchId': {
       id: '/_authenticated/search/$searchId'
       path: '/search/$searchId'
@@ -1002,6 +1034,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/r/track'
       preLoaderRoute: typeof ApiPublicRTrackRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/search/new/$step': {
+      id: '/_authenticated/search/new/$step'
+      path: '/$step'
+      fullPath: '/search/new/$step'
+      preLoaderRoute: typeof AuthenticatedSearchNewStepRouteImport
+      parentRoute: typeof AuthenticatedSearchNewRoute
     }
     '/_authenticated/search/$searchId/notifications': {
       id: '/_authenticated/search/$searchId/notifications'
@@ -1061,6 +1100,20 @@ const AuthenticatedSearchSearchIdRouteWithChildren =
     AuthenticatedSearchSearchIdRouteChildren,
   )
 
+interface AuthenticatedSearchNewRouteChildren {
+  AuthenticatedSearchNewStepRoute: typeof AuthenticatedSearchNewStepRoute
+}
+
+const AuthenticatedSearchNewRouteChildren: AuthenticatedSearchNewRouteChildren =
+  {
+    AuthenticatedSearchNewStepRoute: AuthenticatedSearchNewStepRoute,
+  }
+
+const AuthenticatedSearchNewRouteWithChildren =
+  AuthenticatedSearchNewRoute._addFileChildren(
+    AuthenticatedSearchNewRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
@@ -1068,6 +1121,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSavedRoute: typeof AuthenticatedSavedRoute
   AuthenticatedWrenRoute: typeof AuthenticatedWrenRoute
   AuthenticatedSearchSearchIdRoute: typeof AuthenticatedSearchSearchIdRouteWithChildren
+  AuthenticatedSearchNewRoute: typeof AuthenticatedSearchNewRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -1078,6 +1132,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedWrenRoute: AuthenticatedWrenRoute,
   AuthenticatedSearchSearchIdRoute:
     AuthenticatedSearchSearchIdRouteWithChildren,
+  AuthenticatedSearchNewRoute: AuthenticatedSearchNewRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -1156,13 +1211,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

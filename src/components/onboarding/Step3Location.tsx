@@ -1,6 +1,6 @@
-import { useNavigate, Navigate } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
+import { useStepFlow, StepRedirect } from "@/components/onboarding/stepFlow";
 import { OB_H1, OB_SUB, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 import { NeighborhoodPicker } from "@/components/onboarding/NeighborhoodPicker";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -12,14 +12,14 @@ const reduceMotion = (reduce: boolean | null) =>
     : null;
 
 export function Step3Location() {
-  const navigate = useNavigate();
+  const { goStep } = useStepFlow();
   const reduce = useReducedMotion();
   const stepVariants = reduceMotion(reduce) ?? OB_STEP_VARIANTS;
   const sectionVariants = reduceMotion(reduce) ?? OB_SECTION_VARIANTS;
   const { city, neighborhoods, set } = useOnboardingStore();
   const cityConfig = getCity(city);
   if (!cityConfig) {
-    return <Navigate to="/onboarding/step/$step" params={{ step: "1" }} />;
+    return <StepRedirect step={1} />;
   }
 
   const canContinue = neighborhoods.length > 0;
@@ -40,10 +40,10 @@ export function Step3Location() {
       <motion.div variants={sectionVariants}>
         <OnboardingFooter
           canContinue={canContinue}
-          onBack={() => navigate({ to: "/onboarding/step/$step", params: { step: "2" } })}
+          onBack={() => goStep(2)}
           onNext={() => {
             set("lastStep", 4);
-            navigate({ to: "/onboarding/step/$step", params: { step: "4" } });
+            goStep(4);
           }}
         />
       </motion.div>

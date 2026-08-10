@@ -1,9 +1,9 @@
-import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Pencil, Search, ArrowRight, ArrowLeft } from "lucide-react";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
+import { useStepFlow } from "@/components/onboarding/stepFlow";
 import { CityPicker } from "@/components/onboarding/CityPicker";
 import { RentSlider } from "@/components/onboarding/RentSlider";
 import { MoveInPicker } from "@/components/onboarding/MoveInPicker";
@@ -38,7 +38,7 @@ const H2: React.CSSProperties = {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function Step1Where() {
-  const navigate = useNavigate();
+  const { goStep, exit } = useStepFlow();
   const reduce = useReducedMotion();
   const { city, budget, moveIn, movingOut, set, patch } = useOnboardingStore();
   const cityConfig = getCity(city);
@@ -307,7 +307,8 @@ export function Step1Where() {
               >
                 <button
                   type="button"
-                  disabled
+                  disabled={!exit}
+                  onClick={exit}
                   className="ob-ghost inline-flex items-center disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{
                     height: 56,
@@ -329,7 +330,7 @@ export function Step1Where() {
                   disabled={!canContinue}
                   onClick={() => {
                     set("lastStep", 2);
-                    navigate({ to: "/onboarding/step/$step", params: { step: "2" } });
+                    goStep(2);
                   }}
                   className="ob-next"
                 >

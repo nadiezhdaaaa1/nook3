@@ -5,7 +5,7 @@ import { ExitModal } from "./ExitModal";
 import { Logo } from "@/components/brand/Logo";
 
 
-const STEP_ROUTE_RE = /^\/onboarding\/step\/(\d)/;
+const STEP_ROUTE_RE = /^\/(?:onboarding\/step|search\/new)\/(\d)/;
 
 const LABEL: React.CSSProperties = {
   fontWeight: 600,
@@ -23,6 +23,7 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
+  const isNewSearch = pathname.startsWith("/search/new");
   const stepMatch = pathname.match(STEP_ROUTE_RE);
   const step = stepMatch ? Number(stepMatch[1]) : null;
   const [exitOpen, setExitOpen] = useState(false);
@@ -44,9 +45,11 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
         }}
       >
         <div className="flex items-center justify-between" style={{ gap: 32 }}>
-          <div style={{ padding: "0 8px" }} aria-label="Nook" role="img">
-            <Logo className="h-6 w-auto" />
-          </div>
+          {!isNewSearch && (
+            <div style={{ padding: "0 8px" }} aria-label="Nook" role="img">
+              <Logo className="h-6 w-auto" />
+            </div>
+          )}
 
           {step !== null && (
             <div className="flex flex-1 items-center min-w-0" style={{ gap: 12 }}>
@@ -75,10 +78,14 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
 
           <button
             type="button"
-            onClick={() => setExitOpen(true)}
+            onClick={() =>
+              isNewSearch
+                ? navigate({ to: "/saved", search: { tab: "searches" } as never })
+                : setExitOpen(true)
+            }
             className="ob-ghost inline-flex items-center justify-center"
             style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
-            aria-label="Exit onboarding"
+            aria-label={isNewSearch ? "Cancel new search" : "Exit onboarding"}
           >
             <X style={{ width: 20, height: 20 }} />
           </button>
