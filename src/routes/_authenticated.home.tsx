@@ -241,10 +241,10 @@ function HomeScreen() {
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    aria-label="Filter matches"
-                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border border-black/10 bg-white text-charcoal-700 transition-colors hover:bg-charcoal-950/[0.04] hover:text-charcoal-950"
+                    className="inline-flex h-10 shrink-0 items-center gap-2 rounded-[8px] border border-black/10 bg-white px-3 text-sm font-semibold text-charcoal-700 transition-colors hover:bg-charcoal-950/[0.04] hover:text-charcoal-950"
                   >
                     <ListFilter className="h-4 w-4" aria-hidden />
+                    Filters
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">Filter matches</TooltipContent>
