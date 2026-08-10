@@ -1512,7 +1512,18 @@ function PlanCard({
         </span>
       </div>
 
-      {isCancelPath ? (
+      {isCurrent ? (
+        <span
+          className="inline-flex items-center justify-center gap-1.5 w-full h-12 rounded-[12px] text-[12px] font-extrabold uppercase tracking-[0.14em]"
+          style={{
+            fontFamily: "'Google Sans Flex', sans-serif",
+            background: dark ? "rgba(248,243,225,0.20)" : "#e3e6d8",
+            color: dark ? "#f8f3e1" : "#4a4d3a",
+          }}
+        >
+          <Check className="h-4 w-4" /> Your plan
+        </span>
+      ) : isCancelPath ? (
         <OriginButton
           className="w-full"
           variant={ctaVariant}
@@ -1528,7 +1539,7 @@ function PlanCard({
               className="w-full"
               variant={ctaVariant}
               style={{ borderRadius: 12 }}
-              disabled={isCurrent || updatePlanMut.isPending}
+              disabled={updatePlanMut.isPending}
             >
               {ctaLabel}
             </OriginButton>
