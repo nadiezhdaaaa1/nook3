@@ -42,7 +42,7 @@ export function PreviewListingCard({
       onMouseEnter={() => onHover?.(listing.id)}
       onMouseLeave={() => onHover?.(null)}
       className={`text-left border flex flex-col transition-[border-color,box-shadow] duration-150 group ${
-        selected ? "border-[#6a820a]" : "border-black/20 hover:border-black/30"
+        selected ? "border-[#6a820a]" : "border-black/10 hover:border-black/20"
       } ${popup ? "w-[320px] max-w-[calc(100vw-64px)]" : "w-full"} ${
         onSelect ? "cursor-pointer" : ""
       }`}
