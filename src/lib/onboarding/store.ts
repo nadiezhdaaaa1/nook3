@@ -70,6 +70,7 @@ export interface OnboardingState {
 export interface OnboardingActions {
   set: <K extends keyof OnboardingState>(key: K, val: OnboardingState[K]) => void;
   patch: (p: Partial<OnboardingState>) => void;
+  setCity: (id: CityId | null) => void;
   toggleBedroom: (id: string) => void;
   toggleNeighborhood: (id: string) => void;
   cycleAmenity: (id: string) => void;
