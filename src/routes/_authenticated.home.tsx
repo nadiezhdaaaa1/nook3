@@ -185,6 +185,20 @@ function HomeScreen() {
       popup
       selected
       onClose={() => setActiveId(null)}
+      actions={
+        <ListingActions
+          saved={savedIds.has(activeListing.id)}
+          saving={
+            (saveSnapshot.isPending &&
+              saveSnapshot.variables?.listing.title === activeListing.address) ||
+            (updateStatus.isPending && updateStatus.variables?.id === activeListing.id)
+          }
+          selected
+          onToggleSave={() => handleToggleSave(activeListing)}
+          onDislike={() => handleDislike(activeListing)}
+          onReport={(reason, details) => handleReport(activeListing, reason, details)}
+        />
+      }
     />
   ) : null;
 
