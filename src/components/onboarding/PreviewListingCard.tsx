@@ -225,47 +225,40 @@ export function PreviewListingCard({
       <div
         style={{
           marginTop: 8,
-          background: "rgba(225,230,216,0.7)",
-          border: "1px solid rgba(168,184,154,0.4)",
-          borderRadius: 14,
-          padding: 12,
+          background: "#ffffff",
+          border: "1px solid rgba(0,0,0,0.10)",
+          borderRadius: 10,
+          overflow: "hidden",
         }}
       >
-        <button
-          type="button"
-          aria-expanded={open}
+        <WrenTakeButton
+          open={open}
           onClick={(e) => {
             e.stopPropagation();
             setOpen((v) => !v);
           }}
-          className="flex w-full items-center justify-between gap-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] rounded-[8px]"
         >
-          <span className="flex items-center gap-2">
-            <Sparkles style={{ width: 14, height: 14, color: "#5a6e50" }} />
+          <span className="relative z-10 flex items-center gap-2">
+            <Sparkles
+              className="h-3.5 w-3.5 text-[#D66C38] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
+            />
             <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: "1.1px",
-                textTransform: "uppercase",
-                color: "#241c12",
-              }}
+              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white"
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className="transition-transform duration-150 motion-reduce:transition-none"
+            className="relative z-10 text-[#241C12] transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white"
             style={{
               width: 16,
               height: 16,
-              color: "#5a6e50",
               transform: open ? "rotate(180deg)" : "none",
             }}
           />
-        </button>
+        </WrenTakeButton>
         {open && (
-          <p style={{ marginTop: 8, fontSize: 13, lineHeight: 1.5, color: "#4a4a46" }}>
+          <p className="px-3 pb-3 text-[#4a4a46]" style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
