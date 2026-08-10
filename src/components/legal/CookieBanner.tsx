@@ -116,8 +116,9 @@ export function CookieBanner() {
                 padding: 20px;
                 border-radius: 20px;
               }
-              .ckt-actions { width: 100%; }
-              .ckt-btn { flex: 1; }
+              .ckt-actions { width: 100%; flex-wrap: wrap; }
+              .ckt-btn-accept { order: -1; width: 100%; flex: none; }
+              .ckt-btn-outline { flex: 1; }
             }
           `}</style>
         </div>
