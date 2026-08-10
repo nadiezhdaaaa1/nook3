@@ -262,7 +262,7 @@ function AccountPage() {
                 URL.revokeObjectURL(url);
                 toast.success("Export downloaded");
               }}
-              className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
+              className="inline-flex items-center gap-1.5 h-10 px-4 rounded border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
             >
               <Download className="h-3.5 w-3.5" /> Export
             </button>
