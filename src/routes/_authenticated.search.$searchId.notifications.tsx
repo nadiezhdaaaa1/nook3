@@ -10,6 +10,7 @@ import { useAppStore } from "@/lib/store";
 import { usePreferencesStore } from "@/lib/preferences/store";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { OriginButton } from "@/components/ui/origin-button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/search/$searchId/notifications")({
@@ -196,24 +197,22 @@ function NotificationsTab() {
               <label htmlFor="quiet-start" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
                 Quiet hours start
               </label>
-              <input
+              <Input
                 id="quiet-start"
                 type="time"
                 value={quietHours.start}
                 onChange={(e) => setQuiet("start", e.target.value)}
-                className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="quiet-end" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
                 Quiet hours end
               </label>
-              <input
+              <Input
                 id="quiet-end"
                 type="time"
                 value={quietHours.end}
                 onChange={(e) => setQuiet("end", e.target.value)}
-                className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
               />
             </div>
             <div className="sm:col-span-2 space-y-2">
