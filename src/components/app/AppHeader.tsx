@@ -204,7 +204,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           </Tooltip>
         </nav>
 
-        <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenu>
           <DropdownMenuTrigger
             aria-label="Open menu"
             className="flex shrink-0 items-center justify-center rounded-[8px] p-2 outline-none transition-colors hover:bg-[#EBE2CF] focus-visible:ring-2 focus-visible:ring-black/20 md:hidden"
