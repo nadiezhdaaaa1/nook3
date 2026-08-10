@@ -245,7 +245,7 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div className="group/glow relative mt-auto">
+      <div className="group/glow relative" style={{ marginTop: 16 }}>
         <WrenGlow />
         <div
           className="relative"
