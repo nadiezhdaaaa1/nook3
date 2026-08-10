@@ -357,10 +357,10 @@ function HomeScreen() {
             topLeftControls={
               mapFullscreen ? (
                 <>
-                  <div className="rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+                  <div className="rounded-[12px] bg-[#fffdf7]/90 shadow-sm backdrop-blur-sm">
                     <SearchSelector />
                   </div>
-                  <div className="rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+                  <div className="rounded-[12px] bg-[#fffdf7]/90 shadow-sm backdrop-blur-sm">
                     {filtersButton}
                   </div>
                 </>
