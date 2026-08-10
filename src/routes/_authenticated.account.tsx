@@ -1623,48 +1623,14 @@ function SubscriptionSection({
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
           Subscription &amp; billing
         </h2>
-        <div className="rounded-card bg-paper-warm border border-charcoal-950/12 p-6">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-sage-700">
-                Current plan
-              </div>
-              <div className="mt-1 font-display text-2xl font-bold text-charcoal-950">
-                {currentPlan.label}
-                {trialActive && plan !== "free" && (
-                  <span className="ml-2 text-[10px] font-mono uppercase tracking-[0.14em] text-peach-700">
-                    Trial active
-                  </span>
-                )}
-              </div>
-              <div className="text-sm text-charcoal-600 mt-1">
-                {plan === "free"
-                  ? "$0 / forever"
-                  : cycle === "annual"
-                    ? `$${currentPlan.annual}/year`
-                    : `$${currentPlan.monthly}/mo`}
-              </div>
-            </div>
-            <div className="text-xs text-charcoal-600">
-              Next billing:{" "}
-              <span className="text-charcoal-900 font-semibold">{plan === "free" ? "N/A" : periodEnd}</span>
-            </div>
-          </div>
-          {plan !== "free" && (
-            <div className="mt-5 pt-4 border-t border-charcoal-950/8 flex items-center justify-between gap-3 flex-wrap">
-              <p className="text-xs text-charcoal-600 max-w-md">
-                Cancel anytime. You'll keep paid features until the end of your billing period.
-              </p>
-              <button
-                type="button"
-                onClick={() => setCancelOpen(true)}
-                className="text-sm font-semibold text-charcoal-800 hover:text-charcoal-950 underline-offset-4 hover:underline"
-              >
-                Cancel subscription
-              </button>
-            </div>
-          )}
-        </div>
+        <CurrentPlanCard
+          plan={plan}
+          currentPlan={currentPlan}
+          cycle={cycle}
+          trialActive={trialActive}
+          periodEnd={periodEnd}
+          onCancelRequest={() => setCancelOpen(true)}
+        />
         <CancelSubscriptionDialog
           open={cancelOpen}
           onOpenChange={setCancelOpen}
