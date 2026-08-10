@@ -9,7 +9,7 @@ export function WrenFab() {
     <Link
       to="/preferences/wren"
       aria-label="Open Wren AI chat"
-      className="fixed bottom-6 right-6 z-50 inline-flex items-center justify-center h-14 w-14 rounded-full bg-white border border-black/20 shadow-lg shadow-charcoal-950/20 hover:bg-paper-elevated hover:scale-105 active:scale-95 transition-all"
+      className="group fixed bottom-6 right-6 z-50 inline-flex items-center justify-center h-14 w-14 rounded-full bg-white border border-black/20 shadow-lg shadow-charcoal-950/20 hover:bg-paper-elevated hover:scale-105 active:scale-95 transition-all"
     >
       <img
         src={aiAsset.url}
