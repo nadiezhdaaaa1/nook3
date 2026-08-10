@@ -160,7 +160,7 @@ export function SearchSelector() {
             <button
               type="button"
               onClick={handleNew}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-charcoal-950/[0.04]"
+              className="mx-1.5 mt-1.5 flex w-[calc(100%-12px)] items-center gap-3 rounded-[8px] px-3 py-2.5 text-left hover:bg-charcoal-950/[0.04]"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-pill bg-charcoal-950 text-paper">
                 <Plus className="h-4 w-4" />
