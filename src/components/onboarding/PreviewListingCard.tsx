@@ -60,7 +60,10 @@ export function PreviewListingCard({
           <Tooltip>
             <TooltipTrigger asChild>
               <a
-                href={listing.url || "#"}
+                href={
+                  listing.url ||
+                  `https://www.google.com/search?q=${encodeURIComponent(listing.address)}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Open listing in new tab"
