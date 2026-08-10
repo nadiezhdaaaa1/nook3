@@ -127,7 +127,7 @@ function AccountPage() {
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
           Usage this month
         </h2>
-        <div className="grid sm:grid-cols-3 gap-3 rounded-card bg-white p-6 border border-border">
+        <div className="grid sm:grid-cols-3 gap-3">
           <StatCard
             icon={SearchIcon}
             label="Saved searches"
@@ -322,7 +322,7 @@ function StatCard({
   icon: typeof Sparkles; label: string; value: string; footer: React.ReactNode; progress?: number;
 }) {
   return (
-    <div className="rounded-card border border-border bg-paper-warm p-5">
+    <div className="rounded-card border border-border bg-white p-6">
       <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
         <Icon className="h-3.5 w-3.5" /> {label}
       </div>
