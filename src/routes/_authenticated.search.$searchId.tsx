@@ -160,13 +160,13 @@ function DeleteSearchButton({ searchId, name }: { searchId: string; name: string
 
   return (
     <AlertDialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setConfirmText(""); }}>
-      <button
-        type="button"
+      <OriginButton
+        variant="tertiary"
+        size="medium"
         onClick={() => setOpen(true)}
-        className="inline-flex h-10 items-center gap-1.5 rounded-pill border border-transparent px-4 text-sm font-semibold text-danger transition-colors hover:bg-danger/10"
       >
         <Trash2 className="h-4 w-4" /> Delete search
-      </button>
+      </OriginButton>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete "{name}"?</AlertDialogTitle>
