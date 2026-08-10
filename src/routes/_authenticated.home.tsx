@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
+import { SampleListingsMap, type SampleListingsMapRef } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { SearchSelector } from "@/components/app/SearchSelector";
 import { useActiveSearch } from "@/lib/store";
@@ -131,6 +131,7 @@ function HomeScreen() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
   const [mapFullscreen, setMapFullscreen] = useState(false);
+  const mapRef = useRef<SampleListingsMapRef | null>(null);
 
   useEffect(() => {
     if (!mapFullscreen) return;
@@ -246,6 +247,7 @@ function HomeScreen() {
   };
 
   const handleDislike = (l: SampleListing, reason?: string) => {
+    mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
     if (alert)
@@ -255,6 +257,7 @@ function HomeScreen() {
   };
 
   const handleReport = (l: SampleListing, reason: ReportReason, details: string) => {
+    mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
     if (alert)
@@ -352,6 +355,7 @@ function HomeScreen() {
       >
         {cityConfig && (
           <SampleListingsMap
+            ref={mapRef}
             city={cityConfig}
             listings={pins}
             activeId={activeId}

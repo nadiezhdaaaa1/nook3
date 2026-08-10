@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, useImperativeHandle, forwardRef, type ReactNode } from "react";
 import { Maximize2, Minimize2, Minus, Plus } from "lucide-react";
 import { createRoot, type Root } from "react-dom/client";
 import type { CityConfig } from "@/data/cities";
@@ -330,19 +330,26 @@ function createOverlay(
   return new ListingOverlay(position, container);
 }
 
-export function SampleListingsMap({
-  city,
-  listings,
-  activeId,
-  hoveredId,
-  onSelect,
-  card,
-  className,
-  isFullscreen,
-  onToggleFullscreen,
-  topLeftControls,
-  savedIds,
-}: Props) {
+export interface SampleListingsMapRef {
+  skipNextFit: () => void;
+}
+
+export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(function SampleListingsMap(
+  {
+    city,
+    listings,
+    activeId,
+    hoveredId,
+    onSelect,
+    card,
+    className,
+    isFullscreen,
+    onToggleFullscreen,
+    topLeftControls,
+    savedIds,
+  },
+  ref,
+) {
 
 
   const ready = useGoogleMaps();
@@ -354,6 +361,14 @@ export function SampleListingsMap({
   const [clusters, setClusters] = useState<Cluster[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const signatureRef = useRef<string>("");
+  const skipNextFitRef = useRef(false);
+
+  useImperativeHandle(ref, () => ({
+    skipNextFit: () => {
+      skipNextFitRef.current = true;
+    },
+  }));
+
 
 
   const overlayRef = useRef<{
@@ -408,6 +423,10 @@ export function SampleListingsMap({
     if (!ready || !mapRef.current) return;
     if (fitKeyRef.current === fitKey) return;
     fitKeyRef.current = fitKey;
+    if (skipNextFitRef.current) {
+      skipNextFitRef.current = false;
+      return;
+    }
     const map = mapRef.current;
     if (listings.length > 1) {
       const bounds = new google.maps.LatLngBounds();
@@ -647,4 +666,6 @@ export function SampleListingsMap({
       )}
     </div>
   );
-}
+});
+
+SampleListingsMap.displayName = "SampleListingsMap";
