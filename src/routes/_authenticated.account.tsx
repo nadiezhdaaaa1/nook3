@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 import { OriginButton } from "@/components/ui/origin-button";
+import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
 export const Route = createFileRoute("/_authenticated/account")({
@@ -160,32 +161,35 @@ function AccountPage() {
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
         <div className="space-y-4">
           <Field id="acct-email" label="Email" icon={Mail} error={!emailValid ? "Enter a valid email." : undefined}>
-            <input
+            <Input
               id="acct-email"
               type="email"
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
+              size="big"
               className={cn(
-                "w-full h-11 px-4 rounded-md bg-surface-elevated border focus:outline-none text-sm font-medium",
-                emailValid ? "border-border focus:border-charcoal-950" : "border-danger focus:border-danger",
+                "font-medium",
+                !emailValid && "border-danger focus:border-danger",
               )}
             />
           </Field>
 
-
           <Field id="acct-tz" label="Timezone" icon={Globe}>
-            <select
-              id="acct-tz"
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm font-medium"
-            >
-              {TIMEZONES.map((tz) => (
-                <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="acct-tz"
+                value={timezone}
+                onChange={(e) => setTimezone(e.target.value)}
+                className="flex w-full rounded-[12px] border border-black/20 bg-white px-4 text-[14px] font-['Google_Sans_Flex',sans-serif] font-medium text-[#241c12] transition-colors hover:border-black/[0.32] focus:border-[#DF4400] focus:outline-none focus-visible:border-[#DF4400] focus-visible:outline-none focus-visible:ring-0 h-[56px] appearance-none"
+              >
+                {TIMEZONES.map((tz) => (
+                  <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
+                ))}
+              </select>
+              <ChevronRight className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-charcoal-500" />
+            </div>
           </Field>
         </div>
       </section>
@@ -344,8 +348,8 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-        <Icon className="h-3 w-3" /> {label}
+      <label htmlFor={id} className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-700">
+        {Icon && <Icon className="h-3.5 w-3.5" />} {label}
       </label>
       {children}
       {error && <p className="text-xs text-danger">{error}</p>}
