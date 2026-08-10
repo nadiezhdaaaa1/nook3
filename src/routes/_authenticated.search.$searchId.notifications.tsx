@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Mail, Zap, CalendarDays, CalendarRange, Sparkles,
-  ArrowRight, Lock, Moon, Check, AlertCircle,
+  ArrowRight, Lock, Moon, Check,
 } from "lucide-react";
-import { z } from "zod";
 
 import { useOnboardingStore, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
@@ -35,8 +34,6 @@ const FREQS: {
   { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", bestFor: "Best for casual interest", icon: Sparkles, minPlan: "free" },
 ];
 
-const emailSchema = z.string().trim().max(255).email();
-
 function detectTimezone(): string {
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
@@ -60,45 +57,13 @@ function NotificationsTab() {
   const plan = useAppStore((s) => s.user?.plan ?? "free");
   const activeSearchId = useAppStore((s) => s.activeSearchId);
   const activeSearch = useAppStore((s) => s.searches.find((x) => x.id === s.activeSearchId));
-  const { quietHours, perSearch, setQuiet, setPerSearch } = usePreferencesStore();
-
-  const [emailOverrideOn, setEmailOverrideOn] = useState(false);
-  const [overrideEmail, setOverrideEmail] = useState<string>("");
-  const [overrideEmailTouched, setOverrideEmailTouched] = useState(false);
-
-  const overrideEmailErr = emailOverrideOn && overrideEmail
-    ? (emailSchema.safeParse(overrideEmail).success ? null : "Enter a valid email.")
-    : null;
+  const { quietHours, setQuiet } = usePreferencesStore();
 
   const pill = PLAN_PILL[plan] ?? PLAN_PILL.free;
   const userRank = PLAN_RANK[plan];
   const searchName = activeSearch?.name ?? "this search";
 
   const tz = useMemo(() => detectTimezone(), []);
-
-  const override = activeSearchId
-    ? perSearch[activeSearchId] ?? { emailOverride: null, phoneOverride: null }
-    : { emailOverride: null, phoneOverride: null };
-
-  const commitEmailOverride = (next: string | null) => {
-    if (activeSearchId) setPerSearch(activeSearchId, { emailOverride: next });
-  };
-
-  const handleEmailOverrideToggle = (on: boolean) => {
-    if (!on && (override.emailOverride || overrideEmail)) {
-      const ok = window.confirm(
-        "Discard override email? Future alerts will go to your main email.",
-      );
-      if (!ok) return;
-    }
-    setEmailOverrideOn(on);
-    if (on) {
-      setOverrideEmail(override.emailOverride ?? "");
-    } else {
-      setOverrideEmail("");
-      commitEmailOverride(null);
-    }
-  };
 
   return (
     <div className="space-y-10 pb-32">
@@ -119,7 +84,7 @@ function NotificationsTab() {
       </div>
 
 
-      {/* Email — read-only + per-search override */}
+      {/* Email — read-only */}
       <section className="space-y-4">
         <div>
           <h3 className="font-display text-lg font-semibold text-charcoal-950 flex items-center gap-2">
@@ -149,53 +114,6 @@ function NotificationsTab() {
             </div>
           </div>
 
-          <div className="rounded-card border border-charcoal-950/8 bg-surface-elevated px-5 py-4">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-sm text-charcoal-800">
-                Use a different email for this search only
-              </span>
-              <ToggleSwitch
-                checked={emailOverrideOn || !!override.emailOverride}
-                onChange={handleEmailOverrideToggle}
-              />
-            </div>
-            {(emailOverrideOn || override.emailOverride) && (
-              <div className="mt-4 space-y-2">
-                <label htmlFor="ovr-email" className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-                  Override email for this search
-                </label>
-                <input
-                  id="ovr-email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  value={overrideEmail || override.emailOverride || ""}
-                  onChange={(e) => {
-                    setOverrideEmail(e.target.value);
-                    commitEmailOverride(e.target.value || null);
-                  }}
-                  onBlur={() => setOverrideEmailTouched(true)}
-                  placeholder="alerts@example.com"
-                  aria-invalid={!!(overrideEmailTouched && overrideEmailErr)}
-                  className={cn(
-                    "w-full h-11 px-4 rounded-md bg-paper border focus:outline-none text-sm font-medium",
-                    overrideEmailTouched && overrideEmailErr
-                      ? "border-danger focus:border-danger"
-                      : "border-border focus:border-charcoal-950",
-                  )}
-                />
-                {overrideEmailTouched && overrideEmailErr ? (
-                  <p className="text-xs text-danger inline-flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" /> {overrideEmailErr}
-                  </p>
-                ) : (
-                  <p className="text-[11px] text-charcoal-500">
-                    We'll only send <span className="font-medium text-charcoal-700">{searchName}</span> alerts here. Other searches keep your main email.
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
         </div>
       </section>
 
@@ -315,7 +233,6 @@ function NotificationsTab() {
         state={{
           frequency, email,
           quietHours,
-          override: activeSearchId ? override : null,
         }}
         successMessage={activeSearchId ? `Settings saved · Applied to ${searchName}` : "Settings saved"}
         getChanges={(b, c) => {
@@ -323,7 +240,6 @@ function NotificationsTab() {
           if (b.frequency !== c.frequency) out.push("frequency");
           if (b.email !== c.email) out.push("email");
           if (JSON.stringify(b.quietHours) !== JSON.stringify(c.quietHours)) out.push("quiet hours");
-          if (JSON.stringify(b.override) !== JSON.stringify(c.override)) out.push("per-search override");
           return out;
         }}
         onDiscard={(snap) => {
@@ -332,11 +248,6 @@ function NotificationsTab() {
           setQuiet("enabled", snap.quietHours.enabled);
           setQuiet("start", snap.quietHours.start);
           setQuiet("end", snap.quietHours.end);
-          if (activeSearchId && snap.override) {
-            setPerSearch(activeSearchId, snap.override);
-            setOverrideEmail(snap.override.emailOverride ?? "");
-            setEmailOverrideOn(!!snap.override.emailOverride);
-          }
         }}
       />
     </div>
