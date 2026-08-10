@@ -47,63 +47,66 @@ export function PreviewListingCard({
     >
 
       <div className="flex items-start justify-between gap-3">
-        <h3
-          className="min-w-0 flex-1 truncate"
-          style={{
-            fontWeight: 600,
-            fontSize: 17,
-            lineHeight: "24px",
-            color: "#241c12",
-            fontFamily: "var(--font-sans)",
-          }}
-        >
-          {listing.address}
-        </h3>
-        {onClose && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
+        <div className="min-w-0 flex-1">
+          <h3
+            className="truncate"
+            style={{
+              fontWeight: 600,
+              fontSize: 17,
+              lineHeight: "24px",
+              color: "#241c12",
+              fontFamily: "var(--font-sans)",
             }}
-            aria-label="Dismiss listing"
-            className="shrink-0 -mt-1 -mr-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
           >
-            <X style={{ width: 16, height: 16, color: "#6e6459" }} />
-          </button>
-        )}
-      </div>
+            {listing.address}
+          </h3>
 
-      <div
-        className="flex items-center gap-1"
-        style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}
-      >
-        <MapPin style={{ width: 12, height: 12 }} />
-        {listing.neighborhood}
-        <span style={{ margin: "0 4px" }}>·</span>
-        {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
-        <span style={{ margin: "0 4px" }}>·</span>
-        {listing.baths} bath
-      </div>
+          <div
+            className="flex items-center gap-1"
+            style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}
+          >
+            <MapPin style={{ width: 12, height: 12 }} />
+            {listing.neighborhood}
+            <span style={{ margin: "0 4px" }}>·</span>
+            {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
+            <span style={{ margin: "0 4px" }}>·</span>
+            {listing.baths} bath
+          </div>
+        </div>
 
-      <div className="flex flex-wrap items-baseline gap-3" style={{ marginTop: 8 }}>
-        <span
-          className="font-display tabular-nums"
-          style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
-        >
-          ${listing.rent.toLocaleString()}
-          <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
-        </span>
-        {!!listing.belowMedianPct && (
+        <div className="flex shrink-0 flex-col items-end text-right">
+          {onClose && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              aria-label="Dismiss listing"
+              className="-mt-1 -mr-1 mb-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
+            >
+              <X style={{ width: 16, height: 16, color: "#6e6459" }} />
+            </button>
+          )}
           <span
-            className="inline-flex items-center gap-1"
-            style={{ fontSize: 12, color: "#5a6e50" }}
+            className="font-display tabular-nums"
+            style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
           >
-            <TrendingDown style={{ width: 12, height: 12 }} />
-            {listing.belowMedianPct}% below median
+            ${listing.rent.toLocaleString()}
+            <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
           </span>
-        )}
+          {!!listing.belowMedianPct && (
+            <span
+              className="inline-flex items-center gap-1"
+              style={{ marginTop: 4, fontSize: 12, color: "#5a6e50" }}
+            >
+              <TrendingDown style={{ width: 12, height: 12 }} />
+              {listing.belowMedianPct}% below median
+            </span>
+          )}
+        </div>
       </div>
+
 
       {actions}
     </article>
