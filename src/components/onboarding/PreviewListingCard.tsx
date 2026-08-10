@@ -61,8 +61,16 @@ export function PreviewListingCard({
             {listing.address}
           </h3>
 
+          <span
+            className="font-display tabular-nums"
+            style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
+          >
+            ${listing.rent.toLocaleString()}
+            <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
+          </span>
+
           <div
-            className="flex items-center gap-1"
+            className="flex flex-wrap items-center gap-1"
             style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}
           >
             <MapPin style={{ width: 12, height: 12 }} />
@@ -71,6 +79,18 @@ export function PreviewListingCard({
             {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
             <span style={{ margin: "0 4px" }}>·</span>
             {listing.baths} bath
+            {!!listing.belowMedianPct && (
+              <>
+                <span style={{ margin: "0 4px" }}>·</span>
+                <span
+                  className="inline-flex items-center gap-1"
+                  style={{ color: "#5a6e50" }}
+                >
+                  <TrendingDown style={{ width: 12, height: 12 }} />
+                  {listing.belowMedianPct}% below median
+                </span>
+              </>
+            )}
           </div>
         </div>
 
@@ -83,29 +103,14 @@ export function PreviewListingCard({
                 onClose();
               }}
               aria-label="Dismiss listing"
-              className="-mt-1 -mr-1 mb-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
+              className="-mt-1 -mr-1 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
             >
               <X style={{ width: 16, height: 16, color: "#6e6459" }} />
             </button>
           )}
-          <span
-            className="font-display tabular-nums"
-            style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
-          >
-            ${listing.rent.toLocaleString()}
-            <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
-          </span>
-          {!!listing.belowMedianPct && (
-            <span
-              className="inline-flex items-center gap-1"
-              style={{ marginTop: 4, fontSize: 12, color: "#5a6e50" }}
-            >
-              <TrendingDown style={{ width: 12, height: 12 }} />
-              {listing.belowMedianPct}% below median
-            </span>
-          )}
         </div>
       </div>
+
 
 
       {actions}
