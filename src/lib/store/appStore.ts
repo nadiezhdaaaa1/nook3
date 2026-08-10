@@ -171,14 +171,21 @@ export const useAppStore = create<AppStore>()(
         const search = get().searches.find((s) => s.id === id);
         if (!search) return;
         const defaults = EMPTY_SEARCH_DEFAULTS(cityId);
+        const cityConfig = getCity(cityId);
+        const budget = (() => {
+          if (!search.budget || !cityConfig) return defaults.budget;
+          const [min, max] = search.budget;
+          const { budget: cb } = cityConfig;
+          if (min < cb.min || max > cb.max) return [cb.min, cb.default] as [number, number];
+          return search.budget;
+        })();
         get().updateSearch(id, {
           cityId,
           // Reset city-dependent fields to avoid mismatched neighborhoods / transit lines.
           neighborhoods: defaults.neighborhoods,
           transit: defaults.transit,
           commute: defaults.commute,
-          // If current budget is outside new city's range, reset to its default.
-          budget: search.budget && defaults.budget ? defaults.budget : null,
+          budget,
         });
       },
 
