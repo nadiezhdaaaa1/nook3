@@ -192,7 +192,7 @@ export function SearchSelector() {
                       variant="tertiary"
                       size="medium"
                       aria-label={`Edit ${s.name}`}
-                      className="h-8 w-8 p-0"
+                      className="h-8 w-8 rounded-[8px] p-0"
                       onClick={() => {
                         setOpen(false);
                         navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
