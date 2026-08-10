@@ -289,7 +289,7 @@ function HomeScreen() {
       >
         <div className="mx-auto flex max-w-[960px] flex-col">
           <header className="p-2">
-            <div className="mb-4 flex items-start justify-between gap-4">
+            <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
               <SearchSelector />
               <Tooltip>
                 <TooltipTrigger asChild>
