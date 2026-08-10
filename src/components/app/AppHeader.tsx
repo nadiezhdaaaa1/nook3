@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import {
   IconGift,
   IconHeart,
@@ -12,9 +12,15 @@ import {
 import { Logo } from "@/components/brand/Logo";
 import { NavHoverItem } from "@/components/app/NavHoverItem";
 import { PlanBadge, type PlanKey } from "@/components/app/PlanBadge";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAppStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
 
 const ICON_PROPS = {
   size: 20,
@@ -39,6 +45,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
   const [open, setOpen] = useState(false);
   const resolvedPlan: PlanKey =
     plan ?? (storePlan === "premium" || storePlan === "max" ? storePlan : "free");
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <header
@@ -93,35 +100,47 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           </Tooltip>
         </nav>
 
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger
             aria-label="Open menu"
-            className="flex shrink-0 items-center justify-center rounded-[8px] p-2 md:hidden"
+            className="flex shrink-0 items-center justify-center rounded-[8px] p-2 outline-none transition-colors hover:bg-[#EBE2CF] focus-visible:ring-2 focus-visible:ring-black/20 md:hidden"
           >
             <IconMenu2 size={24} stroke={1.5} color="#241C12" aria-hidden />
-          </SheetTrigger>
-          <SheetContent
-            side="right"
-            className="w-[280px] border-black/[0.08] p-0 font-['Google_Sans_Flex',sans-serif]"
-            style={{ backgroundColor: "#FAF8F3" }}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            sideOffset={8}
+            className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF8F3] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
           >
-            <nav aria-label="Mobile" className="flex flex-col gap-1 px-4 pt-16 pb-6">
-              {NAV_ITEMS.map(({ to, label, Icon }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  onClick={() => setOpen(false)}
-                  activeProps={{ className: "bg-[#241C12] [&_span]:text-white" }}
-                  className="flex items-center gap-3 rounded-[8px] px-3 py-3 transition-colors hover:bg-[#EBE2CF]"
-                >
-                  <Icon size={20} stroke={1.5} className="shrink-0" aria-hidden />
-                  <span className={LABEL_CLASS}>{label}</span>
-                </Link>
-              ))}
+            <nav aria-label="Mobile" className="flex flex-col gap-1">
+              {NAV_ITEMS.map(({ to, label, Icon }) => {
+                const isActive = pathname === to;
+                return (
+                  <DropdownMenuItem
+                    key={to}
+                    asChild
+                    className={cn(
+                      "flex cursor-pointer items-center gap-2 rounded-[8px] px-3 py-2.5 transition-colors hover:bg-[#EBE2CF] focus:bg-[#EBE2CF] focus:text-[#241C12] data-[active]:bg-[#241C12]",
+                      isActive && "bg-[#241C12]"
+                    )}
+                  >
+                    <Link to={to} onClick={() => setOpen(false)}>
+                      <Icon
+                        size={20}
+                        stroke={1.5}
+                        className={cn("shrink-0", isActive ? "text-white" : "text-[#4A4A46]")}
+                        aria-hidden
+                      />
+                      <span className={cn(LABEL_CLASS, isActive && "text-white")}>{label}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
             </nav>
-          </SheetContent>
-        </Sheet>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
 }
+
