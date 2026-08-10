@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
+import { OnboardingHeader } from "@/components/onboarding/OnboardingHeader";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
@@ -13,6 +14,7 @@ import {
   OB_STEP_VARIANTS,
   OB_SECTION_VARIANTS,
 } from "@/components/onboarding/stepStyles";
+
 
 export const Route = createFileRoute("/onboarding/preview")({
   component: SamplePreview,
