@@ -40,12 +40,13 @@ interface Props {
   saved: boolean;
   saving?: boolean;
   selected?: boolean;
+  compactSave?: boolean;
   onToggleSave: () => void;
   onDislike: () => void;
   onReport: (reason: ReportReason, details: string) => void;
 }
 
-export function ListingActions({ saved, saving, selected = false, onToggleSave, onDislike, onReport }: Props) {
+export function ListingActions({ saved, saving, selected = false, compactSave = false, onToggleSave, onDislike, onReport }: Props) {
   const [reason, setReason] = useState<ReportReason | null>(null);
   const [details, setDetails] = useState("");
 
@@ -112,14 +113,14 @@ export function ListingActions({ saved, saving, selected = false, onToggleSave, 
         disabled={saving}
         aria-pressed={saved}
         aria-label={saved ? "Remove from saved listings" : "Save listing"}
-        className="ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"
+        className={compactSave ? "ml-1 h-9 w-9 rounded-[8px] px-0" : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
       >
         {saving ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           <Heart className="h-4 w-4" fill={saved ? "#6a820a" : "none"} color={saved ? "#6a820a" : "#6e6459"} />
         )}
-        {saved ? "Saved" : "Save"}
+        {!compactSave && (saved ? "Saved" : "Save")}
       </OriginButton>
 
 

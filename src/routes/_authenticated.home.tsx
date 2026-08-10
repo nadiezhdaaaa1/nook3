@@ -194,6 +194,7 @@ function HomeScreen() {
             (updateStatus.isPending && updateStatus.variables?.id === activeListing.id)
           }
           selected
+          compactSave
           onToggleSave={() => handleToggleSave(activeListing)}
           onDislike={() => handleDislike(activeListing)}
           onReport={(reason, details) => handleReport(activeListing, reason, details)}
