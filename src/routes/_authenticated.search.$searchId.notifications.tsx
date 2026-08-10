@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Mail, Zap, CalendarDays, CalendarRange, Sparkles,
-  ArrowRight, Lock, Moon, Check, AlertCircle,
+  ArrowRight, Lock, Moon, Check,
 } from "lucide-react";
-import { z } from "zod";
 
 import { useOnboardingStore, type Frequency, type Plan } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
@@ -34,8 +33,6 @@ const FREQS: {
   { id: "minimal", label: "Minimal", desc: "Once daily — only strong matches.", bestFor: "Best for browse mode, exploring", icon: CalendarRange, minPlan: "free" },
   { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", bestFor: "Best for casual interest", icon: Sparkles, minPlan: "free" },
 ];
-
-const emailSchema = z.string().trim().max(255).email();
 
 function detectTimezone(): string {
   try {
