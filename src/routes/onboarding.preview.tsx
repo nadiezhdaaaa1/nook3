@@ -177,6 +177,8 @@ function SamplePreview() {
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
                     onHover={setHoveredId}
+                    openId={openWrenId}
+                    setOpenId={setOpenWrenId}
                   />
 
                 ))}
