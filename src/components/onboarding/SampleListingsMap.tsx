@@ -16,10 +16,12 @@ interface Props {
   city: CityConfig;
   listings: ListingPin[];
   activeId?: string | null;
+  hoveredId?: string | null;
   onSelect?: (id: string | null) => void;
   card?: ReactNode;
   className?: string;
 }
+
 
 const PIN_STYLES: Partial<CSSStyleDeclaration> = {
   position: "absolute",
@@ -186,10 +188,12 @@ export function SampleListingsMap({
   city,
   listings,
   activeId,
+  hoveredId,
   onSelect,
   card,
   className,
 }: Props) {
+
   const ready = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -270,14 +274,17 @@ export function SampleListingsMap({
   }, [ready, city.id, listings]);
 
   // Update marker active state without re-fitting bounds.
+  // Hover takes visual priority over the selected pin.
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     markersRef.current.forEach((m, id) => {
+      const isHovered = id === hoveredId;
       const isActive = id === activeId;
-      m.setActive(isActive);
-      if (isActive) m.panTo(mapRef.current!);
+      m.setActive(isHovered || isActive);
+      if (isActive && !hoveredId) m.panTo(mapRef.current!);
     });
-  }, [ready, activeId]);
+  }, [ready, activeId, hoveredId]);
+
 
   // Render the card overlay anchored to the active pin.
   useEffect(() => {

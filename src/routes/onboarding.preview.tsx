@@ -34,7 +34,9 @@ function SamplePreview() {
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
+
 
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
@@ -111,10 +113,12 @@ function SamplePreview() {
             city={cityConfig}
             listings={pins}
             activeId={activeId}
+            hoveredId={hoveredId}
             onSelect={(id) => setActiveId(id)}
             card={popupCard}
             className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/20 bg-[#f5f2ea]"
           />
+
         )}
       </aside>
 
@@ -169,7 +173,9 @@ function SamplePreview() {
                     listing={listing}
                     selected={listing.id === activeId}
                     onSelect={() => setActiveId(listing.id)}
+                    onHover={setHoveredId}
                   />
+
                 ))}
               </motion.div>
 
