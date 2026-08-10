@@ -1,596 +1,402 @@
-import { AppPage } from "@/components/app/AppPage";
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
+import { useMemo } from "react";
 import {
-  Bell,
   Heart,
-  Mail,
-  X,
   Inbox,
-  Sparkles,
-  ExternalLink,
-  Check,
-  Layers,
   Loader2,
-  ChevronDown,
-  Sparkle,
+  Pencil,
+  Plus,
+  Search as SearchIcon,
+  ThumbsDown,
+  RotateCcw,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { AlertStatus, SavedAlert } from "@/data/savedAlerts";
-import { useAppStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
-import {
-  useAlertsQuery,
-  useUpdateAlertStatusMutation,
-} from "@/lib/queries/alerts";
-import type { AlertRow } from "@/lib/alerts.functions";
 
-export const Route = createFileRoute("/_authenticated/saved")({
-  component: () => (
-    <AppPage title="Saved listings" subtitle="Alerts you kept, contacted, or snoozed.">
-      <SavedAlertsPage />
-    </AppPage>
-  ),
+import { AppPage } from "@/components/app/AppPage";
+import { OriginButton } from "@/components/ui/origin-button";
+import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
+import { ListingActions } from "@/components/app/ListingActions";
+import { cn } from "@/lib/utils";
+import { useAppStore, type Search } from "@/lib/store";
+import { getCity, type CityId } from "@/data/cities";
+import { CITY_MAP } from "@/data/cities/mapData";
+import type { SampleListing } from "@/data/sampleListings";
+import type { AlertRow } from "@/lib/alerts.functions";
+import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
+import { useReportListingMutation } from "@/lib/queries/listingReports";
+
+const TABS = [
+  { key: "saved", label: "Saved listings", icon: Heart },
+  { key: "searches", label: "My searches", icon: SearchIcon },
+  { key: "disliked", label: "Disliked listings", icon: ThumbsDown },
+] as const;
+
+type TabKey = (typeof TABS)[number]["key"];
+
+const searchSchema = z.object({
+  tab: fallback(z.string(), "saved").default("saved"),
 });
 
-type Filter = "all" | "new" | "saved" | "contacted" | "dismissed";
+export const Route = createFileRoute("/_authenticated/saved")({
+  validateSearch: zodValidator(searchSchema),
+  head: () => ({
+    meta: [
+      { title: "Your library — Nook" },
+      {
+        name: "description",
+        content: "Saved listings, your saved searches, and the listings you passed on.",
+      },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
+  component: SavedPage,
+});
 
-const FILTERS: { key: Filter; label: string; icon: any }[] = [
-  { key: "all", label: "All", icon: Inbox },
-  { key: "new", label: "New", icon: Bell },
-  { key: "saved", label: "Saved", icon: Heart },
-  { key: "contacted", label: "Contacted", icon: Mail },
-  { key: "dismissed", label: "Dismissed", icon: X },
-];
-
-function rowToSavedAlert(r: AlertRow): SavedAlert {
-  const l = r.listing as Partial<SavedAlert>;
+/** Map a saved alert row onto the shared listing-card shape. */
+function alertToListing(a: AlertRow, cityId: CityId | undefined): SampleListing {
+  const l = a.listing;
+  const coords = cityId ? CITY_MAP[cityId]?.neighborhoods[l.neighborhood] : undefined;
   return {
-    id: r.id,
-    searchId: r.searchId ?? undefined,
-    title: l.title ?? "Listing",
-    neighborhood: l.neighborhood ?? "—",
-    beds: l.beds ?? 0,
-    baths: l.baths ?? 1,
-    price: l.price ?? 0,
-    receivedAt: l.receivedAt ?? r.createdAt,
-    source: (l.source as SavedAlert["source"]) ?? "StreetEasy",
-    status: r.status as AlertStatus,
-    tags: l.tags ?? [],
-    imageHue: l.imageHue ?? 200,
-    imageUrl: l.imageUrl,
+    id: a.id,
+    address: l.title,
+    rent: l.price,
+    beds: l.beds,
+    baths: l.baths,
+    neighborhood: l.neighborhood,
+    tag: l.tags?.[0],
+    image:
+      l.imageUrl ??
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop",
+    coords,
   };
 }
 
-function SavedAlertsPage() {
-  const allSearches = useAppStore((s) => s.searches);
-  const activeSearchId = useAppStore((s) => s.activeSearchId);
-  const searches = useMemo(
-    () => allSearches.filter((x) => x.status !== "archived"),
-    [allSearches],
+function SavedPage() {
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
+  const activeTab: TabKey = TABS.some((t) => t.key === tab) ? (tab as TabKey) : "saved";
+
+  const searches = useAppStore((s) => s.searches);
+  const alertsQ = useAlertsQuery();
+  const updateStatus = useUpdateAlertStatusMutation();
+  const reportMutation = useReportListingMutation();
+
+  const searchCity = useMemo(() => {
+    const m = new Map<string, CityId>();
+    searches.forEach((s) => m.set(s.id, s.cityId));
+    return m;
+  }, [searches]);
+
+  const rows = alertsQ.data ?? [];
+
+  const savedRows = useMemo(
+    () => rows.filter((r) => r.status !== "dismissed"),
+    [rows],
+  );
+  const dislikedRows = useMemo(
+    () => rows.filter((r) => r.status === "dismissed"),
+    [rows],
   );
 
-  const [filter, setFilter] = useState<Filter>("all");
-  const [scope, setScope] = useState<string>("all"); // "all" | searchId
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [compareOpen, setCompareOpen] = useState(false);
+  const counts: Record<TabKey, number> = {
+    saved: savedRows.length,
+    searches: searches.filter((s) => s.status !== "archived").length,
+    disliked: dislikedRows.length,
+  };
 
-  const alertsQuery = useAlertsQuery();
-  const updateStatusMutation = useUpdateAlertStatusMutation();
-
-  const items: SavedAlert[] = useMemo(
-    () => (alertsQuery.data ?? []).map(rowToSavedAlert),
-    [alertsQuery.data],
-  );
-
-  // searchId is required at DB level — no round-robin needed.
-  const itemsWithSearch = items;
-
-  const scopeFiltered = useMemo(
-    () => (scope === "all" ? itemsWithSearch : itemsWithSearch.filter((a) => a.searchId === scope)),
-    [itemsWithSearch, scope],
-  );
-
-  const filtered = useMemo(
-    () => (filter === "all" ? scopeFiltered : scopeFiltered.filter((a) => a.status === filter)),
-    [scopeFiltered, filter],
-  );
-
-  const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: scopeFiltered.length, new: 0, saved: 0, contacted: 0, dismissed: 0 };
-    scopeFiltered.forEach((a) => (c[a.status as Exclude<Filter, "all">] += 1));
-    return c;
-  }, [scopeFiltered]);
-
-  const updateStatus = (id: string, status: AlertStatus) =>
-    updateStatusMutation.mutate({ id, status });
-
-  const toggle = (id: string) =>
-    setSelected((s) => {
-      const next = new Set(s);
-      if (next.has(id)) next.delete(id);
-      else if (next.size < 3) next.add(id);
-      return next;
-    });
-
-  const selectedItems = itemsWithSearch.filter((a) => selected.has(a.id));
+  const setTab = (key: TabKey) =>
+    navigate({ to: "/saved", search: { tab: key } });
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="font-display text-2xl font-bold text-charcoal-950">
-          Saved <span className="accent-italic">Alerts</span>
-        </h2>
-        <p className="text-sm text-charcoal-600 mt-1">
-          Every listing we've sent you. Select 2–3 to compare with Wren AI.
-        </p>
-      </div>
-
-      {/* Per-search scope chips — only if user has more than one search */}
-      {searches.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1 border-b border-border pb-3">
-          <ScopeChip
-            label="All searches"
-            icon={Layers}
-            active={scope === "all"}
-            count={itemsWithSearch.length}
-            onClick={() => setScope("all")}
-          />
-          {searches.map((s) => {
-            const cnt = itemsWithSearch.filter((a) => a.searchId === s.id).length;
+    <AppPage
+      title="Your library"
+      subtitle="Listings you kept, the searches behind them, and what you passed on."
+    >
+      <div className="space-y-6">
+        {/* Tabs */}
+        <div
+          role="tablist"
+          aria-label="Library sections"
+          className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1"
+        >
+          {TABS.map((t) => {
+            const Icon = t.icon;
+            const active = activeTab === t.key;
             return (
-              <ScopeChip
-                key={s.id}
-                label={s.name}
-                active={scope === s.id}
-                count={cnt}
-                highlight={s.id === activeSearchId}
-                onClick={() => setScope(s.id)}
-              />
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTab(t.key)}
+                className={cn(
+                  "shrink-0 inline-flex items-center gap-2 h-10 px-4 rounded-[12px] text-[13px] font-semibold transition-colors",
+                  active
+                    ? "bg-[#241c12] text-white"
+                    : "bg-white border border-black/10 text-charcoal-700 hover:border-black/20",
+                )}
+              >
+                <Icon className={cn("h-4 w-4", active && t.key === "saved" && "fill-current")} />
+                {t.label}
+                <span
+                  className={cn(
+                    "text-[11px] font-mono",
+                    active ? "text-white/70" : "text-charcoal-500",
+                  )}
+                >
+                  {counts[t.key]}
+                </span>
+              </button>
             );
           })}
         </div>
-      )}
 
-      {/* Filter chips */}
-      <div className="flex gap-2 overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0 pb-1">
-        {FILTERS.map((f) => {
-          const Icon = f.icon;
-          const active = filter === f.key;
-          return (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                "shrink-0 inline-flex items-center gap-2 h-9 px-4 rounded-pill text-xs font-semibold transition-colors",
-                active
-                  ? "bg-charcoal-950 text-paper"
-                  : "bg-paper border border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
-              )}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              {f.label}
-              <span className={cn("text-[10px] font-mono", active ? "text-paper/70" : "text-charcoal-500")}>
-                {counts[f.key]}
-              </span>
-            </button>
-          );
-        })}
+        {alertsQ.isLoading && activeTab !== "searches" ? (
+          <div className="flex items-center justify-center py-16 text-charcoal-500">
+            <Loader2 className="h-5 w-5 animate-spin" />
+          </div>
+        ) : activeTab === "saved" ? (
+          savedRows.length === 0 ? (
+            <EmptyState
+              title="Nothing saved yet"
+              sub="Tap the heart on a listing to keep it here for later."
+            />
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {savedRows.map((r) => {
+                const listing = alertToListing(r, searchCity.get(r.searchId ?? ""));
+                return (
+                  <PreviewListingCard
+                    key={r.id}
+                    listing={listing}
+                    actions={
+                      <ListingActions
+                        saved={r.status === "saved"}
+                        saving={updateStatus.isPending && updateStatus.variables?.id === r.id}
+                        compactSave
+                        onToggleSave={() =>
+                          updateStatus.mutate({
+                            id: r.id,
+                            status: r.status === "saved" ? "new" : "saved",
+                          })
+                        }
+                        onDislike={(reason) =>
+                          updateStatus.mutate({
+                            id: r.id,
+                            status: "dismissed",
+                            dismissReason: reason ?? null,
+                          })
+                        }
+                        onReport={(reason, details) => {
+                          updateStatus.mutate({
+                            id: r.id,
+                            status: "dismissed",
+                            dismissReason: `Reported: ${reason}`,
+                          });
+                          reportMutation.mutate({
+                            listingRef: r.id,
+                            reason,
+                            details,
+                            searchId: r.searchId ?? null,
+                            alertId: r.id,
+                            listing: {
+                              title: listing.address,
+                              neighborhood: listing.neighborhood,
+                              price: listing.rent,
+                              beds: listing.beds,
+                              baths: listing.baths,
+                            },
+                          });
+                        }}
+                      />
+                    }
+                  />
+                );
+              })}
+            </div>
+          )
+        ) : activeTab === "searches" ? (
+          <SearchesTab searches={searches} />
+        ) : dislikedRows.length === 0 ? (
+          <EmptyState
+            title="Nothing disliked"
+            sub="Listings you pass on land here, in case you change your mind."
+          />
+        ) : (
+          <ul className="grid gap-4 sm:grid-cols-2">
+            {dislikedRows.map((r) => (
+              <DislikedCard
+                key={r.id}
+                row={r}
+                restoring={updateStatus.isPending && updateStatus.variables?.id === r.id}
+                onRestore={() =>
+                  updateStatus.mutate({ id: r.id, status: "new", dismissReason: null })
+                }
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    </AppPage>
+  );
+}
+
+/* ---------- My searches ---------- */
+
+function summaryBits(s: Search): string[] {
+  const bits: string[] = [];
+  if (s.budget) bits.push(`$${s.budget[0].toLocaleString()}–$${s.budget[1].toLocaleString()}/mo`);
+  bits.push(s.bedrooms.length ? s.bedrooms.join(", ") : "Any beds");
+  bits.push(`${s.bathrooms} bath`);
+  bits.push(
+    s.moveIn.mode === "specific" && s.moveIn.date
+      ? `Move-in ${new Date(s.moveIn.date).toLocaleDateString()}`
+      : "Flexible move-in",
+  );
+  bits.push(
+    s.neighborhoods.length
+      ? `${s.neighborhoods.length} neighborhood${s.neighborhoods.length === 1 ? "" : "s"}`
+      : "Anywhere in city",
+  );
+  if (s.rentProtection !== "all") bits.push("Rent-protected only");
+  if (!s.includeBrokerFee) bits.push("No broker fee");
+  const amen = Object.entries(s.amenities).filter(([, v]) => v === "must").length;
+  if (amen > 0) bits.push(`${amen} must-have amenit${amen === 1 ? "y" : "ies"}`);
+  if (s.transit.hasPreference) {
+    const lines = Object.entries(s.transit.lines).filter(([, v]) => v !== "off").length;
+    if (lines > 0) bits.push(`${lines} transit line${lines === 1 ? "" : "s"}`);
+  }
+  if (s.commute.maxMinutes) bits.push(`≤${s.commute.maxMinutes} min commute`);
+  bits.push(`${s.alertChannel} alerts · ${s.frequency}`);
+  return bits;
+}
+
+function SearchesTab({ searches }: { searches: Search[] }) {
+  const navigate = useNavigate();
+  const live = searches.filter((s) => s.status !== "archived");
+  const archived = searches.filter((s) => s.status === "archived");
+
+  if (live.length === 0 && archived.length === 0) {
+    return (
+      <EmptyState
+        title="No searches yet"
+        sub="Create a search and we'll start matching listings for you."
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <OriginButton
+          variant="dark"
+          size="medium"
+          onClick={() => navigate({ to: "/onboarding/city" })}
+        >
+          <Plus className="h-4 w-4" /> New search
+        </OriginButton>
       </div>
 
-      {/* List, loading, or empty */}
-      {alertsQuery.isLoading ? (
-        <div className="flex items-center justify-center py-16 text-charcoal-500">
-          <Loader2 className="h-5 w-5 animate-spin" />
-        </div>
-      ) : filtered.length === 0 ? (
-        <EmptyState filter={filter} />
-      ) : (
-        <ul className="space-y-3">
-          {filtered.map((a) => (
-            <AlertRowItem
-              key={a.id}
-              alert={a}
-              selected={selected.has(a.id)}
-              onToggle={() => toggle(a.id)}
-              onAction={(s) => updateStatus(a.id, s)}
-              compareDisabled={!selected.has(a.id) && selected.size >= 3}
-            />
-          ))}
-        </ul>
-      )}
-
-      {/* Compare bar */}
-      {selected.size >= 2 && (
-        <div className="sticky bottom-4 z-30 mx-auto max-w-2xl">
-          <div className="rounded-pill bg-charcoal-950 text-paper shadow-xl px-4 py-2 flex items-center justify-between gap-3">
-            <div className="text-xs">
-              <span className="font-mono text-paper/70">{selected.size} selected</span>
-              <span className="hidden sm:inline text-paper/60 ml-2">· up to 3</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setSelected(new Set())}
-                className="text-xs text-paper/70 hover:text-paper px-2"
+      <ul className="grid gap-4 sm:grid-cols-2">
+        {[...live, ...archived].map((s) => (
+          <li
+            key={s.id}
+            className={cn(
+              "rounded-[16px] border border-black/10 bg-white p-5",
+              s.status === "archived" && "opacity-60",
+            )}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "h-2 w-2 shrink-0 rounded-full",
+                      s.status === "active"
+                        ? "bg-sage-700"
+                        : s.status === "paused"
+                          ? "bg-peach-700"
+                          : "bg-charcoal-300",
+                    )}
+                  />
+                  <h3 className="truncate text-[17px] font-semibold text-[#241c12]">{s.name}</h3>
+                </div>
+                <p className="mt-1 text-[12px] text-charcoal-500">
+                  {getCity(s.cityId)?.name ?? s.cityId} ·{" "}
+                  {s.status === "active" ? "Live" : s.status === "paused" ? "Paused" : "Archived"} ·{" "}
+                  {s.totalAlertsReceived} alerts
+                </p>
+              </div>
+              <OriginButton
+                variant="tertiary"
+                size="medium"
+                aria-label={`Edit ${s.name}`}
+                className="h-9 w-9 shrink-0 rounded-[8px] p-0"
+                onClick={() =>
+                  navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } })
+                }
               >
-                Clear
-              </button>
-              <button
-                type="button"
-                onClick={() => setCompareOpen(true)}
-                className="inline-flex items-center gap-2 h-9 px-4 rounded-pill bg-sage-200 text-charcoal-950 text-xs font-semibold hover:bg-sage-100"
-              >
-                <Sparkles className="h-3.5 w-3.5" /> Compare with Wren AI
-              </button>
+                <Pencil className="h-4 w-4" />
+              </OriginButton>
             </div>
-          </div>
-        </div>
-      )}
 
-      {compareOpen && (
-        <WrenCompareModal items={selectedItems} onClose={() => setCompareOpen(false)} />
-      )}
+            <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-[12px] leading-[18px] text-charcoal-600">
+              {summaryBits(s).map((b, i) => (
+                <span key={`${s.id}-${i}`} className="after:ml-2 after:content-['·'] last:after:content-['']">
+                  {b}
+                </span>
+              ))}
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-/* ---------- Row ---------- */
-function fitScore(id: string): number {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-  return 85 + (h % 14); // 85..98
-}
+/* ---------- Disliked ---------- */
 
-function AlertRowItem({
-  alert,
-  selected,
-  onToggle,
-  onAction,
-  compareDisabled,
+function DislikedCard({
+  row,
+  restoring,
+  onRestore,
 }: {
-  alert: SavedAlert;
-  selected: boolean;
-  onToggle: () => void;
-  onAction: (s: AlertStatus) => void;
-  compareDisabled: boolean;
+  row: AlertRow;
+  restoring: boolean;
+  onRestore: () => void;
 }) {
-  const days = Math.floor((Date.now() - new Date(alert.receivedAt).getTime()) / 86400000);
-  const ago = days === 0 ? "today" : days === 1 ? "1d ago" : `${days}d ago`;
-  const fit = fitScore(alert.id);
-  const isDismissed = alert.status === "dismissed";
-
+  const l = row.listing;
   return (
-    <li
-      className={cn(
-        "rounded-card border bg-surface-elevated px-5 py-4 transition-colors relative",
-        selected ? "border-charcoal-950 ring-1 ring-charcoal-950" : "border-border hover:border-charcoal-300",
-        isDismissed && "opacity-60",
-      )}
-    >
-      {/* Source · ago — top right */}
-      <div className="absolute top-4 right-5 text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-        {alert.source} · {ago}
-      </div>
-
-      <div className="flex items-start gap-4">
-        {/* Checkbox */}
-        <button
-          type="button"
-          onClick={onToggle}
-          disabled={compareDisabled}
-          aria-pressed={selected}
-          className={cn(
-            "shrink-0 mt-1 h-5 w-5 rounded-md border flex items-center justify-center transition-colors",
-            selected ? "bg-charcoal-950 border-charcoal-950 text-paper" : "border-charcoal-300 hover:border-charcoal-950",
-            compareDisabled && "opacity-40 cursor-not-allowed",
-          )}
-        >
-          {selected && <Check className="h-3 w-3" />}
-        </button>
-
-        {/* Thumb */}
-        <div
-          className="shrink-0 h-20 w-28 rounded-lg overflow-hidden bg-charcoal-100"
-          style={{ background: `hsl(${alert.imageHue} 40% 80%)` }}
-        >
-          {alert.imageUrl && (
-            <img
-              src={alert.imageUrl}
-              alt={alert.title}
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          )}
-        </div>
-
-        {/* Main */}
-        <div className="flex-1 min-w-0 pr-28">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <h3 className={cn(
-              "font-display text-lg font-semibold text-charcoal-950 leading-tight",
-              isDismissed && "line-through",
-            )}>
-              {alert.title}
-            </h3>
-            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider bg-sage-100 text-sage-900 rounded-pill px-2 py-0.5">
-              <Sparkle className="h-2.5 w-2.5 fill-current" /> {fit}% match
-            </span>
-          </div>
-          <div className="text-sm text-charcoal-600 mt-1">
-            {alert.neighborhood} · {alert.beds === 0 ? "Studio" : `${alert.beds}BR`}/{alert.baths}BA ·{" "}
-            <span className="font-semibold text-charcoal-800">${alert.price.toLocaleString()}/mo</span>
-          </div>
-
-          {alert.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2.5">
-              {alert.tags.map((t) => (
-                <span
-                  key={t}
-                  className="text-[11px] font-medium px-2.5 py-0.5 rounded-pill bg-sage-100 text-sage-900"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Actions — single status control + View */}
-        <div className="shrink-0 self-end flex items-center gap-2">
-          {isDismissed ? (
-            <button
-              type="button"
-              onClick={() => onAction("new")}
-              className="text-sm font-semibold text-sage-800 hover:text-sage-900"
-            >
-              Undo dismiss
-            </button>
-          ) : (
-            <StatusDropdown status={alert.status} onChange={onAction} />
-          )}
-          <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 transition-colors"
-          >
-            View <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-        </div>
+    <li className="rounded-[16px] border border-black/10 bg-white p-5 opacity-60 transition-opacity hover:opacity-90">
+      <h3 className="truncate text-[17px] font-semibold text-[#241c12] line-through">{l.title}</h3>
+      <p className="mt-1 text-[13px] text-charcoal-500">
+        {l.neighborhood} · {l.beds === 0 ? "Studio" : `${l.beds} bed`} · {l.baths} bath ·{" "}
+        <span className="line-through">${l.price.toLocaleString()}/mo</span>
+      </p>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <span className="inline-flex max-w-[70%] items-center gap-1.5 rounded-[8px] bg-black/[0.04] px-2.5 py-1 text-[12px] text-charcoal-600">
+          <ThumbsDown className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{row.dismissReason ?? "No reason given"}</span>
+        </span>
+        <OriginButton variant="tertiary" size="medium" onClick={onRestore} disabled={restoring}>
+          {restoring ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4" />}
+          Restore
+        </OriginButton>
       </div>
     </li>
   );
 }
 
-const STATUS_OPTIONS: { value: AlertStatus; label: string; icon: any }[] = [
-  { value: "new", label: "New", icon: Bell },
-  { value: "saved", label: "Saved", icon: Heart },
-  { value: "contacted", label: "Contacted", icon: Mail },
-  { value: "dismissed", label: "Dismiss", icon: X },
-];
-
-function StatusDropdown({
-  status,
-  onChange,
-}: {
-  status: AlertStatus;
-  onChange: (s: AlertStatus) => void;
-}) {
-  const current = STATUS_OPTIONS.find((o) => o.value === status) ?? STATUS_OPTIONS[0];
-  const Icon = current.icon;
-
-  const variant: Record<AlertStatus, string> = {
-    "new": "bg-sage-100 border-sage-300 text-sage-900",
-    saved: "bg-sage-900 border-sage-900 text-paper",
-    contacted: "bg-surface-elevated border-sage-500 text-sage-900",
-    dismissed: "bg-surface-elevated border-charcoal-200 text-charcoal-600",
-  };
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "inline-flex items-center gap-1.5 h-9 pl-3 pr-2.5 rounded-pill text-sm font-semibold border transition-colors",
-            variant[status],
-          )}
-        >
-          <Icon className={cn("h-3.5 w-3.5", status === "saved" && "fill-current")} />
-          {current.label}
-          <ChevronDown className="h-3 w-3 opacity-70" />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        {STATUS_OPTIONS.map((o) => {
-          const OIcon = o.icon;
-          const active = o.value === status;
-          return (
-            <DropdownMenuItem
-              key={o.value}
-              onSelect={() => onChange(o.value)}
-              className={cn(
-                "gap-2.5 text-sm",
-                active && "text-sage-900 font-semibold bg-sage-100/60",
-              )}
-            >
-              <OIcon className={cn("h-4 w-4", active ? "text-sage-900" : "text-charcoal-500")} />
-              {o.label}
-              {active && <Check className="h-3.5 w-3.5 ml-auto text-sage-900" />}
-            </DropdownMenuItem>
-          );
-        })}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function ScopeChip({
-  label,
-  icon: Icon,
-  active,
-  count,
-  highlight,
-  onClick,
-}: {
-  label: string;
-  icon?: typeof Layers;
-  active: boolean;
-  count: number;
-  highlight?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "shrink-0 inline-flex items-center gap-2 h-9 px-3.5 rounded-pill text-xs font-semibold transition-colors",
-        active
-          ? "bg-sage-700 text-paper"
-          : "bg-paper border border-charcoal-200 text-charcoal-700 hover:border-charcoal-950",
-        !active && highlight && "border-charcoal-950",
-      )}
-    >
-      {Icon && <Icon className="h-3.5 w-3.5" />}
-      <span className="max-w-[140px] truncate">{label}</span>
-      <span className={cn("text-[10px] font-mono", active ? "text-paper/70" : "text-charcoal-500")}>
-        {count}
-      </span>
-    </button>
-  );
-}
-
-
-
-
 /* ---------- Empty ---------- */
-function EmptyState({ filter }: { filter: Filter }) {
-  const copy: Record<Filter, { title: string; sub: string }> = {
-    all: { title: "No alerts yet", sub: "Your matched listings will land here as soon as they appear." },
-    new: { title: "All caught up", sub: "Nothing new since last visit. We'll ping you the moment something matches." },
-    saved: { title: "Nothing saved", sub: "Tap the heart on an alert to keep it for later." },
-    contacted: { title: "No outreach yet", sub: "Mark listings as contacted to track who you've reached out to." },
-    dismissed: { title: "Inbox zero", sub: "Listings you dismiss show up here in case you change your mind." },
-  };
-  const m = copy[filter];
+
+function EmptyState({ title, sub }: { title: string; sub: string }) {
   return (
-    <div className="rounded-card border border-dashed border-charcoal-200 bg-paper-warm/50 p-10 text-center">
-      <Inbox className="h-8 w-8 text-charcoal-400 mx-auto" />
-      <div className="mt-3 font-display text-lg font-bold text-charcoal-950">{m.title}</div>
-      <div className="text-sm text-charcoal-600 mt-1 max-w-sm mx-auto">{m.sub}</div>
-    </div>
-  );
-}
-
-/* ---------- Wren AI compare modal ---------- */
-function WrenCompareModal({ items, onClose }: { items: SavedAlert[]; onClose: () => void }) {
-  const cheapest = [...items].sort((a, b) => a.price - b.price)[0];
-  const bestProtected = items.find((i) => i.tags.includes("rent-stabilized")) ?? items[0];
-  const avgPrice = Math.round(items.reduce((s, i) => s + i.price, 0) / items.length);
-
-  return (
-    <div className="fixed inset-0 z-50 bg-charcoal-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 animate-fade-in">
-      <div className="bg-paper rounded-card w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div className="sticky top-0 bg-paper border-b border-border px-5 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-pill bg-sage-200 flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-sage-800" />
-            </div>
-            <div>
-              <div className="font-display text-lg font-bold text-charcoal-950">Wren's comparison</div>
-              <div className="text-[11px] text-charcoal-500">Comparing {items.length} listings</div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="h-9 w-9 rounded-pill border border-charcoal-200 inline-flex items-center justify-center text-charcoal-700 hover:border-charcoal-950"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="p-5 space-y-5">
-          {/* Wren summary */}
-          <div className="rounded-card bg-sage-100/60 border border-sage-200 p-4">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-sage-800 mb-2">
-              Wren's take
-            </div>
-            <p className="text-sm text-charcoal-800 leading-relaxed">
-              You're looking at <strong>{items.length}</strong> places averaging{" "}
-              <strong>${avgPrice.toLocaleString()}/mo</strong>. The best price is{" "}
-              <strong>{cheapest.title}</strong> in {cheapest.neighborhood} at{" "}
-              <strong>${cheapest.price.toLocaleString()}</strong>.{" "}
-              {bestProtected.tags.includes("rent-stabilized")
-                ? `${bestProtected.title} is rent-stabilized — strongest long-term protection.`
-                : "None of these are rent-stabilized, so renewal increases will follow market rate."}
-            </p>
-          </div>
-
-          {/* Per-listing grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {items.map((a) => (
-              <div key={a.id} className="rounded-card border border-border p-3 bg-surface-elevated">
-                <div
-                  className="h-28 w-full rounded-md mb-2 overflow-hidden bg-charcoal-100"
-                  style={{ background: `hsl(${a.imageHue} 40% 80%)` }}
-                >
-                  {a.imageUrl && (
-                    <img
-                      src={a.imageUrl}
-                      alt={a.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
-                  )}
-                </div>
-                <div className="text-sm font-semibold text-charcoal-950 truncate">{a.title}</div>
-                <div className="text-xs text-charcoal-600">{a.neighborhood}</div>
-                <div className="text-sm font-bold text-charcoal-950 mt-1">
-                  ${a.price.toLocaleString()}/mo
-                </div>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {a.tags.slice(0, 3).map((t) => (
-                    <span key={t} className="text-[10px] px-1.5 py-0.5 rounded-pill bg-sage-100 text-sage-800">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Suggested questions */}
-          <div>
-            <div className="text-[11px] font-mono uppercase tracking-wider text-charcoal-500 mb-2">
-              Ask Wren
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Which has the best commute to Midtown?",
-                "Any DOB violations on these buildings?",
-                "What's the typical rent trajectory in these neighborhoods?",
-              ].map((q) => (
-                <button
-                  key={q}
-                  type="button"
-                  className="text-xs h-9 px-3 rounded-pill border border-charcoal-200 text-charcoal-700 hover:border-charcoal-950 text-left"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="rounded-[16px] border border-dashed border-black/15 bg-white/50 p-10 text-center">
+      <Inbox className="mx-auto h-8 w-8 text-charcoal-400" />
+      <div className="mt-3 font-display text-lg font-bold text-charcoal-950">{title}</div>
+      <div className="mx-auto mt-1 max-w-sm text-sm text-charcoal-600">{sub}</div>
     </div>
   );
 }
