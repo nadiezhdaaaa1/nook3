@@ -120,7 +120,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
                 >
                   <NavHoverItem
                     to={to}
-                    className="w-full justify-start gap-3 rounded-[12px] border border-black/20 bg-transparent px-3 py-2.5 hover:bg-transparent"
+                    className="w-full justify-start gap-3 rounded-[12px] border border-black/20 px-3 py-2.5"
                   >
                     <Icon size={20} stroke={1.5} className="shrink-0" aria-hidden />
                     <span className={LABEL_CLASS}>{label}</span>
