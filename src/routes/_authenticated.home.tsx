@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useMemo, useState } from "react";
-import { ListFilter, ShieldCheck } from "lucide-react";
+import { ListFilter } from "lucide-react";
 
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
