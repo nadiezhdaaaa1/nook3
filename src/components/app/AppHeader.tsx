@@ -13,6 +13,7 @@ import { Logo } from "@/components/brand/Logo";
 import { NavHoverItem } from "@/components/app/NavHoverItem";
 import { PlanBadge, type PlanKey } from "@/components/app/PlanBadge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAppStore } from "@/lib/store";
 
 const ICON_PROPS = {
@@ -62,19 +63,34 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
             <IconHeart {...ICON_PROPS} aria-hidden />
             <span className={LABEL_CLASS}>Saved</span>
           </NavHoverItem>
-          <NavHoverItem to="/wren" className={ICON_BUTTON_CLASS} aria-label="Wren AI chat">
-            <IconMessageChatbot {...ICON_PROPS} aria-hidden />
-          </NavHoverItem>
-          <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
-            <IconGift {...ICON_PROPS} aria-hidden />
-          </NavHoverItem>
-          <NavHoverItem
-            to="/account"
-            aria-label="Account"
-            className={ICON_BUTTON_CLASS}
-          >
-            <IconUser {...ICON_PROPS} aria-hidden />
-          </NavHoverItem>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavHoverItem to="/wren" className={ICON_BUTTON_CLASS} aria-label="Wren AI chat">
+                <IconMessageChatbot {...ICON_PROPS} aria-hidden />
+              </NavHoverItem>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Wren AI chat</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
+                <IconGift {...ICON_PROPS} aria-hidden />
+              </NavHoverItem>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Referrals</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavHoverItem
+                to="/account"
+                aria-label="Account"
+                className={ICON_BUTTON_CLASS}
+              >
+                <IconUser {...ICON_PROPS} aria-hidden />
+              </NavHoverItem>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Account</TooltipContent>
+          </Tooltip>
         </nav>
 
         <Sheet open={open} onOpenChange={setOpen}>
