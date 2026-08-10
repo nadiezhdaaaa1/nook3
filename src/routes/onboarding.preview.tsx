@@ -35,6 +35,7 @@ function SamplePreview() {
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [openWrenId, setOpenWrenId] = useState<string | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
 
 
