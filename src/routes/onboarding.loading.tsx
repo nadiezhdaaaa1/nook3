@@ -32,7 +32,7 @@ function SearchSetupLoader() {
   // active = index currently in-progress; equals STEPS.length when all done
   const [active, advance] = useReducer((n: number) => n + 1, 0);
   const [almostThere, setAlmostThere] = useState(false);
-  const startedRef = useRef(false);
+  const navigatedRef = useRef(false);
 
   // Block back-nav while loader is running
   useEffect(() => {
@@ -44,28 +44,20 @@ function SearchSetupLoader() {
     return () => window.removeEventListener("beforeunload", block);
   }, []);
 
-  // Sequential simulated progress
+  // Sequential simulated progress: one timer per step, restartable across remounts.
   useEffect(() => {
-    if (startedRef.current) return;
-    startedRef.current = true;
-    let cancelled = false;
-    (async () => {
-      for (let i = 0; i < STEPS.length; i++) {
-        await new Promise<void>((resolve) => {
-          const t = setTimeout(resolve, STEP_MS[i]);
-          if (cancelled) clearTimeout(t);
-        });
-        if (cancelled) return;
-        advance();
-      }
-      // Brief settle pause, then route
-      await new Promise((r) => setTimeout(r, 400));
-      if (!cancelled) navigate({ to: "/onboarding/preview" });
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [navigate]);
+    if (active < STEPS.length) {
+      const t = setTimeout(advance, STEP_MS[active] ?? 1200);
+      return () => clearTimeout(t);
+    }
+    if (navigatedRef.current) return;
+    const t = setTimeout(() => {
+      if (navigatedRef.current) return;
+      navigatedRef.current = true;
+      navigate({ to: "/onboarding/preview", replace: true });
+    }, 400);
+    return () => clearTimeout(t);
+  }, [active, navigate]);
 
   // "Almost there" fallback if step 3 stalls past 3s (won't fire under simulation,
   // but covers slow-backend mode).
@@ -74,6 +66,7 @@ function SearchSetupLoader() {
     const t = setTimeout(() => setAlmostThere(true), ALMOST_THERE_DELAY);
     return () => clearTimeout(t);
   }, [active]);
+
 
   const activeLabel = active < STEPS.length ? STEPS[active] : null;
   const variants = reduce ? undefined : OB_STEP_VARIANTS;
