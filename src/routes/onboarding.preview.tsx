@@ -77,6 +77,8 @@ function SamplePreview() {
       popup
       selected
       onClose={() => setActiveId(null)}
+      openId={openWrenId}
+      setOpenId={setOpenWrenId}
     />
   ) : null;
 
