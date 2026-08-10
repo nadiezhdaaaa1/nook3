@@ -49,6 +49,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           <Link to="/home" aria-label="Nook home" className="flex shrink-0 items-center">
             <Logo className="h-[28px] w-[81.22px]" />
           </Link>
+          <span className="hidden h-5 w-px bg-black/[0.12] sm:block" aria-hidden="true" />
           <PlanBadge plan={resolvedPlan} />
         </div>
 
