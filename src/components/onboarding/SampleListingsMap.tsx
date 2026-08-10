@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Minus, Plus } from "lucide-react";
 import { createRoot, type Root } from "react-dom/client";
 import type { CityConfig } from "@/data/cities";
@@ -53,11 +53,76 @@ function formatRent(rent: number): string {
   return `$${Math.round(rent / 100) / 10}k`;
 }
 
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
+  );
+}
+
+interface Cluster {
+  id: string;
+  anchor: google.maps.LatLng;
+  members: ListingPin[];
+}
+
+const CLUSTER_THRESHOLD_PX = 44;
+
+function computeClusters(
+  map: google.maps.Map,
+  listings: ListingPin[],
+  threshold = CLUSTER_THRESHOLD_PX,
+): Cluster[] {
+  const toCluster = (l: ListingPin): Cluster => ({
+    id: `cluster:${l.id}`,
+    anchor: new google.maps.LatLng(l.coords[0], l.coords[1]),
+    members: [l],
+  });
+
+  const projection = map.getProjection();
+  const zoom = map.getZoom();
+  if (!projection || zoom == null) return listings.map(toCluster);
+
+  const scale = Math.pow(2, zoom);
+  const points = listings.map((l) => {
+    const point = projection.fromLatLngToPoint(new google.maps.LatLng(l.coords[0], l.coords[1]));
+    return { listing: l, x: (point?.x ?? 0) * scale, y: (point?.y ?? 0) * scale };
+  });
+
+  const used = new Set<number>();
+  const clusters: Cluster[] = [];
+  points.forEach((p, i) => {
+    if (used.has(i)) return;
+    used.add(i);
+    const members = [p.listing];
+    points.forEach((q, j) => {
+      if (j <= i || used.has(j)) return;
+      if (Math.hypot(p.x - q.x, p.y - q.y) <= threshold) {
+        used.add(j);
+        members.push(q.listing);
+      }
+    });
+    clusters.push({
+      id: `cluster:${p.listing.id}`,
+      anchor: new google.maps.LatLng(p.listing.coords[0], p.listing.coords[1]),
+      members,
+    });
+  });
+  return clusters;
+}
+
+function clusterSignature(clusters: Cluster[]): string {
+  return clusters.map((c) => c.members.map((m) => m.id).join("+")).join("|");
+}
+
 function createPinElement(): HTMLDivElement {
   const pin = document.createElement("div");
   Object.assign(pin.style, PIN_STYLES);
   return pin;
 }
+
+
+type PinVariant = "price" | "count" | "dot";
 
 class PinOverlay {
   private overlay: google.maps.OverlayView;
@@ -67,11 +132,39 @@ class PinOverlay {
   private map: google.maps.Map | null = null;
   private scale = 1;
   private active = false;
+  private variant: PinVariant;
+  private offset: { x: number; y: number } = { x: 0, y: 0 };
 
-  constructor(position: google.maps.LatLng, rent: number) {
+  constructor(
+    position: google.maps.LatLng,
+    label: string,
+    variant: PinVariant = "price",
+    animate = false,
+  ) {
     this.position = position;
+    this.variant = variant;
     this.pin = createPinElement();
-    this.pin.textContent = formatRent(rent);
+    if (variant === "dot") {
+      this.pin.style.padding = "0";
+      this.pin.style.width = "8px";
+      this.pin.style.height = "8px";
+      this.pin.style.borderRadius = "9999px";
+      this.pin.style.background = "rgba(36, 28, 18, 0.35)";
+      this.pin.style.border = "1px solid rgba(255,255,255,0.7)";
+      this.pin.style.boxShadow = "none";
+      this.pin.style.cursor = "default";
+      this.pin.style.pointerEvents = "none";
+    } else {
+      this.pin.textContent = label;
+      if (variant === "count") {
+        this.pin.style.padding = "10px 16px";
+        this.pin.style.fontSize = "17px";
+        this.pin.style.minWidth = "44px";
+      }
+    }
+    if (animate && !prefersReducedMotion()) {
+      this.pin.style.transition = "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)";
+    }
     this.pin.addEventListener("click", (e) => {
       e.stopPropagation();
       this.clickHandlers.forEach((h) => h());
@@ -86,7 +179,7 @@ class PinOverlay {
       if (!projection) return;
       const pixel = projection.fromLatLngToDivPixel(this.position);
       if (!pixel) return;
-      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%) scale(${this.scale})`;
+      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%) translate(${this.offset.x}px, ${this.offset.y}px) scale(${this.scale})`;
     };
     this.overlay.onRemove = () => {
       if (this.pin.parentNode) {
@@ -94,6 +187,12 @@ class PinOverlay {
       }
     };
   }
+
+  setOffset(x: number, y: number) {
+    this.offset = { x, y };
+    this.overlay.draw();
+  }
+
 
   private getPanes() {
     return this.overlay.getPanes();
@@ -205,6 +304,10 @@ export function SampleListingsMap({
   const markersRef = useRef<Map<string, PinOverlay>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const [clusters, setClusters] = useState<Cluster[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const signatureRef = useRef<string>("");
+
 
   const overlayRef = useRef<{
     overlay: google.maps.OverlayView;
@@ -236,11 +339,12 @@ export function SampleListingsMap({
     });
   }, [ready, city.id]);
 
-  // Clicking the map base clears the active selection.
+  // Clicking the map base clears the active selection and collapses any stack.
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     const map = mapRef.current;
     const listener = map.addListener("click", () => {
+      setExpandedId(null);
       onSelectRef.current?.(null);
     });
     return () => {
@@ -248,25 +352,14 @@ export function SampleListingsMap({
     };
   }, [ready]);
 
-  // Render/update markers when the listing set changes.
+
+  // Fit the viewport to the listing set (does not depend on clustering).
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     const map = mapRef.current;
-
-    markersRef.current.forEach((m) => m.setMap(null));
-    markersRef.current.clear();
-
-    const bounds = new google.maps.LatLngBounds();
-    listings.forEach((l) => {
-      const position = new google.maps.LatLng(l.coords[0], l.coords[1]);
-      const overlay = new PinOverlay(position, l.rent);
-      overlay.addListener("click", () => onSelectRef.current?.(l.id));
-      overlay.setMap(map);
-      markersRef.current.set(l.id, overlay);
-      bounds.extend(position);
-    });
-
     if (listings.length > 1) {
+      const bounds = new google.maps.LatLngBounds();
+      listings.forEach((l) => bounds.extend(new google.maps.LatLng(l.coords[0], l.coords[1])));
       map.fitBounds(bounds, 60);
     } else if (listings.length === 1) {
       map.setCenter({ lat: listings[0].coords[0], lng: listings[0].coords[1] });
@@ -278,18 +371,107 @@ export function SampleListingsMap({
     }
   }, [ready, city.id, listings]);
 
+  // Recompute clusters whenever the map settles or the listing set changes.
+  useEffect(() => {
+    if (!ready || !mapRef.current) return;
+    const map = mapRef.current;
+
+    const recompute = () => {
+      const next = computeClusters(map, listings);
+      const signature = clusterSignature(next);
+      if (signature === signatureRef.current) return;
+      signatureRef.current = signature;
+      setClusters(next);
+    };
+
+    recompute();
+    const idle = map.addListener("idle", recompute);
+    const zoom = map.addListener("zoom_changed", () => setExpandedId(null));
+    const drag = map.addListener("dragstart", () => setExpandedId(null));
+    return () => {
+      google.maps.event.removeListener(idle);
+      google.maps.event.removeListener(zoom);
+      google.maps.event.removeListener(drag);
+    };
+  }, [ready, listings]);
+
+  // Render pins for the current clustering / expansion state.
+  useEffect(() => {
+    if (!ready || !mapRef.current) return;
+    const map = mapRef.current;
+
+    markersRef.current.forEach((m) => m.setMap(null));
+    markersRef.current.clear();
+
+    clusters.forEach((cluster) => {
+      const collapsed = cluster.members.length > 1 && expandedId !== cluster.id;
+
+      if (collapsed) {
+        const pin = new PinOverlay(cluster.anchor, String(cluster.members.length), "count");
+        pin.addListener("click", () => {
+          setExpandedId(cluster.id);
+        });
+        pin.setMap(map);
+        markersRef.current.set(cluster.id, pin);
+        return;
+      }
+
+      if (cluster.members.length > 1) {
+        const dot = new PinOverlay(cluster.anchor, "", "dot");
+        dot.setMap(map);
+        markersRef.current.set(`${cluster.id}:dot`, dot);
+      }
+
+      const count = cluster.members.length;
+      const radius = count > 1 ? 40 + count * 2 : 0;
+      cluster.members.forEach((l, index) => {
+        const position = new google.maps.LatLng(l.coords[0], l.coords[1]);
+        const pin = new PinOverlay(position, formatRent(l.rent), "price", count > 1);
+        if (count > 1) {
+          const angle = -Math.PI / 2 + (index * 2 * Math.PI) / count;
+          pin.setOffset(Math.cos(angle) * radius, Math.sin(angle) * radius);
+        }
+        pin.addListener("click", () => {
+          if (count === 1) setExpandedId(null);
+          onSelectRef.current?.(l.id);
+        });
+        pin.setMap(map);
+        markersRef.current.set(l.id, pin);
+      });
+    });
+  }, [ready, clusters, expandedId]);
+
   // Update marker active state without re-fitting bounds.
   // Hover takes visual priority over the selected pin.
   useEffect(() => {
     if (!ready || !mapRef.current) return;
-    markersRef.current.forEach((m, id) => {
-      const isHovered = id === hoveredId;
-      const isActive = id === activeId;
-      m.setActive(isHovered || isActive);
-      if (isHovered || isActive) m.bringToFront();
-      if (isActive && !hoveredId) m.panTo(mapRef.current!);
+    const clusterOf = new Map<string, Cluster>();
+    clusters.forEach((c) => c.members.forEach((m) => clusterOf.set(m.id, c)));
+
+    const highlightIds = new Set<string>();
+    [hoveredId, activeId].forEach((id) => {
+      if (!id) return;
+      if (markersRef.current.has(id)) {
+        highlightIds.add(id);
+        return;
+      }
+      const cluster = clusterOf.get(id);
+      if (cluster && markersRef.current.has(cluster.id)) highlightIds.add(cluster.id);
     });
-  }, [ready, activeId, hoveredId]);
+
+    markersRef.current.forEach((m, id) => {
+      if (id.endsWith(":dot")) return;
+      const highlighted = highlightIds.has(id);
+      m.setActive(highlighted);
+      if (highlighted) m.bringToFront();
+    });
+
+    if (activeId && !hoveredId) {
+      const target = markersRef.current.get(activeId) ?? markersRef.current.get(clusterOf.get(activeId)?.id ?? "");
+      target?.panTo(mapRef.current);
+    }
+  }, [ready, activeId, hoveredId, clusters, expandedId]);
+
 
 
   // Render the card overlay anchored to the active pin.
