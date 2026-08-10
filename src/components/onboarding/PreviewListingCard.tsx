@@ -241,8 +241,8 @@ export function PreviewListingCard({
         <div
           className="relative"
           style={{
-            background: open ? "#FFF1EA" : "#ffffff",
-            border: "1px solid rgba(0,0,0,0.10)",
+            background: "#2B2521",
+            border: "1px solid transparent",
             borderRadius: 10,
             overflow: "hidden",
           }}
@@ -255,15 +255,15 @@ export function PreviewListingCard({
           }}
         >
           <span className="relative z-10 flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-[#D66C38]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#FA8B55]" />
             <span
-              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12]"
+              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-white"
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-[#241C12]"
+            className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-white"
             style={{
               width: 16,
               height: 16,
@@ -272,7 +272,7 @@ export function PreviewListingCard({
           />
         </WrenTakeButton>
         {open && (
-          <p className="px-3 pb-3 text-[#241C12]" style={{ fontSize: 13, lineHeight: 1.5 }}>
+          <p className="px-3 pb-3 text-white" style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
