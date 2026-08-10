@@ -464,6 +464,22 @@ function HomeScreen() {
 
         </div>
       </section>
+
+      <FiltersSheet
+        open={filtersOpen}
+        onOpenChange={setFiltersOpen}
+        scope={scope}
+        filters={filters}
+        onChange={setFilters}
+        onReset={() => setFilters(defaultFilters(scope))}
+        onEditSearch={() => {
+          setFiltersOpen(false);
+          if (search) navigate({ to: "/search/$searchId/budget", params: { searchId: search.id } });
+        }}
+        resultCount={visibleListings.length}
+        searchName={search?.name}
+      />
     </div>
   );
+
 }
