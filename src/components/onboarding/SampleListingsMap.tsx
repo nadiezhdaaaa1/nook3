@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Minus, Plus } from "lucide-react";
+import { Maximize2, Minimize2, Minus, Plus } from "lucide-react";
 import { createRoot, type Root } from "react-dom/client";
 import type { CityConfig } from "@/data/cities";
 import { useGoogleMaps } from "@/lib/maps/useGoogleMaps";
@@ -20,7 +20,11 @@ interface Props {
   onSelect?: (id: string | null) => void;
   card?: ReactNode;
   className?: string;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
+  topLeftControls?: ReactNode;
 }
+
 
 
 const PIN_STYLES: Partial<CSSStyleDeclaration> = {
@@ -296,7 +300,11 @@ export function SampleListingsMap({
   onSelect,
   card,
   className,
+  isFullscreen,
+  onToggleFullscreen,
+  topLeftControls,
 }: Props) {
+
 
   const ready = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -521,6 +529,18 @@ export function SampleListingsMap({
     };
   }, [ready, activeId, card, listings]);
 
+  // Re-layout tiles and pins when the map container size changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!ready || !map) return;
+    const center = map.getCenter();
+    const id = window.setTimeout(() => {
+      google.maps.event.trigger(map, "resize");
+      if (center) map.setCenter(center);
+    }, 60);
+    return () => window.clearTimeout(id);
+  }, [ready, isFullscreen]);
+
   return (
     <div
       className={
@@ -529,8 +549,27 @@ export function SampleListingsMap({
       }
     >
       <div ref={containerRef} className="absolute inset-0" />
+      {topLeftControls && (
+        <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-2 rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm sm:flex-row sm:items-center">
+          {topLeftControls}
+        </div>
+      )}
+      {ready && onToggleFullscreen && (
+        <div className="absolute right-4 top-4 z-10 flex flex-col gap-1 rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+          <button
+            type="button"
+            aria-label={isFullscreen ? "Exit fullscreen map" : "Expand map to fullscreen"}
+            aria-pressed={!!isFullscreen}
+            onClick={onToggleFullscreen}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#241c12] transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
+          >
+            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+          </button>
+        </div>
+      )}
       {ready && (
-        <div className="absolute bottom-4 right-4 flex flex-col gap-1 rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+        <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-1 rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+
           <button
             type="button"
             aria-label="Zoom in"
