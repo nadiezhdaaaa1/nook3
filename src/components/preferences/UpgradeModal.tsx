@@ -107,7 +107,6 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
               className="w-full sm:flex-1"
               onClick={goPricing}
             >
-              <Zap className="h-4 w-4" aria-hidden />
               View plans
             </OriginButton>
           </div>
