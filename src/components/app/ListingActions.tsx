@@ -68,7 +68,7 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100"
+          className="flex items-center gap-1 opacity-100 transition-opacity duration-150 lg:opacity-0 group-hover:opacity-100 focus-within:opacity-100"
           data-selected={selected}
           style={{ opacity: selected ? 1 : undefined }}
         >
