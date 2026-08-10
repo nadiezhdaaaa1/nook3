@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Bookmark, Gift, Lock, LogOut, Sparkles, UserCircle } from "lucide-react";
 import { toast } from "sonner";
-import { Logo, LogoMark } from "@/components/brand/Logo";
+import { Logo } from "@/components/brand/Logo";
 import { SearchSelector } from "@/components/app/SearchSelector";
 import { useAppStore } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
