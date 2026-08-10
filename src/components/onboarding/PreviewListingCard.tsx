@@ -87,9 +87,10 @@ export function PreviewListingCard({
           className="min-w-0 flex-1 truncate"
           style={{
             fontWeight: 600,
-            fontSize: 15,
-            lineHeight: "22px",
+            fontSize: 17,
+            lineHeight: "24px",
             color: "#241c12",
+            fontFamily: "var(--font-sans)",
           }}
         >
           {listing.address}
