@@ -59,13 +59,7 @@ function getCoverDiameter(width: number, height: number, x: number, y: number) {
   );
 }
 
-function WrenTakeHeader({
-  open,
-  children,
-}: {
-  open: boolean;
-  children: React.ReactNode;
-}) {
+function WrenTakeHeader({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex w-full items-center justify-between gap-2 text-left p-3">
       {children}
