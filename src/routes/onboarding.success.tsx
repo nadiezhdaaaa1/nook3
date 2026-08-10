@@ -222,7 +222,7 @@ function Success() {
     >
       <motion.div variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
-          Create your account to go <span className="accent-italic">live</span>.
+          Create your account to go live.
         </h1>
         <p style={OB_SUB}>
           Here's what we'll watch for you. You can change any of it later in your preferences.
