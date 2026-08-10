@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { Broom, Pencil } from "lucide-react";
+import { Brush, Pencil } from "lucide-react";
 
 import {
   Sheet,
@@ -367,7 +367,7 @@ export function FiltersSheet({
             onClick={onReset}
             disabled={count === 0}
           >
-            <Broom className="mr-1.5 h-4 w-4" aria-hidden />
+            <Brush className="mr-1.5 h-4 w-4" aria-hidden />
             Reset
           </OriginButton>
           <OriginButton
