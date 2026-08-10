@@ -77,23 +77,23 @@ export function PreviewListingCard({
 
       <div
         className="flex flex-wrap items-center gap-1"
-        style={{ marginTop: 8, fontSize: 12, lineHeight: "18px", color: "#6e6459" }}
+        style={{ marginTop: 8, fontSize: 14, lineHeight: "20px", color: "#6e6459" }}
       >
-        <MapPin style={{ width: 12, height: 12 }} />
+        <MapPin style={{ width: 14, height: 14 }} />
         {listing.neighborhood}
         <span style={{ margin: "0 4px" }}>·</span>
         {listing.beds === 0 ? "Studio" : `${listing.beds} bed`}
         <span style={{ margin: "0 4px" }}>·</span>
         {listing.baths} bath
-        {!!listing.belowMedianPct && (
+        {listing.belowMedianPct !== undefined && (
           <>
             <span style={{ margin: "0 4px" }}>·</span>
             <span
               className="inline-flex items-center gap-1"
               style={{ color: "#5a6e50" }}
             >
-              <TrendingDown style={{ width: 12, height: 12 }} />
-              {listing.belowMedianPct}% below median
+              <TrendingDown style={{ width: 14, height: 14 }} />
+              {Math.abs(listing.belowMedianPct)}% {listing.belowMedianPct >= 0 ? "below" : "above"} median
             </span>
           </>
         )}
