@@ -220,7 +220,7 @@ function SidebarNav({ searchId, pathname }: { searchId: string; pathname: string
             aria-current={active ? "page" : undefined}
             className={cn(
               "inline-flex h-11 w-full items-center gap-3 whitespace-nowrap rounded-lg px-3 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950/30",
-              active ? "bg-charcoal-950 text-paper" : "text-charcoal-700 hover:bg-paper-warm",
+              active ? "bg-charcoal-950 text-paper hover:bg-charcoal-950" : "text-charcoal-700 hover:bg-[#EBE2CF]",
             )}
           >
             <Icon className={cn("h-[18px] w-[18px]", active ? "text-paper" : "text-sage-700")} aria-hidden />
