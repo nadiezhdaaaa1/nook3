@@ -28,6 +28,7 @@ function getCoverDiameter(width: number, height: number, x: number, y: number) {
 export function NavHoverItem({
   to,
   onClick,
+  disabled,
   className,
   children,
   onPointerEnter,
@@ -38,6 +39,7 @@ export function NavHoverItem({
 }: {
   to?: string;
   onClick?: () => void;
+  disabled?: boolean;
   className?: string;
   children: React.ReactNode;
 } & Pick<
