@@ -69,11 +69,10 @@ export function ListingActions({ saved, saving, selected = false, onToggleSave, 
             <OriginButton
               variant="tertiary"
               size="medium"
-              onClick={onDislike}
-              aria-label="Not interested in this listing"
+              aria-label="Report this listing"
               className={ICON_BTN}
             >
-              <ThumbsDown className="h-4 w-4" color="#6e6459" />
+              <Flag className="h-4 w-4" color="#6e6459" />
             </OriginButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
