@@ -19,6 +19,12 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { OriginButton } from "@/components/ui/origin-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { ReportReason } from "@/lib/listingReports.functions";
 
 const REASON_LABELS: { value: ReportReason; label: string }[] = [
@@ -56,107 +62,124 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
   };
 
   return (
-    <div
-      className="flex items-center justify-end gap-1"
-      onClick={(e) => e.stopPropagation()}
-    >
+    <TooltipProvider delayDuration={100}>
       <div
-        className="flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100"
-        data-selected={selected}
-        style={{ opacity: selected ? 1 : undefined }}
+        className="flex items-center justify-end gap-1"
+        onClick={(e) => e.stopPropagation()}
       >
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <OriginButton
-              variant="tertiary"
-              size="medium"
-              aria-label="Report this listing"
-              className={ICON_BTN}
-            >
-              <Flag className="h-4 w-4" color="#6e6459" />
-            </OriginButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            <DropdownMenuLabel>What's wrong with this listing?</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {REASON_LABELS.map((r) => (
-              <DropdownMenuItem
-                key={r.value}
-                onSelect={() => {
-                  setReason(r.value);
-                  setDetails("");
-                }}
+        <div
+          className="flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100"
+          data-selected={selected}
+          style={{ opacity: selected ? 1 : undefined }}
+        >
+          <DropdownMenu>
+            <Tooltip>
+              <DropdownMenuTrigger asChild>
+                <TooltipTrigger asChild>
+                  <OriginButton
+                    variant="tertiary"
+                    size="medium"
+                    aria-label="Report this listing"
+                    className={ICON_BTN}
+                  >
+                    <Flag className="h-4 w-4" color="#6e6459" />
+                  </OriginButton>
+                </TooltipTrigger>
+              </DropdownMenuTrigger>
+              <TooltipContent side="bottom" sideOffset={6}>
+                <p>Report listing</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel>What's wrong with this listing?</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {REASON_LABELS.map((r) => (
+                <DropdownMenuItem
+                  key={r.value}
+                  onSelect={() => {
+                    setReason(r.value);
+                    setDetails("");
+                  }}
+                >
+                  {r.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <OriginButton
+                variant="tertiary"
+                size="medium"
+                onClick={onDislike}
+                aria-label="Not interested in this listing"
+                className={ICON_BTN}
               >
-                {r.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <ThumbsDown className="h-4 w-4" color="#6e6459" />
+              </OriginButton>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={6}>
+              <p>Not interested</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+
 
         <OriginButton
           variant="tertiary"
           size="medium"
-          onClick={onDislike}
-          aria-label="Not interested in this listing"
-          className={ICON_BTN}
+          onClick={onToggleSave}
+          disabled={saving}
+          aria-pressed={saved}
+          aria-label={saved ? "Remove from saved listings" : "Save listing"}
+          className={compactSave ? "ml-1 h-9 w-9 rounded-[8px] px-0" : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
         >
-          <ThumbsDown className="h-4 w-4" color="#6e6459" />
+          {saving ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Heart className="h-4 w-4" fill={saved ? "#D66C38" : "none"} color={saved ? "#D66C38" : "#6e6459"} />
+          )}
+          {!compactSave && (saved ? "Saved" : "Save")}
         </OriginButton>
+
+
+        <Dialog open={reason !== null} onOpenChange={(o) => !o && close()}>
+          <DialogContent className="sm:max-w-[440px]">
+            <DialogHeader>
+              <DialogTitle>Report this listing</DialogTitle>
+              <DialogDescription>
+                {REASON_LABELS.find((r) => r.value === reason)?.label}. Add anything that helps us
+                review it faster (optional).
+              </DialogDescription>
+            </DialogHeader>
+            <Textarea
+              value={details}
+              maxLength={1000}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="What did you notice?"
+              className="min-h-[96px]"
+            />
+            <DialogFooter>
+              <button type="button" className={BTN} onClick={close}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-9 items-center rounded-[8px] bg-[#241c12] px-4 text-[13px] font-semibold text-white hover:opacity-90"
+                onClick={() => {
+                  if (reason) onReport(reason, details.trim());
+                  close();
+                }}
+              >
+                Send report
+              </button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-
-
-
-      <OriginButton
-        variant="tertiary"
-        size="medium"
-        onClick={onToggleSave}
-        disabled={saving}
-        aria-pressed={saved}
-        aria-label={saved ? "Remove from saved listings" : "Save listing"}
-        className={compactSave ? "ml-1 h-9 w-9 rounded-[8px] px-0" : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
-      >
-        {saving ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Heart className="h-4 w-4" fill={saved ? "#D66C38" : "none"} color={saved ? "#D66C38" : "#6e6459"} />
-        )}
-        {!compactSave && (saved ? "Saved" : "Save")}
-      </OriginButton>
-
-
-      <Dialog open={reason !== null} onOpenChange={(o) => !o && close()}>
-        <DialogContent className="sm:max-w-[440px]">
-          <DialogHeader>
-            <DialogTitle>Report this listing</DialogTitle>
-            <DialogDescription>
-              {REASON_LABELS.find((r) => r.value === reason)?.label}. Add anything that helps us
-              review it faster (optional).
-            </DialogDescription>
-          </DialogHeader>
-          <Textarea
-            value={details}
-            maxLength={1000}
-            onChange={(e) => setDetails(e.target.value)}
-            placeholder="What did you notice?"
-            className="min-h-[96px]"
-          />
-          <DialogFooter>
-            <button type="button" className={BTN} onClick={close}>
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="inline-flex h-9 items-center rounded-[8px] bg-[#241c12] px-4 text-[13px] font-semibold text-white hover:opacity-90"
-              onClick={() => {
-                if (reason) onReport(reason, details.trim());
-                close();
-              }}
-            >
-              Send report
-            </button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+    </TooltipProvider>
   );
 }
