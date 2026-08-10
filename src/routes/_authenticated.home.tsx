@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
+import { SampleListingsMap, type SampleListingsMapRef } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { SearchSelector } from "@/components/app/SearchSelector";
 import { useActiveSearch } from "@/lib/store";
