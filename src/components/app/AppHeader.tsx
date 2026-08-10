@@ -233,12 +233,13 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
             className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF6EE] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
           >
             <nav aria-label="Mobile" className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ to, label, Icon }) => (
+              {NAV_ITEMS.map(({ to, label, Icon, disabled }) => (
                 <MobileNavItem
                   key={to}
                   to={to}
                   label={label}
                   Icon={Icon}
+                  disabled={disabled}
                 />
               ))}
             </nav>
