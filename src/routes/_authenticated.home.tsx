@@ -340,7 +340,7 @@ function HomeScreen() {
         aria-label="Map of your matches"
         className={
           mapFullscreen
-            ? "fixed inset-0 z-50 h-dvh w-full p-0 md:order-2 md:sticky md:top-[72px] md:h-[calc(100dvh-72px)] md:w-full md:p-6 md:z-auto"
+            ? "fixed inset-x-0 bottom-0 top-[72px] z-30 h-auto w-full p-0 md:order-2 md:sticky md:top-[72px] md:h-[calc(100dvh-72px)] md:w-full md:p-6 md:z-auto"
             : "order-1 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-[calc(100dvh-72px)] md:w-[45%] md:pl-0 md:sticky md:top-[72px]"
         }
       >
