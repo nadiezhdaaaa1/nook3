@@ -4,12 +4,14 @@ import { Pencil, Plus, ShieldCheck } from "lucide-react";
 
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
+import { SearchSelector } from "@/components/app/SearchSelector";
 import { useActiveSearch } from "@/lib/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
 import { useAlertsQuery } from "@/lib/queries/alerts";
 import type { AlertRow } from "@/lib/alerts.functions";
+
 
 export const Route = createFileRoute("/_authenticated/home")({
   head: () => ({
@@ -131,6 +133,9 @@ function HomeScreen() {
       >
         <div className="mx-auto flex max-w-[760px] flex-col">
           <header className="p-2">
+            <div className="mb-4">
+              <SearchSelector />
+            </div>
             <h1 className="font-display" style={H1}>
               {search
                 ? isSample
@@ -138,6 +143,7 @@ function HomeScreen() {
                   : `${listings.length} match${listings.length === 1 ? "" : "es"} for ${search.name}.`
                 : "Create your first search."}
             </h1>
+
             <p className="mt-2 text-sm text-charcoal-600">
               {search
                 ? isSample

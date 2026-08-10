@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Bookmark, Gift, Lock, LogOut, Sparkles, UserCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Logo } from "@/components/brand/Logo";
-import { SearchSelector } from "@/components/app/SearchSelector";
 import { useAppStore } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -13,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
 
 type Action = {
   to: "/saved" | "/wren" | "/referrals" | "/account";
@@ -56,9 +56,8 @@ export function AppHeader() {
           <Link to="/home" className="flex shrink-0 items-center gap-2.5" aria-label="Nook home">
             <Logo className="hidden text-2xl sm:block" />
           </Link>
-          <span aria-hidden className="h-6 w-px shrink-0 bg-black/10" />
-          <SearchSelector />
         </div>
+
 
         <TooltipProvider delayDuration={150}>
           <nav aria-label="Account sections" className="flex shrink-0 items-center gap-3">
