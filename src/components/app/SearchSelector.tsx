@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import {
   Archive,
   Check,
@@ -17,6 +17,7 @@ import {
   type Search,
 } from "@/lib/store";
 import { getCity } from "@/data/cities";
+import { OriginButton } from "@/components/ui/origin-button";
 import { NewSearchModal } from "@/components/preferences/NewSearchModal";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 
@@ -71,6 +72,7 @@ export function SearchSelector() {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   const quota = useMemo(() => {
     const max = SEARCH_LIMITS[plan];
@@ -163,15 +165,10 @@ export function SearchSelector() {
               </span>
             </button>
 
-            <ul className="max-h-[320px] overflow-y-auto border-t border-black/[0.06] py-1">
+            <ul className="max-h-[320px] overflow-y-auto py-1">
               {live.map((s) => (
                 <li key={s.id}>
-                  <div
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-2",
-                      s.id === active?.id && "bg-charcoal-950/[0.04]",
-                    )}
-                  >
+                  <div className="flex items-center gap-2 rounded-[8px] px-3 py-2 hover:bg-charcoal-950/[0.04]">
                     <button
                       type="button"
                       role="option"
@@ -180,7 +177,7 @@ export function SearchSelector() {
                         switchActiveSearch(s.id);
                         setOpen(false);
                       }}
-                      className="min-w-0 flex-1 rounded-md px-1 py-1 text-left hover:bg-charcoal-950/[0.04]"
+                      className="min-w-0 flex-1 text-left"
                     >
                       <span className="flex items-center gap-1.5">
                         <StatusDot status={s.status} />
@@ -191,16 +188,18 @@ export function SearchSelector() {
                         {cityLabel(s.cityId)} · {statusLabel(s)} · {summary(s)}
                       </span>
                     </button>
-                    <Link
-                      to="/search/$searchId/budget"
-                      params={{ searchId: s.id }}
-                      onClick={() => setOpen(false)}
+                    <OriginButton
+                      variant="tertiary"
+                      size="medium"
                       aria-label={`Edit ${s.name}`}
-                      title="Edit search"
-                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-black/10 text-charcoal-600 hover:border-charcoal-950 hover:text-charcoal-950"
+                      className="h-8 w-8 p-0"
+                      onClick={() => {
+                        setOpen(false);
+                        navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
+                      }}
                     >
                       <Pencil className="h-3.5 w-3.5" />
-                    </Link>
+                    </OriginButton>
                   </div>
                 </li>
               ))}
