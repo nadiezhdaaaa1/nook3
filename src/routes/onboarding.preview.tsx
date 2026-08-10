@@ -107,10 +107,8 @@ function SamplePreview() {
         <OnboardingHeader fixed={false} />
       </div>
 
-
-
-
       {/* Map panel */}
+
       <aside
         aria-label="Map of sample matches"
         className="order-2 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-full md:w-1/2 md:pl-0"
