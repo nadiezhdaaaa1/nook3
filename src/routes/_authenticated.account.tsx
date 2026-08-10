@@ -290,30 +290,29 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ email, timezone, cycle, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{ email, timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
           setEmail(snap.email);
           setTimezone(snap.timezone);
-          setCycle(snap.cycle);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
           prefs.setPref("productUpdates", snap.prefs.productUpdates);
         }}
       />
 
-      <SyncProfile email={email} timezone={timezone} cycle={cycle} update={updateProfile} />
+      <SyncProfile email={email} timezone={timezone} update={updateProfile} />
     </div>
   );
 }
 
 function SyncProfile({
-  email, timezone, cycle, update,
+  email, timezone, update,
 }: {
-  email: string; timezone: string; cycle: BillingCycle;
+  email: string; timezone: string;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
   useEffect(() => {
-    update({ email, timezone, billingCycle: cycle });
-  }, [email, timezone, cycle, update]);
+    update({ email, timezone });
+  }, [email, timezone, update]);
   return null;
 }
 
