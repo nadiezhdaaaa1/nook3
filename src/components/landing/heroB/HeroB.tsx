@@ -420,12 +420,12 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
           font-size: 24px;
-          font-weight: 500;
+          font-weight: 700;
           line-height: 1.2;
           letter-spacing: -0.45px;
           color: #000000;
         }
-        .hero-b-card-per { font-size: 20px; font-weight: 500; color: rgba(0,0,0,0.6); }
+        .hero-b-card-per { font-size: 20px; font-weight: 700; color: rgba(0,0,0,0.6); }
         @media (max-width: 680px) {
           .hero-b-card { width: 100%; max-width: 320px; }
         }
