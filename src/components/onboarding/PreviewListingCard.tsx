@@ -46,6 +46,26 @@ export function wrenTake(s: SampleListing) {
   ]);
 }
 
+const GLOW_COLORS = ["#D66C38", "#6A820A", "#F1C40F", "#D66C38"];
+
+/** Animated conic-gradient glow, revealed on hover of the parent (group/glow). */
+function WrenGlow() {
+  return (
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute -inset-[3px] rounded-[13px] blur-lg opacity-0 transition-opacity duration-300 group-hover/glow:opacity-90 motion-reduce:hidden"
+      animate={{
+        background: [
+          `conic-gradient(from 0deg at 50% 50%, ${GLOW_COLORS.join(", ")})`,
+          `conic-gradient(from 360deg at 50% 50%, ${GLOW_COLORS.join(", ")})`,
+        ],
+      }}
+      transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
+      style={{ willChange: "transform, background" }}
+    />
+  );
+}
+
 function getCoverDiameter(width: number, height: number, x: number, y: number) {
   return Math.ceil(
     2 *
@@ -222,15 +242,17 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div
-        style={{
-          marginTop: 8,
-          background: "#ffffff",
-          border: "1px solid rgba(0,0,0,0.10)",
-          borderRadius: 10,
-          overflow: "hidden",
-        }}
-      >
+      <div className="group/glow relative" style={{ marginTop: 8 }}>
+        <WrenGlow />
+        <div
+          className="relative"
+          style={{
+            background: "#ffffff",
+            border: "1px solid rgba(0,0,0,0.10)",
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+        >
         <WrenTakeButton
           open={open}
           onClick={(e) => {
@@ -262,6 +284,7 @@ export function PreviewListingCard({
             {wrenTake(listing)}
           </p>
         )}
+        </div>
       </div>
     </article>
   );
