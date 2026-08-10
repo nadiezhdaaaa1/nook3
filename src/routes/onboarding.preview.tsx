@@ -110,9 +110,9 @@ function SamplePreview() {
         variants={variants}
         initial="hidden"
         animate="visible"
-        className="order-3 w-full px-5 pb-8 md:order-1 md:h-full md:w-1/2 md:overflow-y-auto md:px-10 md:pb-6"
+        className="order-3 w-full px-6 pb-6 md:order-1 md:h-full md:w-1/2 md:overflow-y-auto md:px-6"
       >
-        <div className="sticky top-0 z-10 -mx-5 mb-6 md:-mx-10 md:mb-6">
+        <div className="sticky top-0 z-10 -mx-6 mb-6">
           <OnboardingHeader fixed={false} />
         </div>
 
