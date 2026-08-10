@@ -222,15 +222,17 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div
-        style={{
-          marginTop: 8,
-          background: "#ffffff",
-          border: "1px solid rgba(0,0,0,0.10)",
-          borderRadius: 10,
-          overflow: "hidden",
-        }}
-      >
+      <div className="group/glow relative" style={{ marginTop: 8 }}>
+        <WrenGlow />
+        <div
+          className="relative"
+          style={{
+            background: "#ffffff",
+            border: "1px solid rgba(0,0,0,0.10)",
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+        >
         <WrenTakeButton
           open={open}
           onClick={(e) => {
