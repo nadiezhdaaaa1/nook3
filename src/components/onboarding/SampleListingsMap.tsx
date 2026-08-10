@@ -662,4 +662,7 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
       )}
     </div>
   );
+});
 }
+
+SampleListingsMap.displayName = "SampleListingsMap";
