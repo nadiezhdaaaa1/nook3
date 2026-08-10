@@ -274,14 +274,17 @@ export function SampleListingsMap({
   }, [ready, city.id, listings]);
 
   // Update marker active state without re-fitting bounds.
+  // Hover takes visual priority over the selected pin.
   useEffect(() => {
     if (!ready || !mapRef.current) return;
     markersRef.current.forEach((m, id) => {
+      const isHovered = id === hoveredId;
       const isActive = id === activeId;
-      m.setActive(isActive);
-      if (isActive) m.panTo(mapRef.current!);
+      m.setActive(isHovered || isActive);
+      if (isActive && !hoveredId) m.panTo(mapRef.current!);
     });
-  }, [ready, activeId]);
+  }, [ready, activeId, hoveredId]);
+
 
   // Render the card overlay anchored to the active pin.
   useEffect(() => {
