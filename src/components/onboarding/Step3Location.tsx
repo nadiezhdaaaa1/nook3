@@ -29,6 +29,7 @@ export function Step3Location() {
   const [query, setQuery] = useState("");
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [view, setView] = useState<"list" | "map">("list");
+  const [quickPicksOpen, setQuickPicksOpen] = useState(false);
 
   const groups = useMemo(
     () => (cityConfig ? Object.entries(cityConfig.neighborhoodGroups) : []),
