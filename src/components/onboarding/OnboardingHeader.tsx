@@ -45,21 +45,7 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
       >
         <div className="flex items-center justify-between" style={{ gap: 32 }}>
           <div style={{ padding: "0 8px" }} aria-label="Nook" role="img">
-            <div
-              style={{
-                width: 70,
-                height: 24,
-                backgroundColor: "rgba(0,0,0,0.2)",
-                WebkitMaskImage: `url(${nookLogo.url})`,
-                maskImage: `url(${nookLogo.url})`,
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                WebkitMaskPosition: "center",
-                maskPosition: "center",
-                WebkitMaskSize: "contain",
-                maskSize: "contain",
-              }}
-            />
+            <Logo className="h-6 w-auto" />
           </div>
 
           {step !== null && (
