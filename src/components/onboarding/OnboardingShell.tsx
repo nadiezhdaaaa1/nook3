@@ -24,7 +24,7 @@ export function OnboardingShell() {
           <button
             type="button"
             onClick={() => setExitOpen(true)}
-            className="inline-flex items-center justify-center"
+            className="inline-flex items-center justify-center transition-colors hover:bg-[#241c12]/10"
             style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
             aria-label="Exit onboarding"
           >
