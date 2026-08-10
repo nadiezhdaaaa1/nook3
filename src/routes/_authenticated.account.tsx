@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 import { OriginButton } from "@/components/ui/origin-button";
+import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
 export const Route = createFileRoute("/_authenticated/account")({
