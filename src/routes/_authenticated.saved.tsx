@@ -292,7 +292,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
         <OriginButton
           variant="dark"
           size="medium"
-          onClick={() => navigate({ to: "/onboarding/city" })}
+          onClick={() => navigate({ to: "/onboarding" })}
         >
           <Plus className="h-4 w-4" /> New search
         </OriginButton>
