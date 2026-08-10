@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { getCity } from "@/data/cities";
 import type { CityId } from "@/data/cities";
 import type {
   Search,
