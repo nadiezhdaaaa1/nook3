@@ -13,7 +13,7 @@ export function OnboardingShell() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#faf6ee" }}>
       <header className="flex items-center justify-center px-6 py-4">
-        <div className="flex w-full items-center justify-between" style={{ maxWidth: 1200 }}>
+        <div className="flex w-full items-center justify-between" style={{ maxWidth: 800 }}>
           <img
             src={nookLogo.url}
             alt="Nook"
