@@ -59,6 +59,8 @@ function createPinElement(): HTMLDivElement {
   return pin;
 }
 
+type PinVariant = "price" | "count" | "dot";
+
 class PinOverlay {
   private overlay: google.maps.OverlayView;
   private pin: HTMLDivElement;
@@ -67,11 +69,39 @@ class PinOverlay {
   private map: google.maps.Map | null = null;
   private scale = 1;
   private active = false;
+  private variant: PinVariant;
+  private offset: { x: number; y: number } = { x: 0, y: 0 };
 
-  constructor(position: google.maps.LatLng, rent: number) {
+  constructor(
+    position: google.maps.LatLng,
+    label: string,
+    variant: PinVariant = "price",
+    animate = false,
+  ) {
     this.position = position;
+    this.variant = variant;
     this.pin = createPinElement();
-    this.pin.textContent = formatRent(rent);
+    if (variant === "dot") {
+      this.pin.style.padding = "0";
+      this.pin.style.width = "8px";
+      this.pin.style.height = "8px";
+      this.pin.style.borderRadius = "9999px";
+      this.pin.style.background = "rgba(36, 28, 18, 0.35)";
+      this.pin.style.border = "1px solid rgba(255,255,255,0.7)";
+      this.pin.style.boxShadow = "none";
+      this.pin.style.cursor = "default";
+      this.pin.style.pointerEvents = "none";
+    } else {
+      this.pin.textContent = label;
+      if (variant === "count") {
+        this.pin.style.padding = "10px 16px";
+        this.pin.style.fontSize = "17px";
+        this.pin.style.minWidth = "44px";
+      }
+    }
+    if (animate && !prefersReducedMotion()) {
+      this.pin.style.transition = "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)";
+    }
     this.pin.addEventListener("click", (e) => {
       e.stopPropagation();
       this.clickHandlers.forEach((h) => h());
@@ -86,7 +116,7 @@ class PinOverlay {
       if (!projection) return;
       const pixel = projection.fromLatLngToDivPixel(this.position);
       if (!pixel) return;
-      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%) scale(${this.scale})`;
+      this.pin.style.transform = `translate(${pixel.x}px, ${pixel.y}px) translate(-50%, -50%) translate(${this.offset.x}px, ${this.offset.y}px) scale(${this.scale})`;
     };
     this.overlay.onRemove = () => {
       if (this.pin.parentNode) {
@@ -94,6 +124,12 @@ class PinOverlay {
       }
     };
   }
+
+  setOffset(x: number, y: number) {
+    this.offset = { x, y };
+    this.overlay.draw();
+  }
+
 
   private getPanes() {
     return this.overlay.getPanes();
