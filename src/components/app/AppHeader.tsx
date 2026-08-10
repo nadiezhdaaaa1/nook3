@@ -222,7 +222,6 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
                   to={to}
                   label={label}
                   Icon={Icon}
-                  onNavigate={() => setOpen(false)}
                 />
               ))}
             </nav>
