@@ -186,11 +186,10 @@ function PageHeader({
               variant="tertiary"
               size="medium"
               onClick={() => setIsEditing(true)}
-              className="shrink-0"
+              className="h-11 w-11 shrink-0 p-0"
               aria-label="Edit search name"
             >
               <Pencil className="h-4 w-4" />
-              <span className="hidden sm:inline">Edit name</span>
             </OriginButton>
           </div>
         )}
