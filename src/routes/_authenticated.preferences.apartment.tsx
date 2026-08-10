@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { Heart, Star } from "lucide-react";
 import { PillGroup } from "@/components/onboarding/PillGroup";
+import { ObChip } from "@/components/onboarding/ObChip";
+import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
+import { OB_H2 } from "@/components/onboarding/stepStyles";
 import { SaveBar } from "@/components/preferences/SaveBar";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
-import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/preferences/apartment")({
   component: ApartmentTab,
@@ -75,53 +77,40 @@ function ApartmentTab() {
         />
       </section>
 
-      {/* Amenities block */}
+      {/* Amenities block — same style as onboarding step 4 */}
       <section className="space-y-6">
-        {/* Legend bar */}
-        <div className="flex items-center gap-4 flex-wrap rounded-card bg-surface-elevated border border-border px-4 py-3">
-          <div className="flex items-center gap-2 text-xs text-charcoal-600">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-3.5 w-3.5 rounded-md bg-sage-100 border border-sage-300" />
-              Tap = nice to have
-            </span>
-            <span className="text-charcoal-300">·</span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-3.5 w-3.5 rounded-md bg-sage-900" />
-              Tap again = must have
-            </span>
-          </div>
-          <div className="ml-auto font-mono text-xs text-charcoal-950 hidden sm:block">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.14em] text-charcoal-500">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-surface-elevated border border-border" /> Tap
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-sage-900">
+            <Heart className="h-3 w-3 fill-current" /> Nice
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-sage-900">
+            <Star className="h-3 w-3 fill-current" /> Must
+          </span>
+          <span className="ml-auto font-mono text-xs normal-case tracking-normal text-charcoal-950 hidden sm:block">
             <span className="text-sage-900 font-semibold">{counts.must}</span> must ·{" "}
             <span className="text-sage-700 font-semibold">{counts.nice}</span> nice
-          </div>
+          </span>
         </div>
-
-        <p className="text-sm text-charcoal-600">
-          Pick what matters — <b className="text-sage-900">must-haves</b> filter listings,{" "}
-          <b className="text-sage-700">nice-to-haves</b> nudge your match score. Skip anything you don't care about.
-        </p>
 
         {/* Presets */}
         <div className="space-y-3">
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
             Quick presets
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center" style={{ gap: 12 }}>
             {AMENITY_PRESETS.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => applyPreset(p.id)}
-                className="h-9 px-4 inline-flex items-center rounded-pill border border-charcoal-200 bg-surface-elevated text-sm font-medium text-charcoal-800 hover:border-charcoal-950 hover:text-charcoal-950 transition-colors"
-              >
+              <ObChip key={p.id} onClick={() => applyPreset(p.id)}>
                 + {p.label}
-              </button>
+              </ObChip>
             ))}
             {Object.keys(amenities).length > 0 && (
               <button
                 type="button"
                 onClick={() => patch({ amenities: {} })}
-                className="h-9 px-4 inline-flex items-center text-sm font-semibold text-charcoal-500 hover:text-charcoal-950"
+                className="inline-flex items-center h-[54px] px-6 text-[16px] font-semibold text-charcoal-500 hover:text-charcoal-950 rounded-[12px] transition-colors"
               >
                 Clear all
               </button>
@@ -130,35 +119,19 @@ function ApartmentTab() {
         </div>
 
         {AMENITY_GROUPS.map((g) => (
-          <div key={g.id} className="space-y-3">
-            <h3 className="font-display text-lg font-semibold text-charcoal-950">{g.label}</h3>
-            <div className="flex flex-wrap gap-2">
-              {g.items.map((a) => {
-                const state = amenities[a.id]; // undefined | "nice" | "required"
-                const isNice = state === "nice";
-                const isMust = state === "required";
-                return (
-                  <button
-                    key={a.id}
-                    type="button"
-                    onClick={() => cycleAmenity(a.id)}
-                    aria-pressed={!!state}
-                    className={cn(
-                      "inline-flex items-center gap-2 h-9 px-3.5 rounded-pill text-sm border transition-all leading-none",
-                      !state &&
-                        "bg-surface-elevated border-border text-charcoal-800 hover:border-sage-500 font-medium",
-                      isNice &&
-                        "bg-sage-100 border-sage-300 text-sage-900 font-semibold",
-                      isMust &&
-                        "bg-sage-900 border-sage-900 text-paper font-semibold shadow-sm",
-                    )}
-                  >
-                    {isNice && <Heart className="h-3 w-3 fill-current" />}
-                    {isMust && <Star className="h-3 w-3 fill-current" />}
-                    {a.label}
-                  </button>
-                );
-              })}
+          <div key={g.id} className="space-y-4">
+            <h3 className="font-display" style={OB_H2}>
+              {g.label}
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-2">
+              {g.items.map((a) => (
+                <TriStateToggle
+                  key={a.id}
+                  label={a.label}
+                  state={amenities[a.id]}
+                  onCycle={() => cycleAmenity(a.id)}
+                />
+              ))}
             </div>
           </div>
         ))}
