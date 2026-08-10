@@ -52,8 +52,8 @@ function SamplePreview() {
     };
   }, []);
 
-
   const allListings: SampleListing[] = useMemo(
+
     () => (city && SAMPLE_LISTINGS[city]) || [],
     [city],
   );
