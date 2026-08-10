@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 
 
@@ -107,7 +107,13 @@ function HomeScreen() {
 
   const PAGE_SIZE = 20;
   const [page, setPage] = useState(1);
+  const listSectionRef = useRef<HTMLElement>(null);
   const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
+
+  const handleSetPage = (next: number) => {
+    setPage(next);
+    listSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const scope = useMemo(() => deriveFilterScope(search), [search]);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -313,6 +319,7 @@ function HomeScreen() {
 
       {/* Listings column */}
       <section
+        ref={listSectionRef}
         aria-label="Your matches"
         className="order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
       >
@@ -409,7 +416,7 @@ function HomeScreen() {
                       size="medium"
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Previous page"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      onClick={() => handleSetPage(Math.max(1, page - 1))}
                       disabled={page === 1 || paginatedQ.isLoading}
                     >
                       <ChevronLeft size={18} strokeWidth={2} />
@@ -433,7 +440,7 @@ function HomeScreen() {
                             className="h-[40px] w-[40px] px-0"
                             aria-label={`Page ${item}`}
                             aria-current={item === page ? "page" : undefined}
-                            onClick={() => setPage(item)}
+                            onClick={() => handleSetPage(item)}
                             disabled={paginatedQ.isLoading}
                           >
                             {item}
@@ -447,7 +454,7 @@ function HomeScreen() {
                       size="medium"
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Next page"
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() => handleSetPage(Math.min(totalPages, page + 1))}
                       disabled={page === totalPages || paginatedQ.isLoading}
                     >
                       <ChevronRight size={18} strokeWidth={2} />
