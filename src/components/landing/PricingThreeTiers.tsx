@@ -211,7 +211,7 @@ export function PricingThreeTiers({
               marginTop: 16,
             }}
           >
-            Start free, upgrade anytime
+            You can start free and upgrade anytime
           </p>
         </header>
 
