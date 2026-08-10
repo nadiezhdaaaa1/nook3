@@ -305,6 +305,31 @@ function HomeScreen() {
     />
   ) : null;
 
+  const filtersButton = (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <OriginButton
+          type="button"
+          variant="tertiary"
+          size="medium"
+          aria-haspopup="dialog"
+          onClick={() => setFiltersOpen(true)}
+          className="inline-flex h-[46px] shrink-0 items-center gap-2 px-3 text-sm font-semibold"
+        >
+          {filterCount > 0 ? (
+            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal-950 text-[11px] font-semibold text-paper">
+              {filterCount}
+            </span>
+          ) : (
+            <ListFilter className="h-4 w-4 shrink-0" aria-hidden />
+          )}
+          Filters
+        </OriginButton>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">Filter matches</TooltipContent>
+    </Tooltip>
+  );
+
   return (
     <div
       className="flex min-h-[calc(100dvh-64px)] flex-col md:flex-row"
@@ -313,7 +338,11 @@ function HomeScreen() {
       {/* Map panel */}
       <aside
         aria-label="Map of your matches"
-        className="order-1 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-[calc(100dvh-72px)] md:w-[45%] md:pl-0 md:sticky md:top-[72px]"
+        className={
+          mapFullscreen
+            ? "order-1 h-[calc(100dvh-72px)] w-full shrink-0 p-6 md:order-2 md:sticky md:top-[72px]"
+            : "order-1 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-[calc(100dvh-72px)] md:w-[45%] md:pl-0 md:sticky md:top-[72px]"
+        }
       >
         {cityConfig && (
           <SampleListingsMap
@@ -323,6 +352,16 @@ function HomeScreen() {
             hoveredId={hoveredId}
             onSelect={(id) => setActiveId(id)}
             card={popupCard}
+            isFullscreen={mapFullscreen}
+            onToggleFullscreen={() => setMapFullscreen((v) => !v)}
+            topLeftControls={
+              mapFullscreen ? (
+                <>
+                  <SearchSelector />
+                  {filtersButton}
+                </>
+              ) : null
+            }
             className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/10 bg-[#f5f2ea]"
           />
         )}
@@ -332,36 +371,19 @@ function HomeScreen() {
       <section
         ref={listSectionRef}
         aria-label="Your matches"
-        className="order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
+        className={
+          mapFullscreen
+            ? "hidden"
+            : "order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
+        }
       >
         <div className="mx-auto flex max-w-[960px] flex-col">
           <header className="p-2">
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
               <SearchSelector />
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <OriginButton
-                    type="button"
-                    variant="tertiary"
-                    size="medium"
-                    aria-haspopup="dialog"
-                    onClick={() => setFiltersOpen(true)}
-                    className="inline-flex h-[46px] shrink-0 items-center gap-2 px-3 text-sm font-semibold"
-                  >
-                    {filterCount > 0 ? (
-                      <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal-950 text-[11px] font-semibold text-paper">
-                        {filterCount}
-                      </span>
-                    ) : (
-                      <ListFilter className="h-4 w-4 shrink-0" aria-hidden />
-                    )}
-                    Filters
-                  </OriginButton>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">Filter matches</TooltipContent>
-              </Tooltip>
-
+              {filtersButton}
             </div>
+
             <h1 className="font-display" style={H1}>
               {search
                 ? isSample
