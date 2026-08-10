@@ -45,7 +45,6 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
   const [open, setOpen] = useState(false);
   const resolvedPlan: PlanKey =
     plan ?? (storePlan === "premium" || storePlan === "max" ? storePlan : "free");
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <header
