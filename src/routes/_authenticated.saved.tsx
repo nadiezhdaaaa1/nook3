@@ -310,17 +310,17 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <OriginButton
-          variant="dark"
-          size="medium"
-          onClick={() => navigate({ to: "/onboarding" })}
-        >
-          <Plus className="h-4 w-4" /> New search
-        </OriginButton>
-      </div>
-
       <ul className="grid gap-4 sm:grid-cols-2">
+        <li>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/onboarding" })}
+            className="flex h-full min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-[16px] border-2 border-dashed border-black/20 bg-white/50 transition-colors hover:bg-white hover:border-black/30"
+          >
+            <Plus className="h-6 w-6 text-[#241c12]" />
+            <span className="text-[15px] font-semibold text-[#241c12]">New search</span>
+          </button>
+        </li>
         {[...live, ...archived].map((s) => (
           <li
             key={s.id}
