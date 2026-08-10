@@ -137,7 +137,7 @@ function SamplePreview() {
         </div>
 
 
-        <div className="mx-auto flex min-h-full max-w-[760px] flex-col">
+        <div className="mx-auto flex h-full max-w-[760px] flex-col">
           <div className="flex-1">
             <motion.header variants={itemVariants} className="p-2">
               <h1 className="font-display" style={PREVIEW_H1}>
