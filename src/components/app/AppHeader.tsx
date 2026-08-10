@@ -40,7 +40,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           <PlanBadge plan={resolvedPlan} />
         </div>
 
-        <nav aria-label="Main" className="flex items-center gap-[2px]">
+        <nav aria-label="Main" className="flex items-center gap-1">
           <NavHoverItem to="/home" className={TEXT_BUTTON_CLASS}>
             <IconHomeSearch {...ICON_PROPS} aria-hidden />
             <span className={LABEL_CLASS}>Searches</span>
