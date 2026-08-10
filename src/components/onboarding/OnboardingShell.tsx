@@ -81,36 +81,15 @@ export function OnboardingShell() {
             </div>
           )}
 
-          <div className="flex items-center" style={{ gap: 4 }}>
-            <button
-              type="button"
-              disabled={step === 1}
-              onClick={onBack}
-              className="ob-ghost inline-flex items-center"
-              style={{
-                gap: 8,
-                padding: "12px 16px",
-                borderRadius: 12,
-                fontWeight: 600,
-                fontSize: 14,
-                color: "#241c12",
-                opacity: step === 1 ? 0.35 : 1,
-                cursor: step === 1 ? "not-allowed" : "pointer",
-              }}
-            >
-              <ArrowLeft style={{ width: 20, height: 20 }} />
-              <span className="hidden sm:inline">Back</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setExitOpen(true)}
-              className="ob-ghost inline-flex items-center justify-center"
-              style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
-              aria-label="Exit onboarding"
-            >
-              <X style={{ width: 20, height: 20 }} />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setExitOpen(true)}
+            className="ob-ghost inline-flex items-center justify-center"
+            style={{ padding: 12, borderRadius: 12, color: "#241c12" }}
+            aria-label="Exit onboarding"
+          >
+            <X style={{ width: 20, height: 20 }} />
+          </button>
         </div>
       </header>
 
