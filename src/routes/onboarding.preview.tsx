@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+
 import { ShieldCheck, ArrowRight } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
@@ -37,10 +38,20 @@ function SamplePreview() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [openWrenId, setOpenWrenId] = useState<string | null>(null);
 
+  // Mobile: keep the preview container as the only scrollport so the sticky header behaves.
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth >= 768) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   const allListings: SampleListing[] = useMemo(
     () => (city && SAMPLE_LISTINGS[city]) || [],
     [city],
   );
+
 
   // Filter by budget range; if no neighborhoods picked, ignore the area filter.
   const matched = useMemo(() => {
@@ -84,11 +95,16 @@ function SamplePreview() {
   const itemVariants = reduce ? undefined : OB_SECTION_VARIANTS;
 
   return (
-    <div className="flex h-full min-h-[calc(100vh-96px)] flex-col md:flex-row" style={{ background: "#faf6ee" }}>
+    <div className="flex h-full min-h-[calc(100vh-96px)] flex-col overflow-y-auto md:flex-row md:overflow-y-visible" style={{ background: "#faf6ee" }}>
       {/* Mobile top header */}
-      <div className="px-6 pt-6 md:hidden">
-        <OnboardingHeader fixed={false} />
+      <div className="md:hidden">
+        <div className="h-6" />
+        <div className="sticky top-6 z-40 px-6">
+          <OnboardingHeader fixed={false} />
+        </div>
       </div>
+
+
 
       {/* Map panel */}
       <aside
