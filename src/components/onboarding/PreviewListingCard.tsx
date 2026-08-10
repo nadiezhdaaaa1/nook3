@@ -128,7 +128,7 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div className="mt-4 flex items-end justify-between gap-3">
+      <div className="mt-3 flex items-end justify-between gap-3">
         <span
           className="font-display tabular-nums"
           style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
