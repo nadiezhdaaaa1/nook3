@@ -23,7 +23,7 @@ const ICON_PROPS = {
 } as const;
 
 const LABEL_CLASS = "text-[14px] font-semibold leading-5 text-[#241C12]";
-const TEXT_BUTTON_CLASS = "gap-2 rounded-[8px] pl-2 pr-3 py-2";
+const TEXT_BUTTON_CLASS = "gap-2 rounded-[8px] pl-2.5 pr-3 py-2";
 const ICON_BUTTON_CLASS = "rounded-[8px] p-2";
 
 const NAV_ITEMS = [
