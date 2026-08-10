@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { useNavigate, Navigate } from "@tanstack/react-router";
-import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck } from "lucide-react";
+import { Search, X, MapPin, Sparkles, AlertTriangle, ShieldCheck, ChevronDown } from "lucide-react";
 import { IconList, IconMap } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { OnboardingFooter } from "@/components/onboarding/OnboardingFooter";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { ViewSwitcher } from "@/components/onboarding/ViewSwitcher";
