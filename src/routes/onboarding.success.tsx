@@ -295,7 +295,8 @@ function Success() {
             Your search
           </div>
           <Link
-            to="/onboarding/step/1"
+            to="/onboarding/step/$step"
+            params={{ step: "1" }}
             className="text-[13px] font-semibold text-charcoal-500 underline decoration-black/20 hover:text-charcoal-950"
           >
             Edit
