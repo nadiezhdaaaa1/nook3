@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { ExitModal } from "./ExitModal";
 import nookLogo from "@/assets/Nook_Green.svg.asset.json";
+
 
 const STEP_ROUTE_RE = /^\/onboarding\/step\/(\d)/;
 
