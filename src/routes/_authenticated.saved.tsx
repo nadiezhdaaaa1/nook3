@@ -355,7 +355,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                           : "bg-charcoal-300",
                     )}
                   />
-                  <h3 className="truncate text-[17px] font-semibold text-[#241c12]">{s.name}</h3>
+                  <h3 className="truncate text-[19px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">{s.name}</h3>
                 </div>
                 <p className="mt-1 text-[12px] text-charcoal-500">
                   {getCity(s.cityId)?.name ?? s.cityId} ·{" "}
