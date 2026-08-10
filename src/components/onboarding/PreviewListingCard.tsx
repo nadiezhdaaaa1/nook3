@@ -77,14 +77,14 @@ export function PreviewListingCard({
                 onClick={(e) => e.stopPropagation()}
               >
                 <ArrowUpRight
-                  className="h-4 w-0 shrink-0 opacity-0 transition-all duration-200 group-hover/title:w-4 group-hover/title:opacity-100"
+                  className="h-4 w-4 shrink-0 opacity-100 transition-all duration-200 lg:w-0 lg:opacity-0 lg:group-hover:w-4 lg:group-hover:opacity-100"
                   aria-hidden="true"
                 />
                 <span className="truncate">{listing.address}</span>
               </a>
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={4}>
-              Open in new tab
+              Open original listing
             </TooltipContent>
           </Tooltip>
         </h3>
