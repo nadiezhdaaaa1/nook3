@@ -127,7 +127,7 @@ function AccountPage() {
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
           Usage this month
         </h2>
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="grid sm:grid-cols-3 gap-3 rounded-card bg-white p-6 border border-border">
           <StatCard
             icon={SearchIcon}
             label="Saved searches"
