@@ -154,7 +154,7 @@ export function SearchSelector() {
         {open && (
           <div
             role="listbox"
-            className="absolute left-0 z-50 mt-2 w-[340px] overflow-hidden rounded-card border border-black/10 bg-paper shadow-xl"
+            className="absolute left-0 z-50 mt-2 w-[340px] overflow-hidden rounded-[12px] border border-black/20 bg-white/60 shadow-[0_16px_32px_rgba(36,28,18,0.12)] backdrop-blur-md"
           >
             {/* New search — pinned on top */}
             <button
