@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { Minus, Plus } from "lucide-react";
 import { createRoot, type Root } from "react-dom/client";
 import type { CityConfig } from "@/data/cities";
 import { useGoogleMaps } from "@/lib/maps/useGoogleMaps";
@@ -243,6 +244,34 @@ export function SampleListingsMap({
       }
     >
       <div ref={containerRef} className="absolute inset-0" />
+      {ready && (
+        <div className="absolute bottom-4 right-4 flex flex-col gap-1 rounded-[12px] border border-black/20 bg-[#fffdf7]/90 p-1 shadow-sm backdrop-blur-sm">
+          <button
+            type="button"
+            aria-label="Zoom in"
+            onClick={() => {
+              const map = mapRef.current;
+              if (!map) return;
+              map.setZoom((map.getZoom() ?? 10) + 1);
+            }}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#241c12] transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
+          >
+            <Plus size={16} />
+          </button>
+          <button
+            type="button"
+            aria-label="Zoom out"
+            onClick={() => {
+              const map = mapRef.current;
+              if (!map) return;
+              map.setZoom((map.getZoom() ?? 10) - 1);
+            }}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#241c12] transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
+          >
+            <Minus size={16} />
+          </button>
+        </div>
+      )}
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center text-xs font-mono text-charcoal-500">
           Loading map…
