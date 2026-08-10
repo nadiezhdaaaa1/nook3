@@ -16,10 +16,12 @@ interface Props {
   city: CityConfig;
   listings: ListingPin[];
   activeId?: string | null;
+  hoveredId?: string | null;
   onSelect?: (id: string | null) => void;
   card?: ReactNode;
   className?: string;
 }
+
 
 const PIN_STYLES: Partial<CSSStyleDeclaration> = {
   position: "absolute",
