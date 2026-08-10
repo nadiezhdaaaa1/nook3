@@ -48,6 +48,14 @@ export function PreviewListingCard({
 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
+          <span
+            className="font-display tabular-nums block"
+            style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
+          >
+            ${listing.rent.toLocaleString()}
+            <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
+          </span>
+
           <h3
             className="truncate"
             style={{
@@ -56,18 +64,11 @@ export function PreviewListingCard({
               lineHeight: "24px",
               color: "#241c12",
               fontFamily: "var(--font-sans)",
+              marginTop: 4,
             }}
           >
             {listing.address}
           </h3>
-
-          <span
-            className="font-display tabular-nums"
-            style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
-          >
-            ${listing.rent.toLocaleString()}
-            <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
-          </span>
 
           <div
             className="flex flex-wrap items-center gap-1"
