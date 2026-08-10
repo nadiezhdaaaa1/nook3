@@ -40,6 +40,7 @@ interface Props {
   saved: boolean;
   saving?: boolean;
   selected?: boolean;
+  compactSave?: boolean;
   onToggleSave: () => void;
   onDislike: () => void;
   onReport: (reason: ReportReason, details: string) => void;
