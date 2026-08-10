@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export type PlanKey = "free" | "premium" | "max";
 
 const LABEL_CLASS =
-  "text-[12px] font-bold leading-4 tracking-[1.82px] uppercase";
+  "text-[11px] font-bold leading-[14px] tracking-[1.5px] uppercase";
 
 /** 4-glow aurora layers (top-left, top-right, bottom-right, bottom-left). */
 function aurora(c1: string, c2: string, c3: string, c4: string) {
