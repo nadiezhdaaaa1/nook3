@@ -84,7 +84,7 @@ function SearchEditLayout() {
         <ArrowLeft className="h-3.5 w-3.5" /> Back to listings
       </Link>
 
-      <PageHeader searchId={search.id} name={search.name} status={search.status} sectionLabel={sectionLabel} />
+      <PageHeader searchId={search.id} name={search.name} status={search.status} cityId={search.cityId} sectionLabel={sectionLabel} />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
         <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
