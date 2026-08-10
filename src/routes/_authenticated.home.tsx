@@ -131,6 +131,7 @@ function HomeScreen() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
   const [mapFullscreen, setMapFullscreen] = useState(false);
+  const mapRef = useRef<SampleListingsMapRef | null>(null);
 
   useEffect(() => {
     if (!mapFullscreen) return;
