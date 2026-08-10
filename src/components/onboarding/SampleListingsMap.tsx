@@ -401,8 +401,13 @@ export function SampleListingsMap({
 
 
   // Fit the viewport to the listing set (does not depend on clustering).
+  // Keyed on the listing ids so re-renders (e.g. saving a listing) never re-zoom.
+  const fitKey = `${city.id}|${listings.map((l) => l.id).join(",")}`;
+  const fitKeyRef = useRef<string>("");
   useEffect(() => {
     if (!ready || !mapRef.current) return;
+    if (fitKeyRef.current === fitKey) return;
+    fitKeyRef.current = fitKey;
     const map = mapRef.current;
     if (listings.length > 1) {
       const bounds = new google.maps.LatLngBounds();
@@ -416,7 +421,7 @@ export function SampleListingsMap({
       map.setCenter({ lat: data.center[0], lng: data.center[1] });
       map.setZoom(data.zoom);
     }
-  }, [ready, city.id, listings]);
+  }, [ready, city.id, listings, fitKey]);
 
   // Recompute clusters whenever the map settles or the listing set changes.
   useEffect(() => {
