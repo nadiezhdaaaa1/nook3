@@ -123,8 +123,9 @@ function PageHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <button
-          type="button"
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() => {
             if (status === "paused") {
               resumeSearch(searchId);
@@ -134,14 +135,13 @@ function PageHeader({
               toast.success("Search paused");
             }
           }}
-          className="inline-flex h-10 items-center gap-1.5 rounded-pill border border-charcoal-200 px-4 text-sm font-semibold text-charcoal-700 transition-colors hover:border-charcoal-950"
         >
           {status === "paused" ? (
             <><Play className="h-4 w-4" /> Resume search</>
           ) : (
             <><Pause className="h-4 w-4" /> Pause search</>
           )}
-        </button>
+        </OriginButton>
         <DeleteSearchButton searchId={searchId} name={name} />
       </div>
     </div>
