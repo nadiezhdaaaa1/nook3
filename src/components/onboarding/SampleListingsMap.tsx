@@ -361,6 +361,14 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
   const [clusters, setClusters] = useState<Cluster[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const signatureRef = useRef<string>("");
+  const skipNextFitRef = useRef(false);
+
+  useImperativeHandle(ref, () => ({
+    skipNextFit: () => {
+      skipNextFitRef.current = true;
+    },
+  }));
+
 
 
   const overlayRef = useRef<{
