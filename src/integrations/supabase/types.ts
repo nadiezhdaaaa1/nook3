@@ -578,6 +578,41 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_set_plan: {
+        Args: {
+          _billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          _plan: Database["public"]["Enums"]["app_plan"]
+          _user_id: string
+        }
+        Returns: {
+          billing_cycle: Database["public"]["Enums"]["billing_cycle"]
+          completed_at: string | null
+          consents: Json
+          created_at: string
+          email: string
+          email_verified: boolean
+          email_verified_at: string | null
+          id: string
+          is_affiliate: boolean
+          move_out: Json | null
+          phone: string
+          phone_verified: boolean
+          plan: Database["public"]["Enums"]["app_plan"]
+          referral_code: string
+          referred_by: string | null
+          timezone: string
+          trial_active: boolean
+          trial_ends_at: string | null
+          trial_started_at: string | null
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       grant_trial_extension: {
         Args: { _days: number; _source: string; _user_id: string }
         Returns: undefined
