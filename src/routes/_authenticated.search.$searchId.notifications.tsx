@@ -84,7 +84,7 @@ function NotificationsTab() {
       </div>
 
 
-      {/* Email — read-only + per-search override */}
+      {/* Email — read-only */}
       <section className="space-y-4">
         <div>
           <h3 className="font-display text-lg font-semibold text-charcoal-950 flex items-center gap-2">
