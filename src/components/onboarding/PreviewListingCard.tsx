@@ -199,7 +199,27 @@ export function PreviewListingCard({
       </div>
 
       <div className="relative" style={{ marginTop: 16 }}>
+        {/* 21st.dev glow effect — rotating conic gradient, hover only */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[10px] blur-lg transform-gpu motion-reduce:hidden"
+          initial={false}
+          animate={{
+            opacity: wrenHovered ? 0.85 : 0,
+            scale: wrenHovered ? 1.05 : 1,
+            background: [
+              "conic-gradient(from 0deg at 50% 50%, #FA8B55, #D66C38, #8B5CF6, #4ADE80, #FA8B55)",
+              "conic-gradient(from 360deg at 50% 50%, #FA8B55, #D66C38, #8B5CF6, #4ADE80, #FA8B55)",
+            ],
+          }}
+          transition={{
+            background: { repeat: Infinity, duration: 5, ease: "linear" },
+            opacity: { duration: 0.25 },
+            scale: { type: "spring", stiffness: 300, damping: 20 },
+          }}
+        />
         <div
+
           ref={wrenBoxRef}
           role="button"
           tabIndex={0}
