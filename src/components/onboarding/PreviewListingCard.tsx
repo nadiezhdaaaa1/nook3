@@ -59,24 +59,11 @@ function getCoverDiameter(width: number, height: number, x: number, y: number) {
   );
 }
 
-function WrenTakeButton({
-  open,
-  onClick,
-  children,
-}: {
-  open: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  children: React.ReactNode;
-}) {
+function WrenTakeHeader({ children }: { children: React.ReactNode }) {
   return (
-    <button
-      type="button"
-      aria-expanded={open}
-      onClick={onClick}
-      className="group relative flex w-full items-center justify-between gap-2 rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 p-3"
-    >
+    <div className="flex w-full items-center justify-between gap-2 text-left p-3">
       {children}
-    </button>
+    </div>
   );
 }
 
@@ -214,13 +201,27 @@ export function PreviewListingCard({
       <div className="relative" style={{ marginTop: 16 }}>
         <div
           ref={wrenBoxRef}
+          role="button"
+          tabIndex={0}
+          aria-expanded={open}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenId?.(open ? null : listing.id);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              setOpenId?.(open ? null : listing.id);
+            }
+          }}
           onPointerEnter={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             updateWrenOrigin(e.clientX - rect.left, e.clientY - rect.top);
             setWrenHovered(true);
           }}
           onPointerLeave={() => setWrenHovered(false)}
-          className="relative"
+          className="relative cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           style={{
             background: "#2B2521",
             border: "1px solid transparent",
@@ -228,42 +229,34 @@ export function PreviewListingCard({
             overflow: "hidden",
           }}
         >
-        <motion.span
-          animate={{ scale: wrenHovered && wrenCoverSize > 0 ? 1 : 0 }}
-          initial={false}
-          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#000000]"
-          style={{ left: wrenOrigin.x, top: wrenOrigin.y, width: wrenCoverSize, height: wrenCoverSize }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <WrenTakeButton
-          open={open}
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpenId?.(open ? null : listing.id);
-          }}
-        >
-          <span className="relative z-10 flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-[#FA8B55]" />
-            <span
-              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-white"
-            >
-              Wren's take
-            </span>
-          </span>
-          <ChevronDown
-            className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-white"
-            style={{
-              width: 16,
-              height: 16,
-              transform: open ? "rotate(180deg)" : "none",
-            }}
+          <motion.span
+            animate={{ scale: wrenHovered && wrenCoverSize > 0 ? 1 : 0 }}
+            initial={false}
+            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#000000]"
+            style={{ left: wrenOrigin.x, top: wrenOrigin.y, width: wrenCoverSize, height: wrenCoverSize }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           />
-        </WrenTakeButton>
-        {open && (
-          <p className="relative z-10 px-3 pb-3 text-white" style={{ fontSize: 13, lineHeight: 1.5 }}>
-            {wrenTake(listing)}
-          </p>
-        )}
+          <WrenTakeHeader>
+            <span className="relative z-10 flex items-center gap-2">
+              <Sparkles className="h-3.5 w-3.5 text-[#FA8B55]" />
+              <span className="text-[11px] font-semibold uppercase tracking-[1.1px] text-white">
+                Wren's take
+              </span>
+            </span>
+            <ChevronDown
+              className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-white"
+              style={{
+                width: 16,
+                height: 16,
+                transform: open ? "rotate(180deg)" : "none",
+              }}
+            />
+          </WrenTakeHeader>
+          {open && (
+            <p className="relative z-10 px-3 pb-3 text-white" style={{ fontSize: 13, lineHeight: 1.5 }}>
+              {wrenTake(listing)}
+            </p>
+          )}
         </div>
       </div>
     </article>
