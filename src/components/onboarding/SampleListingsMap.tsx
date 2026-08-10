@@ -300,7 +300,11 @@ export function SampleListingsMap({
   onSelect,
   card,
   className,
+  isFullscreen,
+  onToggleFullscreen,
+  topLeftControls,
 }: Props) {
+
 
   const ready = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement>(null);
