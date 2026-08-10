@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Minus, Plus } from "lucide-react";
+import { Maximize2, Minimize2, Minus, Plus } from "lucide-react";
 import { createRoot, type Root } from "react-dom/client";
 import type { CityConfig } from "@/data/cities";
 import { useGoogleMaps } from "@/lib/maps/useGoogleMaps";
@@ -20,7 +20,11 @@ interface Props {
   onSelect?: (id: string | null) => void;
   card?: ReactNode;
   className?: string;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
+  topLeftControls?: ReactNode;
 }
+
 
 
 const PIN_STYLES: Partial<CSSStyleDeclaration> = {
