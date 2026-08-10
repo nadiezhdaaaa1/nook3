@@ -328,15 +328,16 @@ function HomeScreen() {
                     size="medium"
                     aria-haspopup="dialog"
                     onClick={() => setFiltersOpen(true)}
-                    className="relative inline-flex h-[46px] shrink-0 items-center gap-2 px-3 text-sm font-semibold"
+                    className="inline-flex h-[46px] shrink-0 items-center gap-2 px-3 text-sm font-semibold"
                   >
-                    <ListFilter className="h-4 w-4" aria-hidden />
-                    Filters
-                    {filterCount > 0 && (
-                      <span className="absolute right-0 top-0 z-10 inline-flex h-5 min-w-5 translate-x-1/3 -translate-y-1/3 items-center justify-center rounded-pill bg-charcoal-950 px-1.5 text-[11px] font-semibold text-paper">
+                    {filterCount > 0 ? (
+                      <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal-950 text-[11px] font-semibold text-paper">
                         {filterCount}
                       </span>
+                    ) : (
+                      <ListFilter className="h-4 w-4 shrink-0" aria-hidden />
                     )}
+                    Filters
                   </OriginButton>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">Filter matches</TooltipContent>
