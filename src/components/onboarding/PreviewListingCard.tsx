@@ -59,24 +59,17 @@ function getCoverDiameter(width: number, height: number, x: number, y: number) {
   );
 }
 
-function WrenTakeButton({
+function WrenTakeHeader({
   open,
-  onClick,
   children,
 }: {
   open: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      aria-expanded={open}
-      onClick={onClick}
-      className="group relative flex w-full items-center justify-between gap-2 rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 p-3"
-    >
+    <div className="flex w-full items-center justify-between gap-2 text-left p-3">
       {children}
-    </button>
+    </div>
   );
 }
 
