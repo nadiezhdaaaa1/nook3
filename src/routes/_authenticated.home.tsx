@@ -21,7 +21,16 @@ import {
   useSaveListingSnapshotMutation,
 } from "@/lib/queries/listingReports";
 import { ListingActions } from "@/components/app/ListingActions";
+import { FiltersSheet } from "@/components/app/FiltersSheet";
+import {
+  activeFilterCount,
+  applyFilters,
+  defaultFilters,
+  deriveFilterScope,
+  type MatchFilters,
+} from "@/lib/app/filters";
 import type { ReportReason } from "@/lib/listingReports.functions";
+
 
 
 export const Route = createFileRoute("/_authenticated/home")({
