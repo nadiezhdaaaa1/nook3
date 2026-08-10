@@ -84,7 +84,7 @@ function MobileNavItem({
       onFocus={handleFocus}
       onBlur={() => setHovered(false)}
       className={cn(
-        "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] border border-black/20 bg-[#FAF8F3] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
+        "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] bg-[#FAF8F3] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
         isActive && "bg-[#241C12] text-white focus:bg-[#241C12] focus:text-white",
       )}
     >
