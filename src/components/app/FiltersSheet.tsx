@@ -12,6 +12,9 @@ import {
 import { OriginButton } from "@/components/ui/origin-button";
 import { ObChip } from "@/components/onboarding/ObChip";
 import { findAmenity } from "@/data/amenities";
+import { getCity } from "@/data/cities";
+import { cn } from "@/lib/utils";
+import type { Search } from "@/lib/store";
 import {
   BATH_OPTIONS,
   activeFilterCount,
