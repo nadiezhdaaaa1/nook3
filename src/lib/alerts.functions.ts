@@ -51,6 +51,39 @@ export const listAlerts = createServerFn({ method: "GET" })
     return (data ?? []).map(rowToAlert);
   });
 
+const paginationSchema = z.object({
+  limit: z.number().int().min(1).max(100),
+  offset: z.number().int().min(0),
+});
+
+export type PaginatedAlertsResult = {
+  alerts: AlertRow[];
+  total: number;
+};
+
+export const listAlertsPage = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => paginationSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const [{ count }, { data: rows, error }] = await Promise.all([
+      context.supabase
+        .from("saved_alerts")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", context.userId),
+      context.supabase
+        .from("saved_alerts")
+        .select("*")
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: false })
+        .range(data.offset, data.offset + data.limit - 1),
+    ]);
+    if (error) throw new Error(error.message);
+    return {
+      alerts: (rows ?? []).map(rowToAlert),
+      total: count ?? 0,
+    } satisfies PaginatedAlertsResult;
+  });
+
 export const updateAlertStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
