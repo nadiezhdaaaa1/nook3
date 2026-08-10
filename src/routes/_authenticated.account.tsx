@@ -377,10 +377,11 @@ function ToggleRow({
         onClick={() => !disabled && onChange(!checked)}
         className={cn(
           "relative shrink-0 mt-0.5 rounded-full transition-colors",
-          checked ? "bg-charcoal-950" : "bg-charcoal-300",
+          checked ? "" : "bg-charcoal-300",
           disabled && "opacity-60 cursor-not-allowed",
         )}
-        style={{ width: 44, height: 24 }}
+        style={{ width: 44, height: 24, background: checked ? "#6A820A" : undefined }}
+
       >
         <span
           className="absolute top-1/2 -translate-y-1/2 rounded-full bg-white shadow-sm transition-[left] duration-200"
