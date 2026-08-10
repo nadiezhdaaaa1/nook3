@@ -166,6 +166,21 @@ export const useAppStore = create<AppStore>()(
         get().updateSearch(id, { name: trimmed });
       },
 
+      changeSearchCity: (id, cityId) => {
+        const search = get().searches.find((s) => s.id === id);
+        if (!search) return;
+        const defaults = EMPTY_SEARCH_DEFAULTS(cityId);
+        get().updateSearch(id, {
+          cityId,
+          // Reset city-dependent fields to avoid mismatched neighborhoods / transit lines.
+          neighborhoods: defaults.neighborhoods,
+          transit: defaults.transit,
+          commute: defaults.commute,
+          // If current budget is outside new city's range, reset to its default.
+          budget: search.budget && defaults.budget ? defaults.budget : null,
+        });
+      },
+
       pauseSearch: (id) => get().updateSearch(id, { status: "paused" }),
       resumeSearch: (id) => get().updateSearch(id, { status: "active" }),
       archiveSearch: (id) => {
