@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useMemo, useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { ListFilter, ShieldCheck } from "lucide-react";
+
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
