@@ -654,7 +654,7 @@ function DeleteAccountButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 h-10 px-4 rounded border border-danger/40 text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
+        className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-danger/40 text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
       >
         <Trash2 className="h-3.5 w-3.5" /> Delete account
       </button>
