@@ -11,6 +11,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { OriginButton } from "@/components/ui/origin-button";
 
 export const Route = createFileRoute("/_authenticated/search/$searchId")({
   head: () => ({
