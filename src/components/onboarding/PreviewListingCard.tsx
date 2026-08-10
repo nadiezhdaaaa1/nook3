@@ -283,7 +283,7 @@ export function PreviewListingCard({
           />
         </WrenTakeButton>
         {open && (
-          <p className="px-3 pb-3 text-[#4a4a46]" style={{ fontSize: 13, lineHeight: 1.5 }}>
+          <p className={`px-3 pb-3 ${open ? "text-white" : "text-[#4a4a46]"}`} style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
