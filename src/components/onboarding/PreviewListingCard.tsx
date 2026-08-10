@@ -1,12 +1,12 @@
-import React from "react";
-import { ArrowUpRight, MapPin, TrendingDown, X } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowUpRight, ChevronDown, MapPin, TrendingDown, X } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { SampleListing } from "@/data/sampleListings";
+import { getListingAmenities, type SampleListing } from "@/data/sampleListings";
 
 interface Props {
   listing: SampleListing;
@@ -32,6 +32,9 @@ export function PreviewListingCard({
   actions,
   disableTitleLink = false,
 }: Props) {
+  const [showMore, setShowMore] = useState(false);
+  const amenities = getListingAmenities(listing);
+
   return (
     <TooltipProvider>
     <article
@@ -135,7 +138,40 @@ export function PreviewListingCard({
             </span>
           </>
         )}
+        {amenities.length > 0 && (
+          <>
+            <span style={{ margin: "0 4px" }}>·</span>
+            <button
+              type="button"
+              aria-expanded={showMore}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMore((v) => !v);
+              }}
+              className="inline-flex items-center gap-1 rounded-[6px] px-1 text-[14px] leading-[20px] text-[#241c12] underline decoration-black/20 underline-offset-2 transition-colors hover:decoration-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12]"
+            >
+              {showMore ? "Less" : "More"}
+              <ChevronDown
+                className={`h-3.5 w-3.5 transition-transform duration-200 ${showMore ? "rotate-180" : ""}`}
+                aria-hidden="true"
+              />
+            </button>
+          </>
+        )}
       </div>
+
+      {showMore && amenities.length > 0 && (
+        <ul className="mt-2 flex flex-wrap gap-1.5">
+          {amenities.map((a) => (
+            <li
+              key={a}
+              className="rounded-full border border-black/10 bg-[#faf6ee] px-2.5 py-1 text-[12px] leading-[16px] text-[#4a4238]"
+            >
+              {a}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="mt-3 flex items-end justify-between gap-3">
         <span
