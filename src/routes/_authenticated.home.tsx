@@ -353,6 +353,7 @@ function HomeScreen() {
       >
         {cityConfig && (
           <SampleListingsMap
+            ref={mapRef}
             city={cityConfig}
             listings={pins}
             activeId={activeId}
