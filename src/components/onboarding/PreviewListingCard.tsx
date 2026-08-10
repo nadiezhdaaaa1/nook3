@@ -46,25 +46,6 @@ export function wrenTake(s: SampleListing) {
   ]);
 }
 
-const GLOW_COLORS = ["#D66C38", "#6A820A", "#F1C40F", "#D66C38"];
-
-/** Animated conic-gradient glow, revealed on hover of the parent (group/glow). */
-function WrenGlow() {
-  return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 rounded-[10px] blur-sm opacity-0 transition-opacity duration-300 group-hover/glow:opacity-50 motion-reduce:hidden"
-      animate={{
-        background: [
-          `conic-gradient(from 0deg at 50% 50%, ${GLOW_COLORS.join(", ")})`,
-          `conic-gradient(from 360deg at 50% 50%, ${GLOW_COLORS.join(", ")})`,
-        ],
-      }}
-      transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-      style={{ willChange: "transform, background" }}
-    />
-  );
-}
 
 function getCoverDiameter(width: number, height: number, x: number, y: number) {
   return Math.ceil(
@@ -130,7 +111,7 @@ function WrenTakeButton({
       <motion.span
         animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
         initial={false}
-        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#241C12]"
+        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFF1EA]"
         style={{ left: origin.x, top: origin.y, width: coverSize, height: coverSize }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       />
@@ -245,12 +226,11 @@ export function PreviewListingCard({
         )}
       </div>
 
-      <div className="group/glow relative" style={{ marginTop: 16 }}>
-        <WrenGlow />
+      <div className="relative" style={{ marginTop: 16 }}>
         <div
           className="relative"
           style={{
-            background: open ? "#241C12" : "#ffffff",
+            background: open ? "#FFF1EA" : "#ffffff",
             border: open ? "1px solid transparent" : "1px solid rgba(0,0,0,0.10)",
             borderRadius: 10,
             overflow: "hidden",
@@ -264,17 +244,15 @@ export function PreviewListingCard({
           }}
         >
           <span className="relative z-10 flex items-center gap-2">
-            <Sparkles
-              className="h-3.5 w-3.5 text-[#D66C38]"
-            />
+            <Sparkles className="h-3.5 w-3.5 text-[#D66C38]" />
             <span
-              className={`text-[11px] font-semibold uppercase tracking-[1.1px] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-white ${open ? "text-white" : "text-[#241C12]"}`}
+              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12]"
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className={`relative z-10 transition-[color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none group-hover:text-white ${open ? "text-white" : "text-[#241C12]"}`}
+            className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-[#241C12]"
             style={{
               width: 16,
               height: 16,
@@ -283,7 +261,7 @@ export function PreviewListingCard({
           />
         </WrenTakeButton>
         {open && (
-          <p className={`px-3 pb-3 ${open ? "text-white" : "text-[#4a4a46]"}`} style={{ fontSize: 13, lineHeight: 1.5 }}>
+          <p className="px-3 pb-3 text-[#241C12]" style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
