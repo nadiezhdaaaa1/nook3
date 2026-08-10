@@ -286,7 +286,7 @@ export function SampleListingsMap({
       const isHovered = id === hoveredId;
       const isActive = id === activeId;
       m.setActive(isHovered || isActive);
-      if (isHovered) m.bringToFront();
+      if (isHovered || isActive) m.bringToFront();
       if (isActive && !hoveredId) m.panTo(mapRef.current!);
     });
   }, [ready, activeId, hoveredId]);
