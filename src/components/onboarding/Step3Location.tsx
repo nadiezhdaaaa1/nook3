@@ -131,46 +131,75 @@ export function Step3Location() {
       {/* Quick presets */}
       {presets.length > 0 && (
         <motion.div variants={sectionVariants}>
-          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500 mb-3">
-            Quick picks · tap to add a bundle
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {presets.map((p) => {
-              const resolved = resolvePreset(p, allKnown);
-              const allSelected = resolved.length > 0 && resolved.every((n) => neighborhoods.includes(n));
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => (allSelected ? removePreset(resolved) : applyPreset(resolved))}
-                  disabled={resolved.length === 0}
-                  className={cn(
-                    "group text-left p-3.5 rounded-card border transition-colors",
-                    allSelected
-                      ? "border-transparent hover:border-charcoal-400"
-                      : "bg-surface-elevated border-border hover:border-charcoal-950 disabled:opacity-40 disabled:hover:border-border",
-                  )}
-                  style={allSelected ? { backgroundColor: "#241C12" } : undefined}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg leading-none">{p.emoji}</span>
-                    <span className={cn("text-sm font-semibold", allSelected ? "text-paper" : "text-charcoal-950")}>
-                      {p.label}
-                    </span>
-                  </div>
-                  <div className={cn("text-[11px] leading-snug", allSelected ? "text-paper/70" : "text-charcoal-500")}>
-                    {p.description}
-                  </div>
-                  <div className={cn(
-                    "text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5",
-                    allSelected ? "text-paper/60" : "text-charcoal-400",
-                  )}>
-                    +{resolved.length} areas{allSelected ? " · added · tap to remove" : ""}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          <button
+            type="button"
+            onClick={() => setQuickPicksOpen((v) => !v)}
+            aria-expanded={quickPicksOpen}
+            className="w-full flex items-center justify-between p-3.5 rounded-card border transition-colors text-left bg-surface-elevated border-border hover:border-charcoal-950"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-charcoal-950">Quick picks</span>
+              <span className="text-[11px] font-mono text-charcoal-400">
+                {presets.length} bundles
+              </span>
+            </div>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 text-charcoal-500 transition-transform duration-200",
+                quickPicksOpen && "rotate-180",
+              )}
+            />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {quickPicksOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 mt-3">
+                  {presets.map((p) => {
+                    const resolved = resolvePreset(p, allKnown);
+                    const allSelected = resolved.length > 0 && resolved.every((n) => neighborhoods.includes(n));
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => (allSelected ? removePreset(resolved) : applyPreset(resolved))}
+                        disabled={resolved.length === 0}
+                        className={cn(
+                          "group text-left p-3.5 rounded-card border transition-colors",
+                          allSelected
+                            ? "border-transparent hover:border-charcoal-400"
+                            : "bg-surface-elevated border-border hover:border-charcoal-950 disabled:opacity-40 disabled:hover:border-border",
+                        )}
+                        style={allSelected ? { backgroundColor: "#241C12" } : undefined}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg leading-none">{p.emoji}</span>
+                          <span className={cn("text-sm font-semibold", allSelected ? "text-paper" : "text-charcoal-950")}>
+                            {p.label}
+                          </span>
+                        </div>
+                        <div className={cn("text-[11px] leading-snug", allSelected ? "text-paper/70" : "text-charcoal-500")}>
+                          {p.description}
+                        </div>
+                        <div className={cn(
+                          "text-[10px] font-mono uppercase tracking-[0.14em] mt-1.5",
+                          allSelected ? "text-paper/60" : "text-charcoal-400",
+                        )}>
+                          +{resolved.length} areas{allSelected ? " · added · tap to remove" : ""}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
 
