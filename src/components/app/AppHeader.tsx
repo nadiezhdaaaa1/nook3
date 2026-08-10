@@ -1,5 +1,6 @@
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { useState } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
 import {
   IconGift,
   IconHeart,
@@ -22,6 +23,107 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
+const FILL_DURATION = 0.5;
+const FILL_EASE = [0.16, 1, 0.3, 1] as const;
+const FILL_COLOR = "#EBE2CF";
+
+function getCoverDiameter(width: number, height: number, x: number, y: number) {
+  return Math.ceil(
+    2 *
+      Math.max(
+        Math.hypot(x, y),
+        Math.hypot(width - x, y),
+        Math.hypot(x, height - y),
+        Math.hypot(width - x, height - y),
+      ),
+  );
+}
+
+function MobileNavItem({
+  to,
+  label,
+  Icon,
+}: {
+  to: string;
+  label: string;
+  Icon: (typeof NAV_ITEMS)[number]["Icon"];
+}) {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isActive = pathname === to;
+  const [hovered, setHovered] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+  const [coverSize, setCoverSize] = useState(0);
+
+  const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    setOrigin({ x, y });
+    setCoverSize(getCoverDiameter(rect.width, rect.height, x, y));
+    setHovered(true);
+  };
+
+  const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.matches(":focus-visible")) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = rect.width / 2;
+    const y = rect.height / 2;
+    setOrigin({ x, y });
+    setCoverSize(getCoverDiameter(rect.width, rect.height, x, y));
+    setHovered(true);
+  };
+
+  return (
+    <DropdownMenuItem
+      onSelect={() => {
+        navigate({ to });
+      }}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={() => setHovered(false)}
+      onFocus={handleFocus}
+      onBlur={() => setHovered(false)}
+      className={cn(
+        "group relative flex w-full cursor-pointer select-none items-center gap-3 overflow-hidden rounded-[12px] border border-black/20 bg-[#FAF8F3] px-3 py-2.5 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-black/20 focus:bg-transparent",
+        isActive && "bg-[#241C12] text-white focus:bg-[#241C12] focus:text-white",
+      )}
+    >
+      {!isActive && (
+        <motion.span
+          animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
+          aria-hidden
+          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full"
+          initial={false}
+          style={{
+            backgroundColor: FILL_COLOR,
+            height: coverSize,
+            left: origin.x,
+            top: origin.y,
+            width: coverSize,
+          }}
+          transition={{ duration: FILL_DURATION, ease: FILL_EASE }}
+        />
+      )}
+      <span className="relative z-10 inline-flex items-center gap-3">
+        <Icon
+          size={20}
+          stroke={1.5}
+          className={cn("shrink-0", isActive ? "text-white" : "text-[#241C12]")}
+          aria-hidden
+        />
+        <span
+          className={cn(
+            "text-[14px] font-semibold leading-5",
+            isActive ? "text-white" : "text-[#241C12]",
+          )}
+        >
+          {label}
+        </span>
+      </span>
+    </DropdownMenuItem>
+  );
+}
+
 const ICON_PROPS = {
   size: 20,
   stroke: 1.5,
@@ -42,10 +144,8 @@ const NAV_ITEMS = [
 
 export function AppHeader({ plan }: { plan?: PlanKey }) {
   const storePlan = useAppStore((s) => s.user?.plan);
-  const [open, setOpen] = useState(false);
   const resolvedPlan: PlanKey =
     plan ?? (storePlan === "premium" || storePlan === "max" ? storePlan : "free");
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <header
@@ -100,7 +200,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           </Tooltip>
         </nav>
 
-        <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenu>
           <DropdownMenuTrigger
             aria-label="Open menu"
             className="flex shrink-0 items-center justify-center rounded-[8px] p-2 outline-none transition-colors hover:bg-[#EBE2CF] focus-visible:ring-2 focus-visible:ring-black/20 md:hidden"
@@ -113,29 +213,14 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
             className="w-[220px] rounded-[12px] border-black/[0.08] bg-[#FAF8F3] p-2 shadow-lg font-['Google_Sans_Flex',sans-serif]"
           >
             <nav aria-label="Mobile" className="flex flex-col gap-1">
-              {NAV_ITEMS.map(({ to, label, Icon }) => {
-                const isActive = pathname === to;
-                return (
-                  <DropdownMenuItem
-                    key={to}
-                    asChild
-                    className={cn(
-                      "flex cursor-pointer items-center gap-2 rounded-[8px] px-3 py-2.5 transition-colors hover:bg-[#EBE2CF] focus:bg-[#EBE2CF] focus:text-[#241C12] data-[active]:bg-[#241C12]",
-                      isActive && "bg-[#241C12]"
-                    )}
-                  >
-                    <Link to={to} onClick={() => setOpen(false)}>
-                      <Icon
-                        size={20}
-                        stroke={1.5}
-                        className={cn("shrink-0", isActive ? "text-white" : "text-[#4A4A46]")}
-                        aria-hidden
-                      />
-                      <span className={cn(LABEL_CLASS, isActive && "text-white")}>{label}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
+              {NAV_ITEMS.map(({ to, label, Icon }) => (
+                <MobileNavItem
+                  key={to}
+                  to={to}
+                  label={label}
+                  Icon={Icon}
+                />
+              ))}
             </nav>
           </DropdownMenuContent>
         </DropdownMenu>
