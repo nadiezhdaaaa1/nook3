@@ -106,23 +106,12 @@ function WrenTakeButton({
         setHovered(true);
       }}
       onPointerLeave={() => setHovered(false)}
-      className="group relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] p-3"
+      className="group relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-[10px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 p-3"
     >
-      <motion.span
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        initial={false}
-        animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          background:
-            "radial-gradient(circle at 40% 40%, rgba(214,108,56,0.35) 0%, transparent 55%), radial-gradient(circle at 70% 70%, rgba(167,139,250,0.28) 0%, transparent 55%), radial-gradient(circle at 50% 50%, rgba(74,222,128,0.22) 0%, transparent 60%)",
-          filter: "blur(12px)",
-        }}
-      />
       <motion.span
         animate={{ scale: hovered && coverSize > 0 ? 1 : 0 }}
         initial={false}
-        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFF1EA]"
+        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#000000]"
         style={{ left: origin.x, top: origin.y, width: coverSize, height: coverSize }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       />
@@ -241,8 +230,8 @@ export function PreviewListingCard({
         <div
           className="relative"
           style={{
-            background: open ? "#FFF1EA" : "#ffffff",
-            border: "1px solid rgba(0,0,0,0.10)",
+            background: "#2B2521",
+            border: "1px solid transparent",
             borderRadius: 10,
             overflow: "hidden",
           }}
@@ -255,15 +244,15 @@ export function PreviewListingCard({
           }}
         >
           <span className="relative z-10 flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-[#D66C38]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#FA8B55]" />
             <span
-              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-[#241C12]"
+              className="text-[11px] font-semibold uppercase tracking-[1.1px] text-white"
             >
               Wren's take
             </span>
           </span>
           <ChevronDown
-            className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-[#241C12]"
+            className="relative z-10 transition-[transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none text-white"
             style={{
               width: 16,
               height: 16,
@@ -272,7 +261,7 @@ export function PreviewListingCard({
           />
         </WrenTakeButton>
         {open && (
-          <p className="px-3 pb-3 text-[#241C12]" style={{ fontSize: 13, lineHeight: 1.5 }}>
+          <p className="px-3 pb-3 text-white" style={{ fontSize: 13, lineHeight: 1.5 }}>
             {wrenTake(listing)}
           </p>
         )}
