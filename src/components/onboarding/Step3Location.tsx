@@ -75,6 +75,34 @@ export function Step3Location() {
   const canContinue = neighborhoods.length > 0;
   const tooMany = neighborhoods.length >= 15;
 
+  const selectedChipsEl = neighborhoods.length > 0 ? (
+    <motion.div variants={sectionVariants}>
+      <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
+        Selected · {neighborhoods.length}
+      </div>
+      <div className="flex flex-wrap" style={{ gap: 4 }}>
+        {neighborhoods.map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => toggleNeighborhood(n)}
+            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-pill bg-charcoal-950 text-paper text-xs font-medium hover:bg-charcoal-800"
+          >
+            {n}
+            <X className="h-3 w-3" />
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => set("neighborhoods", [])}
+          className="h-8 px-3 inline-flex items-center text-xs font-semibold text-sage-900 hover:text-charcoal-950"
+        >
+          Clear all
+        </button>
+      </div>
+    </motion.div>
+  ) : null;
+
   return (
     <motion.div className="space-y-10" variants={stepVariants} initial="hidden" animate="visible">
       <motion.header variants={sectionVariants}>
@@ -157,33 +185,7 @@ export function Step3Location() {
       )}
 
       {/* Selected chips */}
-      {neighborhoods.length > 0 && (
-        <motion.div variants={sectionVariants}>
-          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-sage-900 mb-3">
-            Selected · {neighborhoods.length}
-          </div>
-          <div className="flex flex-wrap" style={{ gap: 4 }}>
-            {neighborhoods.map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => toggleNeighborhood(n)}
-                className="h-8 px-3 inline-flex items-center gap-1.5 rounded-pill bg-charcoal-950 text-paper text-xs font-medium hover:bg-charcoal-800"
-              >
-                {n}
-                <X className="h-3 w-3" />
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => set("neighborhoods", [])}
-              className="h-8 px-3 inline-flex items-center text-xs font-semibold text-sage-900 hover:text-charcoal-950"
-            >
-              Clear all
-            </button>
-          </div>
-        </motion.div>
-      )}
+      {view === "list" && selectedChipsEl}
 
       <motion.div variants={sectionVariants}>
         {view === "map" ? (
@@ -337,6 +339,9 @@ export function Step3Location() {
           </>
         )}
       </motion.div>
+
+      {/* Selected chips under map in map mode */}
+      {view === "map" && selectedChipsEl}
 
       {/* Trust signal */}
       <motion.div variants={sectionVariants} className="flex items-start gap-3 p-4 rounded-[12px] bg-charcoal-950/[0.03] border border-charcoal-200/60">
