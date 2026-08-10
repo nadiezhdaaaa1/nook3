@@ -1383,7 +1383,7 @@ function BillingToggle({
             )}
             <span className="relative">{c === "monthly" ? "Monthly" : "Annual"}</span>
             {c === "annual" && (
-              <span className="relative text-[#6a820a]">-2mo</span>
+              <span className="relative text-[#6a820a]">-47% OFF</span>
             )}
           </button>
         );
