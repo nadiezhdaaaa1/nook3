@@ -78,9 +78,9 @@ function MobileNavItem({
 
   return (
     <DropdownMenuItem
-      onClick={() => {
-        navigate({ to });
+      onSelect={() => {
         onNavigate();
+        navigate({ to });
       }}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={() => setHovered(false)}
