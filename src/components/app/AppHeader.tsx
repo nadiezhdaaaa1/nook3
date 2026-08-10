@@ -61,7 +61,7 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           <NavHoverItem
             to="/account"
             aria-label="Account"
-            className="h-9 w-9 rounded-full border border-black/20"
+            className="h-9 w-9 rounded-[8px] border border-black/20"
           >
             <IconUser size={18} stroke={1.5} color="#D66C38" aria-hidden />
           </NavHoverItem>
