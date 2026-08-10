@@ -53,11 +53,74 @@ function formatRent(rent: number): string {
   return `$${Math.round(rent / 100) / 10}k`;
 }
 
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
+  );
+}
+
+interface Cluster {
+  id: string;
+  anchor: google.maps.LatLng;
+  members: ListingPin[];
+}
+
+const CLUSTER_THRESHOLD_PX = 44;
+
+function computeClusters(
+  map: google.maps.Map,
+  listings: ListingPin[],
+  threshold = CLUSTER_THRESHOLD_PX,
+): Cluster[] {
+  const toCluster = (l: ListingPin): Cluster => ({
+    id: `cluster:${l.id}`,
+    anchor: new google.maps.LatLng(l.coords[0], l.coords[1]),
+    members: [l],
+  });
+
+  const projection = map.getProjection();
+  const zoom = map.getZoom();
+  if (!projection || zoom == null) return listings.map(toCluster);
+
+  const scale = Math.pow(2, zoom);
+  const points = listings.map((l) => {
+    const point = projection.fromLatLngToPoint(new google.maps.LatLng(l.coords[0], l.coords[1]));
+    return { listing: l, x: (point?.x ?? 0) * scale, y: (point?.y ?? 0) * scale };
+  });
+
+  const used = new Set<number>();
+  const clusters: Cluster[] = [];
+  points.forEach((p, i) => {
+    if (used.has(i)) return;
+    used.add(i);
+    const members = [p.listing];
+    points.forEach((q, j) => {
+      if (j <= i || used.has(j)) return;
+      if (Math.hypot(p.x - q.x, p.y - q.y) <= threshold) {
+        used.add(j);
+        members.push(q.listing);
+      }
+    });
+    clusters.push({
+      id: `cluster:${p.listing.id}`,
+      anchor: new google.maps.LatLng(p.listing.coords[0], p.listing.coords[1]),
+      members,
+    });
+  });
+  return clusters;
+}
+
+function clusterSignature(clusters: Cluster[]): string {
+  return clusters.map((c) => c.members.map((m) => m.id).join("+")).join("|");
+}
+
 function createPinElement(): HTMLDivElement {
   const pin = document.createElement("div");
   Object.assign(pin.style, PIN_STYLES);
   return pin;
 }
+
 
 type PinVariant = "price" | "count" | "dot";
 
