@@ -77,7 +77,6 @@ function MobileNavItem({
   return (
     <DropdownMenuItem
       onSelect={() => {
-        onNavigate();
         navigate({ to });
       }}
       onPointerEnter={handlePointerEnter}
