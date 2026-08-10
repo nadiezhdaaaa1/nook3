@@ -112,7 +112,7 @@ function SamplePreview() {
         animate="visible"
         className="order-3 w-full px-6 pb-6 pt-6 md:order-1 md:h-full md:w-1/2 md:overflow-y-auto md:px-6 md:pt-6"
       >
-        <div className="sticky top-6 z-10 mb-8">
+        <div className="sticky top-0 z-10 mb-8">
           <OnboardingHeader fixed={false} />
         </div>
 
