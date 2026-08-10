@@ -40,7 +40,7 @@ export function OnboardingHeader({ fixed = true }: OnboardingHeaderProps) {
           backdropFilter: "blur(20px)",
           border: "1px solid rgba(0,0,0,0.2)",
           borderRadius: 16,
-          padding: fixed ? 12 : 24,
+          padding: 12,
         }}
       >
         <div className="flex items-center justify-between" style={{ gap: 32 }}>
