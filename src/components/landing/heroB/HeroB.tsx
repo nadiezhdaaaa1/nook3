@@ -314,7 +314,7 @@ function HeroBBackground({
           .hero-b-map-slot {
             top: 0;
             width: 100%;
-            height: 100%;
+            height: 50%;
             opacity: 1;
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
             mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
