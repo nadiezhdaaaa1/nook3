@@ -159,7 +159,7 @@ function AccountPage() {
       {/* Profile */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
-        <div className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field id="acct-email" label="Email" icon={Mail} error={!emailValid ? "Enter a valid email." : undefined}>
             <Input
               id="acct-email"
