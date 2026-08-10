@@ -218,20 +218,13 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           >
             <nav aria-label="Mobile" className="flex flex-col gap-1">
               {NAV_ITEMS.map(({ to, label, Icon }) => (
-                <DropdownMenuItem
+                <MobileNavItem
                   key={to}
-                  asChild
-                  onClick={() => setOpen(false)}
-                  className="p-0 focus:bg-transparent data-[active]:bg-transparent"
-                >
-                  <NavHoverItem
-                    to={to}
-                    className="w-full justify-start gap-3 rounded-[12px] border border-black/20 px-3 py-2.5"
-                  >
-                    <Icon size={20} stroke={1.5} className="shrink-0" aria-hidden />
-                    <span className={LABEL_CLASS}>{label}</span>
-                  </NavHoverItem>
-                </DropdownMenuItem>
+                  to={to}
+                  label={label}
+                  Icon={Icon}
+                  onNavigate={() => setOpen(false)}
+                />
               ))}
             </nav>
           </DropdownMenuContent>
