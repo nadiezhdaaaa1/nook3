@@ -19,10 +19,12 @@ import { useOnboardingStore } from "@/lib/onboarding/store";
  *    the account's first Search.
  */
 export function useDbSync() {
-  const searchesQ = useQuery(searchesQueryOptions());
-  const profileQ = useQuery(profileQueryOptions());
+  const hasSession = useHasSession();
+  const searchesQ = useQuery({ ...searchesQueryOptions(), enabled: hasSession, retry: false });
+  const profileQ = useQuery({ ...profileQueryOptions(), enabled: hasSession, retry: false });
   const updateMutation = useUpdateSearchMutation();
   const createMutation = useCreateSearchMutation();
+
 
   const hydratedRef = useRef(false);
   const handoffRef = useRef(false);
