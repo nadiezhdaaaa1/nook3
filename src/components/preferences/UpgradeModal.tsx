@@ -98,7 +98,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
               variant="main"
               size="big"
               className="w-full sm:flex-1"
-              onClick={goPricing}
+              onClick={goPlans}
             >
               View plans
             </OriginButton>
