@@ -156,11 +156,12 @@ function AccountPage() {
       {/* Profile */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
-        <div className="space-y-4">
+        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
           <ProfileTimezoneRow timezone={timezone} onChange={setTimezone} />
           <ProfilePasswordRow />
         </div>
       </section>
+
 
 
       {/* Subscription */}
@@ -1481,28 +1482,27 @@ function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange
 
   return (
     <>
-      <div className="rounded-card bg-paper-warm border border-border p-5">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
-              <Globe className="h-4 w-4 text-charcoal-700" />
-            </span>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-charcoal-950">Timezone</div>
-              <div className="text-xs text-charcoal-600 mt-0.5">{display}</div>
-            </div>
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
+            <Globe className="h-4 w-4 text-charcoal-700" />
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950">Timezone</div>
+            <div className="text-xs text-charcoal-600 mt-0.5">{display}</div>
           </div>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
-          >
-            Change
-          </button>
         </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
+        >
+          Change
+        </button>
       </div>
 
       <TimezoneDialog open={open} onOpenChange={setOpen} value={timezone} onChange={onChange} />
+
     </>
   );
 }
@@ -1577,30 +1577,29 @@ function ProfilePasswordRow() {
 
   return (
     <>
-      <div className="rounded-card bg-paper-warm border border-border p-5">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
-              <Lock className="h-4 w-4 text-charcoal-700" />
-            </span>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-charcoal-950">Password</div>
-              <div className="text-xs text-charcoal-600 mt-0.5">
-                {lastChangedDate ? `Last changed at ${lastChangedDate}` : "Change your account password"}
-              </div>
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
+            <Lock className="h-4 w-4 text-charcoal-700" />
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950">Password</div>
+            <div className="text-xs text-charcoal-600 mt-0.5">
+              {lastChangedDate ? `Last changed at ${lastChangedDate}` : "Change your account password"}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
-          >
-            Change password
-          </button>
         </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
+        >
+          Change password
+        </button>
       </div>
 
       <ChangePasswordDialog open={open} onOpenChange={setOpen} />
+
     </>
   );
 }
