@@ -132,13 +132,11 @@ function NewSearchLayout() {
         allowSkip: false,
       }}
     >
-      <div className="min-h-[calc(100dvh-64px)]" style={{ background: "#faf6ee" }}>
-        <div className="w-full mx-auto px-5" style={{ maxWidth: 800, paddingTop: 24 }}>
-          <OnboardingHeader fixed={false} />
-        </div>
+      <div className="min-h-[calc(100dvh-64px)] flex flex-col" style={{ background: "#faf6ee" }}>
+        <OnboardingHeader fixed />
         <main
-          className="w-full mx-auto px-5"
-          style={{ maxWidth: 800, paddingTop: 40, paddingBottom: 40 }}
+          className="w-full mx-auto flex-1 px-5"
+          style={{ maxWidth: 800, paddingTop: 160, paddingBottom: 40 }}
         >
           <Outlet />
         </main>
