@@ -28,13 +28,21 @@ export function useAppHydrated(): boolean {
 /**
  * Copy current `useOnboardingStore` filter fields into the active Search
  * snapshot. Call this on debounced auto-save and before switching searches.
+ *
+ * Guarded: the live buffer only writes to the search it was hydrated from.
+ * An empty buffer, or one belonging to another search / the new-search draft,
+ * is ignored — otherwise it would clobber the saved search (this is what used
+ * to reset a search's city to NYC).
+ *
+ * `cityId` is deliberately NOT copied: a search's city is set at creation and
+ * changed only through `changeSearchCity`.
  */
 export function syncOnboardingToActiveSearch(): void {
   const app = useAppStore.getState();
   if (!app.activeSearchId) return;
   const o = useOnboardingStore.getState();
+  if (o.editingSearchId !== app.activeSearchId) return;
   app.snapshotActiveSearch({
-    cityId: (o.city ?? "nyc") as Search["cityId"],
     budget: o.budget,
     moveIn: o.moveIn,
     bedrooms: o.bedrooms,
@@ -51,9 +59,10 @@ export function syncOnboardingToActiveSearch(): void {
 }
 
 /**
- * Load a Search snapshot into `useOnboardingStore` so existing UI shows it.
+ * Load a Search snapshot into `useOnboardingStore` so existing UI shows it,
+ * and tag the buffer as owned by that search.
  */
-function hydrateOnboardingFromSearch(s: Search): void {
+export function hydrateOnboardingFromSearch(s: Search): void {
   useOnboardingStore.getState().patch({
     city: s.cityId,
     budget: s.budget,
@@ -68,7 +77,20 @@ function hydrateOnboardingFromSearch(s: Search): void {
     commute: s.commute,
     alertChannel: s.alertChannel,
     frequency: s.frequency,
+    editingSearchId: s.id,
   });
+}
+
+/** Mark the live buffer as a brand-new-search draft (never auto-saved). */
+export function beginSearchDraft(): void {
+  useOnboardingStore.getState().setEditingSearch("draft");
+}
+
+/** Re-load the active search into the buffer (e.g. after cancelling a draft). */
+export function restoreActiveSearchBuffer(): void {
+  const s = selectActiveSearch(useAppStore.getState());
+  if (s) hydrateOnboardingFromSearch(s);
+  else useOnboardingStore.getState().setEditingSearch(null);
 }
 
 /**
@@ -81,7 +103,7 @@ export function switchActiveSearch(nextId: string): void {
   const next = app.searches.find((s) => s.id === nextId);
   if (!next) return;
 
-  // 1. Snapshot the outgoing search.
+  // 1. Snapshot the outgoing search (no-op unless the buffer owns it).
   if (app.activeSearchId) syncOnboardingToActiveSearch();
 
   // 2. Update activeSearchId.
@@ -100,6 +122,7 @@ export function hydrateActiveSearchIntoOnboarding(): void {
   const s = selectActiveSearch(useAppStore.getState());
   if (s) hydrateOnboardingFromSearch(s);
 }
+
 
 /**
  * Push account-level fields from the legacy onboarding store up to the new

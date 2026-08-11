@@ -34,6 +34,7 @@ const DRAFT_KEYS = [
   "commute",
   "frequency",
   "lastStep",
+  "editingSearchId",
 ] as const;
 
 type Draft = Partial<OnboardingState>;
@@ -69,6 +70,7 @@ function NewSearchLayout() {
       transit: { hasPreference: false, lines: {} },
       commute: { maxMinutes: null },
       lastStep: 1,
+      editingSearchId: "draft",
     });
     return snap;
   });
@@ -89,7 +91,12 @@ function NewSearchLayout() {
 
   const handleSave = async () => {
     const o = useOnboardingStore.getState();
-    const cityId = (o.city ?? "nyc") as CityId;
+    if (!o.city) {
+      toast.error("Pick a city first");
+      navigate({ to: "/search/new/$step", params: { step: "1" } });
+      return;
+    }
+    const cityId = o.city as CityId;
     const seed = {
       cityId,
       budget: o.budget,

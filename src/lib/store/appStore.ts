@@ -179,14 +179,24 @@ export const useAppStore = create<AppStore>()(
           if (min < cb.min || max > cb.max) return [cb.min, cb.default] as [number, number];
           return search.budget;
         })();
+        // Keep an auto-generated name in step with the city (never touch a
+        // name the user typed themselves).
+        const autoName = getDefaultSearchName(search.cityId, get().searches.filter((s) => s.id !== id));
+        const wasAutoNamed =
+          search.name === autoName ||
+          search.name.startsWith(`${getCity(search.cityId)?.displayName ?? ""} Search`);
         get().updateSearch(id, {
           cityId,
+          ...(wasAutoNamed
+            ? { name: getDefaultSearchName(cityId, get().searches.filter((s) => s.id !== id)) }
+            : {}),
           // Reset city-dependent fields to avoid mismatched neighborhoods / transit lines.
           neighborhoods: defaults.neighborhoods,
           transit: defaults.transit,
           commute: defaults.commute,
           budget,
         });
+
       },
 
       pauseSearch: (id) => get().updateSearch(id, { status: "paused" }),

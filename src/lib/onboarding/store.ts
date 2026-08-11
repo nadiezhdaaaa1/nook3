@@ -63,9 +63,18 @@ export interface OnboardingState {
   lastStep: number;
   completedAt: string | null;
 
+  /**
+   * Which saved Search this live buffer currently represents.
+   * - a search id  → edits belong to that search
+   * - "draft"      → new-search wizard; must never write to an existing search
+   * - null         → nothing hydrated yet; must never write to an existing search
+   */
+  editingSearchId: string | null;
+
   // Move-out
   moveOut?: MoveOutInfo;
 }
+
 
 export interface OnboardingActions {
   set: <K extends keyof OnboardingState>(key: K, val: OnboardingState[K]) => void;
@@ -76,6 +85,7 @@ export interface OnboardingActions {
   cycleAmenity: (id: string) => void;
   cycleTransit: (id: string) => void;
   setTransit: (id: string, state: TriState | null) => void;
+  setEditingSearch: (id: string | null) => void;
   reset: () => void;
 }
 
@@ -102,7 +112,9 @@ const initial: OnboardingState = {
   trialActive: false,
   lastStep: 1,
   completedAt: null,
+  editingSearchId: null,
 };
+
 
 export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
   persist(
@@ -165,6 +177,7 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
         else lines[id] = state;
         set({ transit: { ...get().transit, lines } });
       },
+      setEditingSearch: (id) => set({ editingSearchId: id }),
       reset: () => set({ ...initial }),
     }),
     {
