@@ -1498,15 +1498,15 @@ function ChangePasswordSection() {
   const user = useAppStore((s) => s.user);
 
   const lastChangedDate = useMemo(() => {
-    if (!user?.updated_at) return null;
-    const d = new Date(user.updated_at);
+    if (!user?.updatedAt) return null;
+    const d = new Date(user.updatedAt);
     if (Number.isNaN(d.getTime())) return null;
     return d.toLocaleDateString(undefined, {
       month: "short",
       day: "numeric",
       year: "numeric",
     });
-  }, [user?.updated_at]);
+  }, [user?.updatedAt]);
 
   return (
     <section>
