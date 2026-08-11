@@ -14,6 +14,7 @@ import {
   selectActiveSearch,
   SEARCH_LIMITS,
   switchActiveSearch,
+  useDisabledSearchIds,
   type Search,
 } from "@/lib/store";
 import { getCity } from "@/data/cities";
@@ -25,17 +26,20 @@ function cityLabel(cityId: string) {
   return getCity(cityId as never)?.shortName ?? cityId;
 }
 
-function statusLabel(s: Search) {
+function statusLabel(s: Search, disabled = false) {
+  if (disabled) return "Disabled";
   return s.status === "active" ? "Live" : s.status === "paused" ? "Paused" : "Archived";
 }
 
-function StatusDot({ status }: { status: Search["status"] }) {
+function StatusDot({ status, disabled }: { status: Search["status"]; disabled?: boolean }) {
   return (
     <span
       aria-hidden
       className={cn(
         "h-2 w-2 rounded-full shrink-0",
-        status === "active"
+        disabled
+          ? "bg-charcoal-400"
+          : status === "active"
           ? "bg-sage-700"
           : status === "paused"
             ? "border-2 border-peach-700"
@@ -106,6 +110,7 @@ export function SearchSelector() {
 
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
+  const disabledIds = useDisabledSearchIds();
   const canCreate = quota.remaining > 0;
 
   const handleNew = () => {
@@ -129,7 +134,7 @@ export function SearchSelector() {
         >
           {active ? (
             <>
-              <StatusDot status={active.status} />
+              <StatusDot status={active.status} disabled={disabledIds.has(active.id)} />
               <span className="min-w-0 truncate text-sm font-semibold text-charcoal-950">
                 {active.name}
               </span>
@@ -184,12 +189,12 @@ export function SearchSelector() {
                       className="min-w-0 flex-1 text-left"
                     >
                       <span className="flex items-center gap-1.5">
-                        <StatusDot status={s.status} />
+                        <StatusDot status={s.status} disabled={disabledIds.has(s.id)} />
                         <span className="truncate text-sm font-semibold text-charcoal-950">{s.name}</span>
                         {s.id === active?.id && <Check className="h-3.5 w-3.5 shrink-0 text-sage-700" />}
                       </span>
                       <span className="mt-0.5 block truncate text-[11px] text-charcoal-500">
-                        {cityLabel(s.cityId)} · {statusLabel(s)} · {summary(s)}
+                        {cityLabel(s.cityId)} · {statusLabel(s, disabledIds.has(s.id))} · {summary(s)}
                       </span>
                     </button>
                     <OriginButton

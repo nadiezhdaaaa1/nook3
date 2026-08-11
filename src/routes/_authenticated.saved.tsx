@@ -18,7 +18,7 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
 import { cn } from "@/lib/utils";
-import { useAppStore, type Search, SEARCH_LIMITS } from "@/lib/store";
+import { useAppStore, useDisabledSearchIds, type Search, SEARCH_LIMITS } from "@/lib/store";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
@@ -301,6 +301,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
+  const disabledIds = useDisabledSearchIds();
   const max = SEARCH_LIMITS[plan];
   const canCreate = live.length < max;
   const handleNew = () => {
@@ -338,7 +339,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
             key={s.id}
             className={cn(
               "rounded-[16px] border border-black/10 bg-white p-5",
-              s.status === "archived" && "opacity-60",
+              (s.status === "archived" || disabledIds.has(s.id)) && "opacity-60",
             )}
           >
             <div className="flex items-start justify-between gap-3">
@@ -348,18 +349,27 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                     aria-hidden
                     className={cn(
                       "h-2 w-2 shrink-0 rounded-full",
-                      s.status === "active"
-                        ? "bg-sage-700"
-                        : s.status === "paused"
-                          ? "border-2 border-peach-700"
-                          : "bg-charcoal-300",
+                      disabledIds.has(s.id)
+                        ? "bg-charcoal-400"
+                        : s.status === "active"
+                          ? "bg-sage-700"
+                          : s.status === "paused"
+                            ? "border-2 border-peach-700"
+                            : "bg-charcoal-300",
                     )}
                   />
                   <h3 className="truncate text-[19px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">{s.name}</h3>
                 </div>
                 <p className="mt-1 text-[12px] text-charcoal-500">
                   {getCity(s.cityId)?.name ?? s.cityId} ·{" "}
-                  {s.status === "active" ? "Live" : s.status === "paused" ? "Paused" : "Archived"} ·{" "}
+                  {disabledIds.has(s.id)
+                    ? "Disabled"
+                    : s.status === "active"
+                      ? "Live"
+                      : s.status === "paused"
+                        ? "Paused"
+                        : "Archived"}{" "}
+                  ·{" "}
                   {s.totalAlertsReceived} alerts
                 </p>
               </div>
@@ -375,6 +385,12 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                 <Pencil className="h-4 w-4" />
               </OriginButton>
             </div>
+
+            {disabledIds.has(s.id) && (
+              <p className="mt-2 rounded-[8px] bg-black/[0.04] px-2.5 py-2 text-[12px] leading-[18px] text-charcoal-600">
+                Over your plan limit — upgrade to run it again, or delete it.
+              </p>
+            )}
 
             <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-[12px] leading-[18px] text-charcoal-600">
               {summaryBits(s).map((b, i) => (
