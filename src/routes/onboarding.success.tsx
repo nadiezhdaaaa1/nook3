@@ -202,14 +202,23 @@ function Success() {
 
   async function onGoogle() {
     setBusy(true);
+    try {
+      sessionStorage.setItem("nook:postAuthPath", "/home");
+    } catch {
+      /* ignore */
+    }
     const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/home",
+      redirect_uri: window.location.origin + "/auth/callback",
     });
     setBusy(false);
     if (res?.error) {
       toast.error("Google sign up failed", { description: res.error.message });
+      return;
     }
+    if (res?.redirected) return;
+    navigate({ to: "/home", replace: true });
   }
+
 
   return (
     <>
