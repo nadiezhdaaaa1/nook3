@@ -3,16 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useAppStore } from "@/lib/store";
+import { useAppStore, switchActiveSearch } from "@/lib/store";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
-} from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { OriginButton } from "@/components/ui/origin-button";
 import { CITY_LIST } from "@/data/cities";
@@ -211,26 +208,12 @@ function PageHeader({
         <OriginButton
           variant="tertiary"
           size="medium"
-          onClick={() => setCityDialogOpen(true)}
-        >
-          <MapPin className="h-4 w-4" /> Change city
-        </OriginButton>
-        <OriginButton
-          variant="tertiary"
-          size="medium"
           onClick={() => setIsEditing(true)}
         >
           <Pencil className="h-4 w-4" /> Rename
         </OriginButton>
         <DeleteSearchButton searchId={searchId} name={name} />
       </div>
-
-      <ChangeCityDialog
-        searchId={searchId}
-        currentCityId={cityId}
-        open={cityDialogOpen}
-        onOpenChange={setCityDialogOpen}
-      />
     </div>
   );
 }
