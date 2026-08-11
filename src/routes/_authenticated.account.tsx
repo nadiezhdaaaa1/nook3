@@ -7,6 +7,7 @@ import {
   Mail, Globe, Eye, EyeOff, ChevronRight, Lock, LogOut,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
+import cardAsset from "@/assets/Card.png.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
