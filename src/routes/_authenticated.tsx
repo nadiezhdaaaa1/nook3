@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { AppHeader } from "@/components/app/AppHeader";
@@ -27,11 +27,13 @@ export const Route = createFileRoute("/_authenticated")({
 
 function AppLayout() {
   const { isHydrating } = useDbSync();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hideHeader = pathname.startsWith("/search/new");
 
   return (
     <div className="min-h-dvh bg-paper">
       <EmailVerificationBanner />
-      <AppHeader />
+      {!hideHeader && <AppHeader />}
       {isHydrating ? (
         <div className="mx-auto max-w-[1440px] px-6 py-10">
           <HydrationSkeleton />
