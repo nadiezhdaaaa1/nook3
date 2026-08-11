@@ -113,6 +113,8 @@ function PageHeader({
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
+  const isDisabled = useIsSearchDisabled(searchId);
+
   
 
   const [isEditing, setIsEditing] = useState(false);
