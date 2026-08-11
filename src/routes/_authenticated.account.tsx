@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
-  Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
+  Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Eye, EyeOff, ChevronRight, LogOut,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
-import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
+import { WARM_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
 export const Route = createFileRoute("/_authenticated/account")({
   component: () => (
@@ -56,30 +56,30 @@ type PlanDef = {
 const PLANS: PlanDef[] = [
   {
     id: "free",
-    label: "Free",
-    tagline: "Get a feel for what's out there.",
+    label: "Intro",
+    tagline: "See how it works, on your real search.",
     monthly: 0,
     annual: 0,
     icon: Sparkles,
-    features: ["1 saved search", "Email alerts", "Daily digest"],
+    features: [
+      "1 search — the one you set up at signup",
+      "Only your 3 best matches per email",
+      "Daily or weekly alerts, no delay",
+    ],
   },
   {
     id: "premium",
-    label: "Premium",
+    label: "Pro",
     tagline: "When you're actively looking.",
     monthly: 14.99,
-    annual: 119,
+    annual: 95.88,
     icon: Zap,
-    features: ["3 saved searches", "Real-time alerts", "Email alerts", "All filters", "Wren AI Chat"],
-  },
-  {
-    id: "max",
-    label: "Max",
-    tagline: "For relocators and serious hunters.",
-    monthly: 29,
-    annual: 229,
-    icon: Crown,
-    features: ["Unlimited searches", "Priority alerts", "Concierge matches", "Early access"],
+    features: [
+      "Every match we find",
+      "Up to 3 searches — own filters, own cities",
+      "Daily or weekly alerts, no delay",
+      "Quiet hours in your timezone",
+    ],
   },
 ];
 
@@ -104,7 +104,9 @@ function AccountPage() {
 
   const prefs = usePreferencesStore();
 
-  const currentPlan = PLANS.find((p) => p.id === plan) ?? PLANS[0];
+  // Legacy "max" profiles behave like Pro
+  const currentPlan =
+    PLANS.find((p) => p.id === plan) ?? (plan === "free" ? PLANS[0] : PLANS[1]);
 
   // Usage stats
   const stats = useMemo(() => {
@@ -391,7 +393,7 @@ function LogoutRow() {
       queryClient.clear();
       await supabase.auth.signOut();
       resetApp();
-      navigate({ to: "/auth", replace: true });
+      navigate({ to: "/login", replace: true });
     } catch (e) {
       toast.error("Could not log out. Please try again.");
     } finally {
@@ -1227,17 +1229,18 @@ function PlanCard({
 }) {
   const isCurrent =
     plan.id === currentPlan && (plan.id === "free" || cycle === activeCycle);
-  const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
+  const price =
+    plan.id === "free" ? 0 : cycle === "annual" ? Math.round((plan.annual / 12) * 100) / 100 : plan.monthly;
   const priceLabel = plan.id === "free" ? "$0" : `$${price}`;
-  const suffix = plan.id === "free" ? "forever" : cycle === "annual" ? "/month" : "/month";
+  const suffix = plan.id === "free" ? "for 3 days" : "/month";
   const updatePlanMut = useUpdatePlanMutation();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
 
-  // Gradation: Free < Premium monthly < Premium annual < Max monthly < Max annual
+  // Gradation: Intro < Pro monthly < Pro annual
   const rankOf = (p: Plan, c: BillingCycle) =>
-    p === "free" ? 0 : (p === "premium" ? 1 : 3) + (c === "annual" ? 1 : 0);
+    p === "free" ? 0 : 1 + (c === "annual" ? 1 : 0);
   const targetRank = rankOf(plan.id, cycle);
   const currentRank = rankOf(currentPlan, activeCycle);
   const isUpgrade = targetRank > currentRank;
@@ -1253,10 +1256,8 @@ function PlanCard({
         ? `Upgrade to ${cycleWord}`
         : `Switch to ${cycleWord}`
       : isUpgrade
-        ? `Upgrade to ${plan.label}${plan.id === "free" ? "" : ` ${cycleWord}`}`
-        : plan.id === "free"
-          ? "Switch to Free"
-          : `Switch to ${plan.label} ${cycleWord}`;
+        ? `Upgrade to ${plan.label} ${cycleWord}`
+        : "Cancel subscription";
 
   const handleClick = () => {
     if (isCancelPath) onCancelRequest();
@@ -1266,16 +1267,13 @@ function PlanCard({
   const dark = plan.id !== "free";
   const text = dark ? "#f8f3e1" : "#241c12";
   const checkColor = dark ? "#c2dd93" : "#6a820a";
-  const badge = cycle === "annual" && plan.id === "premium"
-    ? { text: "-47% off", bg: "#6a820a" }
-    : cycle === "annual" && plan.id === "max"
-      ? { text: "-34% off", bg: "#7040c1" }
-      : null;
+  const badge =
+    cycle === "annual" && plan.id === "premium" ? { text: "-47% off", bg: "#6a820a" } : null;
 
   const cardStyle: React.CSSProperties = dark
     ? {
         backgroundColor: "#2c2415",
-        backgroundImage: plan.id === "premium" ? WARM_BG : COOL_BG,
+        backgroundImage: WARM_BG,
         boxShadow: DARK_SHADOW,
         color: text,
       }
@@ -1287,7 +1285,7 @@ function PlanCard({
 
   // Each tier keeps its own established button style, regardless of up/downgrade
   const ctaVariant =
-    plan.id === "premium" ? "premium" : plan.id === "max" ? "max" : "tertiary";
+    plan.id === "free" ? "tertiary" : "premium";
 
   return (
     <div
@@ -1458,7 +1456,7 @@ function CurrentPlanCard({
   const cardStyle: React.CSSProperties = dark
     ? {
         backgroundColor: "#2c2415",
-        backgroundImage: plan === "max" ? COOL_BG : WARM_BG,
+        backgroundImage: WARM_BG,
         boxShadow:
           "0px 2px 1px rgba(36,28,18,0.08), 0px 24px 14px rgba(36,28,18,0.28)",
         color: "#f8f3e1",
@@ -1480,7 +1478,7 @@ function CurrentPlanCard({
     : "$0";
   const suffix = isPaid
     ? (cycle === "annual" ? "/year" : "/month")
-    : "forever";
+    : "for 3 days";
 
   return (
     <div className="p-8" style={cardStyle}>
@@ -1838,16 +1836,16 @@ function SubscriptionSection({
         <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
           <div>
             <h2 className="font-display text-xl font-semibold text-charcoal-950">
-              {plan === "max" ? "Plan options" : "Upgrade your plan"}
+              {plan === "free" ? "Upgrade your plan" : "Plan options"}
             </h2>
             <p className="text-sm text-charcoal-600 mt-1">
-              Get faster alerts, more searches, and Wren AI.
+              Every match we find, plus up to 3 searches.
             </p>
           </div>
           <BillingToggle cycle={cycle} onChange={setCycle} />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid md:grid-cols-2 gap-3">
           {PLANS.map((p) => (
             <PlanCard
               key={p.id}

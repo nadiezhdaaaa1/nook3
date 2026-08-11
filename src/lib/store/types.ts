@@ -83,10 +83,15 @@ export interface SearchQuota {
   label: string; // "1 of 1 used" | "2 of 3 used" | "3 of Unlimited"
 }
 
+/**
+ * Search limits by entitlement state.
+ * `free` = Intro (3 days) → 1 search. `premium` = Pro → 3 searches.
+ * `max` is legacy (stored on old profiles) and behaves like Pro.
+ */
 export const SEARCH_LIMITS: Record<Plan, number> = {
   free: 1,
   premium: 3,
-  max: Number.POSITIVE_INFINITY,
+  max: 3,
 };
 
 export type { OnboardingState, MoveOutInfo, Plan, Frequency, AlertChannel, BillingCycle };

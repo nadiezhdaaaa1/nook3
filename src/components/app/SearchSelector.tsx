@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import {
   Archive,
   Check,
+  Lock,
   ChevronDown,
   Pencil,
   Plus,
@@ -21,6 +22,8 @@ import { getCity } from "@/data/cities";
 import { OriginButton } from "@/components/ui/origin-button";
 import { NewSearchModal } from "@/components/preferences/NewSearchModal";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
+
+const TOTAL_SLOTS = 3;
 
 function cityLabel(cityId: string) {
   return getCity(cityId as never)?.shortName ?? cityId;
@@ -112,6 +115,7 @@ export function SearchSelector() {
   const archived = searches.filter((s) => s.status === "archived");
   const disabledIds = useDisabledSearchIds();
   const canCreate = quota.remaining > 0;
+  const planLimit = Number.isFinite(SEARCH_LIMITS[plan]) ? SEARCH_LIMITS[plan] : TOTAL_SLOTS;
 
   const handleNew = () => {
     setOpen(false);
@@ -154,68 +158,97 @@ export function SearchSelector() {
         {open && (
           <div
             role="listbox"
-            className="absolute left-0 z-50 mt-2 w-[340px] overflow-hidden rounded-[12px] border border-black/20 bg-white shadow-[0_16px_32px_rgba(36,28,18,0.12)] backdrop-blur-md"
+            className="absolute left-0 z-50 mt-2 w-[380px] overflow-hidden rounded-[12px] border border-black/20 bg-white shadow-[0_16px_32px_rgba(36,28,18,0.12)] backdrop-blur-md"
           >
-            {/* New search — pinned on top */}
-            <button
-              type="button"
-              onClick={handleNew}
-              className="mx-1.5 mt-1.5 flex w-[calc(100%-12px)] items-center gap-3 rounded-[6px] px-3 py-2.5 text-left hover:bg-charcoal-950/[0.04]"
-            >
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] bg-charcoal-950 text-paper">
-                <Plus className="h-4 w-4" />
+            <div className="flex items-center justify-between px-4 pt-3 pb-1">
+              <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500">
+                Searches
               </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-semibold text-charcoal-950">New search</span>
-                <span className="block text-[11px] text-charcoal-500">
-                  {quota.used} of {quota.maxLabel} used
-                  {!canCreate ? " · upgrade to add more" : ""}
-                </span>
+              <span className="text-[11px] text-charcoal-500">
+                {quota.used} of {quota.maxLabel} used
               </span>
-            </button>
+            </div>
 
-            <ul className="max-h-[320px] overflow-y-auto py-1">
-              {live.map((s) => (
-                <li key={s.id}>
-                  <div className="mx-1.5 w-[calc(100%-12px)] flex items-center gap-2 rounded-[8px] px-3 py-2 hover:bg-charcoal-950/[0.04]">
+            <ul className="max-h-[420px] space-y-1.5 overflow-y-auto p-1.5">
+              {Array.from({ length: TOTAL_SLOTS }).map((_, i) => {
+                const s = live[i];
+                if (s) {
+                  const isDisabled = disabledIds.has(s.id);
+                  return (
+                    <li key={s.id}>
+                      <div
+                        className={cn(
+                          "flex items-center gap-3 rounded-[10px] border border-black/10 bg-white px-3 py-3 transition-colors hover:bg-charcoal-950/[0.03]",
+                          s.id === active?.id && "border-charcoal-950/40 bg-charcoal-950/[0.03]",
+                          isDisabled && "opacity-60",
+                        )}
+                      >
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={s.id === active?.id}
+                          onClick={() => {
+                            switchActiveSearch(s.id);
+                            setOpen(false);
+                          }}
+                          className="min-w-0 flex-1 text-left"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <StatusDot status={s.status} disabled={isDisabled} />
+                            <span className="truncate text-[15px] font-semibold text-charcoal-950">
+                              {s.name}
+                            </span>
+                            {s.id === active?.id && (
+                              <Check className="h-3.5 w-3.5 shrink-0 text-sage-700" />
+                            )}
+                          </span>
+                          <span className="mt-1 block truncate text-xs text-charcoal-500">
+                            {cityLabel(s.cityId)} · {statusLabel(s, isDisabled)} · {summary(s)}
+                          </span>
+                        </button>
+                        <OriginButton
+                          variant="tertiary"
+                          size="medium"
+                          aria-label={`Edit ${s.name}`}
+                          className="h-9 w-9 rounded-[8px] p-0"
+                          onClick={() => {
+                            setOpen(false);
+                            navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
+                          }}
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </OriginButton>
+                      </div>
+                    </li>
+                  );
+                }
+
+                const locked = i >= planLimit;
+                return (
+                  <li key={`slot-${i}`}>
                     <button
                       type="button"
-                      role="option"
-                      aria-selected={s.id === active?.id}
                       onClick={() => {
-                        switchActiveSearch(s.id);
                         setOpen(false);
+                        if (locked) setUpgradeOpen(true);
+                        else navigate({ to: "/search/new/$step", params: { step: "1" } });
                       }}
-                      className="min-w-0 flex-1 text-left"
+                      className="flex w-full items-center justify-center gap-2 rounded-[10px] border border-dashed border-black/25 px-3 py-4 text-left transition-colors hover:border-charcoal-950 hover:bg-charcoal-950/[0.03]"
                     >
-                      <span className="flex items-center gap-1.5">
-                        <StatusDot status={s.status} disabled={disabledIds.has(s.id)} />
-                        <span className="truncate text-sm font-semibold text-charcoal-950">{s.name}</span>
-                        {s.id === active?.id && <Check className="h-3.5 w-3.5 shrink-0 text-sage-700" />}
-                      </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-charcoal-500">
-                        {cityLabel(s.cityId)} · {statusLabel(s, disabledIds.has(s.id))} · {summary(s)}
+                      {locked ? (
+                        <Lock className="h-4 w-4 shrink-0 text-charcoal-500" />
+                      ) : (
+                        <Plus className="h-4 w-4 shrink-0 text-charcoal-700" />
+                      )}
+                      <span className="text-sm font-semibold text-charcoal-700">
+                        {locked ? "Add a search with Pro" : "New search"}
                       </span>
                     </button>
-                    <OriginButton
-                      variant="tertiary"
-                      size="medium"
-                      aria-label={`Edit ${s.name}`}
-                      className="h-8 w-8 rounded-[8px] p-0"
-                      onClick={() => {
-                        setOpen(false);
-                        navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
-                      }}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </OriginButton>
-                  </div>
-                </li>
-              ))}
-              {live.length === 0 && (
-                <li className="px-4 py-3 text-xs text-charcoal-500">No active searches yet.</li>
-              )}
+                  </li>
+                );
+              })}
             </ul>
+
 
             {archived.length > 0 && (
               <div className="border-t border-black/[0.06]">

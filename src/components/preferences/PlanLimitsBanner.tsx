@@ -6,10 +6,8 @@ import { UpgradeModal } from "./UpgradeModal";
 const DISMISS_KEY = "nook.banner.planlimits.dismissed.v1";
 
 /**
- * Subtle banner shown when a free/premium user is at or near their quota.
- * Free at 1/1 → "Tracking 1 city? Premium lets you watch 3."
- * Premium at 3/3 → "Max unlocks unlimited searches."
- * Dismissible (persisted to localStorage), hidden entirely on Max plan.
+ * Subtle banner shown to Intro users: 1 search, 3 matches per email.
+ * Dismissible (persisted to localStorage), hidden entirely on Pro.
  */
 export function PlanLimitsBanner() {
   const plan = useAppStore((s) => s.user?.plan ?? "free");
@@ -33,24 +31,12 @@ export function PlanLimitsBanner() {
     setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
   }, []);
 
-  if (plan === "max") return null;
-  if (quota.remaining > 0 && plan !== "free") return null;
+  if (plan !== "free") return null;
   if (dismissed) return null;
 
-  const isFreeAtLimit = plan === "free" && quota.used >= quota.max;
-  const isPremiumAtLimit = plan === "premium" && quota.used >= quota.max;
-
-  const headline = isFreeAtLimit
-    ? "You're tracking 1 city. Want 3?"
-    : isPremiumAtLimit
-      ? "You're using all 3 searches. Need more?"
-      : "Looking in more than one neighborhood? Upgrade to add searches.";
-
-  const sub = isFreeAtLimit
-    ? "Premium lets you run 3 searches in parallel — perfect for comparing neighborhoods or cities."
-    : isPremiumAtLimit
-      ? "Max removes the cap entirely — track unlimited searches across every city."
-      : "Premium adds 2 more search slots — $14.99/mo, cancel anytime.";
+  const headline = "One search is part of the intro.";
+  const sub =
+    "Pro unlocks every match we find and up to 3 searches — own filters, own cities. $14.99/month, cancel anytime.";
 
   const dismiss = () => {
     if (typeof window !== "undefined") localStorage.setItem(DISMISS_KEY, "1");

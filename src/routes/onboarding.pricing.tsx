@@ -11,8 +11,9 @@ function PricingScreen() {
   const { billingCycle, set } = useOnboardingStore();
 
   const handleTierSelect = (tier: Tier) => {
-    set("selectedPlan", tier.id as Plan);
-    set("trialActive", tier.id !== "free");
+    set("selectedPlan", tier.plan as Plan);
+    set("billingCycle", tier.billingCycle);
+    set("trialActive", tier.id === "intro");
     navigate({ to: "/onboarding/success" });
   };
 
@@ -27,9 +28,9 @@ function PricingScreen() {
         onTierSelect={handleTierSelect}
         compactTop
         tierCta={{
-          free: "Continue with free",
-          premium: "Start 3-day trial",
-          max: "Start 3-day trial",
+          intro: "Start 3 days free",
+          pro: "Get Pro now",
+          pro_annual: "Get Pro annual",
         }}
       />
     </div>

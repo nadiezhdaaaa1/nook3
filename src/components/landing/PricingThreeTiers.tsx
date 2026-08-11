@@ -30,6 +30,10 @@ interface FeatureItem {
 
 export interface Tier {
   id: string;
+  /** Stored plan value this tier maps to. */
+  plan: "free" | "premium";
+  /** Billing cycle this tier maps to. */
+  billingCycle: Cycle;
   name: string;
   tagline: string;
   price: Record<Cycle, string>;
@@ -41,80 +45,74 @@ export interface Tier {
   features: FeatureItem[];
 }
 
-const FINE_TAIL =
-  "until cancelled. Cancel anytime in Account → Subscription. No hidden fees. Cancel anytime.";
+const CANCEL_TAIL =
+  "Cancel anytime in Account → Subscription in two steps.";
 
 const TIERS: Tier[] = [
   {
-    id: "free",
-    name: "Free",
-    tagline: "Get a feel for what's out there.",
+    id: "intro",
+    plan: "free",
+    billingCycle: "monthly",
+    name: "3 days free",
+    tagline: "See how it works, on your real search.",
     price: { monthly: "$0", annual: "$0" },
-    priceSuffix: "forever",
-    cta: "Get started",
+    priceSuffix: "for 3 days → then $14.99/month",
+    finePrint: {
+      monthly: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
+      annual: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
+    },
+    cta: "Start 3 days free",
     ctaTo: "/onboarding",
     variant: "light",
     features: [
-      { text: "1 saved search", included: true },
-      { text: "Email alerts (3-hour delay)", included: true },
-      { text: "Up to 2 emails per day", included: true },
-      { text: "Verified regulated unit badges", included: true },
-      { text: "Browse Nook web app", included: true },
-      { text: "Real-time alerts", included: false },
-      { text: "Wren AI assistant", included: false },
-      { text: "Search pause/resume", included: false },
-      { text: "Move-out listing tool", included: false },
+      { text: "Daily or weekly alerts — you choose", included: true },
+      { text: "Alerts with no delay", included: true },
+      { text: "Only your 3 best matches per email", included: false },
+      { text: "1 search — the one you set up at signup", included: false },
     ],
   },
   {
-    id: "premium",
-    name: "Premium",
+    id: "pro",
+    plan: "premium",
+    billingCycle: "monthly",
+    name: "Pro",
     tagline: "When you're actively looking.",
-    price: { monthly: "$14.99", annual: "$7.99" },
+    price: { monthly: "$14.99", annual: "$14.99" },
     priceSuffix: "/month",
     finePrint: {
-      monthly: `Auto-renews at $14.99/month ${FINE_TAIL}`,
-      annual: `Auto-renews at $95.88/year ${FINE_TAIL}`,
+      monthly: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
+      annual: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
     },
-    cta: "Start 3-day trial",
+    cta: "Get Pro now",
     ctaTo: "/signup",
     variant: "warm",
     features: [
-      { text: "3 saved searches (run parallel)", included: true },
-      { text: "Real-time email alerts (within minutes)", included: true },
-      { text: "Unlimited email frequency", included: true },
-      { text: "Verified regulated unit badges", included: true },
-      { text: "Wren AI assistant — chat about any listing", included: true },
-      { text: "Pause/resume searches anytime", included: true },
-      { text: "Submit move-out listings ($50 reward)", included: true },
-      { text: "Email support", included: true },
-      { text: "Cross-search Wren comparison", included: false },
+      { text: "Daily or weekly alerts — you choose", included: true },
+      { text: "Alerts with no delay", included: true },
+      { text: "Every match we find", included: true },
+      { text: "Up to 3 searches — own filters, own cities", included: true },
     ],
   },
   {
-    id: "max",
-    name: "Max",
-    tagline: "For relocators and serious hunters.",
-    price: { monthly: "$29", annual: "$19.08" },
-    priceSuffix: "/month",
+    id: "pro_annual",
+    plan: "premium",
+    billingCycle: "annual",
+    name: "Pro annual",
+    tagline: "Same plan, paid once a year.",
+    price: { monthly: "$7.99", annual: "$7.99" },
+    priceSuffix: "/month · billed $95.88/year",
     finePrint: {
-      monthly: `Auto-renews at $29/month ${FINE_TAIL}`,
-      annual: `Auto-renews at $229/year ${FINE_TAIL}`,
+      monthly: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
+      annual: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
     },
-    cta: "Start 3-day trial",
+    cta: "Get Pro annual",
     ctaTo: "/signup",
     variant: "cool",
     features: [
-      { text: "Unlimited saved searches", included: true },
-      { text: "Real-time email alerts", included: true },
-      { text: "Verified regulated unit badges", included: true },
-      { text: "Wren AI assistant", included: true },
-      { text: "Cross-search Wren comparison", included: true },
-      { text: "Roommate mode — 3 user seats", included: true },
-      { text: "Pause/resume searches", included: true },
-      { text: "Submit move-out listings ($50 reward)", included: true },
-      { text: "Priority support", included: true },
-      { text: "Early access to new cities", included: true },
+      { text: "Daily or weekly alerts — you choose", included: true },
+      { text: "Alerts with no delay", included: true },
+      { text: "Every match we find", included: true },
+      { text: "Up to 3 searches — own filters, own cities", included: true },
     ],
   },
 ];
@@ -159,13 +157,8 @@ export function PricingThreeTiers({
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
 
-  const setCycle = (c: Cycle) => {
-    if (onCycleChange) {
-      onCycleChange(c);
-    } else {
-      setInternalCycle(c);
-    }
-  };
+  void onCycleChange;
+  void setInternalCycle;
 
   return (
     <section
@@ -212,78 +205,9 @@ export function PricingThreeTiers({
               marginTop: 16,
             }}
           >
-            You can start free and upgrade anytime
+            Start with 3 free days, then keep going for $14.99/month
           </p>
         </header>
-
-        {/* Billing toggle */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div
-            className="pr-toggle"
-            role="radiogroup"
-            aria-label="Billing cycle"
-            style={{
-              display: "inline-flex",
-              gap: 2,
-              padding: 4,
-              borderRadius: 16,
-              background: "rgba(0,0,0,0.08)",
-              height: 52,
-              boxSizing: "border-box",
-            }}
-          >
-            {(["monthly", "annual"] as Cycle[]).map((c) => {
-              const active = cycle === c;
-              return (
-                <button
-                  key={c}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => setCycle(c)}
-                  className="pr-toggle-btn"
-                  style={{
-                    ...ui,
-                    position: "relative",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "12px 20px",
-                    borderRadius: 12,
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: active ? INK : BODY,
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {active && (
-                    <motion.span
-                      layoutId="pr-toggle-pill"
-                      transition={{ duration: dur, ease: "easeOut" }}
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        borderRadius: 12,
-                        background: "#ffffff",
-                        boxShadow:
-                          "0 1px 2px rgba(12,12,13,0.10), 0 1px 2px rgba(12,12,13,0.05)",
-                      }}
-                      aria-hidden
-                    />
-                  )}
-                  <span style={{ position: "relative" }}>
-                    {c === "monthly" ? "Monthly" : "Annual"}
-                  </span>
-                  {c === "annual" && (
-                    <span style={{ position: "relative", color: LEAF }}>-47% off</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
 
         {/* Cards */}
         <div className="pr-grid">
@@ -298,23 +222,21 @@ export function PricingThreeTiers({
             fontSize: 14,
             lineHeight: 1.9,
             color: MUTED,
-            maxWidth: 440,
+            maxWidth: 560,
             margin: "0 auto",
             textAlign: "center",
           }}
         >
-          All plans include 24/7 monitoring of the rental market in your city. Cancel within 7
-          days for a full refund. After that, prorated.
+          All plans include: all filters and must-haves · match explanations, including what's
+          missing · quiet hours in your timezone · 24/7 monitoring of your city.
         </p>
       </div>
     </section>
   );
 }
 
-function badgeFor(tierId: string, cycle: Cycle) {
-  if (cycle === "monthly") return null;
-  if (tierId === "premium") return { text: "-47% off", bg: LEAF, position: "right" as const };
-  if (tierId === "max") return { text: "-34% off", bg: "#7040C1", position: "right" as const };
+function badgeFor(tierId: string, _cycle: Cycle) {
+  if (tierId === "pro_annual") return { text: "Save 47%", bg: LEAF, position: "right" as const };
   return null;
 }
 
@@ -447,13 +369,11 @@ function PlanCard({
       <OriginButton
         className="w-full"
         variant={
-          tier.id === "free"
+          tier.id === "intro"
             ? "tertiary"
-            : tier.id === "premium"
+            : tier.id === "pro"
               ? "premium"
-              : tier.id === "max"
-                ? "max"
-                : "main"
+              : "max"
         }
         style={{ borderRadius: 12 }}
         onClick={handleCta}
