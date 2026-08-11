@@ -96,6 +96,24 @@ export function MarketingFooter() {
         <div className="ftr-divider" />
 
         <div className="ftr-cols">
+          <nav className="ftr-col" aria-label="Product">
+            <div className="ftr-h">Product</div>
+            <ul className="ftr-list">
+              <li><a href="#how">How it works</a></li>
+              <li><a href="#what">What you get</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#faq">FAQ</a></li>
+              <li><Link to="/blog">Blog</Link></li>
+            </ul>
+          </nav>
+
+          <nav className="ftr-col" aria-label="Company">
+            <div className="ftr-h">Company</div>
+            <ul className="ftr-list">
+              <li><Link to="/contact">Contact</Link></li>
+            </ul>
+          </nav>
+
           <nav className="ftr-col" aria-label="Legal">
             <div className="ftr-h">Legal</div>
             <ul className="ftr-list">
@@ -112,24 +130,6 @@ export function MarketingFooter() {
               <li><Link to="/accessibility">Accessibility</Link></li>
               <li><Link to="/do-not-sell">Do Not Sell or Share</Link></li>
               <li><Link to="/dmca">DMCA</Link></li>
-            </ul>
-          </nav>
-
-          <nav className="ftr-col" aria-label="Product">
-            <div className="ftr-h">Product</div>
-            <ul className="ftr-list">
-              <li><a href="#how">How it works</a></li>
-              <li><a href="#what">What you get</a></li>
-              <li><a href="#pricing">Pricing</a></li>
-              <li><a href="#faq">FAQ</a></li>
-              <li><Link to="/blog">Blog</Link></li>
-            </ul>
-          </nav>
-
-          <nav className="ftr-col" aria-label="Company">
-            <div className="ftr-h">Company</div>
-            <ul className="ftr-list">
-              <li><Link to="/contact">Contact</Link></li>
             </ul>
           </nav>
 
