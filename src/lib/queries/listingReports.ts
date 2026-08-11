@@ -3,7 +3,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { reportListing, type ReportReason } from "@/lib/listingReports.functions";
-import { saveListingSnapshot, type AlertListing } from "@/lib/alerts.functions";
+import {
+  saveListingSnapshot,
+  dismissListingSnapshot,
+  type AlertListing,
+} from "@/lib/alerts.functions";
 import { alertsQueryKey } from "@/lib/queries/alerts";
 
 export function useReportListingMutation() {
