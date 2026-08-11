@@ -157,13 +157,8 @@ export function PricingThreeTiers({
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
 
-  const setCycle = (c: Cycle) => {
-    if (onCycleChange) {
-      onCycleChange(c);
-    } else {
-      setInternalCycle(c);
-    }
-  };
+  void onCycleChange;
+  void setInternalCycle;
 
   return (
     <section
