@@ -312,29 +312,14 @@ function SearchesTab({ searches }: { searches: Search[] }) {
     navigate({ to: "/search/new/$step", params: { step: "1" } });
   };
 
-  if (live.length === 0 && archived.length === 0) {
-    return (
-      <EmptyState
-        title="No searches yet"
-        sub="Create a search and we'll start matching listings for you."
-      />
-    );
-  }
+  const planLimit = Number.isFinite(max) ? max : 3;
+  const emptySlots = Array.from({ length: Math.max(0, 3 - live.length) }, (_, i) => live.length + i);
 
   return (
     <div className="space-y-4">
       <ul className="grid gap-3 sm:grid-cols-2">
-        <li>
-          <button
-            type="button"
-            onClick={handleNew}
-            className="flex h-full min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-[16px] border border-dashed border-black/20 bg-white/50 transition-colors hover:bg-white hover:border-black/30"
-          >
-            <Plus className="h-6 w-6 text-[#241c12]" />
-            <span className="text-[15px] font-semibold text-[#241c12]">New search</span>
-          </button>
-        </li>
         {[...live, ...archived].map((s) => (
+
           <li
             key={s.id}
             className={cn(
