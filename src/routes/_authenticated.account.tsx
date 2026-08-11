@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
-import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
+import { WARM_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
 export const Route = createFileRoute("/_authenticated/account")({
   component: () => (
@@ -1273,7 +1273,7 @@ function PlanCard({
   const cardStyle: React.CSSProperties = dark
     ? {
         backgroundColor: "#2c2415",
-        backgroundImage: plan.id === "premium" ? WARM_BG : COOL_BG,
+        backgroundImage: WARM_BG,
         boxShadow: DARK_SHADOW,
         color: text,
       }
