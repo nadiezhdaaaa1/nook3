@@ -1519,7 +1519,7 @@ function PlanCard({
 
       {isCurrent ? (
         <span
-          className="inline-flex items-center justify-center gap-1.5 w-full h-12 rounded-[12px] text-[12px] font-extrabold uppercase tracking-[0.14em]"
+          className="inline-flex items-center justify-center gap-1.5 w-full h-[56px] rounded-[12px] text-[12px] font-extrabold uppercase tracking-[0.14em]"
           style={{
             fontFamily: "'Google Sans Flex', sans-serif",
             background: dark ? "rgba(248,243,225,0.20)" : "#e3e6d8",
