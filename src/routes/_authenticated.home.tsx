@@ -261,7 +261,8 @@ function HomeScreen() {
   }, [filterCount]);
 
 
-  /** Snapshot shape used when a market/sample listing has no alert row yet. */
+  /** Snapshot shape used when a market/sample listing has no alert row yet.
+   *  Coordinates travel with the snapshot so the saved pin keeps its exact spot. */
   const toSnapshot = (l: SampleListing): AlertListing => ({
     title: l.address,
     neighborhood: l.neighborhood,
@@ -273,7 +274,9 @@ function HomeScreen() {
     tags: l.tag ? [l.tag] : [],
     imageHue: 30,
     imageUrl: l.image,
+    ...(l.coords ? { lat: l.coords[0], lng: l.coords[1] } : {}),
   });
+
 
   const savedIds = useMemo(
     () =>
