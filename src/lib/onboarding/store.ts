@@ -111,7 +111,9 @@ const initial: OnboardingState = {
   trialActive: false,
   lastStep: 1,
   completedAt: null,
+  editingSearchId: null,
 };
+
 
 export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
   persist(
