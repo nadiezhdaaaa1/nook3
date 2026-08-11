@@ -26,6 +26,7 @@ type Cycle = "monthly" | "annual";
 interface FeatureItem {
   text: string;
   included: boolean;
+  locked?: boolean;
 }
 
 export interface Tier {
