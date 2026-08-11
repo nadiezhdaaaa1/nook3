@@ -147,6 +147,7 @@ function HomeScreen() {
 
   const updateStatus = useUpdateAlertStatusMutation();
   const saveSnapshot = useSaveListingSnapshotMutation();
+  const dismissSnapshot = useDismissListingSnapshotMutation();
   const reportMutation = useReportListingMutation();
 
   const alertById = useMemo(() => {
