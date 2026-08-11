@@ -575,8 +575,8 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
         .hero-b-h1 {
           width: max-content;
           font-weight: 600;
-          font-size: 68px;
-          line-height: 69.36px;
+          font-size: 64px;
+          line-height: 65.36px;
           letter-spacing: -1.7px;
           font-optical-sizing: auto;
         }
@@ -589,7 +589,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           .hero-b-h1 {
             width: auto;
             max-width: 100%;
-            font-size: clamp(40px, 7vw, 56px);
+            font-size: clamp(40px, 7vw, 52px);
             line-height: 1.02;
             letter-spacing: -1px;
           }
