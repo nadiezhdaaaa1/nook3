@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useAppStore, switchActiveSearch } from "@/lib/store";
-import { useDeleteSearchMutation, useUpdateSearchMutation } from "@/lib/queries/searches";
+import { useAppStore } from "@/lib/store";
+import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -117,7 +117,7 @@ function PageHeader({
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
-  const [cityDialogOpen, setCityDialogOpen] = useState(false);
+  
 
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(name);
