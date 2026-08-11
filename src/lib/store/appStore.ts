@@ -206,8 +206,12 @@ export const useAppStore = create<AppStore>()(
         const { searches, user } = get();
         const src = searches.find((s) => s.id === id);
         if (!src) return { ok: false, error: "Search not found" };
+        const plan = user?.plan ?? "free";
+        if (isSearchDisabled(searches, plan, id)) {
+          return { ok: false, error: DISABLED_SEARCH_REASON };
+        }
         if (src.status === "active") return { ok: true };
-        const limit = SEARCH_LIMITS[user?.plan ?? "free"];
+        const limit = SEARCH_LIMITS[plan];
         const activeCount = searches.filter((s) => s.status === "active").length;
         if (activeCount >= limit) {
           return {
