@@ -112,6 +112,46 @@ export function useDbSync() {
 
 
 
+  // 1c) Reconcile searches that were created locally but never persisted
+  // (non-uuid ids). Without a real row id, saved/disliked listings can't be
+  // attached to them. Adopt a matching DB row, or insert one.
+  const reconciledRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    if (!searchesQ.data) return;
+    const rows = searchesQ.data as Search[];
+    const locals = useAppStore.getState().searches.filter((s) => !isUuid(s.id));
+    for (const local of locals) {
+      const match = rows.find(
+        (r) => r.name.trim().toLowerCase() === local.name.trim().toLowerCase(),
+      );
+      if (match) {
+        useAppStore.getState().adoptServerSearch(local.id, match);
+        continue;
+      }
+      if (reconciledRef.current.has(local.id)) continue;
+      reconciledRef.current.add(local.id);
+      createMutation.mutate({
+        name: local.name,
+        cityId: local.cityId,
+        status: local.status,
+        budget: local.budget,
+        moveIn: local.moveIn,
+        bedrooms: local.bedrooms,
+        bathrooms: local.bathrooms,
+        rentProtection: local.rentProtection,
+        includeBrokerFee: local.includeBrokerFee,
+        neighborhoods: local.neighborhoods,
+        amenities: local.amenities,
+        transit: local.transit,
+        commute: local.commute,
+        alertChannel: local.alertChannel,
+        frequency: local.frequency,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchesQ.data, hydratedRef.current]);
+
   // 2) Debounced auto-save on local search changes.
   useEffect(() => {
     if (!hydratedRef.current) return;
