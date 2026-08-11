@@ -273,16 +273,15 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ email, timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{ timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
-          setEmail(snap.email);
           setTimezone(snap.timezone);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
           prefs.setPref("productUpdates", snap.prefs.productUpdates);
         }}
       />
 
-      <SyncProfile email={email} timezone={timezone} update={updateProfile} />
+      <SyncProfile timezone={timezone} update={updateProfile} />
     </div>
   );
 }
