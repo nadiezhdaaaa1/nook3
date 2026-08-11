@@ -124,15 +124,37 @@ export function HeroScrollNav() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              data-label="Sign in"
-              className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-              style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-            >
-              Sign in
-            </Link>
-
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/home"
+                  data-label="Searches"
+                  className="hero-nav-link hidden items-center gap-1.5 rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                >
+                  <IconHomeSearch size={18} stroke={1.5} aria-hidden />
+                  Searches
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  data-label="Log out"
+                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                data-label="Sign in"
+                className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+              >
+                Sign in
+              </Link>
+            )}
 
             <OriginButton
               variant="main"
