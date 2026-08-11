@@ -35,7 +35,11 @@ function StatusDot({ status }: { status: Search["status"] }) {
       aria-hidden
       className={cn(
         "h-2 w-2 rounded-full shrink-0",
-        status === "active" ? "bg-sage-700" : status === "paused" ? "bg-peach-700" : "bg-charcoal-300",
+        status === "active"
+          ? "bg-sage-700"
+          : status === "paused"
+            ? "border-2 border-peach-700"
+            : "bg-charcoal-300",
       )}
     />
   );
