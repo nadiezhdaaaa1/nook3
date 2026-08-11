@@ -222,8 +222,9 @@ function AccountPage() {
                 Download a JSON copy of your searches and alerts.
               </div>
             </div>
-            <button
-              type="button"
+            <OriginButton
+              variant="tertiary"
+              size="medium"
               onClick={() => {
                 const blob = new Blob(
                   [JSON.stringify({ user, searches }, null, 2)],
@@ -237,10 +238,9 @@ function AccountPage() {
                 URL.revokeObjectURL(url);
                 toast.success("Export downloaded");
               }}
-              className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
             >
               <Download className="h-3.5 w-3.5" /> Export
-            </button>
+            </OriginButton>
           </div>
 
           <div className="px-5 py-4 flex items-center justify-between gap-4">
@@ -404,21 +404,15 @@ function LogoutRow() {
           <div className="text-xs text-charcoal-600 mt-0.5">Sign out of your account on this device.</div>
         </div>
       </div>
-      <button
-        type="button"
+      <OriginButton
+        variant="tertiary"
+        size="medium"
         onClick={handleLogout}
         disabled={busy}
-        className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        loading={busy}
       >
-        {busy ? (
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-3.5 w-3.5 rounded-full border-2 border-charcoal-950/30 border-t-charcoal-950 animate-spin" />
-            Logging out...
-          </span>
-        ) : (
-          <>Log out</>
-        )}
-      </button>
+        Log out
+      </OriginButton>
     </div>
   );
 }
@@ -486,13 +480,13 @@ function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button
-        type="button"
+      <OriginButton
+        variant="tertiary"
+        size="medium"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-danger/40 text-sm font-semibold text-danger hover:bg-danger/10 transition-colors"
       >
         <Trash2 className="h-3.5 w-3.5" /> Delete account
-      </button>
+      </OriginButton>
       <DeleteAccountDialog open={open} onOpenChange={setOpen} />
     </>
   );
@@ -1551,13 +1545,13 @@ function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange
             <div className="text-xs text-charcoal-600 mt-0.5">{display}</div>
           </div>
         </div>
-        <button
-          type="button"
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() => setOpen(true)}
-          className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
         >
           Change
-        </button>
+        </OriginButton>
       </div>
 
       <TimezoneDialog open={open} onOpenChange={setOpen} value={timezone} onChange={onChange} />
@@ -1648,13 +1642,13 @@ function ProfilePasswordRow() {
             </div>
           </div>
         </div>
-        <button
-          type="button"
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() => setOpen(true)}
-          className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
         >
           Change password
-        </button>
+        </OriginButton>
       </div>
 
       <ChangePasswordDialog open={open} onOpenChange={setOpen} />
@@ -1905,18 +1899,18 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
             </div>
           </div>
         )}
-        <button
-          type="button"
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={() =>
             toast.info("Stripe billing portal", {
               description: "Card management opens once Stripe checkout is live.",
             })
           }
-          className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
         >
           <CreditCard className="h-3.5 w-3.5" />
           {hasCard ? "Update card" : "Add card"}
-        </button>
+        </OriginButton>
       </div>
     </section>
   );
@@ -1982,18 +1976,18 @@ function PaymentHistorySection({
                 <span className="text-sm font-semibold text-charcoal-950">
                   ${inv.amount}
                 </span>
-                <button
-                  type="button"
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
                   onClick={() =>
                     toast.info("Receipt", {
                       description: "PDF receipts become available once Stripe billing is live.",
                     })
                   }
                   aria-label={`Download receipt for ${inv.date}`}
-                  className="inline-flex items-center gap-1.5 h-9 px-3 rounded-[16px] border border-charcoal-950/15 text-xs font-semibold text-charcoal-950 hover:bg-paper transition-colors"
                 >
                   <Download className="h-3.5 w-3.5" /> Receipt
-                </button>
+                </OriginButton>
               </div>
             </div>
           ))}
