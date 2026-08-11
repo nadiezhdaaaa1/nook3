@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { OriginButton } from "@/components/ui/origin-button";
-import { CITY_LIST } from "@/data/cities";
 import type { CityId } from "@/data/cities";
 
 export const Route = createFileRoute("/_authenticated/search/$searchId")({
