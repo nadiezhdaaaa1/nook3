@@ -378,7 +378,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
               </p>
             )}
 
-            <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-[12px] leading-[18px] text-charcoal-600">
+            <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-[14px] leading-[20px] text-charcoal-600">
               {summaryBits(s).map((b, i) => (
                 <span key={`${s.id}-${i}`} className="after:ml-2 after:content-['·'] last:after:content-['']">
                   {b}
