@@ -6,10 +6,8 @@ import { UpgradeModal } from "./UpgradeModal";
 const DISMISS_KEY = "nook.banner.planlimits.dismissed.v1";
 
 /**
- * Subtle banner shown when a free/premium user is at or near their quota.
- * Free at 1/1 → "Tracking 1 city? Premium lets you watch 3."
- * Premium at 3/3 → "Max unlocks unlimited searches."
- * Dismissible (persisted to localStorage), hidden entirely on Max plan.
+ * Subtle banner shown to Intro users: 1 search, 3 matches per email.
+ * Dismissible (persisted to localStorage), hidden entirely on Pro.
  */
 export function PlanLimitsBanner() {
   const plan = useAppStore((s) => s.user?.plan ?? "free");
