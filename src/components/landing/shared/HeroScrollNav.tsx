@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { IconHomeSearch } from "@tabler/icons-react";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
-import { supabase } from "@/integrations/supabase/client";
-import { useHasSession } from "@/lib/queries/useHasSession";
 import { OriginButton } from "@/components/ui/origin-button";
 
 const FONT_UI = '"Google Sans Flex", "Google Sans", system-ui, sans-serif';
@@ -43,21 +39,11 @@ export function HeroNavSpacer() {
  */
 export function HeroScrollNav() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const isAuthenticated = useHasSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onHome = pathname === "/";
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  async function handleLogout() {
-    setOpen(false);
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/login", replace: true });
-  }
 
   useEffect(() => {
     if (!open) return;
@@ -124,37 +110,15 @@ export function HeroScrollNav() {
           </div>
 
           <div className="flex items-center gap-2">
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/home"
-                  data-label="Searches"
-                  className="hero-nav-link hidden items-center gap-1.5 rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-                >
-                  <IconHomeSearch size={18} stroke={1.5} aria-hidden />
-                  Searches
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  data-label="Log out"
-                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-                >
-                  Log out
-                </button>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                data-label="Sign in"
-                className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-                style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-              >
-                Sign in
-              </Link>
-            )}
+            <Link
+              to="/login"
+              data-label="Sign in"
+              className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+              style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+            >
+              Sign in
+            </Link>
+
 
             <OriginButton
               variant="main"
@@ -215,36 +179,14 @@ export function HeroScrollNav() {
               Blog
             </Link>
 
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/home"
-                  onClick={() => setOpen(false)}
-                  className="hero-nav-sheet-link hero-nav-ring inline-flex items-center gap-2"
-                  style={{ ...uiFont, color: INK }}
-                >
-                  <IconHomeSearch size={20} stroke={1.5} aria-hidden />
-                  Searches
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="hero-nav-sheet-signin hero-nav-ring"
-                  style={{ ...uiFont, color: INK }}
-                >
-                  Log out
-                </button>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
-                className="hero-nav-sheet-signin hero-nav-ring"
-                style={{ ...uiFont, color: INK }}
-              >
-                Sign in
-              </Link>
-            )}
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="hero-nav-sheet-signin hero-nav-ring"
+              style={{ ...uiFont, color: INK }}
+            >
+              Sign in
+            </Link>
             <OriginButton
               variant="main"
               onClick={() => {
