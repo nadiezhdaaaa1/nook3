@@ -40,7 +40,7 @@ interface AppActions {
   renameSearch: (searchId: string, name: string) => void;
   changeSearchCity: (searchId: string, cityId: CityId) => void;
   pauseSearch: (searchId: string) => void;
-  resumeSearch: (searchId: string) => void;
+  resumeSearch: (searchId: string) => { ok: true } | { ok: false; error: string };
   duplicateSearch: (searchId: string) => { ok: true; search: Search } | { ok: false; error: string };
   /** Swap a locally-created search for its persisted backend row (id becomes a real uuid). */
   adoptServerSearch: (localId: string, row: Search) => void;
@@ -202,7 +202,22 @@ export const useAppStore = create<AppStore>()(
       },
 
       pauseSearch: (id) => get().updateSearch(id, { status: "paused" }),
-      resumeSearch: (id) => get().updateSearch(id, { status: "active" }),
+      resumeSearch: (id) => {
+        const { searches, user } = get();
+        const src = searches.find((s) => s.id === id);
+        if (!src) return { ok: false, error: "Search not found" };
+        if (src.status === "active") return { ok: true };
+        const limit = SEARCH_LIMITS[user?.plan ?? "free"];
+        const activeCount = searches.filter((s) => s.status === "active").length;
+        if (activeCount >= limit) {
+          return {
+            ok: false,
+            error: `Your plan allows ${limit} live ${limit === 1 ? "search" : "searches"}. Pause another one first.`,
+          };
+        }
+        get().updateSearch(id, { status: "active" });
+        return { ok: true };
+      },
       archiveSearch: (id) => {
         const { searches, activeSearchId } = get();
         const next = searches.map((s) =>
