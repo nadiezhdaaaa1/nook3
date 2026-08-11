@@ -85,39 +85,6 @@ function NotificationsTab() {
       </div>
 
 
-      {/* Email — read-only */}
-      <section className="space-y-4">
-        <div>
-          <h3 className="font-display text-lg font-semibold text-charcoal-950 flex items-center gap-2">
-            <Mail className="h-4 w-4 text-charcoal-500" /> Email alerts
-          </h3>
-        </div>
-        <div className="space-y-3">
-          <div className="rounded-card border border-charcoal-950/8 bg-surface-elevated px-5 py-4">
-            <div className="flex items-center justify-between gap-3 mb-1">
-              <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-                Email address
-              </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-sage-700">
-                <Check className="h-3 w-3" /> Verified
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-medium text-charcoal-950 truncate">
-                {email || "Not set"}
-              </span>
-              <Link
-                to="/account"
-                className="text-xs font-semibold text-sage-800 hover:text-sage-900 whitespace-nowrap inline-flex items-center gap-1"
-              >
-                Change in Account <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
       {/* Frequency */}
       <section className="space-y-4">
         <div>
