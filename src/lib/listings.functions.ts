@@ -32,20 +32,34 @@ export const listCityListings = createServerFn({ method: "GET" })
       },
     });
 
-    const { data: rows, error } = await supabase
-      .from("listings")
-      .select(
-        "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities",
-      )
-      .eq("city_id", data.cityId)
-      .eq("status", "active")
-      .order("rent", { ascending: true })
-      .limit(data.limit ?? 6000);
+    // PostgREST caps a single response (default 1000 rows), so page through
+    // explicit ranges until we have the whole city catalog.
+    const target = data.limit ?? 6000;
+    const PAGE = 1000;
+    const rows: Record<string, unknown>[] = [];
 
-    if (error) {
-      console.error("[listCityListings]", error.message);
-      return [];
+    for (let from = 0; from < target; from += PAGE) {
+      const to = Math.min(from + PAGE, target) - 1;
+      const { data: chunk, error } = await supabase
+        .from("listings")
+        .select(
+          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities",
+        )
+        .eq("city_id", data.cityId)
+        .eq("status", "active")
+        .order("rent", { ascending: true })
+        .order("slug", { ascending: true })
+        .range(from, to);
+
+      if (error) {
+        console.error("[listCityListings]", error.message);
+        break;
+      }
+      if (!chunk || chunk.length === 0) break;
+      rows.push(...(chunk as unknown as Record<string, unknown>[]));
+      if (chunk.length < to - from + 1) break;
     }
+
 
     return (rows ?? []).map((r) => ({
       id: r.slug,
