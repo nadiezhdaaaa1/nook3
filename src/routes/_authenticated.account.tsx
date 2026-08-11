@@ -78,7 +78,6 @@ const PLANS: PlanDef[] = [
   },
 ];
 
-const emailSchema = z.string().trim().email();
 const TIMEZONES = [
   "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
   "America/Phoenix", "America/Anchorage", "Pacific/Honolulu", "UTC",
@@ -96,8 +95,6 @@ function AccountPage() {
   const [cycle, setCycle] = useState<BillingCycle>(user?.billingCycle ?? "monthly");
 
   // Profile editable fields (sourced from onboarding store + user)
-  const [email, setEmail] = useState(user?.email || onboarding.email);
-  
   const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
 
   const prefs = usePreferencesStore();
@@ -119,8 +116,6 @@ function AccountPage() {
       alerts7d,
     };
   }, [searches, plan]);
-
-  const emailValid = !email || emailSchema.safeParse(email).success;
 
   return (
     <div className="space-y-12 pb-24">
@@ -162,21 +157,6 @@ function AccountPage() {
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field id="acct-email" label="Email" icon={Mail} error={!emailValid ? "Enter a valid email." : undefined}>
-            <Input
-              id="acct-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              size="big"
-              className={cn(
-                "font-medium",
-                !emailValid && "border-danger focus:border-danger",
-              )}
-            />
-          </Field>
 
           <Field id="acct-tz" label="Timezone" icon={Globe}>
             <div className="relative">
@@ -293,29 +273,28 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ email, timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{ timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
-          setEmail(snap.email);
           setTimezone(snap.timezone);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
           prefs.setPref("productUpdates", snap.prefs.productUpdates);
         }}
       />
 
-      <SyncProfile email={email} timezone={timezone} update={updateProfile} />
+      <SyncProfile timezone={timezone} update={updateProfile} />
     </div>
   );
 }
 
 function SyncProfile({
-  email, timezone, update,
+  timezone, update,
 }: {
-  email: string; timezone: string;
+  timezone: string;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
   useEffect(() => {
-    update({ email, timezone });
-  }, [email, timezone, update]);
+    update({ timezone });
+  }, [timezone, update]);
   return null;
 }
 
