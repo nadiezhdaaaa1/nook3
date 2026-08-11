@@ -1523,7 +1523,7 @@ function CurrentPlanCard({
             className="text-sm font-semibold underline-offset-4 hover:underline"
             style={{ color: ink, opacity: 0.85 }}
           >
-            Cancel subscription
+            Cancel
           </button>
         </div>
       </div>
