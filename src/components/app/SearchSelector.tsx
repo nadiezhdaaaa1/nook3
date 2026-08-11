@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import {
   Archive,
   Check,
+  Lock,
   ChevronDown,
   Pencil,
   Plus,
@@ -21,6 +22,8 @@ import { getCity } from "@/data/cities";
 import { OriginButton } from "@/components/ui/origin-button";
 import { NewSearchModal } from "@/components/preferences/NewSearchModal";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
+
+const TOTAL_SLOTS = 3;
 
 function cityLabel(cityId: string) {
   return getCity(cityId as never)?.shortName ?? cityId;
@@ -112,6 +115,7 @@ export function SearchSelector() {
   const archived = searches.filter((s) => s.status === "archived");
   const disabledIds = useDisabledSearchIds();
   const canCreate = quota.remaining > 0;
+  const planLimit = Number.isFinite(SEARCH_LIMITS[plan]) ? SEARCH_LIMITS[plan] : TOTAL_SLOTS;
 
   const handleNew = () => {
     setOpen(false);
