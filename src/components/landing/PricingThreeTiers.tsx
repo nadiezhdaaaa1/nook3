@@ -68,7 +68,7 @@ const TIERS: Tier[] = [
     features: [
       { text: "Daily or weekly alerts — you choose", included: true },
       { text: "Alerts with no delay", included: true },
-      { text: "Only your 3 best matches per email", included: false },
+      { text: "Only your 3 best matches per email", included: false, locked: true },
       { text: "1 search — the one you set up at signup", included: false },
     ],
   },
