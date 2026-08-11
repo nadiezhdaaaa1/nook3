@@ -115,23 +115,49 @@ export function HeroScrollNav() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              data-label="Sign in"
-              className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-              style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-            >
-              Sign in
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  data-label="Log out"
+                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                >
+                  Log out
+                </button>
+
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={() => navigate({ to: "/home" })}
+                  className="hero-nav-ring h-[40px] px-4 text-sm"
+                >
+                  <IconHomeSearch size={18} stroke={1.5} aria-hidden />
+                  Searches
+                </OriginButton>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  data-label="Sign in"
+                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                >
+                  Sign in
+                </Link>
 
 
-            <OriginButton
-              variant="main"
-              onClick={onSignup}
-              className="hero-nav-ring h-[40px] px-4 text-sm"
-            >
-              Get free alerts
-            </OriginButton>
+                <OriginButton
+                  variant="main"
+                  onClick={onSignup}
+                  className="hero-nav-ring h-[40px] px-4 text-sm"
+                >
+                  Get free alerts
+                </OriginButton>
+              </>
+            )}
 
             <button
               type="button"
