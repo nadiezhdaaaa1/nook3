@@ -287,14 +287,14 @@ function AccountPage() {
 }
 
 function SyncProfile({
-  email, timezone, update,
+  timezone, update,
 }: {
-  email: string; timezone: string;
+  timezone: string;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
 }) {
   useEffect(() => {
-    update({ email, timezone });
-  }, [email, timezone, update]);
+    update({ timezone });
+  }, [timezone, update]);
   return null;
 }
 
