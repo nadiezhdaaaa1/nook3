@@ -17,10 +17,9 @@ export { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "
 export {
   getDisabledSearchIds,
   isSearchDisabled,
-  useDisabledSearchIds,
-  useIsSearchDisabled,
   DISABLED_SEARCH_REASON,
 } from "./lock";
+export { useDisabledSearchIds, useIsSearchDisabled } from "./lockHooks";
 export {
   SEARCH_LIMITS,
 } from "./types";

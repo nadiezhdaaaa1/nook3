@@ -1,4 +1,3 @@
-import { useAppStore } from "./appStore";
 import { SEARCH_LIMITS, type Plan, type Search } from "./types";
 
 /**
@@ -27,18 +26,6 @@ export function getDisabledSearchIds(searches: Search[], plan: Plan): Set<string
 
 export function isSearchDisabled(searches: Search[], plan: Plan, id: string): boolean {
   return getDisabledSearchIds(searches, plan).has(id);
-}
-
-/** Reactive set of disabled search ids for the signed-in user's plan. */
-export function useDisabledSearchIds(): Set<string> {
-  const searches = useAppStore((s) => s.searches);
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
-  return getDisabledSearchIds(searches, plan);
-}
-
-export function useIsSearchDisabled(id: string | null | undefined): boolean {
-  const disabled = useDisabledSearchIds();
-  return !!id && disabled.has(id);
 }
 
 export const DISABLED_SEARCH_REASON =

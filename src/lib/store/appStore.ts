@@ -12,6 +12,7 @@ import type {
   BillingCycle,
 } from "./types";
 import { SEARCH_LIMITS } from "./types";
+import { isSearchDisabled, DISABLED_SEARCH_REASON } from "./lock";
 import { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
 
 interface AppState {
