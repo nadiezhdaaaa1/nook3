@@ -44,6 +44,7 @@ import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.previ
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ApiWrenTranscribeRouteImport } from './routes/api/wren-transcribe'
 import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
@@ -237,6 +238,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWrenTranscribeRoute = ApiWrenTranscribeRouteImport.update({
   id: '/api/wren-transcribe',
   path: '/api/wren-transcribe',
@@ -367,6 +373,7 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -420,6 +427,7 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -475,6 +483,7 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
@@ -531,6 +540,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/wren-chat'
     | '/api/wren-transcribe'
+    | '/auth/callback'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -584,6 +594,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/wren-chat'
     | '/api/wren-transcribe'
+    | '/auth/callback'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -638,6 +649,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/wren-chat'
     | '/api/wren-transcribe'
+    | '/auth/callback'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/onboarding/loading'
@@ -689,6 +701,7 @@ export interface RootRouteChildren {
   ApiContactRoute: typeof ApiContactRoute
   ApiWrenChatRoute: typeof ApiWrenChatRoute
   ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   PostsSlugRoute: typeof PostsSlugRoute
@@ -942,6 +955,13 @@ declare module '@tanstack/react-router' {
       path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/wren-transcribe': {
@@ -1201,6 +1221,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiContactRoute: ApiContactRoute,
   ApiWrenChatRoute: ApiWrenChatRoute,
   ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   PostsSlugRoute: PostsSlugRoute,
