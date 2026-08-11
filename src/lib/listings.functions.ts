@@ -7,7 +7,7 @@ import type { SampleListing } from "@/data/sampleListings";
 
 const inputSchema = z.object({
   cityId: z.string().min(1),
-  limit: z.number().int().min(1).max(500).optional(),
+  limit: z.number().int().min(1).max(6000).optional(),
 });
 
 /**
@@ -40,7 +40,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       .eq("city_id", data.cityId)
       .eq("status", "active")
       .order("rent", { ascending: true })
-      .limit(data.limit ?? 500);
+      .limit(data.limit ?? 6000);
 
     if (error) {
       console.error("[listCityListings]", error.message);
