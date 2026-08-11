@@ -63,9 +63,18 @@ export interface OnboardingState {
   lastStep: number;
   completedAt: string | null;
 
+  /**
+   * Which saved Search this live buffer currently represents.
+   * - a search id  → edits belong to that search
+   * - "draft"      → new-search wizard; must never write to an existing search
+   * - null         → nothing hydrated yet; must never write to an existing search
+   */
+  editingSearchId: string | null;
+
   // Move-out
   moveOut?: MoveOutInfo;
 }
+
 
 export interface OnboardingActions {
   set: <K extends keyof OnboardingState>(key: K, val: OnboardingState[K]) => void;
