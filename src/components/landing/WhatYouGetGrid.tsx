@@ -22,7 +22,7 @@ const EMBER = "#cb4a0a";
 const ITEMS = [
   {
     icon: shieldAsset.url,
-    title: "Verified regulated units",
+    title: "Verified rent-stabilized units",
     body: "Every listing cross-checked against public databases. Real regulation gets a badge. Fake claims don't.",
   },
   {
