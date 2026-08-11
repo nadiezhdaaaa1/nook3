@@ -36,7 +36,13 @@ export const listCityListings = createServerFn({ method: "GET" })
     // explicit ranges until we have the whole city catalog.
     const target = data.limit ?? 6000;
     const PAGE = 1000;
-    const rows: Record<string, unknown>[] = [];
+    type Row = {
+      slug: string; address: string; rent: number; beds: number; baths: number;
+      neighborhood: string; below_median_pct: number | null; tag: string | null;
+      building_note: string | null; image: string; url: string | null;
+      lat: number | null; lng: number | null; amenities: unknown;
+    };
+    const rows: Row[] = [];
 
     for (let from = 0; from < target; from += PAGE) {
       const to = Math.min(from + PAGE, target) - 1;
@@ -56,7 +62,7 @@ export const listCityListings = createServerFn({ method: "GET" })
         break;
       }
       if (!chunk || chunk.length === 0) break;
-      rows.push(...(chunk as unknown as Record<string, unknown>[]));
+      rows.push(...(chunk as unknown as Row[]));
       if (chunk.length < to - from + 1) break;
     }
 
