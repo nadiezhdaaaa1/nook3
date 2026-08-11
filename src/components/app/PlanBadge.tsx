@@ -44,28 +44,26 @@ export function PlanBadge({
       <span
         className={cn(
           base,
-          "w-[54px] border border-black/20 bg-white text-[#241C12]",
+          "w-[62px] border border-black/20 bg-white text-[#241C12]",
           className,
         )}
       >
-        <span className={LABEL_CLASS}>Free</span>
+        <span className={LABEL_CLASS}>Intro</span>
       </span>
     );
   }
 
-  const isMax = plan === "max";
-
   return (
     <span
-      className={cn(base, isMax ? "w-[50px]" : "w-[84px]", "text-white", className)}
-      style={{ backgroundColor: isMax ? "#5322A7" : "#6A820A" }}
+      className={cn(base, "w-[54px] text-white", className)}
+      style={{ backgroundColor: "#6A820A" }}
     >
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0"
-        style={{ backgroundImage: isMax ? MAX_AURORA : PREMIUM_AURORA }}
+        style={{ backgroundImage: PREMIUM_AURORA }}
       />
-      <span className={cn(LABEL_CLASS, "relative")}>{isMax ? "Max" : "Premium"}</span>
+      <span className={cn(LABEL_CLASS, "relative")}>Pro</span>
     </span>
   );
 }
