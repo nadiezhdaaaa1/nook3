@@ -157,21 +157,6 @@ function AccountPage() {
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field id="acct-email" label="Email" icon={Mail} error={!emailValid ? "Enter a valid email." : undefined}>
-            <Input
-              id="acct-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              size="big"
-              className={cn(
-                "font-medium",
-                !emailValid && "border-danger focus:border-danger",
-              )}
-            />
-          </Field>
 
           <Field id="acct-tz" label="Timezone" icon={Globe}>
             <div className="relative">
