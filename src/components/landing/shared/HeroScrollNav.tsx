@@ -210,24 +210,54 @@ export function HeroScrollNav() {
               Blog
             </Link>
 
-            <Link
-              to="/login"
-              onClick={() => setOpen(false)}
-              className="hero-nav-sheet-signin hero-nav-ring"
-              style={{ ...uiFont, color: INK }}
-            >
-              Sign in
-            </Link>
-            <OriginButton
-              variant="main"
-              onClick={() => {
-                setOpen(false);
-                onSignup();
-              }}
-              className="hero-nav-ring h-12 text-[15px]"
-            >
-              Get free alerts
-            </OriginButton>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onLogout();
+                  }}
+                  className="hero-nav-sheet-signin hero-nav-ring"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  Log out
+                </button>
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate({ to: "/home" });
+                  }}
+                  className="hero-nav-ring h-12 text-[15px]"
+                >
+                  <IconHomeSearch size={20} stroke={1.5} aria-hidden />
+                  Searches
+                </OriginButton>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="hero-nav-sheet-signin hero-nav-ring"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  Sign in
+                </Link>
+                <OriginButton
+                  variant="main"
+                  onClick={() => {
+                    setOpen(false);
+                    onSignup();
+                  }}
+                  className="hero-nav-ring h-12 text-[15px]"
+                >
+                  Get free alerts
+                </OriginButton>
+              </>
+            )}
           </div>
         </div>
       )}
