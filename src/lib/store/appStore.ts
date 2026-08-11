@@ -42,6 +42,8 @@ interface AppActions {
   pauseSearch: (searchId: string) => void;
   resumeSearch: (searchId: string) => void;
   duplicateSearch: (searchId: string) => { ok: true; search: Search } | { ok: false; error: string };
+  /** Swap a locally-created search for its persisted backend row (id becomes a real uuid). */
+  adoptServerSearch: (localId: string, row: Search) => void;
   deleteSearch: (searchId: string) => void;
   archiveSearch: (searchId: string) => void;
   restoreSearch: (searchId: string) => { ok: true } | { ok: false; error: string };
