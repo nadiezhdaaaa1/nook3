@@ -250,6 +250,24 @@ export const useAppStore = create<AppStore>()(
         return { ok: true, search: copy };
       },
 
+      adoptServerSearch: (localId, row) => {
+        const { searches, activeSearchId } = get();
+        const local = searches.find((s) => s.id === localId);
+        if (!local && searches.some((s) => s.id === row.id)) return;
+        const merged: Search = { ...(local ?? ({} as Search)), ...row };
+        const withoutDupe = searches.filter((s) => s.id !== row.id);
+        const next = local
+          ? withoutDupe.map((s) => (s.id === localId ? merged : s))
+          : [...withoutDupe, merged];
+        set({
+          searches: next,
+          activeSearchId:
+            activeSearchId === localId || activeSearchId === null ? row.id : activeSearchId,
+        });
+      },
+
+
+
       deleteSearch: (id) => {
         const remaining = get().searches.filter((s) => s.id !== id);
         // If we just deleted the last non-archived search, auto-bootstrap a
