@@ -73,6 +73,7 @@ export interface User {
 
   // Lifecycle
   completedAt: string | null;
+  updatedAt?: string;
 }
 
 export interface SearchQuota {
