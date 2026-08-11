@@ -178,7 +178,7 @@ export function SearchSelector() {
                     <li key={s.id}>
                       <div
                         className={cn(
-                          "flex items-center gap-3 rounded-[10px] border border-black/10 bg-white px-3 py-3 transition-colors hover:bg-charcoal-950/[0.03]",
+                          "flex items-center gap-3 rounded-[10px] border border-black/[0.12] bg-white px-3 py-3 transition-colors hover:bg-charcoal-950/[0.03]",
                           s.id === active?.id && "border-charcoal-950/40 bg-charcoal-950/[0.03]",
                           isDisabled && "opacity-60",
                         )}
