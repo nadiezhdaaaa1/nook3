@@ -22,12 +22,6 @@ const PREMIUM_AURORA = aurora(
   "rgba(120, 165, 200, 0.12)",
 );
 
-const MAX_AURORA = aurora(
-  "rgba(38, 0, 255, 0.14)",
-  "rgba(203, 10, 94, 0.26)",
-  "rgba(81, 55, 143, 0.30)",
-  "rgba(149, 120, 200, 0.12)",
-);
 
 export function PlanBadge({
   plan,
