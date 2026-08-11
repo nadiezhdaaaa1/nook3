@@ -1783,7 +1783,7 @@ function SubscriptionSection({
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="grid md:grid-cols-2 gap-7">
           {visiblePlans.map((p) => (
             <PlanCard
               key={p.key}
