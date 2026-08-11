@@ -42,6 +42,8 @@ interface AppActions {
   pauseSearch: (searchId: string) => void;
   resumeSearch: (searchId: string) => void;
   duplicateSearch: (searchId: string) => { ok: true; search: Search } | { ok: false; error: string };
+  /** Swap a locally-created search for its persisted backend row (id becomes a real uuid). */
+  adoptServerSearch: (localId: string, row: Search) => void;
   deleteSearch: (searchId: string) => void;
   archiveSearch: (searchId: string) => void;
   restoreSearch: (searchId: string) => { ok: true } | { ok: false; error: string };
@@ -247,6 +249,24 @@ export const useAppStore = create<AppStore>()(
         set({ searches: [...searches, copy], activeSearchId: copy.id });
         return { ok: true, search: copy };
       },
+
+      adoptServerSearch: (localId, row) => {
+        const { searches, activeSearchId } = get();
+        const local = searches.find((s) => s.id === localId);
+        if (!local && searches.some((s) => s.id === row.id)) return;
+        const merged: Search = { ...(local ?? ({} as Search)), ...row };
+        const withoutDupe = searches.filter((s) => s.id !== row.id);
+        const next = local
+          ? withoutDupe.map((s) => (s.id === localId ? merged : s))
+          : [...withoutDupe, merged];
+        set({
+          searches: next,
+          activeSearchId:
+            activeSearchId === localId || activeSearchId === null ? row.id : activeSearchId,
+        });
+      },
+
+
 
       deleteSearch: (id) => {
         const remaining = get().searches.filter((s) => s.id !== id);
