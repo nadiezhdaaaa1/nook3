@@ -372,7 +372,55 @@ function ToggleRow({
 
     </div>
   );
+function LogoutRow() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const resetApp = useAppStore((s) => s.reset);
+  const [busy, setBusy] = useState(false);
+
+  const handleLogout = async () => {
+    setBusy(true);
+    try {
+      await queryClient.cancelQueries();
+      queryClient.clear();
+      await supabase.auth.signOut();
+      resetApp();
+      navigate({ to: "/auth", replace: true });
+    } catch (e) {
+      toast.error("Could not log out. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="px-5 py-4 flex items-center justify-between gap-4">
+      <div className="min-w-0 flex items-center gap-3">
+        <LogOut className="h-4 w-4 text-charcoal-500 shrink-0" />
+        <div>
+          <div className="text-sm font-semibold text-charcoal-950">Log out</div>
+          <div className="text-xs text-charcoal-600 mt-0.5">Sign out of your account on this device.</div>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={handleLogout}
+        disabled={busy}
+        className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {busy ? (
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3.5 w-3.5 rounded-full border-2 border-charcoal-950/30 border-t-charcoal-950 animate-spin" />
+            Logging out...
+          </span>
+        ) : (
+          <>Log out</>
+        )}
+      </button>
+    </div>
+  );
 }
+
 
 
 
