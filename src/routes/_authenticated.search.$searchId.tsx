@@ -190,8 +190,9 @@ function PageHeader({
           size="medium"
           onClick={() => {
             if (status === "paused") {
-              resumeSearch(searchId);
-              toast.success("Search resumed");
+              const res = resumeSearch(searchId);
+              if (res.ok) toast.success("Search resumed");
+              else toast.error("Can't resume", { description: res.error });
             } else {
               pauseSearch(searchId);
               toast.success("Search paused");
