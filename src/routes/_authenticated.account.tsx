@@ -1354,7 +1354,7 @@ function PlanCard({
               style={{
                 fontFamily: "'Google Sans Flex', sans-serif",
                 background: dark ? "#5c6d18" : "#EFEBDE",
-                color: dark ? "#E7EFCB" : "#5f5a4c",
+                color: "#DF4400",
               }}
             >
               {stateBadge}
