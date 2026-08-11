@@ -26,8 +26,8 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
 
   const isIntro = plan === "free";
 
-  const goPricing = () => {
-    navigate({ to: "/onboarding/pricing" });
+  const goPlans = () => {
+    navigate({ to: "/account", hash: "plans" });
     onClose();
   };
 
