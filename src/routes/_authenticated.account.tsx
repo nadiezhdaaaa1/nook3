@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Globe, Lock, KeyRound, Eye, EyeOff, ShieldCheck, AlertTriangle, ChevronRight,
-  PauseCircle, MessageCircle, Tag, Heart, ArrowLeft,
+  PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
+
 import { z } from "zod";
 import { toast } from "sonner";
 import { motion, useReducedMotion } from "framer-motion";
@@ -1764,7 +1765,150 @@ function SubscriptionSection({
         </div>
 
       </section>
+
+      <PaymentMethodSection plan={plan} />
+
+      <PaymentHistorySection plan={plan} cycle={activeCycle} currentPlan={currentPlan} />
     </>
   );
 }
+
+/* ------------------------- Payment method (Stripe) ------------------------- */
+
+function PaymentMethodSection({ plan }: { plan: Plan }) {
+  const hasCard = plan !== "free";
+  return (
+    <section>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
+        Payment method
+      </h2>
+      <p className="text-xs text-charcoal-600 mb-4">
+        Cards are stored and charged securely by Stripe. Nook never sees your card number.
+      </p>
+      <div className="rounded-card bg-paper-warm border border-border px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+        {hasCard ? (
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="inline-flex h-10 w-14 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white">
+              <CreditCard className="h-4 w-4 text-charcoal-700" />
+            </span>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">
+                Visa •••• 4242
+              </div>
+              <div className="text-xs text-charcoal-600 mt-0.5">
+                Expires 04 / 2029 · Default
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="inline-flex h-10 w-14 items-center justify-center rounded-[10px] border border-dashed border-charcoal-950/20 bg-white">
+              <Plus className="h-4 w-4 text-charcoal-500" />
+            </span>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">No card on file</div>
+              <div className="text-xs text-charcoal-600 mt-0.5">
+                Add a card when you start a paid plan or trial.
+              </div>
+            </div>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() =>
+            toast.info("Stripe billing portal", {
+              description: "Card management opens once Stripe checkout is live.",
+            })
+          }
+          className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
+        >
+          <CreditCard className="h-3.5 w-3.5" />
+          {hasCard ? "Update card" : "Add card"}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------- Payment history ------------------------------ */
+
+function PaymentHistorySection({
+  plan, cycle, currentPlan,
+}: {
+  plan: Plan;
+  cycle: BillingCycle;
+  currentPlan: PlanDef;
+}) {
+  const invoices = useMemo(() => {
+    if (plan === "free") return [];
+    const amount =
+      cycle === "annual"
+        ? currentPlan.annual
+        : currentPlan.monthly;
+    const count = cycle === "annual" ? 2 : 4;
+    const stepMonths = cycle === "annual" ? 12 : 1;
+    return Array.from({ length: count }, (_, i) => {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i * stepMonths);
+      return {
+        id: `in_${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`,
+        date: d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }),
+        label: `${currentPlan.label} · ${cycle === "annual" ? "Annual" : "Monthly"}`,
+        amount,
+      };
+    });
+  }, [plan, cycle, currentPlan]);
+
+  return (
+    <section>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
+        Payment history
+      </h2>
+      <p className="text-xs text-charcoal-600 mb-4">
+        Receipts for every charge. Invoices are also emailed to you.
+      </p>
+
+      {invoices.length === 0 ? (
+        <div className="rounded-card bg-paper-warm border border-border px-5 py-8 text-center">
+          <Receipt className="mx-auto h-5 w-5 text-charcoal-400" />
+          <div className="mt-2 text-sm font-semibold text-charcoal-950">No payments yet</div>
+          <div className="mt-1 text-xs text-charcoal-600">
+            You&rsquo;re on the Free plan — receipts appear here after your first charge.
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
+          {invoices.map((inv) => (
+            <div key={inv.id} className="px-5 py-4 flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-charcoal-950">{inv.label}</div>
+                <div className="text-xs text-charcoal-600 mt-0.5">
+                  {inv.date} · Paid · Visa •••• 4242
+                </div>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-sm font-semibold text-charcoal-950">
+                  ${inv.amount}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    toast.info("Receipt", {
+                      description: "PDF receipts become available once Stripe billing is live.",
+                    })
+                  }
+                  aria-label={`Download receipt for ${inv.date}`}
+                  className="inline-flex items-center gap-1.5 h-9 px-3 rounded-[16px] border border-charcoal-950/15 text-xs font-semibold text-charcoal-950 hover:bg-paper transition-colors"
+                >
+                  <Download className="h-3.5 w-3.5" /> Receipt
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 
