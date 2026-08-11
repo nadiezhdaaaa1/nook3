@@ -19,6 +19,7 @@ export function dbRowToUser(row: any) {
     referralCode: row.referral_code ?? "",
     isAffiliate: !!row.is_affiliate,
     completedAt: row.completed_at ?? null,
+    updatedAt: row.updated_at ?? undefined,
   };
 }
 
