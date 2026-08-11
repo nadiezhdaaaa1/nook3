@@ -28,8 +28,8 @@ import {
   type HeroBCity,
 } from "./heroBCities";
 
-const H1_LINES = ["Find it before it's", "gone. Without losing", "your mind."];
-const H1_TEXT = "Find it before it's gone. Without losing your mind.";
+const H1_LINES = ["Real-time apartment alerts.", "Find it before it's gone,", "without losing your mind."];
+const H1_TEXT = "Real-time apartment alerts. Find it before it's gone, without losing your mind.";
 
 const uiFont = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
 const displayFont = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
