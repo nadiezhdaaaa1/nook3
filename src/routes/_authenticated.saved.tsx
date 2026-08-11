@@ -318,7 +318,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
   return (
     <div className="space-y-4">
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid gap-3 lg:grid-cols-3">
         {[...live, ...archived].map((s) => (
 
           <li
