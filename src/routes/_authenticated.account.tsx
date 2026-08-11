@@ -1688,25 +1688,12 @@ function CurrentPlanCard({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => {
-              const el = document.getElementById("plan-options");
-              el?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
+            onClick={onCancelRequest}
             className="text-sm font-semibold underline-offset-4 hover:underline"
-            style={{ color: ink }}
+            style={{ color: ink, opacity: 0.85 }}
           >
-            Change plan
+            Cancel subscription
           </button>
-          {isPaid && (
-            <button
-              type="button"
-              onClick={onCancelRequest}
-              className="text-sm font-semibold underline-offset-4 hover:underline"
-              style={{ color: ink, opacity: 0.85 }}
-            >
-              Cancel
-            </button>
-          )}
         </div>
       </div>
     </div>
