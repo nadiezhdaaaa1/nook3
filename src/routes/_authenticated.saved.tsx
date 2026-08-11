@@ -6,6 +6,7 @@ import {
   Heart,
   Inbox,
   Loader2,
+  Lock,
   Pencil,
   Plus,
   Search as SearchIcon,
