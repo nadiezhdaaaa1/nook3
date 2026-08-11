@@ -85,6 +85,7 @@ export interface OnboardingActions {
   cycleAmenity: (id: string) => void;
   cycleTransit: (id: string) => void;
   setTransit: (id: string, state: TriState | null) => void;
+  setEditingSearch: (id: string | null) => void;
   reset: () => void;
 }
 
@@ -176,6 +177,7 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
         else lines[id] = state;
         set({ transit: { ...get().transit, lines } });
       },
+      setEditingSearch: (id) => set({ editingSearchId: id }),
       reset: () => set({ ...initial }),
     }),
     {
