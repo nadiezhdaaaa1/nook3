@@ -20,6 +20,7 @@ export function NewSearchModal({ onClose }: { onClose: () => void }) {
   const active = useAppStore(selectActiveSearch);
   const createSearch = useAppStore((s) => s.createSearch);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
+  const adoptServerSearch = useAppStore((s) => s.adoptServerSearch);
   const createMut = useCreateSearchMutation();
   const dupMut = useDuplicateSearchMutation();
 
