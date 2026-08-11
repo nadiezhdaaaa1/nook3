@@ -248,8 +248,10 @@ export type Database = {
           email: string
           email_verified: boolean
           email_verified_at: string | null
+          entitlement_state: Database["public"]["Enums"]["entitlement_state"]
           id: string
           is_affiliate: boolean
+          matches_per_digest: number | null
           move_out: Json | null
           phone: string
           phone_verified: boolean
@@ -270,8 +272,10 @@ export type Database = {
           email?: string
           email_verified?: boolean
           email_verified_at?: string | null
+          entitlement_state?: Database["public"]["Enums"]["entitlement_state"]
           id: string
           is_affiliate?: boolean
+          matches_per_digest?: number | null
           move_out?: Json | null
           phone?: string
           phone_verified?: boolean
@@ -292,8 +296,10 @@ export type Database = {
           email?: string
           email_verified?: boolean
           email_verified_at?: string | null
+          entitlement_state?: Database["public"]["Enums"]["entitlement_state"]
           id?: string
           is_affiliate?: boolean
+          matches_per_digest?: number | null
           move_out?: Json | null
           phone?: string
           phone_verified?: boolean
@@ -715,8 +721,10 @@ export type Database = {
           email: string
           email_verified: boolean
           email_verified_at: string | null
+          entitlement_state: Database["public"]["Enums"]["entitlement_state"]
           id: string
           is_affiliate: boolean
+          matches_per_digest: number | null
           move_out: Json | null
           phone: string
           phone_verified: boolean
@@ -763,6 +771,7 @@ export type Database = {
         | "investor"
         | "legal"
         | "other"
+      entitlement_state: "intro" | "pro" | "expired"
       listing_report_reason:
         | "spam"
         | "fraud"
@@ -914,6 +923,7 @@ export const Constants = {
         "legal",
         "other",
       ],
+      entitlement_state: ["intro", "pro", "expired"],
       listing_report_reason: [
         "spam",
         "fraud",
