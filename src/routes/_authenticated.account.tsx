@@ -1634,14 +1634,12 @@ function ProfilePasswordRow() {
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0 overflow-hidden">
-            <img
-              src={lockAsset.url}
-              alt=""
-              className="h-6 w-6 object-contain"
-              aria-hidden="true"
-            />
-          </span>
+          <img
+            src={lockAsset.url}
+            alt=""
+            className="h-10 w-auto object-contain shrink-0"
+            aria-hidden="true"
+          />
           <div className="min-w-0">
             <div className="text-sm font-semibold text-charcoal-950">Password</div>
             <div className="text-xs text-charcoal-600 mt-0.5">
