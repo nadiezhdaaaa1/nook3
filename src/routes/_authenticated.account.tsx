@@ -4,10 +4,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Globe, Eye, EyeOff, ChevronRight, Lock, LogOut,
+  Mail, Globe, Eye, EyeOff, ChevronRight, LogOut,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
+import lockAsset from "@/assets/Lock.png.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
