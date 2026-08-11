@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
+import globeAsset from "@/assets/Globe.png.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
@@ -1539,9 +1540,12 @@ function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
-            <Globe className="h-4 w-4 text-charcoal-700" />
-          </span>
+          <img
+            src={globeAsset.url}
+            alt=""
+            className="h-10 w-auto object-contain shrink-0"
+            aria-hidden="true"
+          />
           <div className="min-w-0">
             <div className="text-sm font-semibold text-charcoal-950">Timezone</div>
             <div className="text-xs text-charcoal-600 mt-0.5">{display}</div>
