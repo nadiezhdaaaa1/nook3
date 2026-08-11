@@ -36,15 +36,15 @@ export const Route = createFileRoute("/onboarding/success")({
 });
 
 const PLAN_META: Record<Plan, { name: string; price: Record<"monthly" | "annual", string>; suffix: string }> = {
-  free: { name: "Free", price: { monthly: "$0", annual: "$0" }, suffix: "forever" },
-  premium: { name: "Premium", price: { monthly: "$14.99", annual: "$7.99" }, suffix: "/month" },
-  max: { name: "Max", price: { monthly: "$29", annual: "$19.08" }, suffix: "/month" },
+  free: { name: "Intro", price: { monthly: "$0", annual: "$0" }, suffix: "for 3 days" },
+  premium: { name: "Pro", price: { monthly: "$14.99", annual: "$7.99" }, suffix: "/month" },
+  max: { name: "Pro", price: { monthly: "$14.99", annual: "$7.99" }, suffix: "/month" },
 };
 
 const PLAN_VARIANT: Record<Plan, "light" | "warm" | "cool"> = {
   free: "light",
   premium: "warm",
-  max: "cool",
+  max: "warm",
 };
 
 const AMENITY_LABELS: Record<string, string> = Object.fromEntries(
