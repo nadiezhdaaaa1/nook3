@@ -24,8 +24,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
     };
   }, [onClose]);
 
-  const nextTier = plan === "free" ? "premium" : "max";
-  const isPremium = nextTier === "premium";
+  const isIntro = plan === "free";
 
   const goPricing = () => {
     navigate({ to: "/onboarding/pricing" });
