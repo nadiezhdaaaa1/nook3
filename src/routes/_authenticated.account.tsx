@@ -56,30 +56,30 @@ type PlanDef = {
 const PLANS: PlanDef[] = [
   {
     id: "free",
-    label: "Free",
-    tagline: "Get a feel for what's out there.",
+    label: "Intro",
+    tagline: "See how it works, on your real search.",
     monthly: 0,
     annual: 0,
     icon: Sparkles,
-    features: ["1 saved search", "Email alerts", "Daily digest"],
+    features: [
+      "1 search — the one you set up at signup",
+      "Only your 3 best matches per email",
+      "Daily or weekly alerts, no delay",
+    ],
   },
   {
     id: "premium",
-    label: "Premium",
+    label: "Pro",
     tagline: "When you're actively looking.",
     monthly: 14.99,
-    annual: 119,
+    annual: 95.88,
     icon: Zap,
-    features: ["3 saved searches", "Real-time alerts", "Email alerts", "All filters", "Wren AI Chat"],
-  },
-  {
-    id: "max",
-    label: "Max",
-    tagline: "For relocators and serious hunters.",
-    monthly: 29,
-    annual: 229,
-    icon: Crown,
-    features: ["Unlimited searches", "Priority alerts", "Concierge matches", "Early access"],
+    features: [
+      "Every match we find",
+      "Up to 3 searches — own filters, own cities",
+      "Daily or weekly alerts, no delay",
+      "Quiet hours in your timezone",
+    ],
   },
 ];
 
