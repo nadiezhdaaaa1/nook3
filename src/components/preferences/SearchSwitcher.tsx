@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Check,
@@ -188,9 +189,14 @@ export function SearchSwitcher() {
                   }}
                   onCancelRename={() => setRenamingId(null)}
                   onDuplicate={() => handleDuplicate(s.id)}
-                  onPauseToggle={() =>
-                    s.status === "paused" ? resumeSearch(s.id) : pauseSearch(s.id)
-                  }
+                  onPauseToggle={() => {
+                    if (s.status !== "paused") {
+                      pauseSearch(s.id);
+                      return;
+                    }
+                    const res = resumeSearch(s.id);
+                    if (!res.ok) toast.error("Can't resume", { description: res.error });
+                  }}
                   onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
                     if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {

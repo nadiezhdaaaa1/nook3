@@ -1,4 +1,5 @@
 import { Pause, Play } from "lucide-react";
+import { toast } from "sonner";
 import { useAppStore, useActiveSearch } from "@/lib/store";
 
 /**
@@ -27,7 +28,10 @@ export function PausedSearchBanner() {
       </div>
       <button
         type="button"
-        onClick={() => resumeSearch(active.id)}
+        onClick={() => {
+          const res = resumeSearch(active.id);
+          if (!res.ok) toast.error("Can't resume", { description: res.error });
+        }}
         className="h-10 px-4 inline-flex items-center gap-1.5 rounded-pill bg-charcoal-950 text-paper text-xs font-semibold hover:bg-charcoal-800 shrink-0"
       >
         <Play className="h-3.5 w-3.5" /> Resume
