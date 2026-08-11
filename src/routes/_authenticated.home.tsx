@@ -164,19 +164,9 @@ function HomeScreen() {
     return rows.map((a) => alertToListing(a, cityId));
   }, [alertsQ.data, cityId, search?.id]);
 
-  const pagedListings = useMemo(
-    () =>
-      (paginatedQ.data?.alerts ?? [])
-        .filter((a) => a.status !== "dismissed" && (!search || !a.searchId || a.searchId === search.id))
-        .map((a) => alertToListing(a, cityId)),
-    [paginatedQ.data, cityId, search?.id],
-  );
-
   const cityListings = useCityListings(cityId);
 
-  const isSample = allAlertListings.length === 0;
-
-  /** Sample listings have their own ids, so match persisted dislikes by title+price. */
+  /** Catalog listings have their own ids, so match persisted dislikes by title+price. */
   const dismissedKeys = useMemo(
     () =>
       new Set(
@@ -187,21 +177,44 @@ function HomeScreen() {
     [alertsQ.data],
   );
 
-  const listings = useMemo(() => {
-    if (!isSample) return allAlertListings;
-    let pool = cityListings;
-    if (search?.budget) {
-      const [lo, hi] = search.budget;
-      pool = pool.filter((l) => l.rent >= lo * 0.85 && l.rent <= hi);
-    }
-    if (search?.neighborhoods.length) {
-      const wanted = pool.filter((l) => search.neighborhoods.includes(l.neighborhood));
-      if (wanted.length > 0) pool = wanted;
-    }
-    pool = pool.filter((l) => !dismissedKeys.has(`${l.address}|${l.rent}`));
-    return [...pool].sort((a, b) => a.rent - b.rent);
-  }, [isSample, allAlertListings, cityListings, search?.budget, search?.neighborhoods, dismissedKeys]);
+  /** Scope filters derived from the saved search — budget, beds, min baths, neighborhoods. */
+  const scopeFilters = useMemo<MatchFilters>(
+    () => ({
+      budget: scope.budget,
+      bedrooms: scope.bedrooms,
+      bathrooms: scope.bathroomsMin,
+      neighborhoods: scope.neighborhoods,
+      amenities: [],
+      transit: [],
+      noFeeOnly: false,
+    }),
+    [scope],
+  );
 
+  /** Catalog narrowed to the saved search, with the user's own alert rows merged in. */
+  const listings = useMemo(() => {
+    const pool = applyFilters(cityListings, scopeFilters, scope).filter(
+      (l) => !dismissedKeys.has(`${l.address}|${l.rent}`),
+    );
+    const seen = new Set(allAlertListings.map((l) => `${l.address}|${l.rent}`));
+    const merged = [...allAlertListings, ...pool.filter((l) => !seen.has(`${l.address}|${l.rent}`))];
+    return merged.sort((a, b) => a.rent - b.rent);
+  }, [cityListings, scopeFilters, scope, dismissedKeys, allAlertListings]);
+
+  /** Which saved-search criterion emptied the pool — drives the empty state copy. */
+  const emptyReason = useMemo(() => {
+    if (cityListings.length === 0) return "city" as const;
+    const budgetOnly = applyFilters(
+      cityListings,
+      { ...scopeFilters, neighborhoods: [], bedrooms: [], bathrooms: null },
+      scope,
+    );
+    if (budgetOnly.length === 0) return "budget" as const;
+    const withBeds = applyFilters(cityListings, { ...scopeFilters, neighborhoods: [] }, scope);
+    if (withBeds.length === 0) return "beds" as const;
+    if (scope.neighborhoods.length > 0) return "neighborhoods" as const;
+    return "filters" as const;
+  }, [cityListings, scopeFilters, scope]);
 
   const visibleListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
@@ -209,15 +222,11 @@ function HomeScreen() {
   );
 
   const pagedVisibleListings = useMemo(() => {
-    if (filtersActive) {
-      const start = (page - 1) * PAGE_SIZE;
-      return visibleListings.slice(start, start + PAGE_SIZE);
-    }
-    return pagedListings.filter((l) => !hiddenIds.includes(l.id));
-  }, [filtersActive, page, visibleListings, pagedListings, hiddenIds]);
+    const start = (page - 1) * PAGE_SIZE;
+    return visibleListings.slice(start, start + PAGE_SIZE);
+  }, [page, visibleListings]);
 
-  const totalMatches =
-    isSample || filtersActive ? visibleListings.length : (paginatedQ.data?.total ?? 0);
+  const totalMatches = visibleListings.length;
   const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
 
   useEffect(() => {
