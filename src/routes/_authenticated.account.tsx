@@ -391,7 +391,7 @@ function LogoutRow() {
       queryClient.clear();
       await supabase.auth.signOut();
       resetApp();
-      navigate({ to: "/auth", replace: true });
+      navigate({ to: "/login", replace: true });
     } catch (e) {
       toast.error("Could not log out. Please try again.");
     } finally {
