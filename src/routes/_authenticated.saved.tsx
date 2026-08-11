@@ -351,7 +351,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                       s.status === "active"
                         ? "bg-sage-700"
                         : s.status === "paused"
-                          ? "bg-peach-700"
+                          ? "border-2 border-peach-700"
                           : "bg-charcoal-300",
                     )}
                   />
