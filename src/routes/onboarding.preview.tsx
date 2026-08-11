@@ -8,7 +8,8 @@ import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { OnboardingHeader } from "@/components/onboarding/OnboardingHeader";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
-import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
+import { type SampleListing } from "@/data/sampleListings";
+import { useCityListings } from "@/lib/queries/listings";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
   OB_SUB,
@@ -51,10 +52,7 @@ function SamplePreview() {
     };
   }, []);
 
-  const allListings: SampleListing[] = useMemo(
-    () => (city && SAMPLE_LISTINGS[city]) || [],
-    [city],
-  );
+  const allListings: SampleListing[] = useCityListings(city);
 
 
 

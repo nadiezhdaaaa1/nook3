@@ -13,7 +13,8 @@ import { SearchSelector } from "@/components/app/SearchSelector";
 import { useActiveSearch } from "@/lib/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
-import { SAMPLE_LISTINGS, type SampleListing } from "@/data/sampleListings";
+import { type SampleListing } from "@/data/sampleListings";
+import { useCityListings } from "@/lib/queries/listings";
 import { useAlertsQuery, usePaginatedAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
 import {
@@ -171,6 +172,8 @@ function HomeScreen() {
     [paginatedQ.data, cityId, search?.id],
   );
 
+  const cityListings = useCityListings(cityId);
+
   const isSample = allAlertListings.length === 0;
 
   /** Sample listings have their own ids, so match persisted dislikes by title+price. */
@@ -186,7 +189,7 @@ function HomeScreen() {
 
   const listings = useMemo(() => {
     if (!isSample) return allAlertListings;
-    let pool = SAMPLE_LISTINGS[cityId] ?? [];
+    let pool = cityListings;
     if (search?.budget) {
       const [lo, hi] = search.budget;
       pool = pool.filter((l) => l.rent >= lo * 0.85 && l.rent <= hi);
@@ -197,7 +200,7 @@ function HomeScreen() {
     }
     pool = pool.filter((l) => !dismissedKeys.has(`${l.address}|${l.rent}`));
     return [...pool].sort((a, b) => a.rent - b.rent);
-  }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods, dismissedKeys]);
+  }, [isSample, allAlertListings, cityListings, search?.budget, search?.neighborhoods, dismissedKeys]);
 
 
   const visibleListings = useMemo(
