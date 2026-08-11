@@ -1285,7 +1285,7 @@ function PlanCard({
 
   // Each tier keeps its own established button style, regardless of up/downgrade
   const ctaVariant =
-    plan.id === "premium" ? "premium" : plan.id === "max" ? "max" : "tertiary";
+    plan.id === "free" ? "tertiary" : "premium";
 
   return (
     <div
@@ -1456,7 +1456,7 @@ function CurrentPlanCard({
   const cardStyle: React.CSSProperties = dark
     ? {
         backgroundColor: "#2c2415",
-        backgroundImage: plan === "max" ? COOL_BG : WARM_BG,
+        backgroundImage: WARM_BG,
         boxShadow:
           "0px 2px 1px rgba(36,28,18,0.08), 0px 24px 14px rgba(36,28,18,0.28)",
         color: "#f8f3e1",
@@ -1836,16 +1836,16 @@ function SubscriptionSection({
         <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
           <div>
             <h2 className="font-display text-xl font-semibold text-charcoal-950">
-              {plan === "max" ? "Plan options" : "Upgrade your plan"}
+              {plan === "free" ? "Upgrade your plan" : "Plan options"}
             </h2>
             <p className="text-sm text-charcoal-600 mt-1">
-              Get faster alerts, more searches, and Wren AI.
+              Every match we find, plus up to 3 searches.
             </p>
           </div>
           <BillingToggle cycle={cycle} onChange={setCycle} />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid md:grid-cols-2 gap-3">
           {PLANS.map((p) => (
             <PlanCard
               key={p.id}
