@@ -1631,6 +1631,7 @@ function ChangePasswordSection() {
   );
 }
 
+function SubscriptionSection({
   plan, cycle, setCycle, trialActive, currentPlan, activeCycle,
 }: {
   plan: Plan;
