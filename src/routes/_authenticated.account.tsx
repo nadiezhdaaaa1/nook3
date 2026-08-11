@@ -197,6 +197,9 @@ function AccountPage() {
       </section>
 
 
+      {/* Security */}
+      <ChangePasswordSection />
+
       {/* Subscription */}
       <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} activeCycle={user?.billingCycle ?? "monthly"} />
 
