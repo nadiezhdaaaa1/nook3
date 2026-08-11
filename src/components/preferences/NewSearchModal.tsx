@@ -36,12 +36,13 @@ export function NewSearchModal({ onClose }: { onClose: () => void }) {
     try {
       if (mode === "duplicate" && active) {
         // DB authoritative: dup on server, then mirror locally.
-        await dupMut.mutateAsync(active.id);
+        const row = await dupMut.mutateAsync(active.id);
         const localRes = duplicateSearch(active.id);
         if (!localRes.ok) {
           setError(localRes.error);
           return;
         }
+        if (row && (row as { id?: string }).id) adoptServerSearch(localRes.search.id, row as never);
       } else {
         const fallback = `Search ${Date.now().toString().slice(-4)}`;
         const candidate = name.trim() || fallback;
@@ -51,7 +52,7 @@ export function NewSearchModal({ onClose }: { onClose: () => void }) {
           return;
         }
         const trimmed = parsed.data;
-        await createMut.mutateAsync({
+        const row = await createMut.mutateAsync({
           name: trimmed,
           cityId,
         });
@@ -60,6 +61,7 @@ export function NewSearchModal({ onClose }: { onClose: () => void }) {
           setError(localRes.error);
           return;
         }
+        if (row && (row as { id?: string }).id) adoptServerSearch(localRes.search.id, row as never);
       }
       hydrateActiveSearchIntoOnboarding();
       onClose();
