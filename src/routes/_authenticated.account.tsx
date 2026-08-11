@@ -1875,9 +1875,11 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
       <div className="rounded-card bg-paper-warm border border-border px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
         {hasCard ? (
           <div className="flex items-center gap-3 min-w-0">
-            <span className="inline-flex h-10 w-14 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white">
-              <CreditCard className="h-4 w-4 text-charcoal-700" />
-            </span>
+            <img
+              src={cardAsset.url}
+              alt="Payment card"
+              className="h-10 w-auto object-contain"
+            />
             <div className="min-w-0">
               <div className="text-sm font-semibold text-charcoal-950">
                 Visa •••• 4242
