@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Check, X } from "lucide-react";
+import { Check, Lock, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
