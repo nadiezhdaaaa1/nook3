@@ -50,6 +50,7 @@ function NewSearchLayout() {
   const navigate = useNavigate();
   const createMut = useCreateSearchMutation();
   const createSearch = useAppStore((s) => s.createSearch);
+  const adoptServerSearch = useAppStore((s) => s.adoptServerSearch);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const savedRef = useRef(false);
 
