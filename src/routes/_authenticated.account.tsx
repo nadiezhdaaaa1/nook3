@@ -156,25 +156,8 @@ function AccountPage() {
       {/* Profile */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-
-          <Field id="acct-tz" label="Timezone" icon={Globe}>
-            <div className="relative">
-              <select
-                id="acct-tz"
-                value={timezone}
-                onChange={(e) => setTimezone(e.target.value)}
-                className="flex w-full rounded-[12px] border border-black/20 bg-white px-4 text-[14px] font-['Google_Sans_Flex',sans-serif] font-medium text-[#241c12] transition-colors hover:border-black/[0.32] focus:border-[#DF4400] focus:outline-none focus-visible:border-[#DF4400] focus-visible:outline-none focus-visible:ring-0 h-[56px] appearance-none"
-              >
-                {TIMEZONES.map((tz) => (
-                  <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
-                ))}
-              </select>
-              <ChevronRight className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-charcoal-500" />
-            </div>
-          </Field>
-        </div>
-        <div className="mt-4">
+        <div className="space-y-4">
+          <ProfileTimezoneRow timezone={timezone} onChange={setTimezone} />
           <ProfilePasswordRow />
         </div>
       </section>
@@ -1489,6 +1472,90 @@ function CurrentPlanCard({
         </div>
       </div>
     </div>
+  );
+}
+
+function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange: (tz: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const display = timezone.replace(/_/g, " ");
+
+  return (
+    <>
+      <div className="rounded-card bg-paper-warm border border-border p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
+              <Globe className="h-4 w-4 text-charcoal-700" />
+            </span>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">Timezone</div>
+              <div className="text-xs text-charcoal-600 mt-0.5">{display}</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
+          >
+            Change
+          </button>
+        </div>
+      </div>
+
+      <TimezoneDialog open={open} onOpenChange={setOpen} value={timezone} onChange={onChange} />
+    </>
+  );
+}
+
+function TimezoneDialog({
+  open, onOpenChange, value, onChange,
+}: {
+  open: boolean; onOpenChange: (v: boolean) => void; value: string; onChange: (tz: string) => void;
+}) {
+  const [draft, setDraft] = useState(value);
+
+  useEffect(() => {
+    if (open) setDraft(value);
+  }, [open, value]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">Change timezone</DialogTitle>
+          <DialogDescription className="text-sm text-charcoal-600">
+            Choose your preferred timezone for alerts and reports.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 mt-2">
+          <div className="relative">
+            <select
+              id="dialog-tz"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              className="flex w-full rounded-[12px] border border-black/20 bg-white px-4 text-[14px] font-['Google_Sans_Flex',sans-serif] font-medium text-[#241c12] transition-colors hover:border-black/[0.32] focus:border-[#DF4400] focus:outline-none focus-visible:border-[#DF4400] focus-visible:outline-none focus-visible:ring-0 h-[56px] appearance-none"
+            >
+              {TIMEZONES.map((tz) => (
+                <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
+              ))}
+            </select>
+            <ChevronRight className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-charcoal-500" />
+          </div>
+          <DialogFooter className="pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                onChange(draft);
+                onOpenChange(false);
+              }}
+              className="inline-flex items-center justify-center h-11 px-5 rounded-[16px] text-sm font-semibold bg-[#241C12] text-white hover:bg-[#241C12]/90 transition-colors"
+            >
+              Save timezone
+            </button>
+          </DialogFooter>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
