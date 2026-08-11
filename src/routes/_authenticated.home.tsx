@@ -231,30 +231,46 @@ function HomeScreen() {
     [alertsQ.data],
   );
 
+  const persistedSearchId = (() => {
+    if (!search) return null;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.id)
+      ? search.id
+      : null;
+  })();
+
   const handleToggleSave = (l: SampleListing) => {
     const alert = alertById.get(l.id);
     if (alert) {
       updateStatus.mutate({ id: alert.id, status: alert.status === "saved" ? "new" : "saved" });
       return;
     }
-    const isPersisted =
-      !!search &&
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.id);
-    if (!isPersisted) {
+    if (!persistedSearchId) {
       toast.error("Create a search first", {
         description: "Saved listings are attached to one of your saved searches.",
       });
       return;
     }
-    saveSnapshot.mutate({ searchId: search!.id, listing: toSnapshot(l) });
+    saveSnapshot.mutate({ searchId: persistedSearchId, listing: toSnapshot(l) });
   };
 
   const handleDislike = (l: SampleListing, reason?: string) => {
     mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
-    if (alert)
+    if (alert) {
       updateStatus.mutate({ id: alert.id, status: "dismissed", dismissReason: reason ?? null });
+    } else if (persistedSearchId) {
+      dismissSnapshot.mutate({
+        searchId: persistedSearchId,
+        listing: toSnapshot(l),
+        dismissReason: reason ?? null,
+      });
+    } else {
+      toast.error("Create a search first", {
+        description: "Disliked listings are attached to one of your saved searches.",
+      });
+      return;
+    }
     if (activeId === l.id) setActiveId(null);
     toast("Hidden from your matches", { description: "We'll show fewer listings like this." });
   };
@@ -263,14 +279,21 @@ function HomeScreen() {
     mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
-    if (alert)
+    if (alert) {
       updateStatus.mutate({ id: alert.id, status: "dismissed", dismissReason: `Reported: ${reason}` });
+    } else if (persistedSearchId) {
+      dismissSnapshot.mutate({
+        searchId: persistedSearchId,
+        listing: toSnapshot(l),
+        dismissReason: `Reported: ${reason}`,
+      });
+    }
     if (activeId === l.id) setActiveId(null);
     reportMutation.mutate({
       listingRef: l.id,
       reason,
       details,
-      searchId: search?.id ?? null,
+      searchId: persistedSearchId,
       alertId: alert?.id ?? null,
       listing: {
         title: l.address,
@@ -282,6 +305,7 @@ function HomeScreen() {
     });
     toast("Listing removed from your matches", { description: "Thanks for letting us know." });
   };
+
 
   const pins = useMemo(
     () =>
