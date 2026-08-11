@@ -104,7 +104,9 @@ function AccountPage() {
 
   const prefs = usePreferencesStore();
 
-  const currentPlan = PLANS.find((p) => p.id === plan) ?? PLANS[0];
+  // Legacy "max" profiles behave like Pro
+  const currentPlan =
+    PLANS.find((p) => p.id === plan) ?? (plan === "free" ? PLANS[0] : PLANS[1]);
 
   // Usage stats
   const stats = useMemo(() => {
