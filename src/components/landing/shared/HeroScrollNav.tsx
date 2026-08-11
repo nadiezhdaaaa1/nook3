@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { IconHomeSearch } from "@tabler/icons-react";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
+import { supabase } from "@/integrations/supabase/client";
+import { useHasSession } from "@/lib/queries/useHasSession";
 
 const FONT_UI = '"Google Sans Flex", "Google Sans", system-ui, sans-serif';
 const UI_VAR = '"wght" 500';
@@ -44,6 +47,8 @@ export function HeroScrollNav() {
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const isAuthenticated = useHasSession();
+  const onLogout = () => void supabase.auth.signOut();
 
   useEffect(() => {
     if (!open) return;
@@ -110,23 +115,49 @@ export function HeroScrollNav() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              data-label="Sign in"
-              className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-              style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-            >
-              Sign in
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  data-label="Log out"
+                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                >
+                  Log out
+                </button>
+
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={() => navigate({ to: "/home" })}
+                  className="hero-nav-ring h-[40px] px-4 text-sm"
+                >
+                  <IconHomeSearch size={18} stroke={1.5} aria-hidden />
+                  Searches
+                </OriginButton>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  data-label="Sign in"
+                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
+                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                >
+                  Sign in
+                </Link>
 
 
-            <OriginButton
-              variant="main"
-              onClick={onSignup}
-              className="hero-nav-ring h-[40px] px-4 text-sm"
-            >
-              Get free alerts
-            </OriginButton>
+                <OriginButton
+                  variant="main"
+                  onClick={onSignup}
+                  className="hero-nav-ring h-[40px] px-4 text-sm"
+                >
+                  Get free alerts
+                </OriginButton>
+              </>
+            )}
 
             <button
               type="button"
@@ -179,24 +210,54 @@ export function HeroScrollNav() {
               Blog
             </Link>
 
-            <Link
-              to="/login"
-              onClick={() => setOpen(false)}
-              className="hero-nav-sheet-signin hero-nav-ring"
-              style={{ ...uiFont, color: INK }}
-            >
-              Sign in
-            </Link>
-            <OriginButton
-              variant="main"
-              onClick={() => {
-                setOpen(false);
-                onSignup();
-              }}
-              className="hero-nav-ring h-12 text-[15px]"
-            >
-              Get free alerts
-            </OriginButton>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onLogout();
+                  }}
+                  className="hero-nav-sheet-signin hero-nav-ring"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  Log out
+                </button>
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate({ to: "/home" });
+                  }}
+                  className="hero-nav-ring h-12 text-[15px]"
+                >
+                  <IconHomeSearch size={20} stroke={1.5} aria-hidden />
+                  Searches
+                </OriginButton>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="hero-nav-sheet-signin hero-nav-ring"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  Sign in
+                </Link>
+                <OriginButton
+                  variant="main"
+                  onClick={() => {
+                    setOpen(false);
+                    onSignup();
+                  }}
+                  className="hero-nav-ring h-12 text-[15px]"
+                >
+                  Get free alerts
+                </OriginButton>
+              </>
+            )}
           </div>
         </div>
       )}
