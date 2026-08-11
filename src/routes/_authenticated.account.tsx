@@ -4,10 +4,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Globe, Eye, EyeOff, ChevronRight, Lock, LogOut,
+  Mail, Globe, Eye, EyeOff, ChevronRight, LogOut,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
+import lockAsset from "@/assets/Lock.png.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
@@ -1633,8 +1634,13 @@ function ProfilePasswordRow() {
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
-            <Lock className="h-4 w-4 text-charcoal-700" />
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0 overflow-hidden">
+            <img
+              src={lockAsset.url}
+              alt=""
+              className="h-6 w-6 object-contain"
+              aria-hidden="true"
+            />
           </span>
           <div className="min-w-0">
             <div className="text-sm font-semibold text-charcoal-950">Password</div>
