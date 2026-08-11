@@ -47,6 +47,8 @@ export function HeroScrollNav() {
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const isAuthenticated = useHasSession();
+  const onLogout = () => void supabase.auth.signOut();
 
   useEffect(() => {
     if (!open) return;
