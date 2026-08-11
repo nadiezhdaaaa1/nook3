@@ -372,6 +372,8 @@ function ToggleRow({
 
     </div>
   );
+}
+
 function LogoutRow() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
