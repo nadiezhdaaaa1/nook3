@@ -174,11 +174,11 @@ function AccountPage() {
             </div>
           </Field>
         </div>
+        <div className="mt-4">
+          <ProfilePasswordRow />
+        </div>
       </section>
 
-
-      {/* Security */}
-      <ChangePasswordSection />
 
       {/* Subscription */}
       <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} activeCycle={user?.billingCycle ?? "monthly"} />
@@ -1493,7 +1493,7 @@ function CurrentPlanCard({
 }
 
 /* --------------------------- Security: password change -------------------------- */
-function ChangePasswordSection() {
+function ProfilePasswordRow() {
   const [open, setOpen] = useState(false);
   const user = useAppStore((s) => s.user);
 
@@ -1509,8 +1509,7 @@ function ChangePasswordSection() {
   }, [user?.updatedAt]);
 
   return (
-    <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
+    <>
       <div className="rounded-card bg-paper-warm border border-border p-5">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
@@ -1535,9 +1534,10 @@ function ChangePasswordSection() {
       </div>
 
       <ChangePasswordDialog open={open} onOpenChange={setOpen} />
-    </section>
+    </>
   );
 }
+
 
 function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const [current, setCurrent] = useState("");
