@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import {
-  Mail, Zap, CalendarDays, CalendarRange, Sparkles,
-  ArrowRight, Lock, Moon, Check,
+  Zap, CalendarDays, CalendarRange, Sparkles,
+  ArrowRight, Lock, Moon,
 } from "lucide-react";
 
 import { useOnboardingStore, type Frequency, type Plan } from "@/lib/onboarding/store";
