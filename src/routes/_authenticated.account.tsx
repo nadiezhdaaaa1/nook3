@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Globe, Lock, KeyRound, Eye, EyeOff, ShieldCheck, AlertTriangle, ChevronRight,
-  PauseCircle, MessageCircle, Tag, Heart, ArrowLeft,
+  PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
+
 import { z } from "zod";
 import { toast } from "sonner";
 import { motion, useReducedMotion } from "framer-motion";
