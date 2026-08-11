@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Check, X } from "lucide-react";
+import { Check, Lock, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
@@ -26,6 +26,7 @@ type Cycle = "monthly" | "annual";
 interface FeatureItem {
   text: string;
   included: boolean;
+  locked?: boolean;
 }
 
 export interface Tier {
@@ -67,7 +68,7 @@ const TIERS: Tier[] = [
     features: [
       { text: "Daily or weekly alerts — you choose", included: true },
       { text: "Alerts with no delay", included: true },
-      { text: "Only your 3 best matches per email", included: false },
+      { text: "Only your 3 best matches per email", included: false, locked: true },
       { text: "1 search — the one you set up at signup", included: false },
     ],
   },
@@ -406,33 +407,40 @@ function PlanCard({
           gap: 12,
         }}
       >
-        {tier.features.map((f) => (
-          <li
-            key={f.text}
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 10,
-              opacity: f.included ? 1 : 0.55,
-            }}
-          >
-            {f.included ? (
-              <Check size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: checkColor }} />
-            ) : (
-              <X size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3 }} />
-            )}
-            <span
+        {tier.features.map((f) => {
+          const locked = f.locked;
+          const iconColor = locked ? "#DF4400" : f.included ? checkColor : undefined;
+          return (
+            <li
+              key={f.text}
               style={{
-                ...ui,
-                fontSize: 14,
-                lineHeight: "21px",
-                textDecoration: f.included ? "none" : "line-through",
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 10,
+                opacity: locked ? 1 : f.included ? 1 : 0.55,
               }}
             >
-              {f.text}
-            </span>
-          </li>
-        ))}
+              {locked ? (
+                <Lock size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: iconColor }} />
+              ) : f.included ? (
+                <Check size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: iconColor }} />
+              ) : (
+                <X size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3 }} />
+              )}
+              <span
+                style={{
+                  ...ui,
+                  fontSize: 14,
+                  lineHeight: "21px",
+                  textDecoration: f.included ? "none" : "none",
+                  color: locked ? "#DF4400" : undefined,
+                }}
+              >
+                {f.text}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
