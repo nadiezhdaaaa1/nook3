@@ -1874,54 +1874,53 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
   const hasCard = plan !== "free";
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
         Payment method
       </h2>
-      <p className="text-xs text-charcoal-600 mb-4">
-        Cards are stored and charged securely by Stripe. Nook never sees your card number.
-      </p>
-      <div className="rounded-card bg-paper-warm border border-border px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
-        {hasCard ? (
-          <div className="flex items-center gap-3 min-w-0">
-            <img
-              src={cardAsset.url}
-              alt="Payment card"
-              className="h-10 w-auto object-contain"
-            />
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-charcoal-950">
-                Visa •••• 4242
-              </div>
-              <div className="text-xs text-charcoal-600 mt-0.5">
-                Expires 04 / 2029 · Default
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="inline-flex h-10 w-14 items-center justify-center rounded-[10px] border border-dashed border-charcoal-950/20 bg-white">
-              <Plus className="h-4 w-4 text-charcoal-500" />
-            </span>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-charcoal-950">No card on file</div>
-              <div className="text-xs text-charcoal-600 mt-0.5">
-                Add a card when you start a paid plan or trial.
+      <div className="rounded-card bg-paper-warm border border-border">
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          {hasCard ? (
+            <div className="flex items-center gap-3 min-w-0">
+              <img
+                src={cardAsset.url}
+                alt="Payment card"
+                className="h-10 w-auto object-contain"
+              />
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-charcoal-950">
+                  Visa •••• 4242
+                </div>
+                <div className="text-xs text-charcoal-600 mt-0.5">
+                  Expires 04 / 2029 · Default
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          onClick={() =>
-            toast.info("Stripe billing portal", {
-              description: "Card management opens once Stripe checkout is live.",
-            })
-          }
-        >
-          <CreditCard className="h-3.5 w-3.5" />
-          {hasCard ? "Update card" : "Add card"}
-        </OriginButton>
+          ) : (
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="inline-flex h-10 w-14 items-center justify-center rounded-[10px] border border-dashed border-charcoal-950/20 bg-white">
+                <Plus className="h-4 w-4 text-charcoal-500" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-charcoal-950">No card on file</div>
+                <div className="text-xs text-charcoal-600 mt-0.5">
+                  Add a card when you start a paid plan or trial.
+                </div>
+              </div>
+            </div>
+          )}
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            onClick={() =>
+              toast.info("Stripe billing portal", {
+                description: "Card management opens once Stripe checkout is live.",
+              })
+            }
+          >
+            <CreditCard className="h-3.5 w-3.5" />
+            {hasCard ? "Update card" : "Add card"}
+          </OriginButton>
+        </div>
       </div>
     </section>
   );
