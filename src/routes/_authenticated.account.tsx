@@ -1229,17 +1229,18 @@ function PlanCard({
 }) {
   const isCurrent =
     plan.id === currentPlan && (plan.id === "free" || cycle === activeCycle);
-  const price = plan.id === "free" ? 0 : cycle === "annual" ? plan.annual : plan.monthly;
+  const price =
+    plan.id === "free" ? 0 : cycle === "annual" ? Math.round((plan.annual / 12) * 100) / 100 : plan.monthly;
   const priceLabel = plan.id === "free" ? "$0" : `$${price}`;
-  const suffix = plan.id === "free" ? "forever" : cycle === "annual" ? "/month" : "/month";
+  const suffix = plan.id === "free" ? "for 3 days" : "/month";
   const updatePlanMut = useUpdatePlanMutation();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
 
-  // Gradation: Free < Premium monthly < Premium annual < Max monthly < Max annual
+  // Gradation: Intro < Pro monthly < Pro annual
   const rankOf = (p: Plan, c: BillingCycle) =>
-    p === "free" ? 0 : (p === "premium" ? 1 : 3) + (c === "annual" ? 1 : 0);
+    p === "free" ? 0 : 1 + (c === "annual" ? 1 : 0);
   const targetRank = rankOf(plan.id, cycle);
   const currentRank = rankOf(currentPlan, activeCycle);
   const isUpgrade = targetRank > currentRank;
@@ -1255,10 +1256,8 @@ function PlanCard({
         ? `Upgrade to ${cycleWord}`
         : `Switch to ${cycleWord}`
       : isUpgrade
-        ? `Upgrade to ${plan.label}${plan.id === "free" ? "" : ` ${cycleWord}`}`
-        : plan.id === "free"
-          ? "Switch to Free"
-          : `Switch to ${plan.label} ${cycleWord}`;
+        ? `Upgrade to ${plan.label} ${cycleWord}`
+        : "Cancel subscription";
 
   const handleClick = () => {
     if (isCancelPath) onCancelRequest();
@@ -1268,11 +1267,8 @@ function PlanCard({
   const dark = plan.id !== "free";
   const text = dark ? "#f8f3e1" : "#241c12";
   const checkColor = dark ? "#c2dd93" : "#6a820a";
-  const badge = cycle === "annual" && plan.id === "premium"
-    ? { text: "-47% off", bg: "#6a820a" }
-    : cycle === "annual" && plan.id === "max"
-      ? { text: "-34% off", bg: "#7040c1" }
-      : null;
+  const badge =
+    cycle === "annual" && plan.id === "premium" ? { text: "-47% off", bg: "#6a820a" } : null;
 
   const cardStyle: React.CSSProperties = dark
     ? {
