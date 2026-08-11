@@ -1494,6 +1494,38 @@ function CurrentPlanCard({
 
 /* --------------------------- Security: password change -------------------------- */
 function ChangePasswordSection() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <section>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
+      <div className="rounded-card bg-paper-warm border border-border p-5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-charcoal-950/10 bg-white shrink-0">
+              <Lock className="h-4 w-4 text-charcoal-700" />
+            </span>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">Password</div>
+              <div className="text-xs text-charcoal-600 mt-0.5">Change your account password</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex items-center justify-center h-10 px-4 rounded-[16px] border border-charcoal-950/10 bg-white text-sm font-semibold text-charcoal-950 hover:bg-charcoal-950/5 transition-colors shrink-0"
+          >
+            Change password
+          </button>
+        </div>
+      </div>
+
+      <ChangePasswordDialog open={open} onOpenChange={setOpen} />
+    </section>
+  );
+}
+
+function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -1541,6 +1573,7 @@ function ChangePasswordSection() {
         setCurrent("");
         setNext("");
         setConfirm("");
+        onOpenChange(false);
       }
     } finally {
       setLoading(false);
@@ -1548,10 +1581,15 @@ function ChangePasswordSection() {
   }
 
   return (
-    <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
-      <div className="rounded-card bg-paper-warm border border-border p-5">
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">Change password</DialogTitle>
+          <DialogDescription className="text-sm text-charcoal-600">
+            Enter your current password and a new one below.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <PasswordField
             id="current-password"
             label="Current password"
@@ -1560,6 +1598,7 @@ function ChangePasswordSection() {
             show={showCurrent}
             onToggle={() => setShowCurrent((s) => !s)}
             autoComplete="current-password"
+            autoFocus
           />
           <PasswordField
             id="new-password"
@@ -1595,21 +1634,23 @@ function ChangePasswordSection() {
           {error && (
             <p className="text-sm text-danger">{error}</p>
           )}
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className={cn(
-              "inline-flex items-center justify-center h-11 px-5 rounded-[16px] text-sm font-semibold transition-colors",
-              canSubmit
-                ? "bg-[#241C12] text-white hover:bg-[#241C12]/90"
-                : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-            )}
-          >
-            {loading ? "Updating…" : "Update password"}
-          </button>
+          <DialogFooter className="pt-2">
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className={cn(
+                "inline-flex items-center justify-center h-11 px-5 rounded-[16px] text-sm font-semibold transition-colors",
+                canSubmit
+                  ? "bg-[#241C12] text-white hover:bg-[#241C12]/90"
+                  : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+              )}
+            >
+              {loading ? "Updating…" : "Update password"}
+            </button>
+          </DialogFooter>
         </form>
-      </div>
-    </section>
+      </DialogContent>
+    </Dialog>
   );
 }
 
