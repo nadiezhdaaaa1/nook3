@@ -156,25 +156,8 @@ function AccountPage() {
       {/* Profile */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-
-          <Field id="acct-tz" label="Timezone" icon={Globe}>
-            <div className="relative">
-              <select
-                id="acct-tz"
-                value={timezone}
-                onChange={(e) => setTimezone(e.target.value)}
-                className="flex w-full rounded-[12px] border border-black/20 bg-white px-4 text-[14px] font-['Google_Sans_Flex',sans-serif] font-medium text-[#241c12] transition-colors hover:border-black/[0.32] focus:border-[#DF4400] focus:outline-none focus-visible:border-[#DF4400] focus-visible:outline-none focus-visible:ring-0 h-[56px] appearance-none"
-              >
-                {TIMEZONES.map((tz) => (
-                  <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
-                ))}
-              </select>
-              <ChevronRight className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-charcoal-500" />
-            </div>
-          </Field>
-        </div>
-        <div className="mt-4">
+        <div className="space-y-4">
+          <ProfileTimezoneRow timezone={timezone} onChange={setTimezone} />
           <ProfilePasswordRow />
         </div>
       </section>
