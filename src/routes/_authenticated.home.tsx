@@ -263,6 +263,19 @@ function HomeScreen() {
     setPage(1);
   }, [filterCount]);
 
+  // A just-saved card comes back under a new id; move the open selection onto it.
+  useEffect(() => {
+    const key = pendingSelectKeyRef.current;
+    if (!key) return;
+    const next = allAlertListings.find((l) => listingKey(l.address, l.rent) === key);
+    if (!next) return;
+    pendingSelectKeyRef.current = null;
+    mapRef.current?.skipNextFit();
+    setActiveId(next.id);
+  }, [allAlertListings]);
+
+
+
 
   /** Snapshot shape used when a market/sample listing has no alert row yet.
    *  Coordinates travel with the snapshot so the saved pin keeps its exact spot. */
