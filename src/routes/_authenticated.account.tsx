@@ -95,8 +95,6 @@ function AccountPage() {
   const [cycle, setCycle] = useState<BillingCycle>(user?.billingCycle ?? "monthly");
 
   // Profile editable fields (sourced from onboarding store + user)
-  const [email, setEmail] = useState(user?.email || onboarding.email);
-  
   const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
 
   const prefs = usePreferencesStore();
