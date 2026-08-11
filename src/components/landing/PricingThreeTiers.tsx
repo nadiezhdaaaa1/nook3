@@ -349,7 +349,7 @@ function PlanCard({
 
       <div style={{ ...ui, fontSize: 14.5, opacity: 0.8 }}>{tier.tagline}</div>
 
-      <div style={{ display: "flex", alignItems: "baseline", gap: 8, paddingBottom: 8 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 8, paddingBottom: 8 }}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={tier.price[cycle]}
