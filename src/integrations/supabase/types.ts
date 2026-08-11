@@ -131,6 +131,72 @@ export type Database = {
           },
         ]
       }
+      listings: {
+        Row: {
+          address: string
+          amenities: Json
+          baths: number
+          beds: number
+          below_median_pct: number | null
+          building_note: string | null
+          city_id: string
+          created_at: string
+          id: string
+          image: string
+          lat: number | null
+          lng: number | null
+          neighborhood: string
+          rent: number
+          slug: string
+          status: string
+          tag: string | null
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          address: string
+          amenities?: Json
+          baths?: number
+          beds?: number
+          below_median_pct?: number | null
+          building_note?: string | null
+          city_id: string
+          created_at?: string
+          id?: string
+          image?: string
+          lat?: number | null
+          lng?: number | null
+          neighborhood?: string
+          rent: number
+          slug: string
+          status?: string
+          tag?: string | null
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          address?: string
+          amenities?: Json
+          baths?: number
+          beds?: number
+          below_median_pct?: number | null
+          building_note?: string | null
+          city_id?: string
+          created_at?: string
+          id?: string
+          image?: string
+          lat?: number | null
+          lng?: number | null
+          neighborhood?: string
+          rent?: number
+          slug?: string
+          status?: string
+          tag?: string | null
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           confirmed_at: string | null
