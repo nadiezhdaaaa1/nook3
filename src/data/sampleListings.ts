@@ -71,7 +71,7 @@ const PHOTOS = [
 ];
 const P = (i: number) => PHOTOS[i % PHOTOS.length];
 
-export const SAMPLE_LISTINGS: Record<CityId, SampleListing[]> = {
+const BASE_LISTINGS: Record<CityId, SampleListing[]> = {
   nyc: [
     { id: "nyc-1", url: "https://www.apartments.com/building/nyc-1",  address: "4520 Broadway, #5C",       rent: 1895, beds: 0, baths: 1, neighborhood: "Inwood",              belowMedianPct: 10, image: P(0),  coords: [40.867, -73.921] },
     { id: "nyc-2", url: "https://www.apartments.com/building/nyc-2",  address: "1241 Myrtle Ave, #2",      rent: 2100, beds: 1, baths: 1, neighborhood: "Bushwick",            belowMedianPct: 14, tag: "Likely RS",   image: P(1),  coords: [40.694, -73.921] },
