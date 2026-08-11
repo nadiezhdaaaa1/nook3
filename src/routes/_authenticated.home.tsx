@@ -54,10 +54,26 @@ const H1: React.CSSProperties = {
   color: "#241c12",
 };
 
-/** Map a saved alert row onto the shared listing-card shape. */
-function alertToListing(a: AlertRow, cityId: CityId): SampleListing {
+/** Stable identity for a listing across catalog rows and saved snapshots. */
+function listingKey(address: string, rent: number): string {
+  return `${address}|${rent}`;
+}
+
+/** Map a saved alert row onto the shared listing-card shape.
+ *  Coordinates: stored snapshot coords → matching catalog listing → neighborhood centroid.
+ *  This keeps a saved pin exactly where it was and stops it from vanishing when
+ *  the neighborhood name is missing from the city map data.
+ */
+function alertToListing(
+  a: AlertRow,
+  cityId: CityId,
+  catalogByKey?: Map<string, SampleListing>,
+): SampleListing {
   const l = a.listing;
-  const coords = CITY_MAP[cityId]?.neighborhoods[l.neighborhood];
+  const catalog = catalogByKey?.get(listingKey(l.title, l.price));
+  const stored: [number, number] | undefined =
+    typeof l.lat === "number" && typeof l.lng === "number" ? [l.lat, l.lng] : undefined;
+  const coords = stored ?? catalog?.coords ?? CITY_MAP[cityId]?.neighborhoods[l.neighborhood];
   return {
     id: a.id,
     address: l.title,
@@ -66,10 +82,14 @@ function alertToListing(a: AlertRow, cityId: CityId): SampleListing {
     baths: l.baths,
     neighborhood: l.neighborhood,
     tag: l.tags?.[0],
-    image: l.imageUrl ?? `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
+    image:
+      l.imageUrl ??
+      catalog?.image ??
+      `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
     coords,
   };
 }
+
 
 /** Build a compact page-number/ellipsis list for pagination.
  *  Pattern: first, last, current, and one neighbor on each side; ellipsis fills gaps.
