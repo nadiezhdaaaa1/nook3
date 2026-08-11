@@ -386,7 +386,34 @@ function SearchesTab({ searches }: { searches: Search[] }) {
             </div>
           </li>
         ))}
+        {emptySlots.map((i) => {
+          const locked = i >= planLimit;
+          return (
+            <li key={`slot-${i}`}>
+              <button
+                type="button"
+                onClick={() => (locked ? setUpgradeOpen(true) : handleNew())}
+                className="flex h-full min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-[16px] border border-dashed border-black/25 bg-white/50 transition-colors hover:border-black/40 hover:bg-white"
+              >
+                {locked ? (
+                  <Lock className="h-6 w-6 text-charcoal-500" />
+                ) : (
+                  <Plus className="h-6 w-6 text-[#241c12]" />
+                )}
+                <span className="text-[15px] font-semibold text-[#241c12]">
+                  {locked ? "Add a search with Pro" : "New search"}
+                </span>
+                <span className="px-6 text-center text-[12px] text-charcoal-500">
+                  {locked
+                    ? "Pro includes up to 3 searches — own filters, own cities."
+                    : "Another city, another budget, another set of filters."}
+                </span>
+              </button>
+            </li>
+          );
+        })}
       </ul>
+
       {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </div>
   );
