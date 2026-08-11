@@ -122,7 +122,10 @@ function NewSearchLayout() {
     savedRef.current = true;
 
     try {
-      await createMut.mutateAsync({ ...seed, name: local.search.name });
+      const row = await createMut.mutateAsync({ ...seed, name: local.search.name });
+      // Replace the temporary local id with the persisted row, otherwise saved
+      // listings can't be attached to this search.
+      if (row && (row as { id?: string }).id) adoptServerSearch(local.search.id, row as never);
     } catch {
       // useCreateSearchMutation already surfaced the error toast.
     }
