@@ -19,6 +19,7 @@ import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
 import {
   useReportListingMutation,
   useSaveListingSnapshotMutation,
+  useDismissListingSnapshotMutation,
 } from "@/lib/queries/listingReports";
 import { ListingActions } from "@/components/app/ListingActions";
 import { FiltersSheet } from "@/components/app/FiltersSheet";
