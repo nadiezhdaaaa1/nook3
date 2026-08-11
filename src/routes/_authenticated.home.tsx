@@ -460,31 +460,38 @@ function HomeScreen() {
 
             <h1 className="font-display" style={H1}>
               {search
-                ? isSample
-                  ? `No new matches yet for ${search.name}.`
-                  : `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}.`
+                ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}.`
                 : "Create your first search."}
             </h1>
 
             <p className="mt-2 text-sm text-charcoal-600">
               {search
-                ? isSample
-                  ? `Here's a sample of what ${cityConfig?.displayName ?? "your city"} listings look like. Real matches land here — and in your inbox — the moment they appear.`
-                  : `Fresh listings in ${cityConfig?.displayName ?? "your city"}, newest first.`
+                ? `Listings in ${cityConfig?.displayName ?? "your city"} matching this search, lowest rent first.`
                 : "Set a city, budget and neighborhoods to start receiving alerts."}
             </p>
 
           </header>
 
           {(() => {
-            const displayListings = isSample ? visibleListings : pagedVisibleListings;
-            const isEmpty = displayListings.length === 0 && !paginatedQ.isLoading;
+            const displayListings = pagedVisibleListings;
+            const isEmpty = displayListings.length === 0 && !alertsQ.isLoading;
+            const emptyCopy: Record<typeof emptyReason, string> = {
+              city: `We're still loading listings for ${cityConfig?.displayName ?? "your city"}.`,
+              budget: "No listings inside your saved budget range — widen the budget on this search.",
+              beds: "No listings with the bedroom or bathroom mix you saved — loosen those on this search.",
+              neighborhoods:
+                "No listings in your selected neighborhoods yet — add a few more neighborhoods to this search.",
+              filters: "No listings match the filters you applied — try clearing a couple.",
+            };
             return isEmpty ? (
               <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
                 <p className="text-sm text-charcoal-700">
-                  Nothing to show for {cityConfig?.displayName ?? "your city"} yet.
+                  {filtersActive
+                    ? "No listings match the filters you applied — try clearing a couple."
+                    : emptyCopy[emptyReason]}
                 </p>
                 <p className="mt-2 text-xs text-charcoal-500">
+
                   Widen your budget or add neighborhoods and we'll start matching.
                 </p>
               </div>
