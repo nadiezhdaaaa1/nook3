@@ -156,11 +156,12 @@ function AccountPage() {
       {/* Profile */}
       <section>
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Profile</h2>
-        <div className="space-y-4">
+        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
           <ProfileTimezoneRow timezone={timezone} onChange={setTimezone} />
           <ProfilePasswordRow />
         </div>
       </section>
+
 
 
       {/* Subscription */}
