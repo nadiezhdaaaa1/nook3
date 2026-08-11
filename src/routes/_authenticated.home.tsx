@@ -491,8 +491,7 @@ function HomeScreen() {
                     : emptyCopy[emptyReason]}
                 </p>
                 <p className="mt-2 text-xs text-charcoal-500">
-
-                  Widen your budget or add neighborhoods and we'll start matching.
+                  Edit this search to widen its range and we'll start matching.
                 </p>
               </div>
             ) : (
@@ -522,7 +521,7 @@ function HomeScreen() {
                     />
                   ))}
                 </div>
-                {!isSample && totalPages > 1 && (
+                {totalPages > 1 && (
                   <div className="mt-6 flex items-center justify-center gap-2">
                     <OriginButton
                       type="button"
@@ -574,11 +573,6 @@ function HomeScreen() {
                       <ChevronRight size={18} strokeWidth={2} />
                     </OriginButton>
                   </div>
-                )}
-                {isSample && (
-                  <p className="mt-6 text-xs uppercase tracking-[0.16em] text-charcoal-500">
-                    Sample listings · real alerts arrive as they hit the market
-                  </p>
                 )}
               </>
             );
