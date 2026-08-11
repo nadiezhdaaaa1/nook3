@@ -1478,7 +1478,7 @@ function CurrentPlanCard({
     : "$0";
   const suffix = isPaid
     ? (cycle === "annual" ? "/year" : "/month")
-    : "forever";
+    : "for 3 days";
 
   return (
     <div className="p-8" style={cardStyle}>
