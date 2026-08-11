@@ -296,6 +296,8 @@ function HomeScreen() {
   })();
 
   const handleToggleSave = (l: SampleListing) => {
+    // Saving swaps the catalog row for a saved row with a new id; keep the viewport put.
+    mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     if (alert) {
       updateStatus.mutate({ id: alert.id, status: alert.status === "saved" ? "new" : "saved" });
@@ -307,8 +309,11 @@ function HomeScreen() {
       });
       return;
     }
+    // Remember which card was open so the selection can follow the new id.
+    if (activeId === l.id) pendingSelectKeyRef.current = listingKey(l.address, l.rent);
     saveSnapshot.mutate({ searchId: persistedSearchId, listing: toSnapshot(l) });
   };
+
 
   const handleDislike = (l: SampleListing, reason?: string) => {
     mapRef.current?.skipNextFit();
