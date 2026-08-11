@@ -312,12 +312,16 @@ function HeroBBackground({
         }
         @media (max-width: 680px) {
           .hero-b-map-slot {
-            top: 0;
+            top: auto;
+            bottom: 0;
             width: 100%;
-            height: 50%;
+            height: 55%;
             opacity: 1;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, #000 72%, transparent 100%);
+            mask-image: linear-gradient(to top, #000 72%, transparent 100%);
+          }
+          .hero-b-map {
+            object-position: center bottom;
           }
         }
       `}</style>
