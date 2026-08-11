@@ -174,11 +174,11 @@ function AccountPage() {
             </div>
           </Field>
         </div>
+        <div className="mt-4">
+          <ProfilePasswordRow />
+        </div>
       </section>
 
-
-      {/* Security */}
-      <ChangePasswordSection />
 
       {/* Subscription */}
       <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} activeCycle={user?.billingCycle ?? "monthly"} />
