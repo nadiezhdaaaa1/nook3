@@ -15,7 +15,7 @@ import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { type SampleListing } from "@/data/sampleListings";
 import { useCityListings } from "@/lib/queries/listings";
-import { useAlertsQuery, usePaginatedAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
+import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
 import {
   useReportListingMutation,
@@ -110,7 +110,6 @@ function HomeScreen() {
   const PAGE_SIZE = 20;
   const [page, setPage] = useState(1);
   const listSectionRef = useRef<HTMLElement>(null);
-  const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
 
   const handleSetPage = (next: number) => {
     setPage(next);
@@ -164,19 +163,9 @@ function HomeScreen() {
     return rows.map((a) => alertToListing(a, cityId));
   }, [alertsQ.data, cityId, search?.id]);
 
-  const pagedListings = useMemo(
-    () =>
-      (paginatedQ.data?.alerts ?? [])
-        .filter((a) => a.status !== "dismissed" && (!search || !a.searchId || a.searchId === search.id))
-        .map((a) => alertToListing(a, cityId)),
-    [paginatedQ.data, cityId, search?.id],
-  );
-
   const cityListings = useCityListings(cityId);
 
-  const isSample = allAlertListings.length === 0;
-
-  /** Sample listings have their own ids, so match persisted dislikes by title+price. */
+  /** Catalog listings have their own ids, so match persisted dislikes by title+price. */
   const dismissedKeys = useMemo(
     () =>
       new Set(
@@ -187,21 +176,44 @@ function HomeScreen() {
     [alertsQ.data],
   );
 
-  const listings = useMemo(() => {
-    if (!isSample) return allAlertListings;
-    let pool = cityListings;
-    if (search?.budget) {
-      const [lo, hi] = search.budget;
-      pool = pool.filter((l) => l.rent >= lo * 0.85 && l.rent <= hi);
-    }
-    if (search?.neighborhoods.length) {
-      const wanted = pool.filter((l) => search.neighborhoods.includes(l.neighborhood));
-      if (wanted.length > 0) pool = wanted;
-    }
-    pool = pool.filter((l) => !dismissedKeys.has(`${l.address}|${l.rent}`));
-    return [...pool].sort((a, b) => a.rent - b.rent);
-  }, [isSample, allAlertListings, cityListings, search?.budget, search?.neighborhoods, dismissedKeys]);
+  /** Scope filters derived from the saved search — budget, beds, min baths, neighborhoods. */
+  const scopeFilters = useMemo<MatchFilters>(
+    () => ({
+      budget: scope.budget,
+      bedrooms: scope.bedrooms,
+      bathrooms: scope.bathroomsMin,
+      neighborhoods: scope.neighborhoods,
+      amenities: [],
+      transit: [],
+      noFeeOnly: false,
+    }),
+    [scope],
+  );
 
+  /** Catalog narrowed to the saved search, with the user's own alert rows merged in. */
+  const listings = useMemo(() => {
+    const pool = applyFilters(cityListings, scopeFilters, scope).filter(
+      (l) => !dismissedKeys.has(`${l.address}|${l.rent}`),
+    );
+    const seen = new Set(allAlertListings.map((l) => `${l.address}|${l.rent}`));
+    const merged = [...allAlertListings, ...pool.filter((l) => !seen.has(`${l.address}|${l.rent}`))];
+    return merged.sort((a, b) => a.rent - b.rent);
+  }, [cityListings, scopeFilters, scope, dismissedKeys, allAlertListings]);
+
+  /** Which saved-search criterion emptied the pool — drives the empty state copy. */
+  const emptyReason = useMemo(() => {
+    if (cityListings.length === 0) return "city" as const;
+    const budgetOnly = applyFilters(
+      cityListings,
+      { ...scopeFilters, neighborhoods: [], bedrooms: [], bathrooms: null },
+      scope,
+    );
+    if (budgetOnly.length === 0) return "budget" as const;
+    const withBeds = applyFilters(cityListings, { ...scopeFilters, neighborhoods: [] }, scope);
+    if (withBeds.length === 0) return "beds" as const;
+    if (scope.neighborhoods.length > 0) return "neighborhoods" as const;
+    return "filters" as const;
+  }, [cityListings, scopeFilters, scope]);
 
   const visibleListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
@@ -209,15 +221,11 @@ function HomeScreen() {
   );
 
   const pagedVisibleListings = useMemo(() => {
-    if (filtersActive) {
-      const start = (page - 1) * PAGE_SIZE;
-      return visibleListings.slice(start, start + PAGE_SIZE);
-    }
-    return pagedListings.filter((l) => !hiddenIds.includes(l.id));
-  }, [filtersActive, page, visibleListings, pagedListings, hiddenIds]);
+    const start = (page - 1) * PAGE_SIZE;
+    return visibleListings.slice(start, start + PAGE_SIZE);
+  }, [page, visibleListings]);
 
-  const totalMatches =
-    isSample || filtersActive ? visibleListings.length : (paginatedQ.data?.total ?? 0);
+  const totalMatches = visibleListings.length;
   const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
 
   useEffect(() => {
@@ -451,32 +459,38 @@ function HomeScreen() {
 
             <h1 className="font-display" style={H1}>
               {search
-                ? isSample
-                  ? `No new matches yet for ${search.name}.`
-                  : `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}.`
+                ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}.`
                 : "Create your first search."}
             </h1>
 
             <p className="mt-2 text-sm text-charcoal-600">
               {search
-                ? isSample
-                  ? `Here's a sample of what ${cityConfig?.displayName ?? "your city"} listings look like. Real matches land here — and in your inbox — the moment they appear.`
-                  : `Fresh listings in ${cityConfig?.displayName ?? "your city"}, newest first.`
+                ? `Listings in ${cityConfig?.displayName ?? "your city"} matching this search, lowest rent first.`
                 : "Set a city, budget and neighborhoods to start receiving alerts."}
             </p>
 
           </header>
 
           {(() => {
-            const displayListings = isSample ? visibleListings : pagedVisibleListings;
-            const isEmpty = displayListings.length === 0 && !paginatedQ.isLoading;
+            const displayListings = pagedVisibleListings;
+            const isEmpty = displayListings.length === 0 && !alertsQ.isLoading;
+            const emptyCopy: Record<typeof emptyReason, string> = {
+              city: `We're still loading listings for ${cityConfig?.displayName ?? "your city"}.`,
+              budget: "No listings inside your saved budget range — widen the budget on this search.",
+              beds: "No listings with the bedroom or bathroom mix you saved — loosen those on this search.",
+              neighborhoods:
+                "No listings in your selected neighborhoods yet — add a few more neighborhoods to this search.",
+              filters: "No listings match the filters you applied — try clearing a couple.",
+            };
             return isEmpty ? (
               <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
                 <p className="text-sm text-charcoal-700">
-                  Nothing to show for {cityConfig?.displayName ?? "your city"} yet.
+                  {filtersActive
+                    ? "No listings match the filters you applied — try clearing a couple."
+                    : emptyCopy[emptyReason]}
                 </p>
                 <p className="mt-2 text-xs text-charcoal-500">
-                  Widen your budget or add neighborhoods and we'll start matching.
+                  Edit this search to widen its range and we'll start matching.
                 </p>
               </div>
             ) : (
@@ -506,7 +520,7 @@ function HomeScreen() {
                     />
                   ))}
                 </div>
-                {!isSample && totalPages > 1 && (
+                {totalPages > 1 && (
                   <div className="mt-6 flex items-center justify-center gap-2">
                     <OriginButton
                       type="button"
@@ -515,7 +529,7 @@ function HomeScreen() {
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Previous page"
                       onClick={() => handleSetPage(Math.max(1, page - 1))}
-                      disabled={page === 1 || paginatedQ.isLoading}
+                      disabled={page === 1}
                     >
                       <ChevronLeft size={18} strokeWidth={2} />
                     </OriginButton>
@@ -539,7 +553,7 @@ function HomeScreen() {
                             aria-label={`Page ${item}`}
                             aria-current={item === page ? "page" : undefined}
                             onClick={() => handleSetPage(item)}
-                            disabled={paginatedQ.isLoading}
+                            disabled={false}
                           >
                             {item}
                           </OriginButton>
@@ -553,16 +567,11 @@ function HomeScreen() {
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Next page"
                       onClick={() => handleSetPage(Math.min(totalPages, page + 1))}
-                      disabled={page === totalPages || paginatedQ.isLoading}
+                      disabled={page === totalPages}
                     >
                       <ChevronRight size={18} strokeWidth={2} />
                     </OriginButton>
                   </div>
-                )}
-                {isSample && (
-                  <p className="mt-6 text-xs uppercase tracking-[0.16em] text-charcoal-500">
-                    Sample listings · real alerts arrive as they hit the market
-                  </p>
                 )}
               </>
             );
