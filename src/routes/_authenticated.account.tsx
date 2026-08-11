@@ -436,6 +436,45 @@ function passwordStrength(p: string): { score: 0|1|2|3|4; label: string } {
    Delete-account flow (5 steps + 30-day grace)
    ========================================================================= */
 
+function PasswordField({
+  id, label, value, onChange, show, onToggle, error, autoFocus, autoComplete,
+}: {
+  id: string; label: string; value: string; onChange: (v: string) => void;
+  show: boolean; onToggle: () => void; error?: string;
+  autoFocus?: boolean; autoComplete?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label htmlFor={id} className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={id}
+          type={show ? "text" : "password"}
+          autoFocus={autoFocus}
+          autoComplete={autoComplete}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={cn(
+            "w-full h-11 pl-4 pr-11 rounded-md bg-surface-elevated border focus:outline-none text-sm",
+            error ? "border-danger/60 focus:border-danger" : "border-border focus:border-charcoal-950",
+          )}
+        />
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={show ? "Hide password" : "Show password"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-charcoal-500 hover:text-charcoal-950 hover:bg-paper"
+        >
+          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+      {error && <p className="text-xs text-danger">{error}</p>}
+    </div>
+  );
+}
+
 function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
   return (
