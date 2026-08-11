@@ -1763,17 +1763,6 @@ function SubscriptionSection({
           ))}
         </div>
 
-        {plan !== "free" && (
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setCancelOpen(true)}
-              className="text-sm text-charcoal-600 hover:text-charcoal-950 underline underline-offset-4"
-            >
-              Cancel subscription
-            </button>
-          </div>
-        )}
       </section>
     </>
   );
