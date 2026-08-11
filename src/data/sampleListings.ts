@@ -185,76 +185,15 @@ const BASE_LISTINGS: Record<CityId, SampleListing[]> = {
 };
 
 /* ------------------------------------------------------------------------- */
-/* Synthetic expansion: grow each city's pool to TARGET_PER_CITY listings.    */
-/* Deterministic (seeded by index) so cards/pins stay stable across renders.  */
+/* Curated anchors only. The full catalog (500 listings per city) lives in the */
+/* backend `listings` table — see src/lib/listings.functions.ts. These rows    */
+/* are a lightweight fallback for the public landing demos.                    */
 /* ------------------------------------------------------------------------- */
-
-const TARGET_PER_CITY = 50;
-
-const STREET_SUFFIX = ["St", "Ave", "Blvd", "Rd", "Pl", "Ter", "Way"];
-const UNIT_LABELS = ["#1A", "#2B", "#3C", "#4R", "#5F", "#6W", "#12D", "#204", "#310", "#608", "#PH"];
-const TAGS = [undefined, undefined, "Likely RS", "Verified RS", "Rent controlled", "No fee"];
-const NOTES = [
-  undefined,
-  "Clean DOB record · 0 open 311",
-  "1 prior 311 complaint · resolved",
-  "Owner-managed · quick replies",
-];
-
-function rng(seed: number) {
-  let s = seed * 2654435761 % 4294967296;
-  return () => {
-    s = (s * 1664525 + 1013904223) % 4294967296;
-    return s / 4294967296;
-  };
-}
-
-function synthesize(city: CityId, base: SampleListing[], index: number): SampleListing {
-  const seedRow = base[index % base.length]!;
-  const r = rng(index * 7919 + city.length * 131);
-  const rents = base.map((b) => b.rent);
-  const min = Math.min(...rents);
-  const max = Math.max(...rents);
-  const rent = Math.round((min + (max - min) * r()) / 5) * 5;
-  const bedsRoll = r();
-  const beds = bedsRoll < 0.18 ? 0 : bedsRoll < 0.62 ? 1 : bedsRoll < 0.9 ? 2 : 3;
-  const baths = beds >= 3 ? 2 : r() > 0.85 ? 2 : 1;
-  const [lat, lng] = seedRow.coords ?? [0, 0];
-  const number = 100 + Math.floor(r() * 4800);
-  const streetSeed = seedRow.address.replace(/^[\d-]+\s*/, "").split(",")[0] ?? "Main St";
-  const streetName = streetSeed.replace(/\s+(St|Ave|Blvd|Rd|Pl|Ter|Way)\.?$/i, "");
-  const suffix = STREET_SUFFIX[Math.floor(r() * STREET_SUFFIX.length)]!;
-  const unit = UNIT_LABELS[Math.floor(r() * UNIT_LABELS.length)]!;
-  const id = `${seedRow.id.split("-")[0]}-g${index}`;
-  return {
-    id,
-    url: `https://www.apartments.com/building/${id}`,
-    address: `${number} ${streetName} ${suffix}, ${unit}`,
-    rent,
-    beds,
-    baths,
-    neighborhood: seedRow.neighborhood,
-    belowMedianPct: 5 + Math.floor(r() * 16),
-    tag: TAGS[Math.floor(r() * TAGS.length)],
-    buildingNote: NOTES[Math.floor(r() * NOTES.length)],
-    image: P(index + Math.floor(r() * PHOTOS.length)),
-    coords: [
-      Number((lat + (r() - 0.5) * 0.02).toFixed(5)),
-      Number((lng + (r() - 0.5) * 0.025).toFixed(5)),
-    ],
-  };
-}
-
-function expand(city: CityId, base: SampleListing[]): SampleListing[] {
-  if (base.length === 0) return base;
-  const out = [...base];
-  for (let i = base.length; i < TARGET_PER_CITY; i += 1) out.push(synthesize(city, base, i));
-  return out.sort((a, b) => a.rent - b.rent);
-}
 
 export const SAMPLE_LISTINGS: Record<CityId, SampleListing[]> = Object.fromEntries(
   (Object.keys(BASE_LISTINGS) as CityId[]).map((city) => [
     city,
-    expand(city, BASE_LISTINGS[city]),
+    [...BASE_LISTINGS[city]].sort((a, b) => a.rent - b.rent),
   ]),
 ) as Record<CityId, SampleListing[]>;
+
