@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useAppStore, switchActiveSearch } from "@/lib/store";
+import { useAppStore, switchActiveSearch, useIsSearchDisabled } from "@/lib/store";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import {
@@ -113,6 +113,8 @@ function PageHeader({
   const pauseSearch = useAppStore((s) => s.pauseSearch);
   const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
+  const isDisabled = useIsSearchDisabled(searchId);
+
   
 
   const [isEditing, setIsEditing] = useState(false);
@@ -188,6 +190,8 @@ function PageHeader({
         <OriginButton
           variant="tertiary"
           size="medium"
+          disabled={isDisabled}
+          title={isDisabled ? "Over your plan limit — upgrade to run this search again." : undefined}
           onClick={() => {
             if (status === "paused") {
               const res = resumeSearch(searchId);
@@ -199,7 +203,9 @@ function PageHeader({
             }
           }}
         >
-          {status === "paused" ? (
+          {isDisabled ? (
+            <><Pause className="h-4 w-4" /> Disabled</>
+          ) : status === "paused" ? (
             <><Play className="h-4 w-4" /> Resume</>
           ) : (
             <><Pause className="h-4 w-4" /> Pause</>

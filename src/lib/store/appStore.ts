@@ -12,6 +12,7 @@ import type {
   BillingCycle,
 } from "./types";
 import { SEARCH_LIMITS } from "./types";
+import { isSearchDisabled, getDisabledSearchIds, DISABLED_SEARCH_REASON } from "./lock";
 import { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
 
 interface AppState {
@@ -133,6 +134,10 @@ export const useAppStore = create<AppStore>()(
       },
       setPlan: (plan, opts) => {
         const cur = get().user ?? DEFAULT_USER();
+        // Downgrades: searches beyond the new limit become "disabled" (derived,
+        // see ./lock). Stop them from running server-side too, otherwise the
+        // backend quota guard rejects any later edit to them.
+        const overflow = getDisabledSearchIds(get().searches, plan);
         set({
           user: {
             ...cur,
@@ -141,6 +146,11 @@ export const useAppStore = create<AppStore>()(
             trialActive: opts?.trial ?? cur.trialActive,
             trialStartedAt: opts?.trial ? nowIso() : cur.trialStartedAt,
           },
+          searches: get().searches.map((s) =>
+            overflow.has(s.id) && s.status === "active"
+              ? { ...s, status: "paused" as SearchStatus, updatedAt: nowIso() }
+              : s,
+          ),
         });
       },
 
@@ -206,8 +216,12 @@ export const useAppStore = create<AppStore>()(
         const { searches, user } = get();
         const src = searches.find((s) => s.id === id);
         if (!src) return { ok: false, error: "Search not found" };
+        const plan = user?.plan ?? "free";
+        if (isSearchDisabled(searches, plan, id)) {
+          return { ok: false, error: DISABLED_SEARCH_REASON };
+        }
         if (src.status === "active") return { ok: true };
-        const limit = SEARCH_LIMITS[user?.plan ?? "free"];
+        const limit = SEARCH_LIMITS[plan];
         const activeCount = searches.filter((s) => s.status === "active").length;
         if (activeCount >= limit) {
           return {

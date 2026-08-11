@@ -15,6 +15,12 @@ export {
 export { ensureMigratedFromLegacy } from "./migrate";
 export { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
 export {
+  getDisabledSearchIds,
+  isSearchDisabled,
+  DISABLED_SEARCH_REASON,
+} from "./lock";
+export { useDisabledSearchIds, useIsSearchDisabled } from "./lockHooks";
+export {
   SEARCH_LIMITS,
 } from "./types";
 export type {
