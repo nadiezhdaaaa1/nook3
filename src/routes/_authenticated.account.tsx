@@ -400,25 +400,6 @@ function ToggleRow({
 
 
 
-function LockedRow({
-  icon: Icon, label, desc,
-}: { icon: typeof Mail; label: string; desc: string }) {
-  return (
-    <div className="px-5 py-4 flex items-center justify-between gap-4 opacity-70">
-      <div className="min-w-0">
-        <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
-          <Icon className="h-3.5 w-3.5 text-charcoal-500" />
-          {label}
-          <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-            Coming soon
-          </span>
-        </div>
-        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
-      </div>
-      <Lock className="h-4 w-4 text-charcoal-400 shrink-0" />
-    </div>
-  );
-}
 
 function passwordStrength(p: string): { score: 0|1|2|3|4; label: string } {
   let s = 0;
