@@ -229,7 +229,7 @@ export function HeroScrollNav() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="hero-nav-sheet-signin hero-nav-ring text-left"
+                  className="hero-nav-sheet-signin hero-nav-ring"
                   style={{ ...uiFont, color: INK }}
                 >
                   Log out
