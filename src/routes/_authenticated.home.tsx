@@ -237,13 +237,16 @@ function HomeScreen() {
       updateStatus.mutate({ id: alert.id, status: alert.status === "saved" ? "new" : "saved" });
       return;
     }
-    if (!search) {
+    const isPersisted =
+      !!search &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.id);
+    if (!isPersisted) {
       toast.error("Create a search first", {
-        description: "Saved listings are attached to one of your searches.",
+        description: "Saved listings are attached to one of your saved searches.",
       });
       return;
     }
-    saveSnapshot.mutate({ searchId: search.id, listing: toSnapshot(l) });
+    saveSnapshot.mutate({ searchId: search!.id, listing: toSnapshot(l) });
   };
 
   const handleDislike = (l: SampleListing, reason?: string) => {
