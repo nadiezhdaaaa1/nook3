@@ -54,7 +54,7 @@ function formatTimeLabel(hhmm: string): string {
 }
 
 function NotificationsTab() {
-  const { frequency, email, set } = useOnboardingStore();
+  const { frequency, set } = useOnboardingStore();
   const plan = useAppStore((s) => s.user?.plan ?? "free");
   const activeSearchId = useAppStore((s) => s.activeSearchId);
   const activeSearch = useAppStore((s) => s.searches.find((x) => x.id === s.activeSearchId));
