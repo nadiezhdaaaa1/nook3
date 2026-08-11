@@ -1353,8 +1353,8 @@ function PlanCard({
               className="ml-2 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em]"
               style={{
                 fontFamily: "'Google Sans Flex', sans-serif",
-                background: dark ? "#5c6d18" : "#EFEBDE",
-                color: "#DF4400",
+                background: "#DF4400",
+                color: "#FFFFFF",
               }}
             >
               {stateBadge}
