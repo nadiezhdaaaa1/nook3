@@ -176,14 +176,22 @@ function HomeScreen() {
     return map;
   }, [alertsQ.data]);
 
+  const cityListings = useCityListings(cityId);
+
+  /** Catalog lookup so saved snapshots can inherit real coords and imagery. */
+  const catalogByKey = useMemo(() => {
+    const map = new Map<string, SampleListing>();
+    for (const l of cityListings) map.set(listingKey(l.address, l.rent), l);
+    return map;
+  }, [cityListings]);
+
   const allAlertListings = useMemo(() => {
     const rows = (alertsQ.data ?? []).filter(
       (a) => a.status !== "dismissed" && (!search || !a.searchId || a.searchId === search.id),
     );
-    return rows.map((a) => alertToListing(a, cityId));
-  }, [alertsQ.data, cityId, search?.id]);
+    return rows.map((a) => alertToListing(a, cityId, catalogByKey));
+  }, [alertsQ.data, cityId, search?.id, catalogByKey]);
 
-  const cityListings = useCityListings(cityId);
 
   /** Catalog listings have their own ids, so match persisted dislikes by title+price. */
   const dismissedKeys = useMemo(
