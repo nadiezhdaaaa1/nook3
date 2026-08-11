@@ -173,6 +173,17 @@ function HomeScreen() {
 
   const isSample = allAlertListings.length === 0;
 
+  /** Sample listings have their own ids, so match persisted dislikes by title+price. */
+  const dismissedKeys = useMemo(
+    () =>
+      new Set(
+        (alertsQ.data ?? [])
+          .filter((a) => a.status === "dismissed")
+          .map((a) => `${a.listing?.title ?? ""}|${a.listing?.price ?? ""}`),
+      ),
+    [alertsQ.data],
+  );
+
   const listings = useMemo(() => {
     if (!isSample) return allAlertListings;
     let pool = SAMPLE_LISTINGS[cityId] ?? [];
@@ -184,8 +195,10 @@ function HomeScreen() {
       const wanted = pool.filter((l) => search.neighborhoods.includes(l.neighborhood));
       if (wanted.length > 0) pool = wanted;
     }
+    pool = pool.filter((l) => !dismissedKeys.has(`${l.address}|${l.rent}`));
     return [...pool].sort((a, b) => a.rent - b.rent);
-  }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods]);
+  }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods, dismissedKeys]);
+
 
   const visibleListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
