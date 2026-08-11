@@ -22,7 +22,7 @@ import { NewSearchModal } from "@/components/preferences/NewSearchModal";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 
 function cityLabel(cityId: string) {
-  return getCity(cityId as never)?.name ?? cityId;
+  return getCity(cityId as never)?.shortName ?? cityId;
 }
 
 function statusLabel(s: Search) {
@@ -126,10 +126,10 @@ export function SearchSelector() {
           {active ? (
             <>
               <StatusDot status={active.status} />
-              <span className="min-w-0 flex-1 truncate text-sm font-semibold text-charcoal-950">
+              <span className="min-w-0 truncate text-sm font-semibold text-charcoal-950">
                 {active.name}
               </span>
-              <span className="shrink-0 text-sm text-charcoal-500">
+              <span className="min-w-0 truncate text-sm text-charcoal-500">
                 {cityLabel(active.cityId)}
               </span>
             </>
