@@ -47,3 +47,20 @@ export function useSaveListingSnapshotMutation() {
       }),
   });
 }
+
+export function useDismissListingSnapshotMutation() {
+  const qc = useQueryClient();
+  const fn = useServerFn(dismissListingSnapshot);
+  return useMutation({
+    mutationFn: (vars: {
+      searchId: string;
+      listing: AlertListing;
+      dismissReason?: string | null;
+    }) => fn({ data: vars }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: alertsQueryKey }),
+    onError: (e) =>
+      toast.error("Couldn't record that dislike", {
+        description: e instanceof Error ? e.message : "Try again",
+      }),
+  });
+}
