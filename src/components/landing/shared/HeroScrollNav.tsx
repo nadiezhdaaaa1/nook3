@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { IconHomeSearch } from "@tabler/icons-react";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/Nook_Green.svg.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
+import { supabase } from "@/integrations/supabase/client";
+import { useHasSession } from "@/lib/queries/useHasSession";
 
 const FONT_UI = '"Google Sans Flex", "Google Sans", system-ui, sans-serif';
 const UI_VAR = '"wght" 500';
