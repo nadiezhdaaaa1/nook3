@@ -374,13 +374,11 @@ function PlanCard({
       <OriginButton
         className="w-full"
         variant={
-          tier.id === "free"
+          tier.id === "intro"
             ? "tertiary"
-            : tier.id === "premium"
+            : tier.id === "pro"
               ? "premium"
-              : tier.id === "max"
-                ? "max"
-                : "main"
+              : "max"
         }
         style={{ borderRadius: 12 }}
         onClick={handleCta}
