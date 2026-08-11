@@ -19,6 +19,7 @@ import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
 import {
   useReportListingMutation,
   useSaveListingSnapshotMutation,
+  useDismissListingSnapshotMutation,
 } from "@/lib/queries/listingReports";
 import { ListingActions } from "@/components/app/ListingActions";
 import { FiltersSheet } from "@/components/app/FiltersSheet";
@@ -146,6 +147,7 @@ function HomeScreen() {
 
   const updateStatus = useUpdateAlertStatusMutation();
   const saveSnapshot = useSaveListingSnapshotMutation();
+  const dismissSnapshot = useDismissListingSnapshotMutation();
   const reportMutation = useReportListingMutation();
 
   const alertById = useMemo(() => {
@@ -171,6 +173,17 @@ function HomeScreen() {
 
   const isSample = allAlertListings.length === 0;
 
+  /** Sample listings have their own ids, so match persisted dislikes by title+price. */
+  const dismissedKeys = useMemo(
+    () =>
+      new Set(
+        (alertsQ.data ?? [])
+          .filter((a) => a.status === "dismissed")
+          .map((a) => `${a.listing?.title ?? ""}|${a.listing?.price ?? ""}`),
+      ),
+    [alertsQ.data],
+  );
+
   const listings = useMemo(() => {
     if (!isSample) return allAlertListings;
     let pool = SAMPLE_LISTINGS[cityId] ?? [];
@@ -182,8 +195,10 @@ function HomeScreen() {
       const wanted = pool.filter((l) => search.neighborhoods.includes(l.neighborhood));
       if (wanted.length > 0) pool = wanted;
     }
+    pool = pool.filter((l) => !dismissedKeys.has(`${l.address}|${l.rent}`));
     return [...pool].sort((a, b) => a.rent - b.rent);
-  }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods]);
+  }, [isSample, allAlertListings, cityId, search?.budget, search?.neighborhoods, dismissedKeys]);
+
 
   const visibleListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
@@ -231,30 +246,46 @@ function HomeScreen() {
     [alertsQ.data],
   );
 
+  const persistedSearchId = (() => {
+    if (!search) return null;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.id)
+      ? search.id
+      : null;
+  })();
+
   const handleToggleSave = (l: SampleListing) => {
     const alert = alertById.get(l.id);
     if (alert) {
       updateStatus.mutate({ id: alert.id, status: alert.status === "saved" ? "new" : "saved" });
       return;
     }
-    const isPersisted =
-      !!search &&
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.id);
-    if (!isPersisted) {
+    if (!persistedSearchId) {
       toast.error("Create a search first", {
         description: "Saved listings are attached to one of your saved searches.",
       });
       return;
     }
-    saveSnapshot.mutate({ searchId: search!.id, listing: toSnapshot(l) });
+    saveSnapshot.mutate({ searchId: persistedSearchId, listing: toSnapshot(l) });
   };
 
   const handleDislike = (l: SampleListing, reason?: string) => {
     mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
-    if (alert)
+    if (alert) {
       updateStatus.mutate({ id: alert.id, status: "dismissed", dismissReason: reason ?? null });
+    } else if (persistedSearchId) {
+      dismissSnapshot.mutate({
+        searchId: persistedSearchId,
+        listing: toSnapshot(l),
+        dismissReason: reason ?? null,
+      });
+    } else {
+      toast.error("Create a search first", {
+        description: "Disliked listings are attached to one of your saved searches.",
+      });
+      return;
+    }
     if (activeId === l.id) setActiveId(null);
     toast("Hidden from your matches", { description: "We'll show fewer listings like this." });
   };
@@ -263,14 +294,21 @@ function HomeScreen() {
     mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     setHiddenIds((cur) => (cur.includes(l.id) ? cur : [...cur, l.id]));
-    if (alert)
+    if (alert) {
       updateStatus.mutate({ id: alert.id, status: "dismissed", dismissReason: `Reported: ${reason}` });
+    } else if (persistedSearchId) {
+      dismissSnapshot.mutate({
+        searchId: persistedSearchId,
+        listing: toSnapshot(l),
+        dismissReason: `Reported: ${reason}`,
+      });
+    }
     if (activeId === l.id) setActiveId(null);
     reportMutation.mutate({
       listingRef: l.id,
       reason,
       details,
-      searchId: search?.id ?? null,
+      searchId: persistedSearchId,
       alertId: alert?.id ?? null,
       listing: {
         title: l.address,
@@ -282,6 +320,7 @@ function HomeScreen() {
     });
     toast("Listing removed from your matches", { description: "Thanks for letting us know." });
   };
+
 
   const pins = useMemo(
     () =>

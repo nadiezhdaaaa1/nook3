@@ -205,3 +205,35 @@ export const saveListingSnapshot = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return rowToAlert(inserted);
   });
+
+/**
+ * Dismiss ("dislike") a listing that has no alert row yet (e.g. a sample/market
+ * listing on the home screen). Creates the row directly in the "dismissed"
+ * state so it shows up on the Disliked listings tab and stays hidden on home.
+ */
+export const dismissListingSnapshot = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        searchId: z.string().uuid(),
+        listing: listingSchema,
+        dismissReason: z.string().max(200).nullable().optional(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: inserted, error } = await context.supabase
+      .from("saved_alerts")
+      .insert({
+        user_id: context.userId,
+        search_id: data.searchId,
+        listing: data.listing as never,
+        status: "dismissed",
+        dismiss_reason: data.dismissReason ?? null,
+      })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return rowToAlert(inserted);
+  });
