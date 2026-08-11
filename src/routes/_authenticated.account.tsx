@@ -1495,6 +1495,18 @@ function CurrentPlanCard({
 /* --------------------------- Security: password change -------------------------- */
 function ChangePasswordSection() {
   const [open, setOpen] = useState(false);
+  const user = useAppStore((s) => s.user);
+
+  const lastChangedDate = useMemo(() => {
+    if (!user?.updated_at) return null;
+    const d = new Date(user.updated_at);
+    if (Number.isNaN(d.getTime())) return null;
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }, [user?.updated_at]);
 
   return (
     <section>
@@ -1507,7 +1519,9 @@ function ChangePasswordSection() {
             </span>
             <div className="min-w-0">
               <div className="text-sm font-semibold text-charcoal-950">Password</div>
-              <div className="text-xs text-charcoal-600 mt-0.5">Change your account password</div>
+              <div className="text-xs text-charcoal-600 mt-0.5">
+                {lastChangedDate ? `Last changed at ${lastChangedDate}` : "Change your account password"}
+              </div>
             </div>
           </div>
           <button
