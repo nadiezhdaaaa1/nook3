@@ -30,6 +30,10 @@ interface FeatureItem {
 
 export interface Tier {
   id: string;
+  /** Stored plan value this tier maps to. */
+  plan: "free" | "premium";
+  /** Billing cycle this tier maps to. */
+  billingCycle: Cycle;
   name: string;
   tagline: string;
   price: Record<Cycle, string>;
@@ -41,80 +45,74 @@ export interface Tier {
   features: FeatureItem[];
 }
 
-const FINE_TAIL =
-  "until cancelled. Cancel anytime in Account → Subscription. No hidden fees. Cancel anytime.";
+const CANCEL_TAIL =
+  "Cancel anytime in Account → Subscription in two steps.";
 
 const TIERS: Tier[] = [
   {
-    id: "free",
-    name: "Free",
-    tagline: "Get a feel for what's out there.",
+    id: "intro",
+    plan: "free",
+    billingCycle: "monthly",
+    name: "3 days free",
+    tagline: "See how it works, on your real search.",
     price: { monthly: "$0", annual: "$0" },
-    priceSuffix: "forever",
-    cta: "Get started",
+    priceSuffix: "for 3 days → then $14.99/month",
+    finePrint: {
+      monthly: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
+      annual: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
+    },
+    cta: "Start 3 days free",
     ctaTo: "/onboarding",
     variant: "light",
     features: [
-      { text: "1 saved search", included: true },
-      { text: "Email alerts (3-hour delay)", included: true },
-      { text: "Up to 2 emails per day", included: true },
-      { text: "Verified regulated unit badges", included: true },
-      { text: "Browse Nook web app", included: true },
-      { text: "Real-time alerts", included: false },
-      { text: "Wren AI assistant", included: false },
-      { text: "Search pause/resume", included: false },
-      { text: "Move-out listing tool", included: false },
+      { text: "Daily or weekly alerts — you choose", included: true },
+      { text: "Alerts with no delay", included: true },
+      { text: "Only your 3 best matches per email", included: false },
+      { text: "1 search — the one you set up at signup", included: false },
     ],
   },
   {
-    id: "premium",
-    name: "Premium",
+    id: "pro",
+    plan: "premium",
+    billingCycle: "monthly",
+    name: "Pro",
     tagline: "When you're actively looking.",
-    price: { monthly: "$14.99", annual: "$7.99" },
+    price: { monthly: "$14.99", annual: "$14.99" },
     priceSuffix: "/month",
     finePrint: {
-      monthly: `Auto-renews at $14.99/month ${FINE_TAIL}`,
-      annual: `Auto-renews at $95.88/year ${FINE_TAIL}`,
+      monthly: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
+      annual: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
     },
-    cta: "Start 3-day trial",
+    cta: "Get Pro now",
     ctaTo: "/signup",
     variant: "warm",
     features: [
-      { text: "3 saved searches (run parallel)", included: true },
-      { text: "Real-time email alerts (within minutes)", included: true },
-      { text: "Unlimited email frequency", included: true },
-      { text: "Verified regulated unit badges", included: true },
-      { text: "Wren AI assistant — chat about any listing", included: true },
-      { text: "Pause/resume searches anytime", included: true },
-      { text: "Submit move-out listings ($50 reward)", included: true },
-      { text: "Email support", included: true },
-      { text: "Cross-search Wren comparison", included: false },
+      { text: "Daily or weekly alerts — you choose", included: true },
+      { text: "Alerts with no delay", included: true },
+      { text: "Every match we find", included: true },
+      { text: "Up to 3 searches — own filters, own cities", included: true },
     ],
   },
   {
-    id: "max",
-    name: "Max",
-    tagline: "For relocators and serious hunters.",
-    price: { monthly: "$29", annual: "$19.08" },
-    priceSuffix: "/month",
+    id: "pro_annual",
+    plan: "premium",
+    billingCycle: "annual",
+    name: "Pro annual",
+    tagline: "Same plan, paid once a year.",
+    price: { monthly: "$7.99", annual: "$7.99" },
+    priceSuffix: "/month · billed $95.88/year",
     finePrint: {
-      monthly: `Auto-renews at $29/month ${FINE_TAIL}`,
-      annual: `Auto-renews at $229/year ${FINE_TAIL}`,
+      monthly: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
+      annual: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
     },
-    cta: "Start 3-day trial",
+    cta: "Get Pro annual",
     ctaTo: "/signup",
     variant: "cool",
     features: [
-      { text: "Unlimited saved searches", included: true },
-      { text: "Real-time email alerts", included: true },
-      { text: "Verified regulated unit badges", included: true },
-      { text: "Wren AI assistant", included: true },
-      { text: "Cross-search Wren comparison", included: true },
-      { text: "Roommate mode — 3 user seats", included: true },
-      { text: "Pause/resume searches", included: true },
-      { text: "Submit move-out listings ($50 reward)", included: true },
-      { text: "Priority support", included: true },
-      { text: "Early access to new cities", included: true },
+      { text: "Daily or weekly alerts — you choose", included: true },
+      { text: "Alerts with no delay", included: true },
+      { text: "Every match we find", included: true },
+      { text: "Up to 3 searches — own filters, own cities", included: true },
     ],
   },
 ];
