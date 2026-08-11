@@ -4,7 +4,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Eye, EyeOff, ChevronRight, LogOut,
+  Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
@@ -43,42 +43,67 @@ export const Route = createFileRoute("/_authenticated/account")({
   ),
 });
 
+type FeatureDef = {
+  text: string;
+  icon: "check" | "lock";
+  bold?: boolean;
+};
+
 type PlanDef = {
+  key: string;
   id: Plan;
+  cycle: BillingCycle;
   label: string;
   tagline: string;
   monthly: number;
   annual: number;
-  icon: typeof Sparkles;
-  features: string[];
+  features: FeatureDef[];
 };
 
 const PLANS: PlanDef[] = [
   {
+    key: "intro",
     id: "free",
-    label: "Intro",
+    cycle: "monthly",
+    label: "3 days free",
     tagline: "See how it works, on your real search.",
     monthly: 0,
     annual: 0,
-    icon: Sparkles,
     features: [
-      "1 search — the one you set up at signup",
-      "Only your 3 best matches per email",
-      "Daily or weekly alerts, no delay",
+      { text: "Daily or weekly — you choose", icon: "check" },
+      { text: "Alerts with no delay", icon: "check" },
+      { text: "Only your 3 best matches per email", icon: "lock", bold: true },
+      { text: "1 search — the one you set up at signup", icon: "lock", bold: true },
     ],
   },
   {
+    key: "pro_monthly",
     id: "premium",
+    cycle: "monthly",
     label: "Pro",
     tagline: "When you're actively looking.",
     monthly: 14.99,
     annual: 95.88,
-    icon: Zap,
     features: [
-      "Every match we find",
-      "Up to 3 searches — own filters, own cities",
-      "Daily or weekly alerts, no delay",
-      "Quiet hours in your timezone",
+      { text: "Daily or weekly — you choose", icon: "check" },
+      { text: "Alerts with no delay", icon: "check" },
+      { text: "Every match we find", icon: "check", bold: true },
+      { text: "Up to 3 searches — own filters, own cities", icon: "check", bold: true },
+    ],
+  },
+  {
+    key: "pro_annual",
+    id: "premium",
+    cycle: "annual",
+    label: "Pro annual",
+    tagline: "Same plan, paid once a year.",
+    monthly: 7.99,
+    annual: 95.88,
+    features: [
+      { text: "Daily or weekly — you choose", icon: "check" },
+      { text: "Alerts with no delay", icon: "check" },
+      { text: "Every match we find", icon: "check", bold: true },
+      { text: "Up to 3 searches — own filters, own cities", icon: "check", bold: true },
     ],
   },
 ];
@@ -97,16 +122,18 @@ function AccountPage() {
 
   const plan: Plan = user?.plan ?? "free";
   const trialActive = user?.trialActive ?? false;
-  const [cycle, setCycle] = useState<BillingCycle>(user?.billingCycle ?? "monthly");
+  const trialEndsAt = user?.trialEndsAt;
+  const activeCycle: BillingCycle = user?.billingCycle ?? "monthly";
 
   // Profile editable fields (sourced from onboarding store + user)
   const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
 
   const prefs = usePreferencesStore();
 
-  // Legacy "max" profiles behave like Pro
+  // Current card matching plan + billing cycle (legacy "max" behaves like Pro monthly)
   const currentPlan =
-    PLANS.find((p) => p.id === plan) ?? (plan === "free" ? PLANS[0] : PLANS[1]);
+    PLANS.find((p) => p.id === plan && (plan === "free" || p.cycle === activeCycle)) ??
+    (plan === "free" ? PLANS[0] : PLANS[1]);
 
   // Usage stats
   const stats = useMemo(() => {
@@ -172,7 +199,13 @@ function AccountPage() {
 
 
       {/* Subscription */}
-      <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} activeCycle={user?.billingCycle ?? "monthly"} />
+      <SubscriptionSection
+        plan={plan}
+        trialActive={trialActive}
+        trialEndsAt={trialEndsAt}
+        currentPlan={currentPlan}
+        activeCycle={activeCycle}
+      />
 
 
       {/* Communications */}
@@ -1175,100 +1208,98 @@ function CancelOffer({
 }
 
 
-function BillingToggle({
-  cycle, onChange,
-}: { cycle: BillingCycle; onChange: (c: BillingCycle) => void }) {
-  const reduce = useReducedMotion();
-  const dur = reduce ? 0 : 0.25;
-  return (
-    <div
-      role="radiogroup"
-      aria-label="Billing cycle"
-      className="inline-flex items-center gap-0.5 p-1 rounded-[16px] bg-black/8"
-      style={{ height: 52 }}
-    >
-      {(["monthly", "annual"] as const).map((c) => {
-        const active = cycle === c;
-        return (
-          <button
-            key={c}
-            type="button"
-            role="radio"
-            aria-checked={active}
-            onClick={() => onChange(c)}
-            className="relative inline-flex items-center gap-1.5 px-5 py-3 rounded-[12px] text-sm font-semibold transition-colors"
-            style={{ color: active ? "#2b2521" : "#4a4a46" }}
-          >
-            {active && (
-              <motion.span
-                layoutId="account-billing-pill"
-                transition={{ duration: dur, ease: "easeOut" }}
-                className="absolute inset-0 rounded-[12px] bg-white"
-                style={{
-                  boxShadow: "0 1px 2px rgba(12,12,13,0.10), 0 1px 2px rgba(12,12,13,0.05)",
-                }}
-                aria-hidden
-              />
-            )}
-            <span className="relative">{c === "monthly" ? "Monthly" : "Annual"}</span>
-            {c === "annual" && (
-              <span className="relative text-[#6a820a]">-47% OFF</span>
-            )}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 function PlanCard({
-  plan, currentPlan, cycle, activeCycle, onCancelRequest,
+  plan, currentPlan, activeCycle, trialEndsAt, periodEnd, onCancelRequest,
 }: {
-  plan: PlanDef; currentPlan: Plan; cycle: BillingCycle; activeCycle: BillingCycle;
+  plan: PlanDef;
+  currentPlan: Plan;
+  activeCycle: BillingCycle;
+  trialEndsAt?: string;
+  periodEnd: string;
   onCancelRequest: () => void;
 }) {
-  const isCurrent =
-    plan.id === currentPlan && (plan.id === "free" || cycle === activeCycle);
-  const price =
-    plan.id === "free" ? 0 : cycle === "annual" ? Math.round((plan.annual / 12) * 100) / 100 : plan.monthly;
-  const priceLabel = plan.id === "free" ? "$0" : `$${price}`;
+  const isCurrent = plan.id === currentPlan && (plan.id === "free" || plan.cycle === activeCycle);
+  const priceLabel = plan.id === "free" ? "$0" : `$${plan.monthly}`;
   const suffix = plan.id === "free" ? "for 3 days" : "/month";
   const updatePlanMut = useUpdatePlanMutation();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
 
-  // Gradation: Intro < Pro monthly < Pro annual
+  // Rank: Intro (0) < Pro monthly (1) < Pro annual (2)
   const rankOf = (p: Plan, c: BillingCycle) =>
     p === "free" ? 0 : 1 + (c === "annual" ? 1 : 0);
-  const targetRank = rankOf(plan.id, cycle);
+  const targetRank = rankOf(plan.id, plan.cycle);
   const currentRank = rankOf(currentPlan, activeCycle);
   const isUpgrade = targetRank > currentRank;
   const isDowngrade = targetRank < currentRank;
-  const isCancelPath = isDowngrade && plan.id === "free";
-  const cycleWord = cycle === "annual" ? "annual" : "monthly";
-  const sameTier = plan.id === currentPlan && plan.id !== "free";
+
+  const trialDaysLeft = useMemo(() => {
+    if (!trialEndsAt) return 3;
+    const end = new Date(trialEndsAt);
+    const now = new Date();
+    const ms = end.getTime() - now.getTime();
+    return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+  }, [trialEndsAt]);
+
+  const firstChargeDate = useMemo(() => {
+    if (trialEndsAt) {
+      const d = new Date(trialEndsAt);
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    }
+    return periodEnd;
+  }, [trialEndsAt, periodEnd]);
+
+  const CANCEL_TAIL = "Cancel anytime in Account → Subscription in two steps.";
+
+  const billLine = isCurrent
+    ? plan.id === "free"
+      ? `${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left`
+      : `next charge ${periodEnd}`
+    : plan.id === "free"
+      ? "then $14.99/month"
+      : plan.cycle === "annual"
+        ? "billed $95.88/year"
+        : currentRank === 2
+          ? "billed monthly"
+          : "billed today";
+
+  const disclaimer = isCurrent
+    ? plan.id === "free"
+      ? `First charge $14.99 on ${firstChargeDate}.`
+      : plan.cycle === "annual"
+        ? `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`
+        : `You keep Pro until then. Nothing is deleted.`
+    : plan.id === "free"
+      ? `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`
+      : plan.cycle === "annual"
+        ? `$95.88 charged on ${periodEnd}, then yearly until cancelled. ${CANCEL_TAIL}`
+        : `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`;
 
   const ctaLabel = isCurrent
-    ? "Current plan"
-    : sameTier
-      ? isUpgrade
-        ? `Upgrade to ${cycleWord}`
-        : `Switch to ${cycleWord}`
-      : isUpgrade
-        ? `Upgrade to ${plan.label} ${cycleWord}`
-        : "Cancel subscription";
+    ? plan.id === "free"
+      ? ""
+      : `Cancel on ${periodEnd}`
+    : isUpgrade
+      ? plan.cycle === "annual"
+        ? "Switch to annual"
+        : "Unlock all matches now"
+      : "Switch to monthly";
 
   const handleClick = () => {
-    if (isCancelPath) onCancelRequest();
-    else setOpen(true);
+    if (isCurrent && plan.id !== "free") {
+      onCancelRequest();
+    } else {
+      setOpen(true);
+    }
   };
 
   const dark = plan.id !== "free";
   const text = dark ? "#f8f3e1" : "#241c12";
   const checkColor = dark ? "#c2dd93" : "#6a820a";
-  const badge =
-    cycle === "annual" && plan.id === "premium" ? { text: "-47% off", bg: "#6a820a" } : null;
+  const lockColor = "#db5919";
+  const badge = plan.cycle === "annual" ? { text: "Save 47%", bg: "#6a820a" } : null;
+  const stateBadge = isCurrent ? (plan.id === "free" ? "Current" : "Your plan") : null;
 
   const cardStyle: React.CSSProperties = dark
     ? {
@@ -1283,9 +1314,7 @@ function PlanCard({
         color: text,
       };
 
-  // Each tier keeps its own established button style, regardless of up/downgrade
-  const ctaVariant =
-    plan.id === "free" ? "tertiary" : "premium";
+  const ctaVariant = plan.id === "free" ? "tertiary" : "premium";
 
   return (
     <div
@@ -1295,7 +1324,7 @@ function PlanCard({
       )}
       style={cardStyle}
     >
-      {/* badge slot */}
+      {/* promo badge slot */}
       <div
         className="absolute -top-4 left-0 right-8 flex justify-end pointer-events-none"
         aria-hidden={!badge}
@@ -1319,6 +1348,18 @@ function PlanCard({
           style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
         >
           {plan.label}
+          {stateBadge && (
+            <span
+              className="ml-2 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em]"
+              style={{
+                fontFamily: "'Google Sans Flex', sans-serif",
+                background: dark ? "#5c6d18" : "#EFEBDE",
+                color: dark ? "#E7EFCB" : "#5f5a4c",
+              }}
+            >
+              {stateBadge}
+            </span>
+          )}
         </div>
       </div>
 
@@ -1348,26 +1389,15 @@ function PlanCard({
         </span>
       </div>
 
-      {isCurrent ? (
-        <span
-          className="inline-flex items-center justify-center gap-1.5 w-full h-[56px] rounded-[12px] text-[12px] font-extrabold uppercase tracking-[0.14em]"
-          style={{
-            fontFamily: "'Google Sans Flex', sans-serif",
-            background: dark ? "rgba(248,243,225,0.20)" : "#e3e6d8",
-            color: dark ? "#f8f3e1" : "#4a4d3a",
-          }}
-        >
-          <Check className="h-4 w-4" /> Your plan
-        </span>
-      ) : isCancelPath ? (
-        <OriginButton
-          className="w-full"
-          variant={ctaVariant}
-          style={{ borderRadius: 12 }}
-          onClick={handleClick}
-        >
-          {ctaLabel}
-        </OriginButton>
+      <div
+        className="text-[13px] font-semibold"
+        style={{ fontFamily: "'Google Sans Flex', sans-serif", color: dark ? "#D6DEB8" : "#cb4a0a" }}
+      >
+        {billLine}
+      </div>
+
+      {isCurrent && plan.id === "free" ? (
+        <div className="w-full h-[56px]" />
       ) : (
         <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
@@ -1376,25 +1406,29 @@ function PlanCard({
               variant={ctaVariant}
               style={{ borderRadius: 12 }}
               disabled={updatePlanMut.isPending}
+              onClick={handleClick}
             >
               {ctaLabel}
             </OriginButton>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>
-                {ctaLabel}?
-              </AlertDialogTitle>
+              <AlertDialogTitle>{ctaLabel}?</AlertDialogTitle>
               <AlertDialogDescription>
                 {isDowngrade ? (
                   <>
-                    Your plan will change to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                    Your plan will change to{" "}
+                    <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
                     ({priceLabel}{suffix}) at the end of your current billing period.
                   </>
                 ) : (
                   <>
-                    You're about to switch to <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                    ({priceLabel}{suffix}). This will auto-renew at the same price until cancelled.
+                    You're about to switch to{" "}
+                    <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                    ({priceLabel}{suffix}).{" "}
+                    {plan.cycle === "annual"
+                      ? "This will auto-renew at $95.88/year until cancelled."
+                      : "This will auto-renew at $14.99/month until cancelled."}
                   </>
                 )}{" "}
                 <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
@@ -1406,7 +1440,7 @@ function PlanCard({
                 disabled={updatePlanMut.isPending}
                 onClick={() => {
                   updatePlanMut.mutate(
-                    { plan: plan.id, billingCycle: cycle },
+                    { plan: plan.id, billingCycle: plan.cycle },
                     { onSuccess: () => setOpen(false) },
                   );
                 }}
@@ -1419,15 +1453,28 @@ function PlanCard({
         </AlertDialog>
       )}
 
+      <div
+        className="text-xs leading-5"
+        style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 0.72 }}
+      >
+        {disclaimer}
+      </div>
+
       <ul className="flex flex-col gap-3 pt-2">
         {plan.features.map((f) => (
           <li
-            key={f}
+            key={f.text}
             className="flex items-start gap-2.5 text-sm"
             style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 1 }}
           >
-            <Check size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: checkColor }} />
-            <span>{f}</span>
+            {f.icon === "check" ? (
+              <Check size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: checkColor }} />
+            ) : (
+              <Lock size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: lockColor }} />
+            )}
+            <span style={f.bold ? { fontWeight: 600, color: f.icon === "lock" ? lockColor : text } : undefined}>
+              {f.text}
+            </span>
           </li>
         ))}
       </ul>
@@ -1438,14 +1485,12 @@ function PlanCard({
 function CurrentPlanCard({
   plan,
   currentPlan,
-  cycle,
   trialActive,
   periodEnd,
   onCancelRequest,
 }: {
   plan: Plan;
   currentPlan: PlanDef;
-  cycle: BillingCycle;
   trialActive: boolean;
   periodEnd: string;
   onCancelRequest: () => void;
@@ -1474,10 +1519,10 @@ function CurrentPlanCard({
   const subtle = dark ? "rgba(248,243,225,0.70)" : "#5a5a55";
 
   const price = isPaid
-    ? (cycle === "annual" ? `$${currentPlan.annual}` : `$${currentPlan.monthly}`)
+    ? (currentPlan.cycle === "annual" ? `$${currentPlan.annual}` : `$${currentPlan.monthly}`)
     : "$0";
   const suffix = isPaid
-    ? (cycle === "annual" ? "/year" : "/month")
+    ? (currentPlan.cycle === "annual" ? "/year" : "/month")
     : "for 3 days";
 
   return (
@@ -1496,7 +1541,6 @@ function CurrentPlanCard({
               style={{ fontWeight: 700, fontSize: 26, color: ink }}
             >
               {currentPlan.label}
-              {isPaid && cycle === "annual" ? " (annual)" : ""}
             </span>
             <span
               className="text-[16px] font-semibold"
@@ -1511,7 +1555,7 @@ function CurrentPlanCard({
           {isPaid && (
             <div className="mt-1 text-[14px]" style={{ color: muted }}>
               {trialActive ? "3-day free trial, then " : ""}
-              billed {cycle === "annual" ? "annually" : "monthly"} · cancel anytime
+              billed {currentPlan.cycle === "annual" ? "annually" : "monthly"} · cancel anytime
               {periodEnd ? ` · next billing ${periodEnd}` : ""}
             </div>
           )}
@@ -1796,12 +1840,11 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
 }
 
 function SubscriptionSection({
-  plan, cycle, setCycle, trialActive, currentPlan, activeCycle,
+  plan, trialActive, trialEndsAt, currentPlan, activeCycle,
 }: {
   plan: Plan;
-  cycle: BillingCycle;
-  setCycle: (c: BillingCycle) => void;
   trialActive: boolean;
+  trialEndsAt?: string;
   currentPlan: PlanDef;
   activeCycle: BillingCycle;
 }) {
@@ -1811,6 +1854,16 @@ function SubscriptionSection({
     d.setDate(d.getDate() + 18);
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   }, []);
+
+  // Determine which two cards to show so the user only sees actionable options.
+  const visiblePlanKeys = useMemo(() => {
+    if (plan === "free") return ["intro", "pro_monthly"];
+    if (activeCycle === "annual") return ["pro_annual", "pro_monthly"];
+    return ["pro_monthly", "pro_annual"];
+  }, [plan, activeCycle]);
+
+  const visiblePlans = PLANS.filter((p) => visiblePlanKeys.includes(p.key));
+
   return (
     <>
       <section>
@@ -1820,7 +1873,6 @@ function SubscriptionSection({
         <CurrentPlanCard
           plan={plan}
           currentPlan={currentPlan}
-          cycle={cycle}
           trialActive={trialActive}
           periodEnd={periodEnd}
           onCancelRequest={() => setCancelOpen(true)}
@@ -1833,31 +1885,28 @@ function SubscriptionSection({
       </section>
 
       <section id="plan-options">
-        <div className="flex items-end justify-between gap-4 flex-wrap mb-5">
-          <div>
-            <h2 className="font-display text-xl font-semibold text-charcoal-950">
-              {plan === "free" ? "Upgrade your plan" : "Plan options"}
-            </h2>
-            <p className="text-sm text-charcoal-600 mt-1">
-              Every match we find, plus up to 3 searches.
-            </p>
-          </div>
-          <BillingToggle cycle={cycle} onChange={setCycle} />
+        <div className="mb-5">
+          <h2 className="font-display text-xl font-semibold text-charcoal-950">
+            {plan === "free" ? "Upgrade your plan" : "Plan options"}
+          </h2>
+          <p className="text-sm text-charcoal-600 mt-1">
+            Every match we find, plus up to 3 searches.
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-3">
-          {PLANS.map((p) => (
+          {visiblePlans.map((p) => (
             <PlanCard
-              key={p.id}
+              key={p.key}
               plan={p}
               currentPlan={plan}
-              cycle={cycle}
               activeCycle={activeCycle}
+              trialEndsAt={trialEndsAt}
+              periodEnd={periodEnd}
               onCancelRequest={() => setCancelOpen(true)}
             />
           ))}
         </div>
-
       </section>
 
       <PaymentMethodSection plan={plan} />
