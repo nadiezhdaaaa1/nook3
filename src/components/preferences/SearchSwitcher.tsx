@@ -23,7 +23,7 @@ import {
 } from "@/lib/store";
 import { getCity } from "@/data/cities";
 import type { Search } from "@/lib/store";
-import { useDeleteSearchMutation } from "@/lib/queries/searches";
+import { useDeleteSearchMutation, useDuplicateSearchMutation } from "@/lib/queries/searches";
 import { NewSearchModal } from "./NewSearchModal";
 import { UpgradeModal } from "./UpgradeModal";
 
@@ -56,6 +56,8 @@ export function SearchSwitcher() {
   const deleteSearch = useAppStore((s) => s.deleteSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
   const deleteMut = useDeleteSearchMutation();
+  const dupMut = useDuplicateSearchMutation();
+  const adoptServerSearch = useAppStore((s) => s.adoptServerSearch);
 
   const isUuid = (id: string) =>
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
@@ -105,16 +107,23 @@ export function SearchSwitcher() {
     setModalOpen(true);
   };
 
-  const handleDuplicate = (id: string) => {
+  const handleDuplicate = async (id: string) => {
     if (!canCreate) {
       setUpgradeOpen(true);
       return;
     }
     syncOnboardingToActiveSearch();
     const res = duplicateSearch(id);
-    if (res.ok) {
-      hydrateActiveSearchIntoOnboarding();
-      setOpen(false);
+    if (!res.ok) return;
+    hydrateActiveSearchIntoOnboarding();
+    setOpen(false);
+    if (isUuid(id)) {
+      try {
+        const row = await dupMut.mutateAsync(id);
+        if (row && (row as { id?: string }).id) adoptServerSearch(res.search.id, row as never);
+      } catch {
+        // mutation surfaces its own toast
+      }
     }
   };
 
