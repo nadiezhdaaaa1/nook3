@@ -43,11 +43,21 @@ export function HeroNavSpacer() {
  */
 export function HeroScrollNav() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const isAuthenticated = useHasSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onHome = pathname === "/";
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  async function handleLogout() {
+    setOpen(false);
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/login", replace: true });
+  }
 
   useEffect(() => {
     if (!open) return;
