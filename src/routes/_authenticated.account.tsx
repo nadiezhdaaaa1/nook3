@@ -1510,7 +1510,127 @@ function CurrentPlanCard({
   );
 }
 
-function SubscriptionSection({
+/* --------------------------- Security: password change -------------------------- */
+function ChangePasswordSection() {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNext, setShowNext] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const user = useAppStore((s) => s.user);
+
+  const strength = passwordStrength(next);
+  const canSubmit = current.length > 0 && next.length >= 8 && next === confirm && !loading;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (next !== confirm) {
+      setError("New passwords do not match.");
+      return;
+    }
+    if (next.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    if (!user?.email) {
+      setError("Unable to verify your session. Please sign in again.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: current,
+      });
+      if (signInError) {
+        setError("Current password is incorrect.");
+        setLoading(false);
+        return;
+      }
+      const { error: updateError } = await supabase.auth.updateUser({ password: next });
+      if (updateError) {
+        setError(updateError.message);
+      } else {
+        toast.success("Password updated successfully.");
+        setCurrent("");
+        setNext("");
+        setConfirm("");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
+      <div className="rounded-card bg-paper-warm border border-border p-5">
+        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
+          <PasswordField
+            id="current-password"
+            label="Current password"
+            value={current}
+            onChange={setCurrent}
+            show={showCurrent}
+            onToggle={() => setShowCurrent((s) => !s)}
+            autoComplete="current-password"
+          />
+          <PasswordField
+            id="new-password"
+            label="New password"
+            value={next}
+            onChange={setNext}
+            show={showNext}
+            onToggle={() => setShowNext((s) => !s)}
+            error={next.length > 0 && next.length < 8 ? "At least 8 characters" : undefined}
+            autoComplete="new-password"
+          />
+          {next.length > 0 && (
+            <div className="flex items-center gap-2 text-xs">
+              <div className="flex-1 h-1.5 rounded-full bg-charcoal-200 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${(strength.score / 4) * 100}%`, background: strength.score < 2 ? "#E16D5E" : strength.score < 3 ? "#D66C38" : "#6A820A" }}
+                />
+              </div>
+              <span className="text-charcoal-600">{strength.label}</span>
+            </div>
+          )}
+          <PasswordField
+            id="confirm-password"
+            label="Confirm new password"
+            value={confirm}
+            onChange={setConfirm}
+            show={showConfirm}
+            onToggle={() => setShowConfirm((s) => !s)}
+            error={confirm.length > 0 && confirm !== next ? "Passwords do not match" : undefined}
+            autoComplete="new-password"
+          />
+          {error && (
+            <p className="text-sm text-danger">{error}</p>
+          )}
+          <button
+            type="submit"
+            disabled={!canSubmit}
+            className={cn(
+              "inline-flex items-center justify-center h-11 px-5 rounded-[16px] text-sm font-semibold transition-colors",
+              canSubmit
+                ? "bg-[#241C12] text-white hover:bg-[#241C12]/90"
+                : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+            )}
+          >
+            {loading ? "Updating…" : "Update password"}
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
   plan, cycle, setCycle, trialActive, currentPlan, activeCycle,
 }: {
   plan: Plan;
