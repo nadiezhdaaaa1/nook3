@@ -210,78 +210,9 @@ export function PricingThreeTiers({
               marginTop: 16,
             }}
           >
-            You can start free and upgrade anytime
+            Start with 3 free days, then keep going for $14.99/month
           </p>
         </header>
-
-        {/* Billing toggle */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div
-            className="pr-toggle"
-            role="radiogroup"
-            aria-label="Billing cycle"
-            style={{
-              display: "inline-flex",
-              gap: 2,
-              padding: 4,
-              borderRadius: 16,
-              background: "rgba(0,0,0,0.08)",
-              height: 52,
-              boxSizing: "border-box",
-            }}
-          >
-            {(["monthly", "annual"] as Cycle[]).map((c) => {
-              const active = cycle === c;
-              return (
-                <button
-                  key={c}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => setCycle(c)}
-                  className="pr-toggle-btn"
-                  style={{
-                    ...ui,
-                    position: "relative",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "12px 20px",
-                    borderRadius: 12,
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: active ? INK : BODY,
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {active && (
-                    <motion.span
-                      layoutId="pr-toggle-pill"
-                      transition={{ duration: dur, ease: "easeOut" }}
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        borderRadius: 12,
-                        background: "#ffffff",
-                        boxShadow:
-                          "0 1px 2px rgba(12,12,13,0.10), 0 1px 2px rgba(12,12,13,0.05)",
-                      }}
-                      aria-hidden
-                    />
-                  )}
-                  <span style={{ position: "relative" }}>
-                    {c === "monthly" ? "Monthly" : "Annual"}
-                  </span>
-                  {c === "annual" && (
-                    <span style={{ position: "relative", color: LEAF }}>-47% off</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
 
         {/* Cards */}
         <div className="pr-grid">
@@ -296,23 +227,21 @@ export function PricingThreeTiers({
             fontSize: 14,
             lineHeight: 1.9,
             color: MUTED,
-            maxWidth: 440,
+            maxWidth: 560,
             margin: "0 auto",
             textAlign: "center",
           }}
         >
-          All plans include 24/7 monitoring of the rental market in your city. Cancel within 7
-          days for a full refund. After that, prorated.
+          All plans include: all filters and must-haves · match explanations, including what's
+          missing · quiet hours in your timezone · 24/7 monitoring of your city.
         </p>
       </div>
     </section>
   );
 }
 
-function badgeFor(tierId: string, cycle: Cycle) {
-  if (cycle === "monthly") return null;
-  if (tierId === "premium") return { text: "-47% off", bg: LEAF, position: "right" as const };
-  if (tierId === "max") return { text: "-34% off", bg: "#7040C1", position: "right" as const };
+function badgeFor(tierId: string, _cycle: Cycle) {
+  if (tierId === "pro_annual") return { text: "Save 47%", bg: LEAF, position: "right" as const };
   return null;
 }
 
