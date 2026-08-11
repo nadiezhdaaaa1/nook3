@@ -26,8 +26,8 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
 
   const isIntro = plan === "free";
 
-  const goPricing = () => {
-    navigate({ to: "/onboarding/pricing" });
+  const goPlans = () => {
+    navigate({ to: "/account", hash: "plans" });
     onClose();
   };
 
@@ -98,7 +98,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
               variant="main"
               size="big"
               className="w-full sm:flex-1"
-              onClick={goPricing}
+              onClick={goPlans}
             >
               View plans
             </OriginButton>
