@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Globe, Lock, KeyRound, Eye, EyeOff, ShieldCheck, AlertTriangle, ChevronRight,
+  Mail, Globe, Eye, EyeOff, ChevronRight,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 
@@ -195,8 +195,6 @@ function AccountPage() {
         </div>
       </section>
 
-      {/* Security */}
-      <SecuritySection />
 
       {/* Subscription */}
       <SubscriptionSection plan={plan} cycle={cycle} setCycle={setCycle} trialActive={trialActive} currentPlan={currentPlan} activeCycle={user?.billingCycle ?? "monthly"} />
@@ -401,70 +399,7 @@ function ToggleRow({
 }
 
 
-/* =========================================================================
-   Security section + Change-password flow
-   ========================================================================= */
 
-function SecuritySection() {
-  // Mock "last changed" — would come from auth metadata
-  const lastChanged = useMemo(() => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - 3);
-    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-  }, []);
-  const [open, setOpen] = useState(false);
-
-  return (
-    <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
-      <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
-              <KeyRound className="h-3.5 w-3.5 text-sage-700" /> Password
-            </div>
-            <div className="text-xs text-charcoal-600 mt-0.5">Last changed {lastChanged}.</div>
-          </div>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
-          >
-            Change password
-          </button>
-        </div>
-
-        <LockedRow
-          icon={Globe}
-          label="Active sessions"
-          desc="See where you're signed in and revoke devices. Coming soon."
-        />
-      </div>
-
-      <ChangePasswordDialog open={open} onOpenChange={setOpen} />
-    </section>
-  );
-}
-
-function LockedRow({
-  icon: Icon, label, desc,
-}: { icon: typeof Mail; label: string; desc: string }) {
-  return (
-    <div className="px-5 py-4 flex items-center justify-between gap-4 opacity-70">
-      <div className="min-w-0">
-        <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
-          <Icon className="h-3.5 w-3.5 text-charcoal-500" />
-          {label}
-          <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-            Coming soon
-          </span>
-        </div>
-        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
-      </div>
-      <Lock className="h-4 w-4 text-charcoal-400 shrink-0" />
-    </div>
-  );
-}
 
 function passwordStrength(p: string): { score: 0|1|2|3|4; label: string } {
   let s = 0;
@@ -476,134 +411,11 @@ function passwordStrength(p: string): { score: 0|1|2|3|4; label: string } {
   return { score: s as 0|1|2|3|4, label };
 }
 
-function ChangePasswordDialog({
-  open, onOpenChange,
-}: { open: boolean; onOpenChange: (v: boolean) => void }) {
-  const [cur, setCur] = useState("");
-  const [next, setNext] = useState("");
-  const [conf, setConf] = useState("");
-  const [showCur, setShowCur] = useState(false);
-  const [showNext, setShowNext] = useState(false);
-  const [signOutOthers, setSignOutOthers] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
 
-  const strength = passwordStrength(next);
-  const minOk = next.length >= 10;
-  const matches = conf.length > 0 && conf === next;
-  const distinct = next.length === 0 || next !== cur;
-  const canSubmit = cur.length > 0 && minOk && matches && distinct && !busy;
 
-  const reset = () => {
-    setCur(""); setNext(""); setConf(""); setError(null);
-    setShowCur(false); setShowNext(false); setBusy(false);
-  };
-
-  const submit = async () => {
-    setError(null);
-    setBusy(true);
-    // Mock: treat "wrongpass" as a wrong current password for demo
-    await new Promise((r) => setTimeout(r, 450));
-    if (cur === "wrongpass") {
-      setBusy(false);
-      setError("That password doesn't match.");
-      return;
-    }
-    setBusy(false);
-    onOpenChange(false);
-    reset();
-    toast.success("Password updated", {
-      description: signOutOthers ? "Other sessions were signed out." : undefined,
-    });
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) reset(); onOpenChange(v); }}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Change password</DialogTitle>
-          <DialogDescription>
-            Use at least 10 characters. Mix letters, numbers, and a symbol for best results.
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <PasswordField
-            id="cur-pw" label="Current password" value={cur} onChange={setCur}
-            show={showCur} onToggle={() => setShowCur((s) => !s)} error={error ?? undefined}
-            autoFocus autoComplete="current-password"
-          />
-          <PasswordField
-            id="new-pw" label="New password" value={next} onChange={setNext}
-            show={showNext} onToggle={() => setShowNext((s) => !s)}
-            error={!distinct ? "New password must differ from current." : undefined}
-            autoComplete="new-password"
-          />
-          {next.length > 0 && (
-            <div>
-              <div className="flex gap-1 mb-1">
-                {[0, 1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      "h-1 flex-1 rounded-full transition-colors",
-                      i < strength.score ? "bg-sage-600" : "bg-charcoal-950/10",
-                    )}
-                  />
-                ))}
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-charcoal-600">
-                <span>{strength.label}</span>
-                <span className={cn(minOk ? "text-sage-700" : "text-charcoal-500")}>
-                  {minOk ? "✓ 10+ characters" : `${next.length}/10 characters`}
-                </span>
-              </div>
-            </div>
-          )}
-          <PasswordField
-            id="conf-pw" label="Confirm new password" value={conf} onChange={setConf}
-            show={showNext} onToggle={() => setShowNext((s) => !s)}
-            error={conf.length > 0 && !matches ? "Passwords don't match." : undefined}
-            autoComplete="new-password"
-          />
-
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={signOutOthers}
-              onChange={(e) => setSignOutOthers(e.target.checked)}
-              className="h-4 w-4 rounded border-charcoal-400 text-charcoal-950 focus:ring-charcoal-950"
-            />
-            <span className="text-xs text-charcoal-700">Sign out everywhere else</span>
-          </label>
-        </div>
-
-        <DialogFooter>
-          <button
-            type="button"
-            onClick={() => { reset(); onOpenChange(false); }}
-            className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            disabled={!canSubmit}
-            onClick={submit}
-            className={cn(
-              "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
-              canSubmit
-                ? "bg-sage-700 text-paper hover:bg-sage-800"
-                : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-            )}
-          >
-            {busy ? "Updating…" : "Update password"}
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+/* =========================================================================
+   Delete-account flow (5 steps + 30-day grace)
+   ========================================================================= */
 
 function PasswordField({
   id, label, value, onChange, show, onToggle, error, autoFocus, autoComplete,
@@ -643,10 +455,6 @@ function PasswordField({
     </div>
   );
 }
-
-/* =========================================================================
-   Delete-account flow (5 steps + 30-day grace)
-   ========================================================================= */
 
 function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
