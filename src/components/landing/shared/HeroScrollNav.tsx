@@ -215,14 +215,36 @@ export function HeroScrollNav() {
               Blog
             </Link>
 
-            <Link
-              to="/login"
-              onClick={() => setOpen(false)}
-              className="hero-nav-sheet-signin hero-nav-ring"
-              style={{ ...uiFont, color: INK }}
-            >
-              Sign in
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/home"
+                  onClick={() => setOpen(false)}
+                  className="hero-nav-sheet-link hero-nav-ring inline-flex items-center gap-2"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  <IconHomeSearch size={20} stroke={1.5} aria-hidden />
+                  Searches
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="hero-nav-sheet-signin hero-nav-ring text-left"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="hero-nav-sheet-signin hero-nav-ring"
+                style={{ ...uiFont, color: INK }}
+              >
+                Sign in
+              </Link>
+            )}
             <OriginButton
               variant="main"
               onClick={() => {
