@@ -257,6 +257,14 @@ function AccountPage() {
         </div>
       </section>
 
+      {/* Session */}
+      <section>
+        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Session</h2>
+        <div className="rounded-card bg-paper-warm border border-border">
+          <LogoutRow />
+        </div>
+      </section>
+
       <StickySaveBar
         state={{ timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
         onDiscard={(snap) => {
