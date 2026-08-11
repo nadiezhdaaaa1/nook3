@@ -1843,8 +1843,8 @@ function PaymentHistorySection({
     if (plan === "free") return [];
     const amount =
       cycle === "annual"
-        ? (currentPlan.annual ?? currentPlan.monthly ?? 0)
-        : (currentPlan.monthly ?? 0);
+        ? currentPlan.annual
+        : currentPlan.monthly;
     const count = cycle === "annual" ? 2 : 4;
     const stepMonths = cycle === "annual" ? 12 : 1;
     return Array.from({ length: count }, (_, i) => {
@@ -1853,7 +1853,7 @@ function PaymentHistorySection({
       return {
         id: `in_${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`,
         date: d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }),
-        label: `${currentPlan.name} · ${cycle === "annual" ? "Annual" : "Monthly"}`,
+        label: `${currentPlan.label} · ${cycle === "annual" ? "Annual" : "Monthly"}`,
         amount,
       };
     });
