@@ -53,40 +53,34 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
           {/* Header */}
           <div className="flex flex-col gap-3">
             <div className="inline-flex items-center gap-1.5 font-sans text-[12px] uppercase tracking-[0.18em] text-peach-900">
-              <Sparkles className="h-4 w-4" /> Plan limit reached
+              <Sparkles className="h-4 w-4" /> {isIntro ? "Part of Pro" : "All searches in use"}
             </div>
             <h2 className="font-display text-[28px] font-bold leading-tight tracking-[-0.04em] text-charcoal-950">
-              Track more cities with {isPremium ? "Premium" : "Max"}
+              {isIntro ? "Unlock all matches and 3 searches" : "You're using all 3 searches"}
             </h2>
           </div>
 
           {/* Body copy */}
           <div className="flex flex-col gap-4 text-charcoal-700">
             <p className="text-base leading-relaxed">
-              {plan === "free"
-                ? "You're on Free — limited to 1 active search. Upgrade to run up to 3 at once."
-                : "Premium covers 3 searches. Go Max for unlimited tracking across every city."}
+              {isIntro
+                ? "A second search is part of Pro. Unlock all matches and up to 3 searches for $14.99/month."
+                : "You're using all 3 searches. Edit or delete one to add another."}
             </p>
-            <ul className="flex flex-col gap-2 text-sm">
-              {(isPremium
-                ? [
-                    "Up to 3 active searches",
-                    "Real-time email alerts, no delay",
-                    "Per-search notification settings",
-                  ]
-                : [
-                    "Unlimited active searches",
-                    "Real-time alerts across cities",
-                    "Roommate mode (multi-account)",
-                    "Priority concierge support",
-                  ]
-              ).map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" aria-hidden />
-                  {f}
-                </li>
-              ))}
-            </ul>
+            {isIntro && (
+              <ul className="flex flex-col gap-2 text-sm">
+                {[
+                  "Every match we find — no 3-per-email cap",
+                  "Up to 3 searches — own filters, own cities",
+                  "Daily or weekly alerts, with no delay",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" aria-hidden />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* Actions */}
