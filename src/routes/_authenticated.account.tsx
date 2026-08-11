@@ -401,50 +401,6 @@ function ToggleRow({
 }
 
 
-/* =========================================================================
-   Security section + Change-password flow
-   ========================================================================= */
-
-function SecuritySection() {
-  // Mock "last changed" — would come from auth metadata
-  const lastChanged = useMemo(() => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - 3);
-    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-  }, []);
-  const [open, setOpen] = useState(false);
-
-  return (
-    <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Security</h2>
-      <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <div className="text-sm font-semibold text-charcoal-950 flex items-center gap-2">
-              <KeyRound className="h-3.5 w-3.5 text-sage-700" /> Password
-            </div>
-            <div className="text-xs text-charcoal-600 mt-0.5">Last changed {lastChanged}.</div>
-          </div>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-1.5 h-10 px-4 rounded-[16px] border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper transition-colors"
-          >
-            Change password
-          </button>
-        </div>
-
-        <LockedRow
-          icon={Globe}
-          label="Active sessions"
-          desc="See where you're signed in and revoke devices. Coming soon."
-        />
-      </div>
-
-      <ChangePasswordDialog open={open} onOpenChange={setOpen} />
-    </section>
-  );
-}
 
 function LockedRow({
   icon: Icon, label, desc,
