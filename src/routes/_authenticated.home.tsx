@@ -149,6 +149,9 @@ function HomeScreen() {
   }, [search?.id]);
 
   const [activeId, setActiveId] = useState<string | null>(null);
+  /** Listing key of a card that was open when it got saved — selection follows to the new id. */
+  const pendingSelectKeyRef = useRef<string | null>(null);
+
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
   const [mapFullscreen, setMapFullscreen] = useState(false);
