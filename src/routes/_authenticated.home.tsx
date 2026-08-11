@@ -54,10 +54,26 @@ const H1: React.CSSProperties = {
   color: "#241c12",
 };
 
-/** Map a saved alert row onto the shared listing-card shape. */
-function alertToListing(a: AlertRow, cityId: CityId): SampleListing {
+/** Stable identity for a listing across catalog rows and saved snapshots. */
+function listingKey(address: string, rent: number): string {
+  return `${address}|${rent}`;
+}
+
+/** Map a saved alert row onto the shared listing-card shape.
+ *  Coordinates: stored snapshot coords → matching catalog listing → neighborhood centroid.
+ *  This keeps a saved pin exactly where it was and stops it from vanishing when
+ *  the neighborhood name is missing from the city map data.
+ */
+function alertToListing(
+  a: AlertRow,
+  cityId: CityId,
+  catalogByKey?: Map<string, SampleListing>,
+): SampleListing {
   const l = a.listing;
-  const coords = CITY_MAP[cityId]?.neighborhoods[l.neighborhood];
+  const catalog = catalogByKey?.get(listingKey(l.title, l.price));
+  const stored: [number, number] | undefined =
+    typeof l.lat === "number" && typeof l.lng === "number" ? [l.lat, l.lng] : undefined;
+  const coords = stored ?? catalog?.coords ?? CITY_MAP[cityId]?.neighborhoods[l.neighborhood];
   return {
     id: a.id,
     address: l.title,
@@ -66,10 +82,14 @@ function alertToListing(a: AlertRow, cityId: CityId): SampleListing {
     baths: l.baths,
     neighborhood: l.neighborhood,
     tag: l.tags?.[0],
-    image: l.imageUrl ?? `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
+    image:
+      l.imageUrl ??
+      catalog?.image ??
+      `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
     coords,
   };
 }
+
 
 /** Build a compact page-number/ellipsis list for pagination.
  *  Pattern: first, last, current, and one neighbor on each side; ellipsis fills gaps.
@@ -129,6 +149,9 @@ function HomeScreen() {
   }, [search?.id]);
 
   const [activeId, setActiveId] = useState<string | null>(null);
+  /** Listing key of a card that was open when it got saved — selection follows to the new id. */
+  const pendingSelectKeyRef = useRef<string | null>(null);
+
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
   const [mapFullscreen, setMapFullscreen] = useState(false);
@@ -156,14 +179,22 @@ function HomeScreen() {
     return map;
   }, [alertsQ.data]);
 
+  const cityListings = useCityListings(cityId);
+
+  /** Catalog lookup so saved snapshots can inherit real coords and imagery. */
+  const catalogByKey = useMemo(() => {
+    const map = new Map<string, SampleListing>();
+    for (const l of cityListings) map.set(listingKey(l.address, l.rent), l);
+    return map;
+  }, [cityListings]);
+
   const allAlertListings = useMemo(() => {
     const rows = (alertsQ.data ?? []).filter(
       (a) => a.status !== "dismissed" && (!search || !a.searchId || a.searchId === search.id),
     );
-    return rows.map((a) => alertToListing(a, cityId));
-  }, [alertsQ.data, cityId, search?.id]);
+    return rows.map((a) => alertToListing(a, cityId, catalogByKey));
+  }, [alertsQ.data, cityId, search?.id, catalogByKey]);
 
-  const cityListings = useCityListings(cityId);
 
   /** Catalog listings have their own ids, so match persisted dislikes by title+price. */
   const dismissedKeys = useMemo(
@@ -232,8 +263,22 @@ function HomeScreen() {
     setPage(1);
   }, [filterCount]);
 
+  // A just-saved card comes back under a new id; move the open selection onto it.
+  useEffect(() => {
+    const key = pendingSelectKeyRef.current;
+    if (!key) return;
+    const next = allAlertListings.find((l) => listingKey(l.address, l.rent) === key);
+    if (!next) return;
+    pendingSelectKeyRef.current = null;
+    mapRef.current?.skipNextFit();
+    setActiveId(next.id);
+  }, [allAlertListings]);
 
-  /** Snapshot shape used when a market/sample listing has no alert row yet. */
+
+
+
+  /** Snapshot shape used when a market/sample listing has no alert row yet.
+   *  Coordinates travel with the snapshot so the saved pin keeps its exact spot. */
   const toSnapshot = (l: SampleListing): AlertListing => ({
     title: l.address,
     neighborhood: l.neighborhood,
@@ -245,7 +290,9 @@ function HomeScreen() {
     tags: l.tag ? [l.tag] : [],
     imageHue: 30,
     imageUrl: l.image,
+    ...(l.coords ? { lat: l.coords[0], lng: l.coords[1] } : {}),
   });
+
 
   const savedIds = useMemo(
     () =>
@@ -265,6 +312,8 @@ function HomeScreen() {
   })();
 
   const handleToggleSave = (l: SampleListing) => {
+    // Saving swaps the catalog row for a saved row with a new id; keep the viewport put.
+    mapRef.current?.skipNextFit();
     const alert = alertById.get(l.id);
     if (alert) {
       updateStatus.mutate({ id: alert.id, status: alert.status === "saved" ? "new" : "saved" });
@@ -276,8 +325,11 @@ function HomeScreen() {
       });
       return;
     }
+    // Remember which card was open so the selection can follow the new id.
+    if (activeId === l.id) pendingSelectKeyRef.current = listingKey(l.address, l.rent);
     saveSnapshot.mutate({ searchId: persistedSearchId, listing: toSnapshot(l) });
   };
+
 
   const handleDislike = (l: SampleListing, reason?: string) => {
     mapRef.current?.skipNextFit();
