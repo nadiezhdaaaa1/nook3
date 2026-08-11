@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchesQueryOptions, useUpdateSearchMutation, useCreateSearchMutation } from "./searches";
 import { profileQueryOptions } from "./profile";
-import { useAppStore, getDefaultSearchName } from "@/lib/store";
+import { useAppStore, getDefaultSearchName, hydrateOnboardingFromSearch } from "@/lib/store";
 import type { Search } from "@/lib/store";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { useHasSession } from "./useHasSession";
@@ -39,6 +39,8 @@ export function useDbSync() {
     if (!searchesQ.data || !profileQ.data) return;
     const rows = searchesQ.data as Search[];
     const profile = profileQ.data;
+    const active =
+      rows.find((s) => s.status !== "archived") ?? rows[0] ?? null;
 
     // Replace state without going through individual setters.
     useAppStore.setState({
@@ -62,9 +64,13 @@ export function useDbSync() {
           }
         : null,
       searches: rows,
-      activeSearchId:
-        rows.find((s) => s.status !== "archived")?.id ?? rows[0]?.id ?? null,
+      activeSearchId: active?.id ?? null,
     });
+    // Load the active search into the live editing buffer so the first local
+    // edit can't push stale/blank values (notably a default city) onto it.
+    if (active && useOnboardingStore.getState().editingSearchId !== "draft") {
+      hydrateOnboardingFromSearch(active);
+    }
     // Seed sync cache so we don't echo hydrated rows back to DB.
     const cache = new Map<string, string>();
     for (const s of rows) cache.set(s.id, serializePatch(s));

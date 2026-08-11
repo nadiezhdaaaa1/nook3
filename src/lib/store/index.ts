@@ -8,6 +8,9 @@ export {
   syncOnboardingToActiveSearch,
   syncOnboardingToUser,
   hydrateActiveSearchIntoOnboarding,
+  hydrateOnboardingFromSearch,
+  beginSearchDraft,
+  restoreActiveSearchBuffer,
 } from "./bridge";
 export { ensureMigratedFromLegacy } from "./migrate";
 export { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
