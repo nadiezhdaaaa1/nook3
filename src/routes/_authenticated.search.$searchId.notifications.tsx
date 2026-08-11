@@ -197,20 +197,18 @@ function NotificationsTab() {
 
       <StickySaveBar
         state={{
-          frequency, email,
+          frequency,
           quietHours,
         }}
         successMessage={activeSearchId ? `Settings saved · Applied to ${searchName}` : "Settings saved"}
         getChanges={(b, c) => {
           const out: string[] = [];
           if (b.frequency !== c.frequency) out.push("frequency");
-          if (b.email !== c.email) out.push("email");
           if (JSON.stringify(b.quietHours) !== JSON.stringify(c.quietHours)) out.push("quiet hours");
           return out;
         }}
         onDiscard={(snap) => {
           set("frequency", snap.frequency);
-          set("email", snap.email);
           setQuiet("enabled", snap.quietHours.enabled);
           setQuiet("start", snap.quietHours.start);
           setQuiet("end", snap.quietHours.end);
