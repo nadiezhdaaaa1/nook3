@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Globe, Eye, EyeOff, ChevronRight, Lock,
+  Mail, Globe, Eye, EyeOff, ChevronRight, Lock, LogOut,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 
