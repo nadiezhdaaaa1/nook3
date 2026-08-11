@@ -186,7 +186,7 @@ export function TiredOfSection() {
             <span className="prob-dot" />
             Built for active renters
           </div>
-          <h2 className="prob-h2">You probably know this feeling.</h2>
+          <h2 className="prob-h2">You probably know this apartment-hunting burnout feeling.</h2>
           <p className="prob-sub">
             Apartment hunting is broken. We rebuilt the part you actually use.
           </p>
