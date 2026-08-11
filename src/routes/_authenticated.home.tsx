@@ -15,7 +15,7 @@ import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { type SampleListing } from "@/data/sampleListings";
 import { useCityListings } from "@/lib/queries/listings";
-import { useAlertsQuery, usePaginatedAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
+import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import type { AlertListing, AlertRow } from "@/lib/alerts.functions";
 import {
   useReportListingMutation,
@@ -110,7 +110,6 @@ function HomeScreen() {
   const PAGE_SIZE = 20;
   const [page, setPage] = useState(1);
   const listSectionRef = useRef<HTMLElement>(null);
-  const paginatedQ = usePaginatedAlertsQuery(page, PAGE_SIZE);
 
   const handleSetPage = (next: number) => {
     setPage(next);
@@ -530,7 +529,7 @@ function HomeScreen() {
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Previous page"
                       onClick={() => handleSetPage(Math.max(1, page - 1))}
-                      disabled={page === 1 || paginatedQ.isLoading}
+                      disabled={page === 1}
                     >
                       <ChevronLeft size={18} strokeWidth={2} />
                     </OriginButton>
@@ -554,7 +553,7 @@ function HomeScreen() {
                             aria-label={`Page ${item}`}
                             aria-current={item === page ? "page" : undefined}
                             onClick={() => handleSetPage(item)}
-                            disabled={paginatedQ.isLoading}
+                            disabled={false}
                           >
                             {item}
                           </OriginButton>
@@ -568,7 +567,7 @@ function HomeScreen() {
                       className="h-[40px] w-[40px] px-0"
                       aria-label="Next page"
                       onClick={() => handleSetPage(Math.min(totalPages, page + 1))}
-                      disabled={page === totalPages || paginatedQ.isLoading}
+                      disabled={page === totalPages}
                     >
                       <ChevronRight size={18} strokeWidth={2} />
                     </OriginButton>
