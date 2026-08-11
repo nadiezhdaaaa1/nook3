@@ -117,8 +117,6 @@ function AccountPage() {
     };
   }, [searches, plan]);
 
-  const emailValid = !email || emailSchema.safeParse(email).success;
-
   return (
     <div className="space-y-12 pb-24">
       {/* Usage stats */}
