@@ -10,6 +10,7 @@ import {
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
 import globeAsset from "@/assets/Globe.png.asset.json";
+import doorAsset from "@/assets/Door.png.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
