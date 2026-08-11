@@ -110,12 +110,23 @@ function SignupPage() {
     }
     stashPendingConsents(buildConsents({ marketing, source: "signup_google" }));
     setSubmitting(true);
+    try {
+      sessionStorage.setItem("nook:postAuthPath", redirectTo ?? "/home");
+    } catch {
+      /* ignore */
+    }
     const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + (redirectTo ?? "/home"),
+      redirect_uri: window.location.origin + "/auth/callback",
     });
     setSubmitting(false);
-    if (res?.error) toast.error("Google sign in failed", { description: res.error.message });
+    if (res?.error) {
+      toast.error("Google sign in failed", { description: res.error.message });
+      return;
+    }
+    if (res?.redirected) return;
+    navigate({ to: redirectTo ?? "/home", replace: true });
   }
+
 
   return (
     <div className="sgn-page">
