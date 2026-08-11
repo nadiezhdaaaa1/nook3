@@ -350,7 +350,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
       transition={
         reduced
           ? { duration: 0.3 }
-          : { type: "spring", stiffness: 140, damping: 14, opacity: { duration: 0.3 } }
+          : { type: "spring", stiffness: 280, damping: 18, opacity: { duration: 0.2 } }
       }
       style={{ ...uiFont, boxShadow: "0 0 0 rgba(12,12,13,0)", transformOrigin: "bottom center" }}
     >
