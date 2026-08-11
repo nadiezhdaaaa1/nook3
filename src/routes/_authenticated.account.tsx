@@ -3,12 +3,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Crown, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Globe, Eye, EyeOff, ChevronRight,
+  Mail, Globe, Eye, EyeOff, ChevronRight, Lock,
   PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 
 import { z } from "zod";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { motion, useReducedMotion } from "framer-motion";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { useAppStore, type Plan, type BillingCycle } from "@/lib/store";
