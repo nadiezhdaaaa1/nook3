@@ -644,8 +644,8 @@ function HomeScreen() {
         </div>
         )}
         {noSearches && hydrated && (
-          <div className="mx-auto max-w-[960px] p-2">
-            <div className="mt-8 rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
+          <div className="mx-auto flex h-full max-w-[960px] flex-col items-center justify-center p-2">
+            <div className="w-full rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
               <h3 className="text-[22px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">
                 No searches yet
               </h3>
