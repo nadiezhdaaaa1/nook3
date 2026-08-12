@@ -638,7 +638,6 @@ function DeleteAccountDialog({
   };
 
   const scheduleDeletion = useScheduleAccountDeletionMutation();
-  const updateStoreProfile = useAppStore((s) => s.updateProfile);
 
   const handleDelete = () => {
     scheduleDeletion.mutate(
@@ -650,10 +649,6 @@ function DeleteAccountDialog({
       {
         onSuccess: (user) => {
           closeAll();
-          updateStoreProfile({
-            subscriptionCanceledAt: user.subscriptionCanceledAt,
-            subscriptionPeriodEnd: user.subscriptionPeriodEnd,
-          } as any);
           toast.success("Account scheduled for deletion", {
             description: user.subscriptionCanceledAt
               ? "Auto-renewal is off and nothing is deleted for 30 days — you can reverse this from any screen."
