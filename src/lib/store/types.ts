@@ -76,6 +76,7 @@ export interface User {
   hasPassword?: boolean;
   deletionRequestedAt?: string | null;
   deletionScheduledAt?: string | null;
+  deletionCancelSubscription?: boolean | null;
   updatedAt?: string;
 }
 
