@@ -62,6 +62,8 @@ export function useDbSync() {
             isAffiliate: profile.isAffiliate,
             completedAt: profile.completedAt,
             hasPassword: profile.hasPassword,
+            deletionRequestedAt: profile.deletionRequestedAt,
+            deletionScheduledAt: profile.deletionScheduledAt,
           }
         : null,
       searches: rows,

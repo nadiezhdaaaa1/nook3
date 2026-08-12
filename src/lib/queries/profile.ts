@@ -1,7 +1,12 @@
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { getProfile, updateProfile } from "@/lib/profile.functions";
+import {
+  getProfile,
+  updateProfile,
+  scheduleAccountDeletion,
+  cancelAccountDeletion,
+} from "@/lib/profile.functions";
 
 export const profileQueryKey = ["profile"] as const;
 
@@ -23,6 +28,37 @@ export function useUpdateProfileMutation() {
     },
     onError: (e) =>
       toast.error("Couldn't update profile", {
+        description: e instanceof Error ? e.message : "Try again",
+      }),
+  });
+}
+
+export function useScheduleAccountDeletionMutation() {
+  const qc = useQueryClient();
+  const fn = useServerFn(scheduleAccountDeletion);
+  return useMutation({
+    mutationFn: (data: { reason?: string; feedback?: string }) => fn({ data }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: profileQueryKey }),
+    onError: (e) =>
+      toast.error("Couldn't schedule deletion", {
+        description: e instanceof Error ? e.message : "Try again",
+      }),
+  });
+}
+
+export function useCancelAccountDeletionMutation() {
+  const qc = useQueryClient();
+  const fn = useServerFn(cancelAccountDeletion);
+  return useMutation({
+    mutationFn: () => fn(),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: profileQueryKey });
+      toast.success("Account restored", {
+        description: "Your account is active again — nothing was deleted.",
+      });
+    },
+    onError: (e) =>
+      toast.error("Couldn't restore your account", {
         description: e instanceof Error ? e.message : "Try again",
       }),
   });
