@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { OriginButton } from "@/components/ui/origin-button";
 
 interface StickySaveBarProps<T> {
   state: T;
@@ -73,10 +74,10 @@ export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes", 
         dirty ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none",
       )}
     >
-      <div className="flex items-center gap-3 pl-5 pr-2 h-14 rounded-pill bg-charcoal-950 text-paper shadow-lg border border-charcoal-800">
+      <div className="flex items-center gap-4 px-4 py-3 h-16 rounded-pill bg-charcoal-950 text-paper shadow-lg border border-charcoal-800">
         <span className="inline-flex flex-col leading-tight">
-          <span className="inline-flex items-center gap-2 text-sm font-semibold">
-            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+          <span className="inline-flex items-center gap-2 text-[15px] font-semibold">
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" />
             {label}
           </span>
           {getChanges && dirty && (() => {
@@ -84,7 +85,7 @@ export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes", 
               const changes = getChanges(JSON.parse(baseline) as T, state);
               if (changes.length === 0) return null;
               return (
-                <span className="text-[11px] text-sage-200/90 mt-0.5 max-w-[260px] truncate">
+                <span className="text-[12px] text-sage-200/90 mt-0.5 max-w-[280px] truncate">
                   {changes.join(", ")}
                 </span>
               );
@@ -93,22 +94,24 @@ export function StickySaveBar<T>({ state, onDiscard, label = "Unsaved changes", 
             }
           })()}
         </span>
-        <button
-          type="button"
+        <OriginButton
+          variant="tertiary"
+          size="medium"
           onClick={handleDiscard}
           disabled={saving}
-          className="inline-flex items-center gap-1.5 h-10 px-3 rounded-pill text-sm font-semibold text-paper/80 hover:text-paper hover:bg-charcoal-800 transition-colors disabled:opacity-50"
+          className="border-paper/20 text-paper hover:bg-paper/10 hover:text-paper"
         >
-          <Undo2 className="h-3.5 w-3.5" /> Discard
-        </button>
-        <button
-          type="button"
+          <Undo2 className="h-4 w-4" /> Discard
+        </OriginButton>
+        <OriginButton
+          variant="main"
+          size="medium"
           onClick={handleSave}
           disabled={saving}
-          className="inline-flex items-center gap-1.5 h-10 px-4 rounded-pill bg-paper text-charcoal-950 text-sm font-semibold hover:bg-paper-warm transition-colors disabled:opacity-50"
+          loading={saving}
         >
-          <Check className="h-3.5 w-3.5" /> {saving ? "Saving…" : "Save changes"}
-        </button>
+          <Check className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
+        </OriginButton>
       </div>
     </div>
   );
