@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
-import { useUpdateProfileMutation, useScheduleAccountDeletionMutation } from "@/lib/queries/profile";
+import { useUpdateProfileMutation, useScheduleAccountDeletionMutation, useCancelAccountDeletionMutation } from "@/lib/queries/profile";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
@@ -289,10 +289,24 @@ function AccountPage() {
 
           <div className="px-5 py-4 flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <div className="text-sm font-semibold text-danger">Delete account</div>
+              <div className={cn("text-sm font-semibold", user?.deletionScheduledAt ? "text-danger" : "text-danger")}>
+                {user?.deletionScheduledAt ? "Account scheduled for deletion" : "Delete account"}
+              </div>
               <div className="text-xs text-charcoal-600 mt-0.5">
-                Removes your <span className="font-semibold text-charcoal-800">entire account</span>,
-                including all searches, alerts, and profile data.
+                {user?.deletionScheduledAt ? (
+                  <>
+                    Your account will be permanently deleted on{" "}
+                    <span className="font-semibold text-charcoal-800">
+                      {new Date(user.deletionScheduledAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                    </span>
+                    . Nothing is removed until that date — you can keep your account any time before then.
+                  </>
+                ) : (
+                  <>
+                    Removes your <span className="font-semibold text-charcoal-800">entire account</span>,
+                    including all searches, alerts, and profile data.
+                  </>
+                )}
               </div>
             </div>
             <DeleteAccountButton />
@@ -559,6 +573,22 @@ function PasswordField({
 
 function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
+  const scheduledAt = useAppStore((s) => s.user?.deletionScheduledAt);
+  const cancel = useCancelAccountDeletionMutation();
+
+  if (scheduledAt) {
+    return (
+      <OriginButton
+        variant="dark"
+        size="medium"
+        onClick={() => cancel.mutate()}
+        disabled={cancel.isPending}
+      >
+        {cancel.isPending ? "Restoring…" : "Keep my account"}
+      </OriginButton>
+    );
+  }
+
   return (
     <>
       <OriginButton
