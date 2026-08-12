@@ -12,6 +12,7 @@ import lockAsset from "@/assets/Lock.png.asset.json";
 import globeAsset from "@/assets/Globe.png.asset.json";
 import doorAsset from "@/assets/Door-2.png.asset.json";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
+import mailAsset from "@/assets/Mail.png.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
@@ -1618,8 +1619,13 @@ function SignInMethodRows() {
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="h-10 w-10 shrink-0 rounded-full bg-charcoal-950/[0.06] flex items-center justify-center">
-            <Mail className="h-7 w-7 text-charcoal-700" />
+          <span className="h-10 w-10 shrink-0 flex items-center justify-center">
+            <img
+              src={mailAsset.url}
+              alt=""
+              className="h-8 w-8 object-contain shrink-0"
+              aria-hidden="true"
+            />
           </span>
           <div className="min-w-0">
             <div className="text-sm font-semibold text-charcoal-950">Login / Email</div>
