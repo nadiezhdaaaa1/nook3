@@ -319,7 +319,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   if (searches.length === 0) {
     return (
       <div className="rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
-        <h3 className="text-[22px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">
+        <h3 className="font-display text-[22px] font-semibold text-[#241c12]">
           No saved searches yet
         </h3>
         <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
