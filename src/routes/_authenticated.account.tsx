@@ -1976,25 +1976,45 @@ function SubscriptionSection({
 }) {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [renewOpen, setRenewOpen] = useState(false);
-  const [canceled, setCanceled] = useState(false);
-  const periodEnd = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 18);
-    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-  }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setCanceled(window.localStorage.getItem("nook:subCanceled") === "1");
-  }, []);
+  // Cancellation is account state, not a browser flag: it must survive reload,
+  // sign-out and other devices, and it's also set by the delete-account flow.
+  const profileQ = useQuery(profileQueryOptions());
+  const setCanceledMutation = useSetSubscriptionCanceledMutation();
+  const updateStoreProfile = useAppStore((s) => s.updateProfile);
+  const canceled = Boolean(profileQ.data?.subscriptionCanceledAt);
+
+  const periodEnd = useMemo(() => {
+    const raw = profileQ.data?.subscriptionPeriodEnd;
+    const d = raw ? new Date(raw) : new Date(Date.now() + 18 * 24 * 60 * 60 * 1000);
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  }, [profileQ.data?.subscriptionPeriodEnd]);
 
   const setCanceledState = (v: boolean) => {
-    setCanceled(v);
-    if (typeof window !== "undefined") {
-      if (v) window.localStorage.setItem("nook:subCanceled", "1");
-      else window.localStorage.removeItem("nook:subCanceled");
-    }
+    setCanceledMutation.mutate(v, {
+      onSuccess: (user) =>
+        updateStoreProfile({
+          subscriptionCanceledAt: user.subscriptionCanceledAt,
+          subscriptionPeriodEnd: user.subscriptionPeriodEnd,
+        } as any),
+    });
+    if (typeof window !== "undefined") window.localStorage.removeItem("nook:subCanceled");
   };
+
+  // One-time migration of the old browser-only flag.
+  const migratedRef = useRef(false);
+  useEffect(() => {
+    if (migratedRef.current) return;
+    if (typeof window === "undefined" || !profileQ.data) return;
+    const legacy = window.localStorage.getItem("nook:subCanceled") === "1";
+    if (!legacy) return;
+    migratedRef.current = true;
+    window.localStorage.removeItem("nook:subCanceled");
+    if (!profileQ.data.subscriptionCanceledAt && plan !== "free") {
+      setCanceledMutation.mutate(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileQ.data, plan]);
 
   // Determine which two cards to show so the user only sees actionable options.
   const visiblePlanKeys = useMemo(() => {
