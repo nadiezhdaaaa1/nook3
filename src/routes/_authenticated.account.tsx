@@ -1011,7 +1011,7 @@ function CancelSubscriptionDialog({
                 type="button"
                 onClick={() => setReason(r.id)}
                 className={cn(
-                  "w-full text-left px-4 py-3 rounded-card border text-sm font-medium transition-colors",
+                  "w-full text-left px-4 py-3 rounded-[12px] border text-sm font-medium transition-colors",
                   reason === r.id
                     ? "border-charcoal-950 bg-paper-warm text-charcoal-950"
                     : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
