@@ -73,6 +73,7 @@ export interface User {
 
   // Lifecycle
   completedAt: string | null;
+  hasPassword?: boolean;
   updatedAt?: string;
 }
 
