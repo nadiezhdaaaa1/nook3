@@ -156,7 +156,7 @@ function ContactHero() {
           className="font-display font-medium text-[44px] sm:text-[56px] lg:text-[64px] leading-[1.02] tracking-[-0.02em]"
           style={{ color: "var(--color-brand-charcoal)" }}
         >
-          Talk to a <span className="italic font-normal" style={{ color: "var(--color-brand-sage)" }}>human.</span>
+          Talk to a human.
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 8 }}
