@@ -623,6 +623,7 @@ function DeleteAccountDialog({
   const [reason, setReason] = useState<DeleteReason | null>(null);
   const [reasonNote, setReasonNote] = useState("");
   const [stayFeedback, setStayFeedback] = useState("");
+  const [cancelSubscription, setCancelSubscription] = useState(true);
 
   const closeAll = () => {
     onOpenChange(false);
