@@ -722,7 +722,7 @@ function DeleteAccountDialog({
                   Skip
                 </OriginButton>
                 <OriginButton
-                  variant="secondary"
+                  variant="danger"
                   size="medium"
                   onClick={() => setStep("feedback")}
                 >
