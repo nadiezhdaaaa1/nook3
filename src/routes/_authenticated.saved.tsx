@@ -314,6 +314,10 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   const deleteSearch = useAppStore((s) => s.deleteSearch);
   const deleteMut = useDeleteSearchMutation();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; search: Search | null }>({
+    open: false,
+    search: null,
+  });
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
   const disabledIds = useDisabledSearchIds();
@@ -331,6 +335,14 @@ function SearchesTab({ searches }: { searches: Search[] }) {
       return;
     }
     navigate({ to: "/search/new/$step", params: { step: "1" } });
+  };
+  const openDeleteDialog = (search: Search) => setDeleteDialog({ open: true, search });
+  const closeDeleteDialog = () => setDeleteDialog({ open: false, search: null });
+  const onConfirmDelete = () => {
+    if (deleteDialog.search) {
+      dbAwareDelete(deleteDialog.search.id);
+    }
+    closeDeleteDialog();
   };
 
   const planLimit = Number.isFinite(max) ? max : 3;
