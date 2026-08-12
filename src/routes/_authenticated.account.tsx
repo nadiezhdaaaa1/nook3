@@ -161,33 +161,27 @@ function AccountPage() {
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
           Usage this month
         </h2>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
           <StatCard
             icon={SearchIcon}
             label="Saved searches"
             value={`${stats.used} / ${stats.maxLabel}`}
-            footer={
-              stats.max === Infinity
-                ? <>No limit on your plan.</>
-                : stats.used >= stats.max
-                  ? <>Limit reached — <a href="#plans" className="text-sage-700 font-semibold underline-offset-2 hover:underline">upgrade to add more</a>.</>
-                  : <>{stats.max - stats.used} slot{stats.max - stats.used === 1 ? "" : "s"} left.</>
-            }
-            progress={stats.pct}
+            illustration={savedSearchesArt.url}
           />
           <StatCard
             icon={Bell}
             label="Alerts received"
             value={String(stats.totalAlerts)}
-            footer="All-time across your searches."
+            illustration={alertsArt.url}
           />
           <StatCard
             icon={Clock}
             label="Last 7 days"
             value={String(stats.alerts7d)}
-            footer="Recent activity volume."
+            illustration={lastDaysArt.url}
           />
         </div>
+
       </section>
 
       {/* Profile */}
