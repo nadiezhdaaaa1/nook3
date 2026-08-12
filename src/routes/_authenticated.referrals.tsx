@@ -91,12 +91,12 @@ function ReferralsPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <h3
-                  className="font-display text-[14px] font-semibold leading-5"
+                  className="font-display text-[16px] font-semibold leading-6"
                   style={{ letterSpacing: "-0.21px", color: "#241C12" }}
                 >
                   {s.title}
                 </h3>
-                <p className="text-[13px] leading-[17.875px]" style={{ color: "#6E6459" }}>
+                <p className="text-[15px] leading-[21px]" style={{ color: "#6E6459" }}>
                   {s.body}
                 </p>
               </div>
