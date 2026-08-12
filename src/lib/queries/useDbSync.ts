@@ -64,6 +64,8 @@ export function useDbSync() {
             hasPassword: profile.hasPassword,
             deletionRequestedAt: profile.deletionRequestedAt,
             deletionScheduledAt: profile.deletionScheduledAt,
+            subscriptionCanceledAt: profile.subscriptionCanceledAt,
+            subscriptionPeriodEnd: profile.subscriptionPeriodEnd,
           }
         : null,
       searches: rows,
