@@ -13,7 +13,6 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubprocessorsRouteImport } from './routes/subprocessors'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RefundsRouteImport } from './routes/refunds'
@@ -81,11 +80,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignUpRoute = SignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
@@ -353,7 +347,6 @@ export interface FileRoutesByFullPath {
   '/refunds': typeof RefundsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -406,7 +399,6 @@ export interface FileRoutesByTo {
   '/refunds': typeof RefundsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -461,7 +453,6 @@ export interface FileRoutesById {
   '/refunds': typeof RefundsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
@@ -517,7 +508,6 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/reset-password'
     | '/sign-in'
-    | '/sign-up'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -570,7 +560,6 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/reset-password'
     | '/sign-in'
-    | '/sign-up'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -624,7 +613,6 @@ export interface FileRouteTypes {
     | '/refunds'
     | '/reset-password'
     | '/sign-in'
-    | '/sign-up'
     | '/signup'
     | '/sitemap.xml'
     | '/subprocessors'
@@ -680,7 +668,6 @@ export interface RootRouteChildren {
   RefundsRoute: typeof RefundsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignInRoute: typeof SignInRoute
-  SignUpRoute: typeof SignUpRoute
   SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubprocessorsRoute: typeof SubprocessorsRoute
@@ -725,13 +712,6 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -1192,7 +1172,6 @@ const rootRouteChildren: RootRouteChildren = {
   RefundsRoute: RefundsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignInRoute: SignInRoute,
-  SignUpRoute: SignUpRoute,
   SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubprocessorsRoute: SubprocessorsRoute,
