@@ -1412,30 +1412,56 @@ function PlanCard({
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>{ctaLabel}?</AlertDialogTitle>
+              <AlertDialogTitle>
+                {isUpgrade ? "Upgrade" : "Switch"} to {plan.label}
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                {isDowngrade ? (
+                {isUpgrade ? (
+                  <div className="space-y-4 text-left">
+                    <p>
+                      You’re upgrading to{" "}
+                      <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
+                      ({priceLabel}{suffix}).
+                    </p>
+                    <ul className="flex flex-col gap-2">
+                      {plan.features
+                        .filter((f) => f.icon === "check")
+                        .map((f) => (
+                          <li key={f.text} className="flex items-start gap-2 text-sm text-charcoal-700">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" />
+                            <span className={f.bold ? "font-semibold text-charcoal-950" : ""}>{f.text}</span>
+                          </li>
+                        ))}
+                    </ul>
+                    <p className="text-xs text-charcoal-500">
+                      {plan.cycle === "annual"
+                        ? "Auto-renews at $95.88/year until cancelled. No payment will be charged — this is a demo flow."
+                        : "Auto-renews at $14.99/month until cancelled. No payment will be charged — this is a demo flow."}
+                    </p>
+                  </div>
+                ) : (
                   <>
                     Your plan will change to{" "}
                     <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
                     ({priceLabel}{suffix}) at the end of your current billing period.
                   </>
-                ) : (
-                  <>
-                    You're about to switch to{" "}
-                    <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                    ({priceLabel}{suffix}).{" "}
-                    {plan.cycle === "annual"
-                      ? "This will auto-renew at $95.88/year until cancelled."
-                      : "This will auto-renew at $14.99/month until cancelled."}
-                  </>
-                )}{" "}
-                <span className="text-charcoal-500">No payment will be charged — this is a demo flow.</span>
+                )}
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Keep my plan</AlertDialogCancel>
-              <AlertDialogAction
+            <AlertDialogFooter className="gap-3">
+              <OriginButton
+                variant="tertiary"
+                size="big"
+                className="w-full sm:w-auto"
+                disabled={updatePlanMut.isPending}
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </OriginButton>
+              <OriginButton
+                variant="main"
+                size="big"
+                className="w-full sm:flex-1"
                 disabled={updatePlanMut.isPending}
                 onClick={() => {
                   updatePlanMut.mutate(
@@ -1443,10 +1469,9 @@ function PlanCard({
                     { onSuccess: () => setOpen(false) },
                   );
                 }}
-                className="bg-charcoal-950 text-paper hover:bg-charcoal-800"
               >
-                {updatePlanMut.isPending ? "Updating…" : "Confirm"}
-              </AlertDialogAction>
+                {updatePlanMut.isPending ? "Updating…" : isUpgrade ? "Upgrade" : "Confirm"}
+              </OriginButton>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
