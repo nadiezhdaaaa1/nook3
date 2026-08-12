@@ -120,8 +120,6 @@ export const updateProfile = createServerFn({ method: "POST" })
    one-click reversal.
    ------------------------------------------------------------------------- */
 
-const GRACE_DAYS = 30;
-
 export const scheduleAccountDeletion = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
@@ -172,11 +170,6 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return dbRowToUser(updated);
   });
-
-/** Fallback period end while real billing dates aren't wired up yet. */
-function defaultPeriodEnd(from: Date) {
-  return new Date(from.getTime() + 18 * 24 * 60 * 60 * 1000);
-}
 
 /**
  * Turn auto-renewal off (or back on) for the current user. Access continues
