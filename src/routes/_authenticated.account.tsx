@@ -333,12 +333,13 @@ function SyncProfile({
 }
 
 function StatCard({
-  icon: Icon, label, value, illustration, loading, className,
+  icon: Icon, label, value, illustration, nudgeY, loading, className,
 }: {
   icon: typeof Sparkles;
   label: string;
   value: string;
   illustration: string;
+  nudgeY?: number;
   loading?: boolean;
   className?: string;
 }) {
