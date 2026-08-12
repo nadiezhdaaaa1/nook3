@@ -159,6 +159,7 @@ export const cancelAccountDeletion = createServerFn({ method: "POST" })
         deletion_scheduled_at: null,
         deletion_reason: null,
         deletion_feedback: null,
+        deletion_cancel_subscription: null,
       } as never)
       .eq("id", context.userId)
       .select("*")
