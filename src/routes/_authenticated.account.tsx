@@ -641,10 +641,12 @@ function DeleteAccountDialog({
             )}
             <DialogTitle>Delete account</DialogTitle>
           </div>
-          <DialogDescription>
-            Sorry to see you go — what's driving this?{" "}
-            <span className="text-charcoal-500">(optional)</span>
-          </DialogDescription>
+          {step === "reason" && (
+            <DialogDescription>
+              Sorry to see you go — what's driving this?{" "}
+              <span className="text-charcoal-500">(optional)</span>
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         {step === "reason" && (
