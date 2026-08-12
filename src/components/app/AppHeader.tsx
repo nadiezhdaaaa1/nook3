@@ -147,7 +147,6 @@ const ICON_BUTTON_CLASS = "rounded-[8px] p-2";
 const NAV_ITEMS = [
   { to: "/home", label: "Searches", Icon: IconHomeSearch, disabled: false },
   { to: "/saved", label: "Saved", Icon: IconHeart, disabled: false },
-  { to: "/wren", label: "Wren AI chat", Icon: IconMessageChatbot, disabled: true },
   { to: "/referrals", label: "Referrals", Icon: IconGift, disabled: false },
   { to: "/account", label: "Account", Icon: IconUser, disabled: false },
 ] as const;
