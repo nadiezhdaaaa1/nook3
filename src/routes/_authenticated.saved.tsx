@@ -386,17 +386,32 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                   {s.totalAlertsReceived} alerts
                 </p>
               </div>
-              <OriginButton
-                variant="tertiary"
-                size="medium"
-                aria-label={`Edit ${s.name}`}
-                className="h-9 w-9 shrink-0 rounded-[8px] p-0"
-                onClick={() =>
-                  navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } })
-                }
-              >
-                <Pencil className="h-4 w-4" />
-              </OriginButton>
+              <div className="flex items-center gap-1">
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  aria-label={`Edit ${s.name}`}
+                  className="h-9 w-9 shrink-0 rounded-[8px] p-0"
+                  onClick={() =>
+                    navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } })
+                  }
+                >
+                  <Pencil className="h-4 w-4" />
+                </OriginButton>
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  aria-label={`Delete ${s.name}`}
+                  className="h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger hover:text-danger hover:bg-danger/10"
+                  onClick={() => {
+                    if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
+                      dbAwareDelete(s.id);
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </OriginButton>
+              </div>
             </div>
 
             {disabledIds.has(s.id) && (
