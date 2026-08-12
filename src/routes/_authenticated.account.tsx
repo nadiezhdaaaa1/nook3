@@ -333,28 +333,59 @@ function SyncProfile({
 }
 
 function StatCard({
-  icon: Icon, label, value, footer, progress,
+  icon: Icon, label, value, illustration, loading,
 }: {
-  icon: typeof Sparkles; label: string; value: string; footer: React.ReactNode; progress?: number;
+  icon: typeof Sparkles;
+  label: string;
+  value: string;
+  illustration: string;
+  loading?: boolean;
 }) {
   return (
-    <div className="rounded-card border border-border bg-white p-6">
-      <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-        <Icon className="h-3.5 w-3.5" /> {label}
+    <section
+      aria-label={label}
+      className="relative flex min-h-[148px] flex-col overflow-hidden rounded-2xl border bg-white p-5 sm:p-6"
+      style={{ borderColor: "rgba(0,0,0,0.2)" }}
+    >
+      <div className="relative z-10 flex items-start gap-2">
+        <Icon
+          className="mt-[1px] h-[14px] w-[14px] shrink-0"
+          strokeWidth={1.5}
+          style={{ color: "#6E6459" }}
+        />
+        <span
+          className="text-[12px] font-medium uppercase leading-4"
+          style={{ letterSpacing: "0.165em", color: "#6E6459" }}
+        >
+          {label}
+        </span>
       </div>
-      <div className="mt-2 font-display text-2xl font-bold text-charcoal-950 tabular-nums">{value}</div>
-      {typeof progress === "number" && (
-        <div className="mt-3 h-1.5 w-full rounded-full bg-charcoal-950/8 overflow-hidden">
-          <div
-            className="h-full bg-charcoal-950 transition-all"
-            style={{ width: `${progress}%` }}
-          />
+      <div className="flex-1" />
+      {loading ? (
+        <div className="relative z-10 h-9 w-24 animate-pulse rounded-md bg-charcoal-950/8 sm:h-10" />
+      ) : (
+        <div
+          aria-live="polite"
+          className="relative z-10 font-display font-bold tabular-nums text-[28px] leading-9 sm:text-[32px] sm:leading-10"
+          style={{
+            letterSpacing: "-0.36px",
+            color: "#241C12",
+            fontVariationSettings: '"SOFT" 0, "WONK" 1',
+          }}
+        >
+          {value}
         </div>
       )}
-      <div className="mt-2 text-xs text-charcoal-600">{footer}</div>
-    </div>
+      <img
+        src={illustration}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 select-none object-contain sm:h-[120px] sm:w-[120px]"
+      />
+    </section>
   );
 }
+
 
 function Field({
   id, label, icon: Icon, error, children,
