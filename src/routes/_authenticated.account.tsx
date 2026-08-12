@@ -1016,7 +1016,7 @@ function CancelSubscriptionDialog({
                 className={cn(
                   "w-full text-left px-4 py-3 rounded-[12px] border text-sm font-medium transition-colors",
                   reason === r.id
-                    ? "border-charcoal-950 bg-paper-warm text-charcoal-950"
+                    ? "border-[#2B2521] bg-[#2B2521] text-white"
                     : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
                 )}
               >
@@ -1025,7 +1025,7 @@ function CancelSubscriptionDialog({
             ))}
             {reason === "other" && (
               <Input
-                placeholder="What happened?"
+                placeholder="What happened? (optional)"
                 value={otherReason}
                 onChange={(e) => setOtherReason(e.target.value)}
                 className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
@@ -1034,19 +1034,19 @@ function CancelSubscriptionDialog({
             )}
             <DialogFooter className="justify-end gap-2 pt-4">
               <OriginButton
-                variant="secondary"
-                size="medium"
-                disabled={!reason || (reason === "other" && !otherReason.trim())}
-                onClick={() => setStep("offer")}
-              >
-                Cancel subscription
-              </OriginButton>
-              <OriginButton
                 variant="main"
                 size="medium"
                 onClick={close}
               >
                 Keep subscription
+              </OriginButton>
+              <OriginButton
+                variant="secondary"
+                size="medium"
+                disabled={!reason}
+                onClick={() => setStep("offer")}
+              >
+                Cancel subscription
               </OriginButton>
             </DialogFooter>
           </div>
