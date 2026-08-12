@@ -50,7 +50,7 @@ export function AccountDeletionBanner() {
       className="sticky top-0 z-50 bg-danger text-white"
     >
       <div className="mx-auto max-w-[1440px] px-6 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-2.5">
+        <div className="flex items-center gap-2.5">
           <img
             src={trashAsset.url}
             alt=""
