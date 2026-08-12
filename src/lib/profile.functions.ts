@@ -74,6 +74,7 @@ export const updateProfile = createServerFn({ method: "POST" })
     if (data.phone !== undefined) patch.phone = data.phone;
     if (data.timezone !== undefined) patch.timezone = data.timezone;
     if (data.completedAt !== undefined) patch.completed_at = data.completedAt;
+    if (data.hasPassword !== undefined) patch.has_password = data.hasPassword;
     if (data.moveOut !== undefined) patch.move_out = data.moveOut;
 
     const { data: updated, error } = await context.supabase
