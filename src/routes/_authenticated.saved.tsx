@@ -3,6 +3,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useMemo, useState, type ReactNode } from "react";
 import {
+  ArrowLeft,
   Heart,
   Inbox,
   Loader2,
@@ -29,6 +30,15 @@ import type { AlertRow } from "@/lib/alerts.functions";
 import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import { useReportListingMutation } from "@/lib/queries/listingReports";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 const TABS = [
   {
