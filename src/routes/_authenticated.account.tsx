@@ -976,11 +976,12 @@ function CancelSubscriptionDialog({
 }: { open: boolean; onOpenChange: (v: boolean) => void; periodEnd: string }) {
   const [step, setStep] = useState<CancelStep>("reason");
   const [reason, setReason] = useState<CancelReason | null>(null);
+  const [otherReason, setOtherReason] = useState("");
   const updatePlanMut = useUpdatePlanMutation();
 
   const close = () => {
     onOpenChange(false);
-    setTimeout(() => { setStep("reason"); setReason(null); }, 200);
+    setTimeout(() => { setStep("reason"); setReason(null); setOtherReason(""); }, 200);
   };
 
   const reasons: { id: CancelReason; label: string }[] = [
