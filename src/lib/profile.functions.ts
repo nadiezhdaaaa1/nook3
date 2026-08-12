@@ -126,6 +126,7 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
       .object({
         reason: z.string().max(120).optional(),
         feedback: z.string().max(1000).optional(),
+        cancelSubscription: z.boolean().optional(),
       })
       .parse(input ?? {}),
   )
