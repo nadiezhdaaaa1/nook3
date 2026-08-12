@@ -245,6 +245,7 @@ export type Database = {
           completed_at: string | null
           consents: Json
           created_at: string
+          deletion_cancel_subscription: boolean | null
           deletion_feedback: string | null
           deletion_reason: string | null
           deletion_requested_at: string | null
@@ -274,6 +275,7 @@ export type Database = {
           completed_at?: string | null
           consents?: Json
           created_at?: string
+          deletion_cancel_subscription?: boolean | null
           deletion_feedback?: string | null
           deletion_reason?: string | null
           deletion_requested_at?: string | null
@@ -303,6 +305,7 @@ export type Database = {
           completed_at?: string | null
           consents?: Json
           created_at?: string
+          deletion_cancel_subscription?: boolean | null
           deletion_feedback?: string | null
           deletion_reason?: string | null
           deletion_requested_at?: string | null
@@ -733,6 +736,7 @@ export type Database = {
           completed_at: string | null
           consents: Json
           created_at: string
+          deletion_cancel_subscription: boolean | null
           deletion_feedback: string | null
           deletion_reason: string | null
           deletion_requested_at: string | null

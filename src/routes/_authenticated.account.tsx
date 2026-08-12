@@ -7,6 +7,7 @@ import {
   Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
   ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
 import globeAsset from "@/assets/Globe.png.asset.json";
@@ -622,6 +623,7 @@ function DeleteAccountDialog({
   const [reason, setReason] = useState<DeleteReason | null>(null);
   const [reasonNote, setReasonNote] = useState("");
   const [stayFeedback, setStayFeedback] = useState("");
+  const [cancelSubscription, setCancelSubscription] = useState(true);
 
   const closeAll = () => {
     onOpenChange(false);
@@ -630,6 +632,7 @@ function DeleteAccountDialog({
       setReason(null);
       setReasonNote("");
       setStayFeedback("");
+      setCancelSubscription(true);
     }, 200);
   };
 
@@ -640,6 +643,7 @@ function DeleteAccountDialog({
       {
         reason: reason ? (reason === "other" ? reasonNote || "other" : reason) : undefined,
         feedback: stayFeedback || undefined,
+        cancelSubscription,
       },
       {
         onSuccess: () => {
@@ -746,6 +750,26 @@ function DeleteAccountDialog({
                 className="w-full min-h-[96px] px-4 py-3 rounded-[12px] border border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:border-charcoal-950 focus:outline-none resize-none"
                 autoFocus
               />
+            </div>
+
+            <div className="flex items-start gap-3 rounded-[12px] border border-border bg-paper-warm p-4">
+              <Checkbox
+                id="cancel-subscription"
+                checked={cancelSubscription}
+                onCheckedChange={(v) => setCancelSubscription(v === true)}
+                className="mt-0.5"
+              />
+              <div className="space-y-1">
+                <label
+                  htmlFor="cancel-subscription"
+                  className="text-sm font-semibold text-charcoal-950 cursor-pointer"
+                >
+                  Also cancel my subscription
+                </label>
+                <p className="text-xs text-charcoal-600">
+                  Stops billing at the end of your current period. You can keep the subscription if you only want to delete the account data.
+                </p>
+              </div>
             </div>
 
             <div className="rounded-[12px] border border-danger/30 bg-danger p-4">

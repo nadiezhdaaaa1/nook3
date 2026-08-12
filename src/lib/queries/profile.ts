@@ -37,7 +37,8 @@ export function useScheduleAccountDeletionMutation() {
   const qc = useQueryClient();
   const fn = useServerFn(scheduleAccountDeletion);
   return useMutation({
-    mutationFn: (data: { reason?: string; feedback?: string }) => fn({ data }),
+    mutationFn: (data: { reason?: string; feedback?: string; cancelSubscription?: boolean }) =>
+      fn({ data }),
     onSuccess: () => qc.invalidateQueries({ queryKey: profileQueryKey }),
     onError: (e) =>
       toast.error("Couldn't schedule deletion", {

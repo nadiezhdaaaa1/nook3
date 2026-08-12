@@ -22,6 +22,7 @@ export function dbRowToUser(row: any) {
     hasPassword: !!row.has_password,
     deletionRequestedAt: row.deletion_requested_at ?? null,
     deletionScheduledAt: row.deletion_scheduled_at ?? null,
+    deletionCancelSubscription: row.deletion_cancel_subscription ?? null,
     updatedAt: row.updated_at ?? undefined,
   };
 }
@@ -125,6 +126,7 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
       .object({
         reason: z.string().max(120).optional(),
         feedback: z.string().max(1000).optional(),
+        cancelSubscription: z.boolean().optional(),
       })
       .parse(input ?? {}),
   )
@@ -138,6 +140,7 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
         deletion_scheduled_at: scheduled.toISOString(),
         deletion_reason: data.reason ?? null,
         deletion_feedback: data.feedback ?? null,
+        deletion_cancel_subscription: data.cancelSubscription ?? null,
       } as never)
       .eq("id", context.userId)
       .select("*")
@@ -156,6 +159,7 @@ export const cancelAccountDeletion = createServerFn({ method: "POST" })
         deletion_scheduled_at: null,
         deletion_reason: null,
         deletion_feedback: null,
+        deletion_cancel_subscription: null,
       } as never)
       .eq("id", context.userId)
       .select("*")
