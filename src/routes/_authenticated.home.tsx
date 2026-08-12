@@ -122,6 +122,8 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 
 function HomeScreen() {
   const search = useActiveSearch();
+  const noSearches = useAppStore((s) => s.searches.length === 0);
+  const hydrated = useAppStore((s) => s.hydrated);
   const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
   const cityConfig = getCity(cityId);
