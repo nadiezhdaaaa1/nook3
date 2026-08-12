@@ -2092,18 +2092,16 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
             <p className="text-sm text-danger">{error}</p>
           )}
           <DialogFooter className="pt-2">
-            <button
+            <OriginButton
               type="submit"
+              variant="main"
+              size="big"
+              className="w-full sm:w-auto"
               disabled={!canSubmit}
-              className={cn(
-                "inline-flex items-center justify-center h-11 px-5 rounded-[16px] text-sm font-semibold transition-colors",
-                canSubmit
-                  ? "bg-[#241C12] text-white hover:bg-[#241C12]/90"
-                  : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-              )}
+              loading={loading}
             >
               {loading ? "Updating…" : "Update password"}
-            </button>
+            </OriginButton>
           </DialogFooter>
         </form>
       </DialogContent>
