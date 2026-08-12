@@ -582,26 +582,21 @@ function DeleteAccountDialog({
     <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
-          <div className="flex items-center justify-between gap-3">
-            <DialogTitle className="flex items-center gap-2">
-              {step !== "reason" && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const i = stepLabels.indexOf(step);
-                    if (i > 0) setStep(stepLabels[i - 1]);
-                  }}
-                  className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
-                  aria-label="Back"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-              )}
-              Delete account
-            </DialogTitle>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-              Step {stepIndex} of 5
-            </span>
+          <div className="flex items-center gap-3">
+            {step !== "reason" && (
+              <button
+                type="button"
+                onClick={() => {
+                  const i = stepLabels.indexOf(step);
+                  if (i > 0) setStep(stepLabels[i - 1]);
+                }}
+                className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
+                aria-label="Back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+            )}
+            <DialogTitle>Delete account</DialogTitle>
           </div>
           <DialogDescription>
             Sorry to see you go — what's driving this?{" "}
@@ -635,21 +630,26 @@ function DeleteAccountDialog({
                 autoFocus
               />
             )}
-            <DialogFooter className="justify-end gap-2 pt-4">
-              <OriginButton
-                variant="tertiary"
-                size="medium"
-                onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
-              >
-                Skip
-              </OriginButton>
-              <OriginButton
-                variant="secondary"
-                size="medium"
-                onClick={goToOffer}
-              >
-                Continue
-              </OriginButton>
+            <DialogFooter className="justify-between gap-2 pt-4">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+              <div className="flex items-center gap-2">
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
+                >
+                  Skip
+                </OriginButton>
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={goToOffer}
+                >
+                  Continue
+                </OriginButton>
+              </div>
             </DialogFooter>
           </div>
         )}
