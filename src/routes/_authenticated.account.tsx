@@ -753,7 +753,7 @@ function DeleteAccountDialog({
             </div>
 
             <label
-              className="flex items-start cursor-pointer"
+              className="flex items-center cursor-pointer"
               style={{
                 background: "#EAE0CD",
                 border: "1px solid #B5AB98",
