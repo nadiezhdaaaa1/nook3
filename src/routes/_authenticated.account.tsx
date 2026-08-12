@@ -1327,6 +1327,8 @@ function useSignInMethods(): SignInMethodsState {
     let cancelled = false;
     setLoading(true);
     (async () => {
+      // Refresh the session first so freshly linked/unlinked identities are reflected.
+      await supabase.auth.refreshSession().catch(() => null);
       const { data, error: err } = await supabase.auth.getUserIdentities();
       if (cancelled) return;
       if (err || !data) {
@@ -1342,6 +1344,7 @@ function useSignInMethods(): SignInMethodsState {
       cancelled = true;
     };
   }, [tick]);
+
 
   const list = identities ?? [];
   const googleIdentity = list.find((i) => i.provider === "google") ?? null;
