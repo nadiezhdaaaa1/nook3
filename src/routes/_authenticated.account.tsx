@@ -1559,16 +1559,18 @@ function TimezoneDialog({
             <ChevronRight className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-charcoal-500" />
           </div>
           <DialogFooter className="pt-2">
-            <button
+            <OriginButton
               type="button"
+              variant="main"
+              size="big"
+              className="w-full sm:w-auto"
               onClick={() => {
                 onChange(draft);
                 onOpenChange(false);
               }}
-              className="inline-flex items-center justify-center h-11 px-5 rounded-[16px] text-sm font-semibold bg-[#241C12] text-white hover:bg-[#241C12]/90 transition-colors"
             >
               Save timezone
-            </button>
+            </OriginButton>
           </DialogFooter>
         </div>
       </DialogContent>
