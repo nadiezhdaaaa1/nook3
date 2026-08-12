@@ -632,6 +632,7 @@ function DeleteAccountDialog({
       setReason(null);
       setReasonNote("");
       setStayFeedback("");
+      setCancelSubscription(true);
     }, 200);
   };
 
