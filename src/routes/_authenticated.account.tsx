@@ -1724,6 +1724,15 @@ function SubscriptionSection({
 
   return (
     <>
+      <RenewSubscriptionDialog
+        open={renewOpen}
+        onOpenChange={setRenewOpen}
+        periodEnd={periodEnd}
+        onConfirm={() => {
+          setCanceledState(false);
+          toast.success("Subscription renewed — auto-renewal is back on");
+        }}
+      />
       <CancelSubscriptionDialog
         open={cancelOpen}
         onOpenChange={setCancelOpen}
@@ -1754,10 +1763,7 @@ function SubscriptionSection({
               periodEnd={periodEnd}
               onCancelRequest={() => setCancelOpen(true)}
               canceled={canceled}
-              onRenew={() => {
-                setCanceledState(false);
-                toast.success("Subscription renewed — auto-renewal is back on");
-              }}
+              onRenew={() => setRenewOpen(true)}
             />
           ))}
         </div>
