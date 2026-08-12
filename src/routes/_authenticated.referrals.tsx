@@ -43,7 +43,7 @@ function ReferralsPage() {
     >
       <div className="flex max-w-[720px] flex-col gap-10">
         {/* 1) Hero row */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <img
             src={presentAsset.url}
             alt=""
