@@ -6,6 +6,7 @@ import {
   updateProfile,
   scheduleAccountDeletion,
   cancelAccountDeletion,
+  setSubscriptionCanceled,
 } from "@/lib/profile.functions";
 
 export const profileQueryKey = ["profile"] as const;
