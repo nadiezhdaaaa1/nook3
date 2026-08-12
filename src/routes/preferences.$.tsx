@@ -9,9 +9,8 @@ import { useAppStore } from "@/lib/store";
  * the active search id, which only exists client-side, so those render a tiny
  * component that navigates once the store has hydrated.
  */
-const STATIC_MAP: Record<string, "/saved" | "/wren" | "/referrals" | "/account"> = {
+const STATIC_MAP: Record<string, "/saved" | "/referrals" | "/account"> = {
   alerts: "/saved",
-  wren: "/wren",
   referrals: "/referrals",
   account: "/account",
 };
