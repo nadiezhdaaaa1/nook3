@@ -1173,7 +1173,7 @@ function PlanCard({
         color: text,
       };
 
-  const ctaVariant = isCurrent && plan.id !== "free" ? "cancel" : plan.id === "free" ? "tertiary" : plan.cycle === "annual" ? "max" : "premium";
+  const ctaVariant = isCanceledCurrent ? (plan.cycle === "annual" ? "max" : "premium") : isCurrent && plan.id !== "free" ? "cancel" : plan.id === "free" ? "tertiary" : plan.cycle === "annual" ? "max" : "premium";
 
   return (
     <div
