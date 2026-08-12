@@ -2,7 +2,7 @@ import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Gift, Copy, Check } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { getReferralCode } from "@/lib/onboarding/store";
 import { referralStatsQueryOptions } from "@/lib/queries/referrals";
 import presentAsset from "@/assets/Present-2.png.asset.json";
@@ -55,7 +55,6 @@ function ReferralsPage() {
               className="flex items-center gap-2 text-[12px] font-medium uppercase leading-4"
               style={{ letterSpacing: "1.54px", color: "#3D4A36" }}
             >
-              <Gift className="h-4 w-4 flex-none" strokeWidth={1.75} aria-hidden="true" />
               <span>Refer a friend · Give a week, get a week</span>
             </div>
             <h2
