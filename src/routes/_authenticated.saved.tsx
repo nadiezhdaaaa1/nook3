@@ -28,6 +28,7 @@ import type { SampleListing } from "@/data/sampleListings";
 import type { AlertRow } from "@/lib/alerts.functions";
 import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import { useReportListingMutation } from "@/lib/queries/listingReports";
+import { useDeleteSearchMutation } from "@/lib/queries/searches";
 
 const TABS = [
   {
