@@ -2036,6 +2036,15 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
       if (updateError) {
         setError(updateError.message);
       } else {
+        // Keep the persisted flag in sync so the Login / Email row stays enabled.
+        setLocalProfile({ hasPassword: true });
+        if (!user.hasPassword) {
+          try {
+            await saveProfile.mutateAsync({ hasPassword: true });
+          } catch {
+            /* non-blocking: password already changed successfully */
+          }
+        }
         toast.success("Password updated successfully.");
         setCurrent("");
         setNext("");
