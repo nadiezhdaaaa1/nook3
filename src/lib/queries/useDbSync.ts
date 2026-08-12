@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchesQueryOptions, useUpdateSearchMutation, useCreateSearchMutation } from "./searches";
-import { profileQueryOptions } from "./profile";
+import { profileQueryOptions, syncDeletionStateToStore } from "./profile";
 import { useAppStore, getDefaultSearchName, hydrateOnboardingFromSearch } from "@/lib/store";
 import type { Search } from "@/lib/store";
 import { useOnboardingStore } from "@/lib/onboarding/store";
