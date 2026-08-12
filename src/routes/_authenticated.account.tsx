@@ -1,7 +1,7 @@
 import { AppPage } from "@/components/app/AppPage";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
