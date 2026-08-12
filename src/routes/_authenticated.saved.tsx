@@ -479,7 +479,7 @@ function EmptyState({
 }: {
   title: string;
   sub: string;
-  action?: React.ReactNode;
+  action?: ReactNode;
 }) {
   return (
     <div className="rounded-[16px] border border-dashed border-black/15 bg-white/50 p-10 text-center">
