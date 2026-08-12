@@ -7,6 +7,7 @@ import {
   Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
   ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
 import globeAsset from "@/assets/Globe.png.asset.json";
