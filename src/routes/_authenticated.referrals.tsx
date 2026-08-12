@@ -2,7 +2,7 @@ import { AppPage } from "@/components/app/AppPage";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Gift, Copy, Check } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { getReferralCode } from "@/lib/onboarding/store";
 import { referralStatsQueryOptions } from "@/lib/queries/referrals";
 import presentAsset from "@/assets/Present-2.png.asset.json";
