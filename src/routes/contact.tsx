@@ -140,19 +140,10 @@ function ContactHero() {
   return (
     <section className="px-6 pt-16 md:pt-24 pb-12">
       <div className="max-w-[720px] mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-[11px] font-mono uppercase tracking-[0.2em] mb-6"
-          style={{ color: "var(--color-brand-sage)" }}
-        >
-          · Contact ·
-        </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
+          transition={{ duration: 0.5 }}
           className="font-display font-medium text-[44px] sm:text-[56px] lg:text-[64px] leading-[1.02] tracking-[-0.02em]"
           style={{ color: "var(--color-brand-charcoal)" }}
         >
