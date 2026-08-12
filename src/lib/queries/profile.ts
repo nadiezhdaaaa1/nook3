@@ -65,3 +65,16 @@ export function useCancelAccountDeletionMutation() {
       }),
   });
 }
+
+export function useSetSubscriptionCanceledMutation() {
+  const qc = useQueryClient();
+  const fn = useServerFn(setSubscriptionCanceled);
+  return useMutation({
+    mutationFn: (canceled: boolean) => fn({ data: { canceled } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: profileQueryKey }),
+    onError: (e) =>
+      toast.error("Couldn't update your subscription", {
+        description: e instanceof Error ? e.message : "Try again",
+      }),
+  });
+}
