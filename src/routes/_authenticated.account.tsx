@@ -1662,7 +1662,7 @@ function SignInMethodRows() {
             <img
               src={mailAsset.url}
               alt=""
-              className="h-10 w-10 object-contain shrink-0"
+              className="h-[38px] w-[38px] object-contain shrink-0"
               aria-hidden="true"
             />
           </span>
