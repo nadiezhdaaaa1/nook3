@@ -1079,7 +1079,7 @@ function RenewSubscriptionDialog({
             All your saved searches, filters, and Wren chats stay exactly as you left them — nothing is lost.
           </span>
         </div>
-        <DialogFooter className="justify-end gap-3 pt-2">
+        <DialogFooter className="justify-end gap-[12px] pt-2">
           <OriginButton
             variant="tertiary"
             size="medium"
