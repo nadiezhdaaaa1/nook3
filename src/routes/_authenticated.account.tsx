@@ -825,10 +825,11 @@ function DeleteAccountDialog({
 }
 
 function DeleteAlternatives({
-  reason, isPaid, onAccept, onDowngradeFree, onTurnOffEmails, onContinue, onKeep,
+  reason, isPaid, stepCounter, onAccept, onDowngradeFree, onTurnOffEmails, onContinue, onKeep,
 }: {
   reason: DeleteReason | null;
   isPaid: boolean;
+  stepCounter: React.ReactNode;
   onAccept: (msg: string) => void;
   onDowngradeFree: () => void;
   onTurnOffEmails: () => void;
@@ -860,20 +861,23 @@ function DeleteAlternatives({
           See our <a href="/privacy" className="text-sage-700 underline-offset-2 hover:underline">Privacy Policy</a> for what's retained.
         </p>
         <DialogFooter className="!justify-between pt-2">
-          <button
-            type="button"
-            onClick={onKeep}
-            className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
-          >
-            Keep my account
-          </button>
-          <button
-            type="button"
-            onClick={onContinue}
-            className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
-          >
-            Continue to delete <ChevronRight className="h-3.5 w-3.5" />
-          </button>
+          {stepCounter}
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={onKeep}
+              className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+            >
+              Keep my account
+            </button>
+            <button
+              type="button"
+              onClick={onContinue}
+              className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+            >
+              Continue to delete <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </DialogFooter>
       </div>
     );
