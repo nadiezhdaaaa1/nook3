@@ -1072,7 +1072,7 @@ function CancelSubscriptionDialog({
               <span className="font-semibold text-charcoal-950">{periodEnd}</span>,
               then move to Intro. Auto-renewal stops and no further charges will be made.
             </p>
-            <DialogFooter className="!justify-between pt-2 gap-2">
+            <DialogFooter className="justify-end gap-2 pt-2">
               <OriginButton
                 variant="secondary"
                 size="medium"
@@ -1082,14 +1082,14 @@ function CancelSubscriptionDialog({
                   toast.success(`Subscription canceled — active until ${periodEnd}`);
                 }}
               >
-                Cancel
+                Cancel subscription
               </OriginButton>
               <OriginButton
                 variant="main"
                 size="medium"
                 onClick={close}
               >
-                Keep
+                Keep subscription
               </OriginButton>
             </DialogFooter>
           </div>
