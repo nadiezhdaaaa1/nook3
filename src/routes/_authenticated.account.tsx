@@ -889,8 +889,6 @@ function DeleteAlternatives({
       alts.push({ kind: "emails-off", icon: Bell, label: "Turn off all emails", desc: "Quiet the inbox. Keep your account dormant." });
     }
   } else if (reason === "found") {
-    if (isPaid) {
-    }
     alts.push({ kind: "accept", icon: Heart, label: "List your move-out · earn $50", desc: "Help someone else find your spot.", toast: "Move-out listing started" });
     alts.push({ kind: "accept", icon: Sparkles, label: "Refer a friend", desc: "Both get a free week of Premium.", toast: "Referral link copied" });
   } else if (reason === "matches") {
@@ -899,8 +897,6 @@ function DeleteAlternatives({
       alts.push({ kind: "accept", icon: Tag, label: "1 month free to retry", desc: "Give it another shot on us.", toast: "1 month free added" });
     }
   } else if (reason === "unused" || reason === "other" || reason === null) {
-    if (isPaid) {
-    }
     alts.push({ kind: "emails-off", icon: Bell, label: "Keep account dormant", desc: "Turn off optional emails. We'll be here when you're ready." });
   }
 
