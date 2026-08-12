@@ -638,6 +638,7 @@ function DeleteAccountDialog({
   };
 
   const scheduleDeletion = useScheduleAccountDeletionMutation();
+  const updateStoreProfile = useAppStore((s) => s.updateProfile);
 
   const handleDelete = () => {
     scheduleDeletion.mutate(
