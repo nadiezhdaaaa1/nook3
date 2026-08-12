@@ -1692,6 +1692,7 @@ function SubscriptionSection({
   activeCycle: BillingCycle;
 }) {
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [renewOpen, setRenewOpen] = useState(false);
   const [canceled, setCanceled] = useState(false);
   const periodEnd = useMemo(() => {
     const d = new Date();
