@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
-import { useUpdateProfileMutation } from "@/lib/queries/profile";
+import { useUpdateProfileMutation, useScheduleAccountDeletionMutation } from "@/lib/queries/profile";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
@@ -592,8 +592,6 @@ function DeleteAccountDialog({
   const [reason, setReason] = useState<DeleteReason | null>(null);
   const [reasonNote, setReasonNote] = useState("");
   const [stayFeedback, setStayFeedback] = useState("");
-  const resetApp = useAppStore((s) => s.reset);
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
 
   const closeAll = () => {
     onOpenChange(false);
@@ -605,16 +603,25 @@ function DeleteAccountDialog({
     }, 200);
   };
 
+  const scheduleDeletion = useScheduleAccountDeletionMutation();
+
   const handleDelete = () => {
-    // Log feedback (analytics stub)
-    // eslint-disable-next-line no-console
-    console.log("[deletion_feedback]", { reason, reasonNote, stayFeedback, plan });
-    resetApp();
-    closeAll();
-    toast.success("Account scheduled for deletion", {
-      description: "You have 30 days to restore it by signing back in.",
-      duration: 6000,
-    });
+    scheduleDeletion.mutate(
+      {
+        reason: reason ? (reason === "other" ? reasonNote || "other" : reason) : undefined,
+        feedback: stayFeedback || undefined,
+      },
+      {
+        onSuccess: () => {
+          closeAll();
+          toast.success("Account scheduled for deletion", {
+            description:
+              "Nothing is deleted for 30 days — you can reverse this from any screen.",
+            duration: 6000,
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -733,8 +740,9 @@ function DeleteAccountDialog({
                   variant="danger"
                   size="medium"
                   onClick={handleDelete}
+                  disabled={scheduleDeletion.isPending}
                 >
-                  Delete account
+                  {scheduleDeletion.isPending ? "Scheduling…" : "Delete account"}
                 </OriginButton>
               </div>
             </DialogFooter>

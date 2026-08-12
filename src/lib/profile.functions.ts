@@ -20,6 +20,8 @@ export function dbRowToUser(row: any) {
     isAffiliate: !!row.is_affiliate,
     completedAt: row.completed_at ?? null,
     hasPassword: !!row.has_password,
+    deletionRequestedAt: row.deletion_requested_at ?? null,
+    deletionScheduledAt: row.deletion_scheduled_at ?? null,
     updatedAt: row.updated_at ?? undefined,
   };
 }
@@ -101,6 +103,61 @@ export const updateProfile = createServerFn({ method: "POST" })
     const { data: updated, error } = await context.supabase
       .from("profiles")
       .upsert({ id: context.userId, ...patch } as never, { onConflict: "id" })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return dbRowToUser(updated);
+  });
+
+/* -------------------------------------------------------------------------
+   Account deletion — scheduled with a 30-day grace period.
+   Nothing is deleted while `deletion_scheduled_at` is in the future; the row
+   only carries the schedule so every screen can surface it and offer a
+   one-click reversal.
+   ------------------------------------------------------------------------- */
+
+const GRACE_DAYS = 30;
+
+export const scheduleAccountDeletion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        reason: z.string().max(120).optional(),
+        feedback: z.string().max(1000).optional(),
+      })
+      .parse(input ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    const now = new Date();
+    const scheduled = new Date(now.getTime() + GRACE_DAYS * 24 * 60 * 60 * 1000);
+    const { data: updated, error } = await context.supabase
+      .from("profiles")
+      .update({
+        deletion_requested_at: now.toISOString(),
+        deletion_scheduled_at: scheduled.toISOString(),
+        deletion_reason: data.reason ?? null,
+        deletion_feedback: data.feedback ?? null,
+      } as never)
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return dbRowToUser(updated);
+  });
+
+export const cancelAccountDeletion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: updated, error } = await context.supabase
+      .from("profiles")
+      .update({
+        deletion_requested_at: null,
+        deletion_scheduled_at: null,
+        deletion_reason: null,
+        deletion_feedback: null,
+      } as never)
+      .eq("id", context.userId)
       .select("*")
       .single();
     if (error) throw new Error(error.message);

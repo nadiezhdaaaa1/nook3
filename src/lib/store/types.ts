@@ -74,6 +74,8 @@ export interface User {
   // Lifecycle
   completedAt: string | null;
   hasPassword?: boolean;
+  deletionRequestedAt?: string | null;
+  deletionScheduledAt?: string | null;
   updatedAt?: string;
 }
 

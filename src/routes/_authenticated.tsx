@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
+import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanner";
 import { AppHeader } from "@/components/app/AppHeader";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
@@ -32,6 +33,7 @@ function AppLayout() {
 
   return (
     <div className="min-h-dvh bg-paper">
+      <AccountDeletionBanner />
       <EmailVerificationBanner />
       {!hideHeader && <AppHeader />}
       {isHydrating ? (
