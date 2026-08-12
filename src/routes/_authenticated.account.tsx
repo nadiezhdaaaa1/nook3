@@ -385,7 +385,7 @@ function StatCard({
         src={illustration}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-5 -right-5 h-[80px] w-[96px] select-none object-contain sm:-bottom-6 sm:-right-6"
+        className="pointer-events-none absolute bottom-0 right-0 h-[80px] w-[96px] select-none object-contain"
       />
     </section>
   );
