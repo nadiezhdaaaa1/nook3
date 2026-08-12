@@ -19,6 +19,7 @@ export function dbRowToUser(row: any) {
     referralCode: row.referral_code ?? "",
     isAffiliate: !!row.is_affiliate,
     completedAt: row.completed_at ?? null,
+    hasPassword: !!row.has_password,
     updatedAt: row.updated_at ?? undefined,
   };
 }
@@ -45,6 +46,8 @@ const profilePatchSchema = z.object({
   phone: z.string().trim().max(40).optional(),
   timezone: z.string().max(60).optional(),
   completedAt: z.string().nullable().optional(),
+  hasPassword: z.boolean().optional(),
+
   moveOut: z
     .object({
       date: z.string(),
@@ -71,6 +74,7 @@ export const updateProfile = createServerFn({ method: "POST" })
     if (data.phone !== undefined) patch.phone = data.phone;
     if (data.timezone !== undefined) patch.timezone = data.timezone;
     if (data.completedAt !== undefined) patch.completed_at = data.completedAt;
+    if (data.hasPassword !== undefined) patch.has_password = data.hasPassword;
     if (data.moveOut !== undefined) patch.move_out = data.moveOut;
 
     const { data: updated, error } = await context.supabase
