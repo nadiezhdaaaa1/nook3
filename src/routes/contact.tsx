@@ -5,6 +5,7 @@ import { CheckCircle2, AlertTriangle, X, ArrowUpRight } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 type Topic =
   | "general"
@@ -535,13 +536,14 @@ function ContactFormSection() {
               {/* Honeypot — hidden from real users, bots fill it. */}
               <div style={{ display: "none" }} aria-hidden="true">
                 <label htmlFor="contact-website">Website (leave empty)</label>
-                <input
+                <Input
                   id="contact-website"
                   type="text"
                   tabIndex={-1}
                   autoComplete="off"
                   value={form.website}
                   onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))}
+                  size="big"
                 />
               </div>
 
