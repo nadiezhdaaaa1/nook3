@@ -1021,6 +1021,15 @@ function CancelSubscriptionDialog({
                 {r.label}
               </button>
             ))}
+            {reason === "other" && (
+              <Input
+                placeholder="Tell us what happened..."
+                value={otherReason}
+                onChange={(e) => setOtherReason(e.target.value)}
+                className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
+                autoFocus
+              />
+            )}
             <DialogFooter className="!justify-between pt-4 gap-2">
               <OriginButton
                 variant="tertiary"
@@ -1032,7 +1041,7 @@ function CancelSubscriptionDialog({
               <OriginButton
                 variant="main"
                 size="medium"
-                disabled={!reason}
+                disabled={!reason || (reason === "other" && !otherReason.trim())}
                 onClick={() => setStep("offer")}
               >
                 Continue
