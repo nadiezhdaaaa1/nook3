@@ -580,7 +580,7 @@ function DeleteAccountDialog({
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <div className="flex items-center justify-between gap-3">
             <DialogTitle className="flex items-center gap-2">
@@ -603,52 +603,53 @@ function DeleteAccountDialog({
               Step {stepIndex} of 5
             </span>
           </div>
+          <DialogDescription>
+            Sorry to see you go — what's driving this?{" "}
+            <span className="text-charcoal-500">(optional)</span>
+          </DialogDescription>
         </DialogHeader>
 
         {step === "reason" && (
-          <div className="space-y-3">
-            <p className="text-sm text-charcoal-700">
-              Sorry to see you go — what's driving this? <span className="text-charcoal-500">(optional)</span>
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {DELETE_REASONS.map((r) => (
-                <button
-                  key={r.id}
-                  type="button"
-                  onClick={() => setReason(reason === r.id ? null : r.id)}
-                  className={cn(
-                    "px-3 py-2 rounded-pill text-xs font-medium border transition-colors",
-                    reason === r.id
-                      ? "border-charcoal-950 bg-charcoal-950 text-paper"
-                      : "border-charcoal-950/15 bg-paper-warm text-charcoal-800 hover:border-charcoal-400",
-                  )}
-                >
-                  {r.label}
-                </button>
-              ))}
-            </div>
-            <textarea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value.slice(0, 1000))}
-              placeholder="Anything we could've done better?"
-              rows={3}
-              className="w-full px-4 py-3 rounded-md bg-surface-elevated border border-border focus:border-charcoal-950 focus:outline-none text-sm resize-none"
-            />
-            <DialogFooter className="!justify-between pt-2">
+          <div className="space-y-2">
+            {DELETE_REASONS.map((r) => (
               <button
+                key={r.id}
                 type="button"
+                onClick={() => setReason(reason === r.id ? null : r.id)}
+                className={cn(
+                  "w-full text-left px-4 py-3 rounded-[12px] border text-sm font-medium transition-colors",
+                  reason === r.id
+                    ? "border-[#2B2521] bg-[#2B2521] text-white"
+                    : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+            {reason === "other" && (
+              <Input
+                placeholder="What happened? (optional)"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value.slice(0, 1000))}
+                className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
+                autoFocus
+              />
+            )}
+            <DialogFooter className="justify-end gap-2 pt-4">
+              <OriginButton
+                variant="tertiary"
+                size="medium"
                 onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
-                className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
               >
                 Skip
-              </button>
-              <button
-                type="button"
+              </OriginButton>
+              <OriginButton
+                variant="secondary"
+                size="medium"
                 onClick={goToOffer}
-                className="h-10 px-5 rounded-pill text-sm font-semibold bg-charcoal-950 text-paper hover:bg-charcoal-800"
               >
                 Continue
-              </button>
+              </OriginButton>
             </DialogFooter>
           </div>
         )}
