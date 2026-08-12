@@ -177,12 +177,14 @@ function AccountPage() {
             label="Alerts received"
             value={String(stats.totalAlerts)}
             illustration={alertsArt.url}
+            nudgeY={4}
           />
           <StatCard
             icon={Clock}
             label="Last 7 days"
             value={String(stats.alerts7d)}
             illustration={lastDaysArt.url}
+            nudgeY={5}
             className="sm:col-span-2 lg:col-span-1"
           />
 
@@ -333,12 +335,13 @@ function SyncProfile({
 }
 
 function StatCard({
-  icon: Icon, label, value, illustration, loading, className,
+  icon: Icon, label, value, illustration, nudgeY, loading, className,
 }: {
   icon: typeof Sparkles;
   label: string;
   value: string;
   illustration: string;
+  nudgeY?: number;
   loading?: boolean;
   className?: string;
 }) {
@@ -385,8 +388,10 @@ function StatCard({
         src={illustration}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 h-[80px] w-[96px] select-none object-contain"
+        className="pointer-events-none absolute bottom-0 right-0 h-[96px] w-[80px] select-none object-contain object-bottom-right"
+        style={nudgeY ? { transform: `translateY(${nudgeY}px)` } : undefined}
       />
+
     </section>
   );
 }
