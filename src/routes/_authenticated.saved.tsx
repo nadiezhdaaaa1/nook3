@@ -12,6 +12,7 @@ import {
   Search as SearchIcon,
   ThumbsDown,
   RotateCcw,
+  Trash2,
 } from "lucide-react";
 
 import { AppPage } from "@/components/app/AppPage";
@@ -27,6 +28,7 @@ import type { SampleListing } from "@/data/sampleListings";
 import type { AlertRow } from "@/lib/alerts.functions";
 import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
 import { useReportListingMutation } from "@/lib/queries/listingReports";
+import { useDeleteSearchMutation } from "@/lib/queries/searches";
 
 const TABS = [
   {
@@ -299,12 +301,20 @@ function summaryBits(s: Search): string[] {
 function SearchesTab({ searches }: { searches: Search[] }) {
   const navigate = useNavigate();
   const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const deleteSearch = useAppStore((s) => s.deleteSearch);
+  const deleteMut = useDeleteSearchMutation();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
   const disabledIds = useDisabledSearchIds();
   const max = SEARCH_LIMITS[plan];
   const canCreate = live.length < max;
+  const isUuid = (id: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  const dbAwareDelete = (id: string) => {
+    if (isUuid(id)) deleteMut.mutate(id);
+    deleteSearch(id);
+  };
   const handleNew = () => {
     if (!canCreate) {
       setUpgradeOpen(true);
@@ -341,7 +351,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
           <li
             key={s.id}
             className={cn(
-              "rounded-[16px] border border-black/10 bg-white p-5",
+              "rounded-[16px] border border-black/10 bg-white p-6",
               (s.status === "archived" || disabledIds.has(s.id)) && "opacity-60",
             )}
           >
@@ -376,17 +386,32 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                   {s.totalAlertsReceived} alerts
                 </p>
               </div>
-              <OriginButton
-                variant="tertiary"
-                size="medium"
-                aria-label={`Edit ${s.name}`}
-                className="h-9 w-9 shrink-0 rounded-[8px] p-0"
-                onClick={() =>
-                  navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } })
-                }
-              >
-                <Pencil className="h-4 w-4" />
-              </OriginButton>
+              <div className="flex items-center gap-1">
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  aria-label={`Edit ${s.name}`}
+                  className="h-9 w-9 shrink-0 rounded-[8px] p-0"
+                  onClick={() =>
+                    navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } })
+                  }
+                >
+                  <Pencil className="h-4 w-4" />
+                </OriginButton>
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  aria-label={`Delete ${s.name}`}
+                  className="h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger hover:text-danger hover:bg-danger/10"
+                  onClick={() => {
+                    if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
+                      dbAwareDelete(s.id);
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </OriginButton>
+              </div>
             </div>
 
             {disabledIds.has(s.id) && (
