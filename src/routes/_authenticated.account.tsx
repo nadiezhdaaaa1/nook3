@@ -996,7 +996,9 @@ function CancelSubscriptionDialog({
     <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
-          <DialogTitle>We’re sorry to see you go</DialogTitle>
+          <DialogTitle>
+            {step === "reason" ? "We’re sorry to see you go" : "Confirm cancellation"}
+          </DialogTitle>
           {step === "reason" && (
             <DialogDescription>
               Before you cancel, tell us what changed. Your feedback helps us make Nook better for the next apartment hunt.
