@@ -1641,7 +1641,7 @@ function SignInMethodRows() {
             <img
               src={googleIcon.url}
               alt=""
-              className="h-8 w-8 object-contain shrink-0"
+              className="h-7 w-7 object-contain shrink-0"
               aria-hidden="true"
             />
             <div className="min-w-0">
