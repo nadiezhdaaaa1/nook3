@@ -1614,6 +1614,27 @@ function SignInMethodRows() {
 
   return (
     <>
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="h-8 w-8 shrink-0 rounded-full bg-charcoal-950/[0.06] flex items-center justify-center">
+            <Mail className="h-4 w-4 text-charcoal-700" />
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950">Login / Email</div>
+            <div className="text-xs text-charcoal-600 mt-0.5 truncate">
+              {methods.hasEmailPassword ? methods.email : "Disabled"}
+            </div>
+          </div>
+        </div>
+        {!methods.hasEmailPassword && (
+          <OriginButton variant="tertiary" size="medium" onClick={() => setEnableOpen(true)}>
+            Enable
+          </OriginButton>
+        )}
+      </div>
+
+      {methods.hasEmailPassword && <ProfilePasswordRow />}
+
       {methods.hasGoogle && (
         <div className="px-5 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
@@ -1635,27 +1656,6 @@ function SignInMethodRows() {
           </OriginButton>
         </div>
       )}
-
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="h-8 w-8 shrink-0 rounded-full bg-charcoal-950/[0.06] flex items-center justify-center">
-            <Mail className="h-4 w-4 text-charcoal-700" />
-          </span>
-          <div className="min-w-0">
-            <div className="text-sm font-semibold text-charcoal-950">Login / Email</div>
-            <div className="text-xs text-charcoal-600 mt-0.5 truncate">
-              {methods.hasEmailPassword ? methods.email : "Disabled"}
-            </div>
-          </div>
-        </div>
-        {!methods.hasEmailPassword && (
-          <OriginButton variant="tertiary" size="medium" onClick={() => setEnableOpen(true)}>
-            Enable
-          </OriginButton>
-        )}
-      </div>
-
-      {methods.hasEmailPassword && <ProfilePasswordRow />}
 
       <EnableEmailPasswordDialog
         open={enableOpen}
