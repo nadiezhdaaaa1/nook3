@@ -8,6 +8,7 @@ import {
   cancelAccountDeletion,
   setSubscriptionCanceled,
 } from "@/lib/profile.functions";
+import { useAppStore } from "@/lib/store/appStore";
 
 export const profileQueryKey = ["profile"] as const;
 
