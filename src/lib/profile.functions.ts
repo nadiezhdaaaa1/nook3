@@ -23,6 +23,8 @@ export function dbRowToUser(row: any) {
     deletionRequestedAt: row.deletion_requested_at ?? null,
     deletionScheduledAt: row.deletion_scheduled_at ?? null,
     deletionCancelSubscription: row.deletion_cancel_subscription ?? null,
+    subscriptionCanceledAt: row.subscription_canceled_at ?? null,
+    subscriptionPeriodEnd: row.subscription_period_end ?? null,
     updatedAt: row.updated_at ?? undefined,
   };
 }
