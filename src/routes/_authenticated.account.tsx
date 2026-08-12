@@ -638,16 +638,9 @@ function DeleteAccountDialog({
   const [stayFeedback, setStayFeedback] = useState("");
   const [cancelSubscription, setCancelSubscription] = useState(true);
 
-  const closeAll = () => {
-    onOpenChange(false);
-    setTimeout(() => {
-      setStep("reason");
-      setReason(null);
-      setReasonNote("");
-      setStayFeedback("");
-      setCancelSubscription(true);
-    }, 200);
-  };
+  // Local state is reset by remounting (parent passes a fresh key per open),
+  // so closing just needs to close.
+  const closeAll = () => onOpenChange(false);
 
   const scheduleDeletion = useScheduleAccountDeletionMutation();
 
