@@ -928,20 +928,23 @@ function DeleteAlternatives({
         />
       ))}
       <DialogFooter className="!justify-between pt-2">
-        <button
-          type="button"
-          onClick={onKeep}
-          className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
-        >
-          Keep my account
-        </button>
-        <button
-          type="button"
-          onClick={onContinue}
-          className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
-        >
-          No — delete my account <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+        {stepCounter}
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={onKeep}
+            className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+          >
+            Keep my account
+          </button>
+          <button
+            type="button"
+            onClick={onContinue}
+            className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+          >
+            No — delete my account <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </DialogFooter>
     </div>
   );
