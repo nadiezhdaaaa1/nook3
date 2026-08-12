@@ -1327,6 +1327,8 @@ function useSignInMethods(): SignInMethodsState {
     let cancelled = false;
     setLoading(true);
     (async () => {
+      // Refresh the session first so freshly linked/unlinked identities are reflected.
+      await supabase.auth.refreshSession().catch(() => null);
       const { data, error: err } = await supabase.auth.getUserIdentities();
       if (cancelled) return;
       if (err || !data) {
@@ -1342,6 +1344,7 @@ function useSignInMethods(): SignInMethodsState {
       cancelled = true;
     };
   }, [tick]);
+
 
   const list = identities ?? [];
   const googleIdentity = list.find((i) => i.provider === "google") ?? null;
@@ -1363,6 +1366,40 @@ function SignInMethodRows() {
   const methods = useSignInMethods();
   const [enableOpen, setEnableOpen] = useState(false);
   const [disconnectOpen, setDisconnectOpen] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+
+  // If Google came back linked under a different email than the account email,
+  // unlink it again — only the account's own email may be connected.
+  useEffect(() => {
+    if (methods.loading || !methods.hasGoogle || !methods.googleIdentity) return;
+    const linked = (methods.googleIdentity.identity_data?.email ?? "").toLowerCase();
+    const own = (methods.email ?? "").toLowerCase();
+    if (!linked || !own || linked === own) return;
+    (async () => {
+      await supabase.auth.unlinkIdentity(methods.googleIdentity);
+      toast.error("That Google account doesn't match your email", {
+        description: `Connect the Google account for ${methods.email}.`,
+      });
+      methods.refresh();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [methods.loading, methods.hasGoogle, methods.googleIdentity, methods.email]);
+
+  async function handleConnectGoogle() {
+    setConnecting(true);
+    const { error } = await supabase.auth.linkIdentity({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/account`,
+        queryParams: { login_hint: methods.email, prompt: "select_account" },
+      },
+    });
+    setConnecting(false);
+    if (error) {
+      toast.error("Couldn't connect Google", { description: error.message });
+    }
+  }
+
 
   if (methods.loading) {
     return (
@@ -1411,9 +1448,8 @@ function SignInMethodRows() {
 
       {methods.hasEmailPassword && <ProfilePasswordRow />}
 
-      {methods.hasGoogle && (
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
           <span className="h-10 w-10 shrink-0 flex items-center justify-center">
             <img
               src={googleIcon.url}
@@ -1422,18 +1458,29 @@ function SignInMethodRows() {
               aria-hidden="true"
             />
           </span>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-charcoal-950">Google Account</div>
-              <div className="text-xs text-charcoal-600 mt-0.5 truncate">
-                Connected {methods.googleEmail}
-              </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950">Google Account</div>
+            <div className="text-xs text-charcoal-600 mt-0.5 truncate">
+              {methods.hasGoogle ? `Connected ${methods.googleEmail}` : "Disconnected"}
             </div>
           </div>
+        </div>
+        {methods.hasGoogle ? (
           <OriginButton variant="tertiary" size="medium" onClick={() => setDisconnectOpen(true)}>
             Disconnect
           </OriginButton>
-        </div>
-      )}
+        ) : (
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            disabled={connecting}
+            onClick={handleConnectGoogle}
+          >
+            {connecting ? "Connecting…" : "Connect"}
+          </OriginButton>
+        )}
+      </div>
+
 
       <EnableEmailPasswordDialog
         open={enableOpen}
