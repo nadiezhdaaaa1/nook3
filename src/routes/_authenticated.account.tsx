@@ -752,6 +752,26 @@ function DeleteAccountDialog({
               />
             </div>
 
+            <div className="flex items-start gap-3 rounded-[12px] border border-border bg-paper-warm p-4">
+              <Checkbox
+                id="cancel-subscription"
+                checked={cancelSubscription}
+                onCheckedChange={(v) => setCancelSubscription(v === true)}
+                className="mt-0.5"
+              />
+              <div className="space-y-1">
+                <label
+                  htmlFor="cancel-subscription"
+                  className="text-sm font-semibold text-charcoal-950 cursor-pointer"
+                >
+                  Also cancel my subscription
+                </label>
+                <p className="text-xs text-charcoal-600">
+                  Stops billing at the end of your current period. You can keep the subscription if you only want to delete the account data.
+                </p>
+              </div>
+            </div>
+
             <div className="rounded-[12px] border border-danger/30 bg-danger p-4">
               <p className="text-sm text-white leading-relaxed">
                 Your account will be deactivated now and permanently deleted after a 30-day grace period. During that window you can restore it by signing back in. After that, your data is gone for good.
