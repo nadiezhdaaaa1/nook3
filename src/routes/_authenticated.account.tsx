@@ -1779,8 +1779,16 @@ function EnableEmailPasswordDialog({
     setLocalProfile({ hasPassword: true });
     try {
       await saveProfile.mutateAsync({ hasPassword: true });
-    } catch {
-      /* local state already updated; surfaced by the mutation toast */
+    } catch (err) {
+      // The password was set in auth but we couldn't persist the flag — keep
+      // the dialog open and tell the user instead of pretending it worked.
+      setError(
+        err instanceof Error
+          ? `Password set, but we couldn't save your sign-in settings: ${err.message}`
+          : "Password set, but we couldn't save your sign-in settings. Please try again.",
+      );
+      setLoading(false);
+      return;
     }
     setLoading(false);
     toast.success("Email & password sign-in enabled", {
