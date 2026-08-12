@@ -1783,6 +1783,11 @@ function SubscriptionSection({
 
   return (
     <>
+      <CancelSubscriptionDialog
+        open={cancelOpen}
+        onOpenChange={setCancelOpen}
+        periodEnd={periodEnd}
+      />
       <section id="plan-options">
         <div className="mb-5">
           <h2 className="font-display text-xl font-semibold text-charcoal-950">
@@ -1813,6 +1818,7 @@ function SubscriptionSection({
       <PaymentHistorySection plan={plan} cycle={activeCycle} currentPlan={currentPlan} />
     </>
   );
+
 }
 
 /* ------------------------- Payment method (Stripe) ------------------------- */
