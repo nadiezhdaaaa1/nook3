@@ -472,12 +472,21 @@ function DislikedCard({
 
 /* ---------- Empty ---------- */
 
-function EmptyState({ title, sub }: { title: string; sub: string }) {
+function EmptyState({
+  title,
+  sub,
+  action,
+}: {
+  title: string;
+  sub: string;
+  action?: React.ReactNode;
+}) {
   return (
     <div className="rounded-[16px] border border-dashed border-black/15 bg-white/50 p-10 text-center">
       <Inbox className="mx-auto h-8 w-8 text-charcoal-400" />
       <div className="mt-3 font-display text-lg font-bold text-charcoal-950">{title}</div>
       <div className="mx-auto mt-1 max-w-sm text-sm text-charcoal-600">{sub}</div>
+      {action}
     </div>
   );
 }
