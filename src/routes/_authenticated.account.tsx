@@ -349,11 +349,10 @@ function StatCard({
     <section
       aria-label={label}
       className={cn(
-        "relative flex h-[140px] flex-col overflow-hidden rounded-2xl border bg-white p-5 sm:p-6",
+        "relative flex h-[120px] flex-col overflow-hidden rounded-2xl border bg-white p-5 sm:p-6",
         className,
       )}
       style={{ borderColor: "rgba(0,0,0,0.2)" }}
-
     >
       <div className="relative z-10 flex items-start gap-2">
         <Icon
@@ -370,11 +369,11 @@ function StatCard({
       </div>
       <div className="flex-1" />
       {loading ? (
-        <div className="relative z-10 h-9 w-24 animate-pulse rounded-md bg-charcoal-950/8 sm:h-10" />
+        <div className="relative z-10 h-8 w-24 animate-pulse rounded-md bg-charcoal-950/8 sm:h-9" />
       ) : (
         <div
           aria-live="polite"
-          className="relative z-10 font-display font-bold tabular-nums text-[28px] leading-9 sm:text-[32px] sm:leading-10"
+          className="relative z-10 font-display font-bold tabular-nums text-[24px] leading-8 sm:text-[28px] sm:leading-9"
           style={{
             letterSpacing: "-0.36px",
             color: "#241C12",
@@ -388,10 +387,9 @@ function StatCard({
         src={illustration}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 h-[96px] w-[80px] select-none object-contain object-bottom-right"
+        className="pointer-events-none absolute bottom-0 right-0 h-[76px] w-[64px] select-none object-contain object-bottom-right"
         style={nudgeY ? { transform: `translateY(${nudgeY}px)` } : undefined}
       />
-
     </section>
   );
 }
