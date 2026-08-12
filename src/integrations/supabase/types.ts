@@ -245,6 +245,10 @@ export type Database = {
           completed_at: string | null
           consents: Json
           created_at: string
+          deletion_feedback: string | null
+          deletion_reason: string | null
+          deletion_requested_at: string | null
+          deletion_scheduled_at: string | null
           email: string
           email_verified: boolean
           email_verified_at: string | null
@@ -270,6 +274,10 @@ export type Database = {
           completed_at?: string | null
           consents?: Json
           created_at?: string
+          deletion_feedback?: string | null
+          deletion_reason?: string | null
+          deletion_requested_at?: string | null
+          deletion_scheduled_at?: string | null
           email?: string
           email_verified?: boolean
           email_verified_at?: string | null
@@ -295,6 +303,10 @@ export type Database = {
           completed_at?: string | null
           consents?: Json
           created_at?: string
+          deletion_feedback?: string | null
+          deletion_reason?: string | null
+          deletion_requested_at?: string | null
+          deletion_scheduled_at?: string | null
           email?: string
           email_verified?: boolean
           email_verified_at?: string | null
@@ -721,6 +733,10 @@ export type Database = {
           completed_at: string | null
           consents: Json
           created_at: string
+          deletion_feedback: string | null
+          deletion_reason: string | null
+          deletion_requested_at: string | null
+          deletion_scheduled_at: string | null
           email: string
           email_verified: boolean
           email_verified_at: string | null
