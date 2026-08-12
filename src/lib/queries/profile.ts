@@ -53,10 +53,12 @@ export function useCancelAccountDeletionMutation() {
   const fn = useServerFn(cancelAccountDeletion);
   return useMutation({
     mutationFn: () => fn(),
-    onSuccess: () => {
+    onSuccess: (user) => {
       qc.invalidateQueries({ queryKey: profileQueryKey });
       toast.success("Account restored", {
-        description: "Your account is active again — nothing was deleted.",
+        description: user?.subscriptionCanceledAt
+          ? "Your account is active again — nothing was deleted. Auto-renewal is still off; renew anytime in Plan options."
+          : "Your account is active again — nothing was deleted.",
       });
     },
     onError: (e) =>
