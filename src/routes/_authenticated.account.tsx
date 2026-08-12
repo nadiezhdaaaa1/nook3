@@ -1531,6 +1531,348 @@ function TimezoneDialog({
   );
 }
 
+/* --------------------------- Sign-in methods -------------------------- */
+type SignInMethodsState = {
+  loading: boolean;
+  error: boolean;
+  hasGoogle: boolean;
+  hasEmailPassword: boolean;
+  email: string;
+  googleEmail: string;
+  googleIdentity: any | null;
+  refresh: () => void;
+};
+
+function useSignInMethods(): SignInMethodsState {
+  const user = useAppStore((s) => s.user);
+  const [identities, setIdentities] = useState<any[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    (async () => {
+      const { data, error: err } = await supabase.auth.getUserIdentities();
+      if (cancelled) return;
+      if (err || !data) {
+        setError(true);
+        setIdentities([]);
+      } else {
+        setError(false);
+        setIdentities(data.identities ?? []);
+      }
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [tick]);
+
+  const list = identities ?? [];
+  const googleIdentity = list.find((i) => i.provider === "google") ?? null;
+  const emailIdentity = list.find((i) => i.provider === "email") ?? null;
+
+  return {
+    loading,
+    error,
+    hasGoogle: !!googleIdentity,
+    hasEmailPassword: !!emailIdentity || !!user?.hasPassword,
+    email: user?.email ?? "",
+    googleEmail: googleIdentity?.identity_data?.email ?? user?.email ?? "",
+    googleIdentity,
+    refresh: () => setTick((t) => t + 1),
+  };
+}
+
+function SignInMethodRows() {
+  const methods = useSignInMethods();
+  const [enableOpen, setEnableOpen] = useState(false);
+  const [disconnectOpen, setDisconnectOpen] = useState(false);
+
+  if (methods.loading) {
+    return (
+      <div className="px-5 py-4 text-xs text-charcoal-600">Loading sign-in methods…</div>
+    );
+  }
+
+  if (methods.error) {
+    return (
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="text-xs text-charcoal-600">
+          We couldn&apos;t load your sign-in methods right now.
+        </div>
+        <OriginButton variant="tertiary" size="medium" onClick={methods.refresh}>
+          Retry
+        </OriginButton>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {methods.hasGoogle && (
+        <div className="px-5 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <img
+              src={googleIcon.url}
+              alt=""
+              className="h-8 w-8 object-contain shrink-0"
+              aria-hidden="true"
+            />
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">Google Account</div>
+              <div className="text-xs text-charcoal-600 mt-0.5 truncate">
+                Connected {methods.googleEmail}
+              </div>
+            </div>
+          </div>
+          <OriginButton variant="tertiary" size="medium" onClick={() => setDisconnectOpen(true)}>
+            Disconnect
+          </OriginButton>
+        </div>
+      )}
+
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="h-8 w-8 shrink-0 rounded-full bg-charcoal-950/[0.06] flex items-center justify-center">
+            <Mail className="h-4 w-4 text-charcoal-700" />
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950">Login / Email</div>
+            <div className="text-xs text-charcoal-600 mt-0.5 truncate">
+              {methods.hasEmailPassword ? methods.email : "Disabled"}
+            </div>
+          </div>
+        </div>
+        {!methods.hasEmailPassword && (
+          <OriginButton variant="tertiary" size="medium" onClick={() => setEnableOpen(true)}>
+            Enable
+          </OriginButton>
+        )}
+      </div>
+
+      {methods.hasEmailPassword && <ProfilePasswordRow />}
+
+      <EnableEmailPasswordDialog
+        open={enableOpen}
+        onOpenChange={setEnableOpen}
+        email={methods.email}
+        onDone={methods.refresh}
+      />
+
+      <DisconnectGoogleDialog
+        open={disconnectOpen}
+        onOpenChange={setDisconnectOpen}
+        hasEmailPassword={methods.hasEmailPassword}
+        identity={methods.googleIdentity}
+        onEnable={() => {
+          setDisconnectOpen(false);
+          setEnableOpen(true);
+        }}
+        onDone={methods.refresh}
+      />
+    </>
+  );
+}
+
+function EnableEmailPasswordDialog({
+  open, onOpenChange, email, onDone,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  email: string;
+  onDone: () => void;
+}) {
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [showNext, setShowNext] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const updateProfile = useAppStore((s) => s.updateUser);
+  const strength = passwordStrength(next);
+  const canSubmit = next.length >= 8 && next === confirm && !loading;
+
+  useEffect(() => {
+    if (open) {
+      setNext("");
+      setConfirm("");
+      setError(null);
+    }
+  }, [open]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (next.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    if (next !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+    setLoading(true);
+    const { error: updateError } = await supabase.auth.updateUser({ password: next });
+    if (updateError) {
+      setError(updateError.message);
+      setLoading(false);
+      return;
+    }
+    updateProfile({ hasPassword: true });
+    setLoading(false);
+    toast.success("Email & password sign-in enabled", {
+      description: `You can now sign in with ${email}.`,
+    });
+    onOpenChange(false);
+    onDone();
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md bg-white">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">
+            Enable email &amp; password sign-in
+          </DialogTitle>
+          <DialogDescription className="text-sm text-charcoal-600">
+            Set a password so you can also sign in without Google. Your email stays the same.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          <div>
+            <label className="block text-sm font-medium text-charcoal-800 mb-2" htmlFor="enable-email">
+              Email
+            </label>
+            <Input id="enable-email" value={email} readOnly disabled size="big" />
+            <p className="text-xs text-charcoal-600 mt-2">
+              This is your account email and can&apos;t be changed.
+            </p>
+          </div>
+          <PasswordField
+            id="enable-password"
+            label="New password"
+            value={next}
+            onChange={setNext}
+            show={showNext}
+            onToggle={() => setShowNext((s) => !s)}
+            error={next.length > 0 && next.length < 8 ? "At least 8 characters" : undefined}
+            autoComplete="new-password"
+            autoFocus
+          />
+          {next.length > 0 && (
+            <div className="flex items-center gap-2 text-xs">
+              <div className="flex-1 h-1.5 rounded-full bg-charcoal-200 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${(strength.score / 4) * 100}%`, background: strength.score < 2 ? "#E16D5E" : strength.score < 3 ? "#D66C38" : "#6A820A" }}
+                />
+              </div>
+              <span className="text-charcoal-600">{strength.label}</span>
+            </div>
+          )}
+          <PasswordField
+            id="enable-password-confirm"
+            label="Confirm password"
+            value={confirm}
+            onChange={setConfirm}
+            show={showConfirm}
+            onToggle={() => setShowConfirm((s) => !s)}
+            error={confirm.length > 0 && confirm !== next ? "Passwords do not match" : undefined}
+            autoComplete="new-password"
+          />
+          {error && <p className="text-sm text-danger">{error}</p>}
+          <DialogFooter className="pt-2 gap-2">
+            <OriginButton
+              type="button"
+              variant="tertiary"
+              size="medium"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </OriginButton>
+            <OriginButton type="submit" variant="main" size="medium" disabled={!canSubmit}>
+              {loading ? "Saving…" : "Enable"}
+            </OriginButton>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function DisconnectGoogleDialog({
+  open, onOpenChange, hasEmailPassword, identity, onEnable, onDone,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  hasEmailPassword: boolean;
+  identity: any | null;
+  onEnable: () => void;
+  onDone: () => void;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleDisconnect() {
+    if (!identity) return;
+    setLoading(true);
+    const { error } = await supabase.auth.unlinkIdentity(identity);
+    setLoading(false);
+    if (error) {
+      toast.error("Couldn't disconnect Google", { description: error.message });
+      return;
+    }
+    toast.success("Google account disconnected");
+    onOpenChange(false);
+    onDone();
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md bg-white">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">
+            Disconnect Google
+          </DialogTitle>
+          <DialogDescription className="text-sm text-charcoal-600">
+            {hasEmailPassword
+              ? "You'll keep access with your email and password. You can reconnect Google later by signing in with it."
+              : "Google is currently the only way into your account. Switch to email & password sign-in first, then you can disconnect Google."}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="pt-2 gap-2">
+          <OriginButton
+            type="button"
+            variant="tertiary"
+            size="medium"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </OriginButton>
+          {hasEmailPassword ? (
+            <OriginButton
+              type="button"
+              variant="secondary"
+              size="medium"
+              disabled={loading}
+              onClick={handleDisconnect}
+            >
+              {loading ? "Disconnecting…" : "Disconnect"}
+            </OriginButton>
+          ) : (
+            <OriginButton type="button" variant="main" size="medium" onClick={onEnable}>
+              Enable Email/Password
+            </OriginButton>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
 /* --------------------------- Security: password change -------------------------- */
 function ProfilePasswordRow() {
   const [open, setOpen] = useState(false);
