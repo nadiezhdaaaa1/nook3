@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { GRACE_DAYS, defaultPeriodEnd } from "@/lib/profile.helpers";
 
 export function dbRowToUser(row: any) {
   return {
