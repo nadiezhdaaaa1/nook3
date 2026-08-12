@@ -643,6 +643,7 @@ function DeleteAccountDialog({
       {
         reason: reason ? (reason === "other" ? reasonNote || "other" : reason) : undefined,
         feedback: stayFeedback || undefined,
+        cancelSubscription,
       },
       {
         onSuccess: () => {
