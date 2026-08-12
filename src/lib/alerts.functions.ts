@@ -7,6 +7,8 @@ import {
   paginationSchema,
   rowToAlert,
 } from "@/lib/alerts.shared";
+import type { PaginatedAlertsResult } from "@/lib/alerts.shared";
+
 
 export type {
   AlertStatusDb,
