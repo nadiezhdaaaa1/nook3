@@ -122,7 +122,7 @@ function ContactPage() {
     <MarketingLayout>
       <div
         className="relative"
-        style={{ backgroundColor: "var(--color-brand-cream)" }}
+        style={{ backgroundColor: "#FAF6EE" }}
       >
         <ContactHero />
         <ChannelCards />
