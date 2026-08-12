@@ -38,7 +38,8 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
-import { useUpdateProfileMutation, useScheduleAccountDeletionMutation, useCancelAccountDeletionMutation } from "@/lib/queries/profile";
+import { useUpdateProfileMutation, useScheduleAccountDeletionMutation, useCancelAccountDeletionMutation, useSetSubscriptionCanceledMutation, profileQueryOptions } from "@/lib/queries/profile";
+import { useQuery } from "@tanstack/react-query";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
