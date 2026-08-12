@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, AlertTriangle, X, ArrowUpRight } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { OriginButton } from "@/components/ui/origin-button";
+import { Input } from "@/components/ui/input";
 
 type Topic =
   | "general"
@@ -442,16 +443,18 @@ function ContactFormSection() {
                 required
                 error={errors.name}
               >
-                <input
+                <Input
                   id="contact-name"
                   type="text"
                   autoComplete="name"
                   aria-required="true"
+                  aria-invalid={!!errors.name}
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  className={inputCls(!!errors.name)}
                   maxLength={100}
                   placeholder="Alex Johnson"
+                  size="big"
+                  className={errors.name ? "border-[#c93822] focus:border-[#c93822]" : ""}
                 />
               </Field>
 
@@ -461,16 +464,18 @@ function ContactFormSection() {
                 required
                 error={errors.email}
               >
-                <input
+                <Input
                   id="contact-email"
                   type="email"
                   autoComplete="email"
                   aria-required="true"
+                  aria-invalid={!!errors.email}
                   value={form.email}
                   onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                  className={inputCls(!!errors.email)}
                   maxLength={255}
                   placeholder="you@email.com"
+                  size="big"
+                  className={errors.email ? "border-[#c93822] focus:border-[#c93822]" : ""}
                 />
               </Field>
 
@@ -483,11 +488,15 @@ function ContactFormSection() {
                 <select
                   id="contact-topic"
                   aria-required="true"
+                  aria-invalid={!!errors.topic}
                   value={form.topic}
                   onChange={(e) =>
                     setForm((f) => ({ ...f, topic: e.target.value as Topic }))
                   }
-                  className={inputCls(!!errors.topic) + " appearance-none pr-10 bg-no-repeat bg-[right_14px_center]"}
+                  className={cn(
+                    fieldClassName(!!errors.topic),
+                    "appearance-none pr-10 bg-no-repeat bg-[right_14px_center]"
+                  )}
                   style={{
                     backgroundImage:
                       'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'8\' viewBox=\'0 0 12 8\' fill=\'none\'><path d=\'M1 1.5L6 6.5L11 1.5\' stroke=\'%232B2521\' stroke-width=\'1.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/></svg>")',
@@ -513,9 +522,10 @@ function ContactFormSection() {
                 <textarea
                   id="contact-message"
                   aria-required="true"
+                  aria-invalid={!!errors.message}
                   value={form.message}
                   onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                  className={inputCls(!!errors.message) + " min-h-[120px] resize-y"}
+                  className={cn(fieldClassName(!!errors.message), "min-h-[120px] resize-y")}
                   rows={5}
                   maxLength={5000}
                   placeholder="Tell us what's going on — the more context, the faster we can help."
@@ -579,8 +589,7 @@ function Field({
     <div className="mb-5">
       <label
         htmlFor={id}
-        className="block text-[11px] font-mono uppercase tracking-[0.08em] font-semibold mb-2"
-        style={{ color: "color-mix(in oklab, var(--color-brand-charcoal) 75%, transparent)" }}
+        className="block text-[14px] font-medium mb-2 text-[#4a4a46]"
       >
         {label}{" "}
         {required && (
@@ -592,7 +601,7 @@ function Field({
         {error && (
           <div
             className="text-[13px] flex items-center gap-1"
-            style={{ color: "#A0533F" }}
+            style={{ color: "#c93822" }}
           >
             <AlertTriangle className="h-3 w-3 shrink-0" />
             <span>{error}</span>
@@ -603,17 +612,10 @@ function Field({
   );
 }
 
-function inputCls(hasError: boolean) {
-  return [
-    "w-full rounded-[8px] px-4 py-3 text-[15px] outline-none transition-colors",
-    "focus:ring-2 focus:ring-offset-0",
-    "disabled:opacity-60",
-  ].join(" ") +
-    " " +
-    [
-      "bg-[var(--color-brand-soft)]",
-      hasError ? "border border-[var(--color-brand-terracotta)]" : "border border-[var(--color-brand-clay)]",
-      "text-[var(--color-brand-charcoal)]",
-      "focus:ring-[var(--color-brand-sage)]",
-    ].join(" ");
+function fieldClassName(hasError: boolean) {
+  return cn(
+    "flex w-full rounded-[12px] border bg-white px-4 text-[14px] font-['Google_Sans_Flex',sans-serif] text-[#241c12] transition-colors placeholder:text-[rgba(36,28,18,0.5)] hover:border-black/[0.32] focus:border-[#DF4400] focus:outline-none focus-visible:border-[#DF4400] focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
+    hasError ? "border-[#c93822] focus:border-[#c93822]" : "border-black/20",
+    "h-[56px]"
+  );
 }
