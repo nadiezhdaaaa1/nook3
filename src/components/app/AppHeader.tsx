@@ -6,7 +6,6 @@ import {
   IconHeart,
   IconHomeSearch,
   IconMenu2,
-  IconMessageChatbot,
   IconUser,
 } from "@tabler/icons-react";
 
