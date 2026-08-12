@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   Heart,
   Inbox,
@@ -318,23 +318,18 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
   if (searches.length === 0) {
     return (
-      <div className="rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
-        <h3 className="font-display text-[22px] font-semibold text-[#241c12]">
-          No saved searches yet
-        </h3>
-        <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-          A search is what powers your alerts and the listings on your home screen. Create one to
-          start getting matches.
-        </p>
-        <div className="mt-6 flex justify-center">
-          <OriginButton variant="main" size="medium" onClick={handleNew}>
+      <EmptyState
+        title="No saved searches yet"
+        sub="A search is what powers your alerts and the listings on your home screen. Create one to start getting matches."
+        action={
+          <OriginButton variant="main" size="medium" onClick={handleNew} className="mt-5">
             Create a search
           </OriginButton>
-        </div>
-        {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
-      </div>
+        }
+      />
     );
   }
+
 
 
 
@@ -477,12 +472,21 @@ function DislikedCard({
 
 /* ---------- Empty ---------- */
 
-function EmptyState({ title, sub }: { title: string; sub: string }) {
+function EmptyState({
+  title,
+  sub,
+  action,
+}: {
+  title: string;
+  sub: string;
+  action?: ReactNode;
+}) {
   return (
     <div className="rounded-[16px] border border-dashed border-black/15 bg-white/50 p-10 text-center">
       <Inbox className="mx-auto h-8 w-8 text-charcoal-400" />
       <div className="mt-3 font-display text-lg font-bold text-charcoal-950">{title}</div>
       <div className="mx-auto mt-1 max-w-sm text-sm text-charcoal-600">{sub}</div>
+      {action}
     </div>
   );
 }
