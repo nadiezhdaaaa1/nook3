@@ -86,6 +86,14 @@ export function useDbSync() {
     if (rows.length > 0) useOnboardingStore.getState().setHandoffCompleted(true);
   }, [searchesQ.data, profileQ.data]);
 
+  // 1a) Keep deletion / subscription state fresh after hydration: any later
+  // profile refetch (mutation invalidation, tab focus, other device) mirrors
+  // onto the store so UI reading the store doesn't need a page reload.
+  useEffect(() => {
+    if (!profileQ.data) return;
+    syncDeletionStateToStore(profileQ.data as any);
+  }, [profileQ.data]);
+
   // 1b) Onboarding handoff: the account has no searches yet, but the browser
   // still holds the onboarding answers — persist them as the first Search.
   useEffect(() => {
