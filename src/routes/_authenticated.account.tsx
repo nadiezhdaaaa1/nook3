@@ -1109,10 +1109,14 @@ function PlanCard({
 
   const CANCEL_TAIL = "Cancel anytime in Account → Subscription in two steps.";
 
+  const isCanceledCurrent = Boolean(isCurrent && canceled && plan.id !== "free");
+
   const billLine = isCurrent
     ? plan.id === "free"
       ? `${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left`
-      : `next charge ${periodEnd}`
+      : isCanceledCurrent
+        ? `Cancels on ${periodEnd}`
+        : `next charge ${periodEnd}`
     : plan.id === "free"
       ? "then $14.99/month"
       : plan.cycle === "annual"
@@ -1124,9 +1128,11 @@ function PlanCard({
   const disclaimer = isCurrent
     ? plan.id === "free"
       ? `First charge $14.99 on ${firstChargeDate}.`
-      : plan.cycle === "annual"
-        ? `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`
-        : `You keep Pro until then. Nothing is deleted.`
+      : isCanceledCurrent
+        ? `Your subscription will be canceled on ${periodEnd}. You keep Pro until then — renew anytime to stay on.`
+        : plan.cycle === "annual"
+          ? `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`
+          : `You keep Pro until then. Nothing is deleted.`
     : plan.id === "free"
       ? `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`
       : plan.cycle === "annual"
@@ -1136,8 +1142,11 @@ function PlanCard({
   const ctaLabel = isCurrent
     ? plan.id === "free"
       ? ""
-      : `Cancel on ${periodEnd}`
+      : isCanceledCurrent
+        ? "Renew subscription"
+        : `Cancel on ${periodEnd}`
     : isUpgrade
+
       ? plan.cycle === "annual"
         ? "Switch to annual"
         : "Unlock all matches now"
