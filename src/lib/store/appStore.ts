@@ -14,6 +14,7 @@ import type {
 import { SEARCH_LIMITS } from "./types";
 import { isSearchDisabled, getDisabledSearchIds, DISABLED_SEARCH_REASON } from "./lock";
 import { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 interface AppState {
   user: User | null;
@@ -21,6 +22,11 @@ interface AppState {
   activeSearchId: string | null;
   /** Set true after first hydration so consumers can avoid SSR flicker. */
   hydrated: boolean;
+  /**
+   * Ids of searches deleted from this browser. Tombstones so background sync
+   * (onboarding hand-off / local reconcile) can never resurrect them.
+   */
+  deletedSearchIds: string[];
 }
 
 interface AppActions {
@@ -101,7 +107,38 @@ const initialState: AppState = {
   searches: [],
   activeSearchId: null,
   hydrated: false,
+  deletedSearchIds: [],
 };
+
+/**
+ * After a delete, make sure the live editing buffer no longer points at the
+ * removed search (a stale buffer would otherwise be flushed back to the DB).
+ */
+function clearEditingBufferFor(deletedId: string, nextActiveId: string | null, remaining: Search[]) {
+  const ob = useOnboardingStore.getState();
+  if (ob.editingSearchId !== deletedId) return;
+  const next = nextActiveId ? remaining.find((s) => s.id === nextActiveId) : null;
+  if (next) {
+    ob.patch({
+      city: next.cityId,
+      budget: next.budget,
+      moveIn: next.moveIn,
+      bedrooms: next.bedrooms,
+      bathrooms: next.bathrooms,
+      rentProtection: next.rentProtection,
+      includeBrokerFee: next.includeBrokerFee,
+      neighborhoods: next.neighborhoods,
+      amenities: next.amenities,
+      transit: next.transit,
+      commute: next.commute,
+      alertChannel: next.alertChannel,
+      frequency: next.frequency,
+      editingSearchId: next.id,
+    });
+  } else {
+    ob.setEditingSearch(null);
+  }
+}
 
 function buildSearch(seed: Partial<Search> & { cityId: CityId }, existing: Search[]): Search {
   const defaults = EMPTY_SEARCH_DEFAULTS(seed.cityId);
@@ -303,7 +340,13 @@ export const useAppStore = create<AppStore>()(
           get().activeSearchId === id
             ? (remaining.find((s) => s.status !== "archived")?.id ?? null)
             : get().activeSearchId;
-        set({ searches: remaining, activeSearchId: remaining.length === 0 ? null : nextActive });
+        const tombstones = [...get().deletedSearchIds.filter((x) => x !== id), id].slice(-50);
+        set({
+          searches: remaining,
+          activeSearchId: remaining.length === 0 ? null : nextActive,
+          deletedSearchIds: tombstones,
+        });
+        clearEditingBufferFor(id, nextActive, remaining);
       },
 
       setActiveSearch: (id) => {

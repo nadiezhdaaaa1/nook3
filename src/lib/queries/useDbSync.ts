@@ -81,6 +81,9 @@ export function useDbSync() {
     for (const s of rows) cache.set(s.id, serializePatch(s));
     lastSyncedRef.current = cache;
     hydratedRef.current = true;
+    // The account already owns searches, so the onboarding answers were
+    // already handed off — never re-insert them later.
+    if (rows.length > 0) useOnboardingStore.getState().setHandoffCompleted(true);
   }, [searchesQ.data, profileQ.data]);
 
   // 1b) Onboarding handoff: the account has no searches yet, but the browser
@@ -92,8 +95,16 @@ export function useDbSync() {
 
     const o = useOnboardingStore.getState();
     if (!o.city) return;
+    // One-time per account: once the answers have been persisted (or the user
+    // has deleted searches), an empty list must stay empty.
+    if (o.handoffCompleted) return;
+    if (useAppStore.getState().deletedSearchIds.length > 0) {
+      useOnboardingStore.getState().setHandoffCompleted(true);
+      return;
+    }
 
     handoffRef.current = true;
+    useOnboardingStore.getState().setHandoffCompleted(true);
     createMutation.mutate({
       name: getDefaultSearchName(o.city, []),
       cityId: o.city,
@@ -125,7 +136,10 @@ export function useDbSync() {
     if (!hydratedRef.current) return;
     if (!searchesQ.data) return;
     const rows = searchesQ.data as Search[];
-    const locals = useAppStore.getState().searches.filter((s) => !isUuid(s.id));
+    const tombstones = new Set(useAppStore.getState().deletedSearchIds);
+    const locals = useAppStore
+      .getState()
+      .searches.filter((s) => !isUuid(s.id) && !tombstones.has(s.id));
     for (const local of locals) {
       const match = rows.find(
         (r) => r.name.trim().toLowerCase() === local.name.trim().toLowerCase(),
