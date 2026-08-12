@@ -747,7 +747,7 @@ function DeleteAccountDialog({
                 value={stayFeedback}
                 onChange={(e) => setStayFeedback(e.target.value.slice(0, 1000))}
                 placeholder="Tell us what would have changed your mind..."
-                className="w-full min-h-[96px] px-4 py-3 rounded-[12px] border border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:border-charcoal-950 focus:outline-none resize-none"
+                className="w-full min-h-[96px] px-4 py-3 rounded-[12px] border border-border bg-white text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:border-charcoal-950 focus:outline-none resize-none"
                 autoFocus
               />
             </div>
