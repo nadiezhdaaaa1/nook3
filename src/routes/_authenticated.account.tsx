@@ -705,7 +705,7 @@ function DeleteAccountDialog({
                 placeholder="What happened? (optional)"
                 value={reasonNote}
                 onChange={(e) => setReasonNote(e.target.value.slice(0, 1000))}
-                className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
+                className="h-11 rounded-[12px] border-border bg-white text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
                 autoFocus
               />
             )}
