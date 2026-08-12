@@ -6,6 +6,7 @@ import {
   updateProfile,
   scheduleAccountDeletion,
   cancelAccountDeletion,
+  setSubscriptionCanceled,
 } from "@/lib/profile.functions";
 
 export const profileQueryKey = ["profile"] as const;
@@ -52,14 +53,29 @@ export function useCancelAccountDeletionMutation() {
   const fn = useServerFn(cancelAccountDeletion);
   return useMutation({
     mutationFn: () => fn(),
-    onSuccess: () => {
+    onSuccess: (user) => {
       qc.invalidateQueries({ queryKey: profileQueryKey });
       toast.success("Account restored", {
-        description: "Your account is active again — nothing was deleted.",
+        description: user?.subscriptionCanceledAt
+          ? "Your account is active again — nothing was deleted. Auto-renewal is still off; renew anytime in Plan options."
+          : "Your account is active again — nothing was deleted.",
       });
     },
     onError: (e) =>
       toast.error("Couldn't restore your account", {
+        description: e instanceof Error ? e.message : "Try again",
+      }),
+  });
+}
+
+export function useSetSubscriptionCanceledMutation() {
+  const qc = useQueryClient();
+  const fn = useServerFn(setSubscriptionCanceled);
+  return useMutation({
+    mutationFn: (canceled: boolean) => fn({ data: { canceled } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: profileQueryKey }),
+    onError: (e) =>
+      toast.error("Couldn't update your subscription", {
         description: e instanceof Error ? e.message : "Try again",
       }),
   });

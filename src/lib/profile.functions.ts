@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { GRACE_DAYS, defaultPeriodEnd } from "@/lib/profile.helpers";
 
 export function dbRowToUser(row: any) {
   return {
@@ -23,6 +24,8 @@ export function dbRowToUser(row: any) {
     deletionRequestedAt: row.deletion_requested_at ?? null,
     deletionScheduledAt: row.deletion_scheduled_at ?? null,
     deletionCancelSubscription: row.deletion_cancel_subscription ?? null,
+    subscriptionCanceledAt: row.subscription_canceled_at ?? null,
+    subscriptionPeriodEnd: row.subscription_period_end ?? null,
     updatedAt: row.updated_at ?? undefined,
   };
 }
@@ -117,8 +120,6 @@ export const updateProfile = createServerFn({ method: "POST" })
    one-click reversal.
    ------------------------------------------------------------------------- */
 
-const GRACE_DAYS = 30;
-
 export const scheduleAccountDeletion = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
@@ -133,15 +134,70 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const now = new Date();
     const scheduled = new Date(now.getTime() + GRACE_DAYS * 24 * 60 * 60 * 1000);
+
+    // Read current billing state so the cancellation only applies to a paid
+    // plan and an existing period end is preserved.
+    const { data: current } = await context.supabase
+      .from("profiles")
+      .select("plan, subscription_canceled_at, subscription_period_end")
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    const cancelNow =
+      data.cancelSubscription === true && (current as any)?.plan && (current as any).plan !== "free";
+
+    const patch: Record<string, unknown> = {
+      deletion_requested_at: now.toISOString(),
+      deletion_scheduled_at: scheduled.toISOString(),
+      deletion_reason: data.reason ?? null,
+      deletion_feedback: data.feedback ?? null,
+      deletion_cancel_subscription: data.cancelSubscription ?? null,
+    };
+
+    if (cancelNow) {
+      patch.subscription_canceled_at =
+        (current as any)?.subscription_canceled_at ?? now.toISOString();
+      patch.subscription_period_end =
+        (current as any)?.subscription_period_end ?? defaultPeriodEnd(now).toISOString();
+    }
+
     const { data: updated, error } = await context.supabase
       .from("profiles")
-      .update({
-        deletion_requested_at: now.toISOString(),
-        deletion_scheduled_at: scheduled.toISOString(),
-        deletion_reason: data.reason ?? null,
-        deletion_feedback: data.feedback ?? null,
-        deletion_cancel_subscription: data.cancelSubscription ?? null,
-      } as never)
+      .update(patch as never)
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return dbRowToUser(updated);
+  });
+
+/**
+ * Turn auto-renewal off (or back on) for the current user. Access continues
+ * until `subscription_period_end`.
+ */
+export const setSubscriptionCanceled = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ canceled: z.boolean() }).parse(input ?? {}))
+  .handler(async ({ data, context }) => {
+    const now = new Date();
+    const { data: current } = await context.supabase
+      .from("profiles")
+      .select("subscription_canceled_at, subscription_period_end")
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    const patch = data.canceled
+      ? {
+          subscription_canceled_at:
+            (current as any)?.subscription_canceled_at ?? now.toISOString(),
+          subscription_period_end:
+            (current as any)?.subscription_period_end ?? defaultPeriodEnd(now).toISOString(),
+        }
+      : { subscription_canceled_at: null };
+
+    const { data: updated, error } = await context.supabase
+      .from("profiles")
+      .update(patch as never)
       .eq("id", context.userId)
       .select("*")
       .single();

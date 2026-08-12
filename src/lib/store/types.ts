@@ -77,6 +77,8 @@ export interface User {
   deletionRequestedAt?: string | null;
   deletionScheduledAt?: string | null;
   deletionCancelSubscription?: boolean | null;
+  subscriptionCanceledAt?: string | null;
+  subscriptionPeriodEnd?: string | null;
   updatedAt?: string;
 }
 

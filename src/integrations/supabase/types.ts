@@ -264,6 +264,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["app_plan"]
           referral_code: string
           referred_by: string | null
+          subscription_canceled_at: string | null
+          subscription_period_end: string | null
           timezone: string
           trial_active: boolean
           trial_ends_at: string | null
@@ -294,6 +296,8 @@ export type Database = {
           plan?: Database["public"]["Enums"]["app_plan"]
           referral_code?: string
           referred_by?: string | null
+          subscription_canceled_at?: string | null
+          subscription_period_end?: string | null
           timezone?: string
           trial_active?: boolean
           trial_ends_at?: string | null
@@ -324,6 +328,8 @@ export type Database = {
           plan?: Database["public"]["Enums"]["app_plan"]
           referral_code?: string
           referred_by?: string | null
+          subscription_canceled_at?: string | null
+          subscription_period_end?: string | null
           timezone?: string
           trial_active?: boolean
           trial_ends_at?: string | null
@@ -755,6 +761,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["app_plan"]
           referral_code: string
           referred_by: string | null
+          subscription_canceled_at: string | null
+          subscription_period_end: string | null
           timezone: string
           trial_active: boolean
           trial_ends_at: string | null
