@@ -393,13 +393,15 @@ function HomeScreen() {
 
   const pins = useMemo(
     () =>
-      visibleListings
-        .filter((l) => l.coords)
-        .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
-    [visibleListings],
+      search
+        ? visibleListings
+            .filter((l) => l.coords)
+            .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent }))
+        : [],
+    [search, visibleListings],
   );
 
-  const activeListing = visibleListings.find((l) => l.id === activeId) ?? null;
+  const activeListing = search ? (visibleListings.find((l) => l.id === activeId) ?? null) : null;
 
   const popupCard = activeListing ? (
     <PreviewListingCard
