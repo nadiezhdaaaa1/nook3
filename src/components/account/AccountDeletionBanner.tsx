@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle } from "lucide-react";
+import trashAsset from "@/assets/Trash.png.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
   profileQueryOptions,
@@ -47,11 +47,16 @@ export function AccountDeletionBanner() {
     <div
       role="status"
       aria-live="polite"
-      className="bg-danger text-white"
+      className="sticky top-0 z-50 bg-danger text-white"
     >
       <div className="mx-auto max-w-[1440px] px-6 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-2.5">
-          <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" aria-hidden />
+          <img
+            src={trashAsset.url}
+            alt=""
+            aria-hidden
+            className="h-10 w-10 shrink-0 object-contain"
+          />
           <p className="text-sm leading-relaxed">
             <span className="font-semibold">
               Your account is scheduled for deletion on {formatDate(scheduledAt)}
@@ -65,7 +70,7 @@ export function AccountDeletionBanner() {
         </div>
         <div className="shrink-0 sm:pl-4">
           <OriginButton
-            variant="secondary"
+            variant="dark"
             size="medium"
             onClick={() => cancel.mutate()}
             disabled={cancel.isPending}
