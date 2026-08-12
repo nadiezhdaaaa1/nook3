@@ -1779,8 +1779,16 @@ function EnableEmailPasswordDialog({
     setLocalProfile({ hasPassword: true });
     try {
       await saveProfile.mutateAsync({ hasPassword: true });
-    } catch {
-      /* local state already updated; surfaced by the mutation toast */
+    } catch (err) {
+      // The password was set in auth but we couldn't persist the flag — keep
+      // the dialog open and tell the user instead of pretending it worked.
+      setError(
+        err instanceof Error
+          ? `Password set, but we couldn't save your sign-in settings: ${err.message}`
+          : "Password set, but we couldn't save your sign-in settings. Please try again.",
+      );
+      setLoading(false);
+      return;
     }
     setLoading(false);
     toast.success("Email & password sign-in enabled", {
@@ -1994,6 +2002,8 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const user = useAppStore((s) => s.user);
+  const setLocalProfile = useAppStore((s) => s.updateProfile);
+  const saveProfile = useUpdateProfileMutation();
 
   const strength = passwordStrength(next);
   const canSubmit = current.length > 0 && next.length >= 8 && next === confirm && !loading;
@@ -2028,6 +2038,15 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
       if (updateError) {
         setError(updateError.message);
       } else {
+        // Keep the persisted flag in sync so the Login / Email row stays enabled.
+        setLocalProfile({ hasPassword: true });
+        if (!user.hasPassword) {
+          try {
+            await saveProfile.mutateAsync({ hasPassword: true });
+          } catch {
+            /* non-blocking: password already changed successfully */
+          }
+        }
         toast.success("Password updated successfully.");
         setCurrent("");
         setNext("");

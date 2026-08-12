@@ -33,8 +33,28 @@ export const getProfile = createServerFn({ method: "GET" })
       .eq("id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    if (!data) return null;
-    return dbRowToUser(data);
+    if (data) return dbRowToUser(data);
+
+    // Self-heal: the account exists in auth but has no profile row yet
+    // (e.g. the trigger didn't run, or the row was removed). Create it so the
+    // app always has a durable place to persist profile state.
+    const email = (context.claims as any)?.email ?? "";
+    const { data: created, error: insertError } = await context.supabase
+      .from("profiles")
+      .insert({ id: context.userId, email } as never)
+      .select("*")
+      .single();
+    if (insertError) {
+      // A concurrent request may have created it — re-read once.
+      const { data: reread } = await context.supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", context.userId)
+        .maybeSingle();
+      if (reread) return dbRowToUser(reread);
+      throw new Error(insertError.message);
+    }
+    return dbRowToUser(created);
   });
 
 // SECURITY: billing fields (plan, billing_cycle, trial_active, trial_started_at,
@@ -77,10 +97,10 @@ export const updateProfile = createServerFn({ method: "POST" })
     if (data.hasPassword !== undefined) patch.has_password = data.hasPassword;
     if (data.moveOut !== undefined) patch.move_out = data.moveOut;
 
+    // Upsert so the write still lands when the profile row is missing.
     const { data: updated, error } = await context.supabase
       .from("profiles")
-      .update(patch as never)
-      .eq("id", context.userId)
+      .upsert({ id: context.userId, ...patch } as never, { onConflict: "id" })
       .select("*")
       .single();
     if (error) throw new Error(error.message);
