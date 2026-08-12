@@ -14,6 +14,7 @@ import type {
 import { SEARCH_LIMITS } from "./types";
 import { isSearchDisabled, getDisabledSearchIds, DISABLED_SEARCH_REASON } from "./lock";
 import { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 interface AppState {
   user: User | null;
@@ -108,6 +109,36 @@ const initialState: AppState = {
   hydrated: false,
   deletedSearchIds: [],
 };
+
+/**
+ * After a delete, make sure the live editing buffer no longer points at the
+ * removed search (a stale buffer would otherwise be flushed back to the DB).
+ */
+function clearEditingBufferFor(deletedId: string, nextActiveId: string | null, remaining: Search[]) {
+  const ob = useOnboardingStore.getState();
+  if (ob.editingSearchId !== deletedId) return;
+  const next = nextActiveId ? remaining.find((s) => s.id === nextActiveId) : null;
+  if (next) {
+    ob.patch({
+      city: next.cityId,
+      budget: next.budget,
+      moveIn: next.moveIn,
+      bedrooms: next.bedrooms,
+      bathrooms: next.bathrooms,
+      rentProtection: next.rentProtection,
+      includeBrokerFee: next.includeBrokerFee,
+      neighborhoods: next.neighborhoods,
+      amenities: next.amenities,
+      transit: next.transit,
+      commute: next.commute,
+      alertChannel: next.alertChannel,
+      frequency: next.frequency,
+      editingSearchId: next.id,
+    });
+  } else {
+    ob.setEditingSearch(null);
+  }
+}
 
 function buildSearch(seed: Partial<Search> & { cityId: CityId }, existing: Search[]): Search {
   const defaults = EMPTY_SEARCH_DEFAULTS(seed.cityId);
