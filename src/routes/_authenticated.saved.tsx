@@ -351,7 +351,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
           <li
             key={s.id}
             className={cn(
-              "rounded-[16px] border border-black/10 bg-white p-5",
+              "rounded-[16px] border border-black/10 bg-white p-6",
               (s.status === "archived" || disabledIds.has(s.id)) && "opacity-60",
             )}
           >
