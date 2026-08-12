@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { SampleListingsMap, type SampleListingsMapRef } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { SearchSelector } from "@/components/app/SearchSelector";
-import { useActiveSearch } from "@/lib/store";
+import { useActiveSearch, useAppStore } from "@/lib/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { type SampleListing } from "@/data/sampleListings";
@@ -122,6 +122,8 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 
 function HomeScreen() {
   const search = useActiveSearch();
+  const noSearches = useAppStore((s) => s.searches.length === 0);
+  const hydrated = useAppStore((s) => s.hydrated);
   const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
   const cityConfig = getCity(cityId);
@@ -165,6 +167,10 @@ function HomeScreen() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [mapFullscreen]);
+
+  useEffect(() => {
+    if (!search) setActiveId(null);
+  }, [search]);
 
 
 
@@ -387,13 +393,15 @@ function HomeScreen() {
 
   const pins = useMemo(
     () =>
-      visibleListings
-        .filter((l) => l.coords)
-        .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
-    [visibleListings],
+      search
+        ? visibleListings
+            .filter((l) => l.coords)
+            .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent }))
+        : [],
+    [search, visibleListings],
   );
 
-  const activeListing = visibleListings.find((l) => l.id === activeId) ?? null;
+  const activeListing = search ? (visibleListings.find((l) => l.id === activeId) ?? null) : null;
 
   const popupCard = activeListing ? (
     <PreviewListingCard
@@ -505,7 +513,8 @@ function HomeScreen() {
             : "order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
         }
       >
-        <div className="mx-auto flex max-w-[960px] flex-col">
+        {!noSearches && (
+          <div className="mx-auto flex max-w-[960px] flex-col">
           <header className="p-2">
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
               <SearchSelector />
@@ -633,6 +642,28 @@ function HomeScreen() {
           })()}
 
         </div>
+        )}
+        {noSearches && hydrated && (
+          <div className="mx-auto flex h-full max-w-[960px] flex-col items-center justify-center p-2">
+            <div className="w-full rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
+              <h3 className="text-[22px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">
+                No searches yet
+              </h3>
+              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
+                Create a search to start seeing matches on your home screen.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <OriginButton
+                  variant="main"
+                  size="medium"
+                  onClick={() => navigate({ to: "/search/new/$step", params: { step: "1" } })}
+                >
+                  Create a search
+                </OriginButton>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <FiltersSheet
