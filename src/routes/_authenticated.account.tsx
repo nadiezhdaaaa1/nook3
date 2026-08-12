@@ -582,26 +582,21 @@ function DeleteAccountDialog({
     <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
-          <div className="flex items-center justify-between gap-3">
-            <DialogTitle className="flex items-center gap-2">
-              {step !== "reason" && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const i = stepLabels.indexOf(step);
-                    if (i > 0) setStep(stepLabels[i - 1]);
-                  }}
-                  className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
-                  aria-label="Back"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-              )}
-              Delete account
-            </DialogTitle>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500">
-              Step {stepIndex} of 5
-            </span>
+          <div className="flex items-center gap-3">
+            {step !== "reason" && (
+              <button
+                type="button"
+                onClick={() => {
+                  const i = stepLabels.indexOf(step);
+                  if (i > 0) setStep(stepLabels[i - 1]);
+                }}
+                className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
+                aria-label="Back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+            )}
+            <DialogTitle>Delete account</DialogTitle>
           </div>
           <DialogDescription>
             Sorry to see you go — what's driving this?{" "}
@@ -635,21 +630,26 @@ function DeleteAccountDialog({
                 autoFocus
               />
             )}
-            <DialogFooter className="justify-end gap-2 pt-4">
-              <OriginButton
-                variant="tertiary"
-                size="medium"
-                onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
-              >
-                Skip
-              </OriginButton>
-              <OriginButton
-                variant="secondary"
-                size="medium"
-                onClick={goToOffer}
-              >
-                Continue
-              </OriginButton>
+            <DialogFooter className="justify-between gap-2 pt-4">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+              <div className="flex items-center gap-2">
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
+                >
+                  Skip
+                </OriginButton>
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={goToOffer}
+                >
+                  Continue
+                </OriginButton>
+              </div>
             </DialogFooter>
           </div>
         )}
@@ -658,6 +658,11 @@ function DeleteAccountDialog({
           <DeleteAlternatives
             reason={reason}
             isPaid={isPaid}
+            stepCounter={
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+            }
             onAccept={(msg) => { toast.success(msg); closeAll(); }}
             onDowngradeFree={() => {
               updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
@@ -704,21 +709,26 @@ function DeleteAccountDialog({
               Some records required by law (tax and transaction history) are retained per our Privacy Policy.
               After the 30-day grace period, deletion can't be undone.
             </p>
-            <DialogFooter>
-              <button
-                type="button"
-                onClick={closeAll}
-                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-              >
-                Keep my account
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep("reauth")}
-                className="h-10 px-5 rounded-pill text-sm font-semibold border border-danger/40 text-danger hover:bg-danger/10"
-              >
-                Continue
-              </button>
+            <DialogFooter className="justify-between gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={closeAll}
+                  className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+                >
+                  Keep my account
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStep("reauth")}
+                  className="h-10 px-5 rounded-pill text-sm font-semibold border border-danger/40 text-danger hover:bg-danger/10"
+                >
+                  Continue
+                </button>
+              </div>
             </DialogFooter>
           </div>
         )}
@@ -739,33 +749,38 @@ function DeleteAccountDialog({
               autoFocus
               autoComplete="current-password"
             />
-            <DialogFooter>
-              <button
-                type="button"
-                onClick={closeAll}
-                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={pw.length === 0}
-                onClick={() => {
-                  if (pw === "wrongpass") {
-                    setPwError("That password doesn't match.");
-                    return;
-                  }
-                  setStep("confirm");
-                }}
-                className={cn(
-                  "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
-                  pw.length > 0
-                    ? "border border-danger/40 text-danger hover:bg-danger/10"
-                    : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-                )}
-              >
-                Verify
-              </button>
+            <DialogFooter className="justify-between gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={closeAll}
+                  className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={pw.length === 0}
+                  onClick={() => {
+                    if (pw === "wrongpass") {
+                      setPwError("That password doesn't match.");
+                      return;
+                    }
+                    setStep("confirm");
+                  }}
+                  className={cn(
+                    "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
+                    pw.length > 0
+                      ? "border border-danger/40 text-danger hover:bg-danger/10"
+                      : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+                  )}
+                >
+                  Verify
+                </button>
+              </div>
             </DialogFooter>
           </div>
         )}
@@ -783,34 +798,39 @@ function DeleteAccountDialog({
               placeholder="DELETE"
               className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-danger focus:outline-none text-sm font-mono"
             />
-            <DialogFooter>
-              <button
-                type="button"
-                onClick={closeAll}
-                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-              >
-                Keep my account
-              </button>
-              <button
-                type="button"
-                disabled={confirmText !== "DELETE"}
-                onClick={() => {
-                  resetApp();
-                  closeAll();
-                  toast.success("Account scheduled for deletion", {
-                    description: "You have 30 days to restore by signing back in.",
-                    duration: 6000,
-                  });
-                }}
-                className={cn(
-                  "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
-                  confirmText === "DELETE"
-                    ? "bg-danger text-paper hover:bg-danger/90"
-                    : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-                )}
-              >
-                Delete my account
-              </button>
+            <DialogFooter className="justify-between gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={closeAll}
+                  className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
+                >
+                  Keep my account
+                </button>
+                <button
+                  type="button"
+                  disabled={confirmText !== "DELETE"}
+                  onClick={() => {
+                    resetApp();
+                    closeAll();
+                    toast.success("Account scheduled for deletion", {
+                      description: "You have 30 days to restore by signing back in.",
+                      duration: 6000,
+                    });
+                  }}
+                  className={cn(
+                    "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
+                    confirmText === "DELETE"
+                      ? "bg-danger text-paper hover:bg-danger/90"
+                      : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
+                  )}
+                >
+                  Delete my account
+                </button>
+              </div>
             </DialogFooter>
           </div>
         )}
@@ -820,10 +840,11 @@ function DeleteAccountDialog({
 }
 
 function DeleteAlternatives({
-  reason, isPaid, onAccept, onDowngradeFree, onTurnOffEmails, onContinue, onKeep,
+  reason, isPaid, stepCounter, onAccept, onDowngradeFree, onTurnOffEmails, onContinue, onKeep,
 }: {
   reason: DeleteReason | null;
   isPaid: boolean;
+  stepCounter: React.ReactNode;
   onAccept: (msg: string) => void;
   onDowngradeFree: () => void;
   onTurnOffEmails: () => void;
@@ -855,20 +876,23 @@ function DeleteAlternatives({
           See our <a href="/privacy" className="text-sage-700 underline-offset-2 hover:underline">Privacy Policy</a> for what's retained.
         </p>
         <DialogFooter className="!justify-between pt-2">
-          <button
-            type="button"
-            onClick={onKeep}
-            className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
-          >
-            Keep my account
-          </button>
-          <button
-            type="button"
-            onClick={onContinue}
-            className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
-          >
-            Continue to delete <ChevronRight className="h-3.5 w-3.5" />
-          </button>
+          {stepCounter}
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={onKeep}
+              className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+            >
+              Keep my account
+            </button>
+            <button
+              type="button"
+              onClick={onContinue}
+              className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+            >
+              Continue to delete <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </DialogFooter>
       </div>
     );
@@ -919,20 +943,23 @@ function DeleteAlternatives({
         />
       ))}
       <DialogFooter className="!justify-between pt-2">
-        <button
-          type="button"
-          onClick={onKeep}
-          className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
-        >
-          Keep my account
-        </button>
-        <button
-          type="button"
-          onClick={onContinue}
-          className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
-        >
-          No — delete my account <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+        {stepCounter}
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={onKeep}
+            className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
+          >
+            Keep my account
+          </button>
+          <button
+            type="button"
+            onClick={onContinue}
+            className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
+          >
+            No — delete my account <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </DialogFooter>
     </div>
   );
