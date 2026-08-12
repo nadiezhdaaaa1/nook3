@@ -55,7 +55,6 @@ function ReferralsPage() {
               className="flex items-center gap-2 text-[12px] font-medium uppercase leading-4"
               style={{ letterSpacing: "1.54px", color: "#3D4A36" }}
             >
-              <Gift className="h-4 w-4 flex-none" strokeWidth={1.75} aria-hidden="true" />
               <span>Refer a friend · Give a week, get a week</span>
             </div>
             <h2
