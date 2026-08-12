@@ -318,23 +318,18 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
   if (searches.length === 0) {
     return (
-      <div className="rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
-        <h3 className="font-display text-[22px] font-semibold text-[#241c12]">
-          No saved searches yet
-        </h3>
-        <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-          A search is what powers your alerts and the listings on your home screen. Create one to
-          start getting matches.
-        </p>
-        <div className="mt-6 flex justify-center">
-          <OriginButton variant="main" size="medium" onClick={handleNew}>
+      <EmptyState
+        title="No saved searches yet"
+        sub="A search is what powers your alerts and the listings on your home screen. Create one to start getting matches."
+        action={
+          <OriginButton variant="main" size="medium" onClick={handleNew} className="mt-5">
             Create a search
           </OriginButton>
-        </div>
-        {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
-      </div>
+        }
+      />
     );
   }
+
 
 
 
