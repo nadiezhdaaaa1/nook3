@@ -337,8 +337,8 @@ function ContactFormSection() {
       <div
         className="max-w-[600px] mx-auto rounded-[16px] p-6 md:p-8 relative"
         style={{
-          backgroundColor: "var(--color-brand-soft)",
-          border: "1px solid color-mix(in oklab, var(--color-brand-clay) 80%, transparent)",
+          backgroundColor: "#FFFFFF",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
         }}
       >
         <AnimatePresence mode="wait">
