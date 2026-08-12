@@ -168,6 +168,10 @@ function HomeScreen() {
     return () => window.removeEventListener("keydown", onKey);
   }, [mapFullscreen]);
 
+  useEffect(() => {
+    if (!search) setActiveId(null);
+  }, [search]);
+
 
 
   const updateStatus = useUpdateAlertStatusMutation();
