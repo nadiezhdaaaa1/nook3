@@ -17,7 +17,6 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -30,10 +29,8 @@ import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AcceptableUseRouteImport } from './routes/acceptable-use'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PreferencesIndexRouteImport } from './routes/preferences.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RCodeRouteImport } from './routes/r.$code'
-import { Route as PreferencesSplatRouteImport } from './routes/preferences.$'
 import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
 import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
@@ -100,11 +97,6 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PreferencesRoute = PreferencesRouteImport.update({
-  id: '/preferences',
-  path: '/preferences',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -164,11 +156,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PreferencesIndexRoute = PreferencesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PreferencesRoute,
-} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -178,11 +165,6 @@ const RCodeRoute = RCodeRouteImport.update({
   id: '/r/$code',
   path: '/r/$code',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PreferencesSplatRoute = PreferencesSplatRouteImport.update({
-  id: '/$',
-  path: '/$',
-  getParentRoute: () => PreferencesRoute,
 } as any)
 const PostsSlugRoute = PostsSlugRouteImport.update({
   id: '/posts/$slug',
@@ -329,7 +311,6 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
-  '/preferences': typeof PreferencesRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
@@ -353,10 +334,8 @@ export interface FileRoutesByFullPath {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
-  '/preferences/$': typeof PreferencesSplatRoute
   '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
-  '/preferences/': typeof PreferencesIndexRoute
   '/search/$searchId': typeof AuthenticatedSearchSearchIdRouteWithChildren
   '/search/new': typeof AuthenticatedSearchNewRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
@@ -403,10 +382,8 @@ export interface FileRoutesByTo {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
-  '/preferences/$': typeof PreferencesSplatRoute
   '/r/$code': typeof RCodeRoute
   '/blog': typeof BlogIndexRoute
-  '/preferences': typeof PreferencesIndexRoute
   '/search/new': typeof AuthenticatedSearchNewRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
   '/search/$searchId/apartment': typeof AuthenticatedSearchSearchIdApartmentRoute
@@ -431,7 +408,6 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
-  '/preferences': typeof PreferencesRouteWithChildren
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refunds': typeof RefundsRoute
@@ -455,10 +431,8 @@ export interface FileRoutesById {
   '/onboarding/pricing': typeof OnboardingPricingRoute
   '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
-  '/preferences/$': typeof PreferencesSplatRoute
   '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
-  '/preferences/': typeof PreferencesIndexRoute
   '/_authenticated/search/$searchId': typeof AuthenticatedSearchSearchIdRouteWithChildren
   '/_authenticated/search/new': typeof AuthenticatedSearchNewRouteWithChildren
   '/onboarding/step/$step': typeof OnboardingStepStepRoute
@@ -484,7 +458,6 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/onboarding'
-    | '/preferences'
     | '/pricing'
     | '/privacy'
     | '/refunds'
@@ -508,10 +481,8 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
-    | '/preferences/$'
     | '/r/$code'
     | '/blog/'
-    | '/preferences/'
     | '/search/$searchId'
     | '/search/new'
     | '/onboarding/step/$step'
@@ -558,10 +529,8 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
-    | '/preferences/$'
     | '/r/$code'
     | '/blog'
-    | '/preferences'
     | '/search/new'
     | '/onboarding/step/$step'
     | '/search/$searchId/apartment'
@@ -585,7 +554,6 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/onboarding'
-    | '/preferences'
     | '/pricing'
     | '/privacy'
     | '/refunds'
@@ -609,10 +577,8 @@ export interface FileRouteTypes {
     | '/onboarding/pricing'
     | '/onboarding/success'
     | '/posts/$slug'
-    | '/preferences/$'
     | '/r/$code'
     | '/blog/'
-    | '/preferences/'
     | '/_authenticated/search/$searchId'
     | '/_authenticated/search/new'
     | '/onboarding/step/$step'
@@ -638,7 +604,6 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
-  PreferencesRoute: typeof PreferencesRouteWithChildren
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundsRoute: typeof RefundsRoute
@@ -715,13 +680,6 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preferences': {
-      id: '/preferences'
-      path: '/preferences'
-      fullPath: '/preferences'
-      preLoaderRoute: typeof PreferencesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -808,13 +766,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preferences/': {
-      id: '/preferences/'
-      path: '/'
-      fullPath: '/preferences/'
-      preLoaderRoute: typeof PreferencesIndexRouteImport
-      parentRoute: typeof PreferencesRoute
-    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -828,13 +779,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/r/$code'
       preLoaderRoute: typeof RCodeRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/preferences/$': {
-      id: '/preferences/$'
-      path: '/$'
-      fullPath: '/preferences/$'
-      preLoaderRoute: typeof PreferencesSplatRouteImport
-      parentRoute: typeof PreferencesRoute
     }
     '/posts/$slug': {
       id: '/posts/$slug'
@@ -1098,20 +1042,6 @@ const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
   OnboardingRouteChildren,
 )
 
-interface PreferencesRouteChildren {
-  PreferencesSplatRoute: typeof PreferencesSplatRoute
-  PreferencesIndexRoute: typeof PreferencesIndexRoute
-}
-
-const PreferencesRouteChildren: PreferencesRouteChildren = {
-  PreferencesSplatRoute: PreferencesSplatRoute,
-  PreferencesIndexRoute: PreferencesIndexRoute,
-}
-
-const PreferencesRouteWithChildren = PreferencesRoute._addFileChildren(
-  PreferencesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -1125,7 +1055,6 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
-  PreferencesRoute: PreferencesRouteWithChildren,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundsRoute: RefundsRoute,
