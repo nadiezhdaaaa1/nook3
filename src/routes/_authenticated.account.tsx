@@ -346,7 +346,7 @@ function StatCard({
     <section
       aria-label={label}
       className={cn(
-        "relative flex min-h-[148px] flex-col overflow-hidden rounded-2xl border bg-white p-5 sm:p-6",
+        "relative flex h-[140px] flex-col overflow-hidden rounded-2xl border bg-white p-5 sm:p-6",
         className,
       )}
       style={{ borderColor: "rgba(0,0,0,0.2)" }}
