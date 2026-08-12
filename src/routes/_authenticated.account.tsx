@@ -1263,7 +1263,7 @@ function PlanCard({
           variant={ctaVariant}
           style={{ borderRadius: 12 }}
           disabled={updatePlanMut.isPending}
-          onClick={() => onCancelRequest()}
+          onClick={() => (isCanceledCurrent ? onRenew?.() : onCancelRequest())}
         >
           {ctaLabel}
         </OriginButton>
