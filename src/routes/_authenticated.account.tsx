@@ -439,7 +439,7 @@ function LogoutRow() {
   return (
     <div className="px-5 py-4 flex items-center justify-between gap-4">
       <div className="min-w-0 flex items-center gap-3">
-        <img src={doorAsset.url} alt="" className="h-10 w-auto object-contain shrink-0" />
+        <img src={doorAsset.url} alt="" className="h-10 w-10 object-contain shrink-0" />
         <div>
           <div className="text-sm font-semibold text-charcoal-950">Log out</div>
           <div className="text-xs text-charcoal-600 mt-0.5">Sign out of your account on this device.</div>
@@ -1460,7 +1460,7 @@ function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange
             <img
               src={globeAsset.url}
               alt=""
-              className="h-9 w-9 object-contain shrink-0"
+              className="h-10 w-10 object-contain shrink-0"
               aria-hidden="true"
             />
           </span>
@@ -1623,7 +1623,7 @@ function SignInMethodRows() {
             <img
               src={mailAsset.url}
               alt=""
-              className="h-8 w-8 object-contain shrink-0"
+              className="h-10 w-10 object-contain shrink-0"
               aria-hidden="true"
             />
           </span>
@@ -1915,7 +1915,7 @@ function ProfilePasswordRow() {
             <img
               src={lockAsset.url}
               alt=""
-              className="h-9 w-9 object-contain shrink-0"
+              className="h-10 w-10 object-contain shrink-0"
               aria-hidden="true"
             />
           </span>
