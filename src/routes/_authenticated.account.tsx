@@ -1650,11 +1650,25 @@ function SubscriptionSection({
   activeCycle: BillingCycle;
 }) {
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [canceled, setCanceled] = useState(false);
   const periodEnd = useMemo(() => {
     const d = new Date();
     d.setDate(d.getDate() + 18);
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setCanceled(window.localStorage.getItem("nook:subCanceled") === "1");
+  }, []);
+
+  const setCanceledState = (v: boolean) => {
+    setCanceled(v);
+    if (typeof window !== "undefined") {
+      if (v) window.localStorage.setItem("nook:subCanceled", "1");
+      else window.localStorage.removeItem("nook:subCanceled");
+    }
+  };
 
   // Determine which two cards to show so the user only sees actionable options.
   const visiblePlanKeys = useMemo(() => {
@@ -1671,6 +1685,10 @@ function SubscriptionSection({
         open={cancelOpen}
         onOpenChange={setCancelOpen}
         periodEnd={periodEnd}
+        onConfirm={() => {
+          setCanceledState(true);
+          toast.success(`Subscription canceled — active until ${periodEnd}`);
+        }}
       />
       <section id="plan-options">
         <div className="mb-5">
@@ -1692,10 +1710,16 @@ function SubscriptionSection({
               trialEndsAt={trialEndsAt}
               periodEnd={periodEnd}
               onCancelRequest={() => setCancelOpen(true)}
+              canceled={canceled}
+              onRenew={() => {
+                setCanceledState(false);
+                toast.success("Subscription renewed — auto-renewal is back on");
+              }}
             />
           ))}
         </div>
       </section>
+
 
       <PaymentMethodSection plan={plan} />
 
