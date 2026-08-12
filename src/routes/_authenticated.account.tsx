@@ -1283,13 +1283,6 @@ function PlanCard({
         : "Unlock all matches now"
       : "Switch to monthly";
 
-  const handleClick = () => {
-    if (isCurrent && plan.id !== "free") {
-      onCancelRequest();
-    } else {
-      setOpen(true);
-    }
-  };
 
   const dark = plan.id !== "free";
   const text = dark ? "#f8f3e1" : "#241c12";
