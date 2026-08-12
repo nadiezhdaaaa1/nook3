@@ -46,6 +46,8 @@ const profilePatchSchema = z.object({
   phone: z.string().trim().max(40).optional(),
   timezone: z.string().max(60).optional(),
   completedAt: z.string().nullable().optional(),
+  hasPassword: z.boolean().optional(),
+
   moveOut: z
     .object({
       date: z.string(),
