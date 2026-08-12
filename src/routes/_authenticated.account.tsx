@@ -575,32 +575,44 @@ function PasswordField({
 
 function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
+  const [openCount, setOpenCount] = useState(0);
   const scheduledAt = useAppStore((s) => s.user?.deletionScheduledAt);
   const cancel = useCancelAccountDeletionMutation();
 
-  if (scheduledAt) {
-    return (
-      <OriginButton
-        variant="dark"
-        size="medium"
-        onClick={() => cancel.mutate()}
-        disabled={cancel.isPending}
-      >
-        {cancel.isPending ? "Restoring…" : "Keep my account"}
-      </OriginButton>
-    );
-  }
+  // Once deletion is scheduled, the dialog must never be able to come back
+  // (e.g. after pressing "Keep my account" in the same session).
+  useEffect(() => {
+    if (scheduledAt) setOpen(false);
+  }, [scheduledAt]);
 
   return (
     <>
-      <OriginButton
-        variant="tertiary"
-        size="medium"
-        onClick={() => setOpen(true)}
-      >
-        <Trash2 className="h-3.5 w-3.5" /> Delete account
-      </OriginButton>
-      <DeleteAccountDialog open={open} onOpenChange={setOpen} />
+      {scheduledAt ? (
+        <OriginButton
+          variant="dark"
+          size="medium"
+          onClick={() => cancel.mutate()}
+          disabled={cancel.isPending}
+        >
+          {cancel.isPending ? "Restoring…" : "Keep my account"}
+        </OriginButton>
+      ) : (
+        <OriginButton
+          variant="tertiary"
+          size="medium"
+          onClick={() => {
+            setOpenCount((n) => n + 1);
+            setOpen(true);
+          }}
+        >
+          <Trash2 className="h-3.5 w-3.5" /> Delete account
+        </OriginButton>
+      )}
+      <DeleteAccountDialog
+        key={openCount}
+        open={open && !scheduledAt}
+        onOpenChange={setOpen}
+      />
     </>
   );
 }
@@ -626,16 +638,9 @@ function DeleteAccountDialog({
   const [stayFeedback, setStayFeedback] = useState("");
   const [cancelSubscription, setCancelSubscription] = useState(true);
 
-  const closeAll = () => {
-    onOpenChange(false);
-    setTimeout(() => {
-      setStep("reason");
-      setReason(null);
-      setReasonNote("");
-      setStayFeedback("");
-      setCancelSubscription(true);
-    }, 200);
-  };
+  // Local state is reset by remounting (parent passes a fresh key per open),
+  // so closing just needs to close.
+  const closeAll = () => onOpenChange(false);
 
   const scheduleDeletion = useScheduleAccountDeletionMutation();
 
