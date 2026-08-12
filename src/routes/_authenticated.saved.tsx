@@ -475,12 +475,185 @@ function SearchesTab({ searches }: { searches: Search[] }) {
         })}
       </ul>
 
+      <DeleteSearchDialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => {
+          if (!open) closeDeleteDialog();
+        }}
+        search={deleteDialog.search}
+        onConfirm={onConfirmDelete}
+      />
+
       {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </div>
   );
 }
 
-/* ---------- Disliked ---------- */
+/* ---------- Delete search dialog ---------- */
+
+type SearchDeleteReason = "found" | "too-many" | "matches" | "break" | "other";
+
+const DELETE_REASONS: { id: SearchDeleteReason; label: string }[] = [
+  { id: "found", label: "I found a place" },
+  { id: "too-many", label: "Too many alerts" },
+  { id: "matches", label: "Not enough good matches" },
+  { id: "break", label: "Just taking a break" },
+  { id: "other", label: "Something else" },
+];
+
+function DeleteSearchDialog({
+  open,
+  onOpenChange,
+  search,
+  onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  search: Search | null;
+  onConfirm: () => void;
+}) {
+  const [step, setStep] = useState<"reason" | "feedback">("reason");
+  const [reason, setReason] = useState<SearchDeleteReason | null>(null);
+  const [reasonNote, setReasonNote] = useState("");
+  const [feedback, setFeedback] = useState("");
+
+  const close = () => {
+    onOpenChange(false);
+    setTimeout(() => {
+      setStep("reason");
+      setReason(null);
+      setReasonNote("");
+      setFeedback("");
+    }, 200);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
+      <DialogContent className="max-w-md bg-white">
+        <DialogHeader>
+          <div className="flex items-center gap-3">
+            {step === "feedback" && (
+              <button
+                type="button"
+                onClick={() => setStep("reason")}
+                className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
+                aria-label="Back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+            )}
+            <DialogTitle>Delete search</DialogTitle>
+          </div>
+          {step === "reason" && (
+            <DialogDescription>
+              {search ? `Removing "${search.name}". What's driving this?` : "Removing your search. What's driving this?"}{" "}
+              <span className="text-charcoal-500">(optional)</span>
+            </DialogDescription>
+          )}
+        </DialogHeader>
+
+        {step === "reason" && (
+          <div className="space-y-2">
+            {DELETE_REASONS.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setReason(reason === r.id ? null : r.id)}
+                className={cn(
+                  "w-full text-left px-4 py-3 rounded-[12px] border text-sm font-medium transition-colors",
+                  reason === r.id
+                    ? "border-[#2B2521] bg-[#2B2521] text-white"
+                    : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
+                )}
+              >
+                {r.label}
+              </button>
+            ))}
+            {reason === "other" && (
+              <Input
+                placeholder="What happened? (optional)"
+                value={reasonNote}
+                onChange={(e) => setReasonNote(e.target.value.slice(0, 1000))}
+                className="h-11 rounded-[12px] border-border bg-white text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
+                autoFocus
+              />
+            )}
+            <DialogFooter className="justify-between gap-2 pt-4">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step 1 of 2
+              </span>
+              <div className="flex items-center gap-2">
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  onClick={() => setStep("feedback")}
+                >
+                  Skip
+                </OriginButton>
+                <OriginButton
+                  variant="secondary"
+                  size="medium"
+                  onClick={() => setStep("feedback")}
+                >
+                  Continue
+                </OriginButton>
+              </div>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "feedback" && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="search-feedback" className="text-sm font-medium text-charcoal-950">
+                Is there anything that we can do to make your search better?
+              </label>
+              <p className="text-xs text-charcoal-500">
+                This is optional — your answer helps us improve Nook.
+              </p>
+              <textarea
+                id="search-feedback"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value.slice(0, 1000))}
+                placeholder="Tell us what would have changed your mind..."
+                className="w-full min-h-[96px] px-4 py-3 rounded-[12px] border border-border bg-white text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:border-charcoal-950 focus:outline-none resize-none"
+                autoFocus
+              />
+            </div>
+
+            <div className="rounded-[12px] border border-danger/30 bg-danger p-4">
+              <p className="text-sm text-white leading-relaxed">
+                This search and its alerts will be permanently deleted. You can't undo this.
+              </p>
+            </div>
+
+            <DialogFooter className="justify-between gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step 2 of 2
+              </span>
+              <div className="flex items-center gap-2">
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
+                  onClick={close}
+                >
+                  Cancel
+                </OriginButton>
+                <OriginButton
+                  variant="danger"
+                  size="medium"
+                  onClick={() => { onConfirm(); close(); }}
+                >
+                  Delete search
+                </OriginButton>
+              </div>
+            </DialogFooter>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function DislikedCard({
   row,
