@@ -642,6 +642,28 @@ function HomeScreen() {
           })()}
 
         </div>
+        )}
+        {noSearches && hydrated && (
+          <div className="mx-auto max-w-[960px] p-2">
+            <div className="mt-8 rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
+              <h3 className="text-[22px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">
+                No searches yet
+              </h3>
+              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
+                Create a search to start seeing matches on your home screen.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <OriginButton
+                  variant="main"
+                  size="medium"
+                  onClick={() => navigate({ to: "/search/new/$step", params: { step: "1" } })}
+                >
+                  Create a search
+                </OriginButton>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <FiltersSheet
