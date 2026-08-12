@@ -180,23 +180,6 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
           </NavHoverItem>
           <Tooltip>
             <TooltipTrigger asChild>
-              <NavHoverItem
-                disabled
-                className={ICON_BUTTON_CLASS}
-                aria-label="Wren AI chat"
-              >
-                <IconMessageChatbot {...ICON_PROPS} aria-hidden />
-              </NavHoverItem>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <div className="text-center leading-tight">
-                <div>Wren AI chat</div>
-                <div className="text-xs opacity-70">(coming soon)</div>
-              </div>
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
               <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
                 <IconGift {...ICON_PROPS} aria-hidden />
               </NavHoverItem>
