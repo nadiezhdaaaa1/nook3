@@ -1063,7 +1063,7 @@ function CancelSubscriptionDialog({
 
 
 function PlanCard({
-  plan, currentPlan, activeCycle, trialEndsAt, periodEnd, onCancelRequest,
+  plan, currentPlan, activeCycle, trialEndsAt, periodEnd, onCancelRequest, canceled, onRenew,
 }: {
   plan: PlanDef;
   currentPlan: Plan;
@@ -1071,7 +1071,10 @@ function PlanCard({
   trialEndsAt?: string;
   periodEnd: string;
   onCancelRequest: () => void;
+  canceled?: boolean;
+  onRenew?: () => void;
 }) {
+
   const isCurrent = plan.id === currentPlan && (plan.id === "free" || plan.cycle === activeCycle);
   const priceLabel = plan.id === "free" ? "$0" : `$${plan.monthly}`;
   const suffix = plan.id === "free" ? "for 3 days" : "/month";
