@@ -13,6 +13,10 @@ import globeAsset from "@/assets/Globe.png.asset.json";
 import doorAsset from "@/assets/Door-2.png.asset.json";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 import mailAsset from "@/assets/Mail.png.asset.json";
+import savedSearchesArt from "@/assets/Saved-searches.png.asset.json";
+import alertsArt from "@/assets/Alerts-received.png.asset.json";
+import lastDaysArt from "@/assets/Last-days.png.asset.json";
+
 
 import { z } from "zod";
 import { toast } from "sonner";
@@ -161,33 +165,29 @@ function AccountPage() {
         <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
           Usage this month
         </h2>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
           <StatCard
             icon={SearchIcon}
             label="Saved searches"
             value={`${stats.used} / ${stats.maxLabel}`}
-            footer={
-              stats.max === Infinity
-                ? <>No limit on your plan.</>
-                : stats.used >= stats.max
-                  ? <>Limit reached — <a href="#plans" className="text-sage-700 font-semibold underline-offset-2 hover:underline">upgrade to add more</a>.</>
-                  : <>{stats.max - stats.used} slot{stats.max - stats.used === 1 ? "" : "s"} left.</>
-            }
-            progress={stats.pct}
+            illustration={savedSearchesArt.url}
           />
           <StatCard
             icon={Bell}
             label="Alerts received"
             value={String(stats.totalAlerts)}
-            footer="All-time across your searches."
+            illustration={alertsArt.url}
           />
           <StatCard
             icon={Clock}
             label="Last 7 days"
             value={String(stats.alerts7d)}
-            footer="Recent activity volume."
+            illustration={lastDaysArt.url}
+            className="sm:col-span-2 lg:col-span-1"
           />
+
         </div>
+
       </section>
 
       {/* Profile */}
@@ -333,28 +333,64 @@ function SyncProfile({
 }
 
 function StatCard({
-  icon: Icon, label, value, footer, progress,
+  icon: Icon, label, value, illustration, loading, className,
 }: {
-  icon: typeof Sparkles; label: string; value: string; footer: React.ReactNode; progress?: number;
+  icon: typeof Sparkles;
+  label: string;
+  value: string;
+  illustration: string;
+  loading?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="rounded-card border border-border bg-white p-6">
-      <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-        <Icon className="h-3.5 w-3.5" /> {label}
+    <section
+      aria-label={label}
+      className={cn(
+        "relative flex min-h-[148px] flex-col overflow-hidden rounded-2xl border bg-white p-5 sm:p-6",
+        className,
+      )}
+      style={{ borderColor: "rgba(0,0,0,0.2)" }}
+
+    >
+      <div className="relative z-10 flex items-start gap-2">
+        <Icon
+          className="mt-[1px] h-[14px] w-[14px] shrink-0"
+          strokeWidth={1.5}
+          style={{ color: "#6E6459" }}
+        />
+        <span
+          className="text-[12px] font-medium uppercase leading-4"
+          style={{ letterSpacing: "0.165em", color: "#6E6459" }}
+        >
+          {label}
+        </span>
       </div>
-      <div className="mt-2 font-display text-2xl font-bold text-charcoal-950 tabular-nums">{value}</div>
-      {typeof progress === "number" && (
-        <div className="mt-3 h-1.5 w-full rounded-full bg-charcoal-950/8 overflow-hidden">
-          <div
-            className="h-full bg-charcoal-950 transition-all"
-            style={{ width: `${progress}%` }}
-          />
+      <div className="flex-1" />
+      {loading ? (
+        <div className="relative z-10 h-9 w-24 animate-pulse rounded-md bg-charcoal-950/8 sm:h-10" />
+      ) : (
+        <div
+          aria-live="polite"
+          className="relative z-10 font-display font-bold tabular-nums text-[28px] leading-9 sm:text-[32px] sm:leading-10"
+          style={{
+            letterSpacing: "-0.36px",
+            color: "#241C12",
+            fontVariationSettings: '"SOFT" 0, "WONK" 1',
+          }}
+        >
+          {value}
         </div>
       )}
-      <div className="mt-2 text-xs text-charcoal-600">{footer}</div>
-    </div>
+      <img
+        src={illustration}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 select-none object-contain sm:h-[120px] sm:w-[120px]"
+      />
+    </section>
   );
 }
+
 
 function Field({
   id, label, icon: Icon, error, children,
