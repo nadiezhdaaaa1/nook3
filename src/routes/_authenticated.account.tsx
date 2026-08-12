@@ -11,6 +11,7 @@ import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
 import globeAsset from "@/assets/Globe.png.asset.json";
 import doorAsset from "@/assets/Door-2.png.asset.json";
+import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 
 import { z } from "zod";
 import { toast } from "sonner";
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
+import { useUpdateProfileMutation } from "@/lib/queries/profile";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
@@ -1691,7 +1693,8 @@ function EnableEmailPasswordDialog({
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const updateProfile = useAppStore((s) => s.updateUser);
+  const setLocalProfile = useAppStore((s) => s.updateProfile);
+  const saveProfile = useUpdateProfileMutation();
   const strength = passwordStrength(next);
   const canSubmit = next.length >= 8 && next === confirm && !loading;
 
@@ -1721,7 +1724,12 @@ function EnableEmailPasswordDialog({
       setLoading(false);
       return;
     }
-    updateProfile({ hasPassword: true });
+    setLocalProfile({ hasPassword: true });
+    try {
+      await saveProfile.mutateAsync({ hasPassword: true });
+    } catch {
+      /* local state already updated; surfaced by the mutation toast */
+    }
     setLoading(false);
     toast.success("Email & password sign-in enabled", {
       description: `You can now sign in with ${email}.`,
