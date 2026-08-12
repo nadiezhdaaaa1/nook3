@@ -427,10 +427,11 @@ function HomeScreen() {
           variant="tertiary"
           size="medium"
           aria-haspopup="dialog"
+          disabled={!search}
           onClick={() => setFiltersOpen(true)}
           className="inline-flex h-[46px] shrink-0 items-center gap-2 px-3 text-sm font-semibold"
         >
-          {filterCount > 0 ? (
+          {search && filterCount > 0 ? (
             <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal-950 text-[11px] font-semibold text-paper">
               {filterCount}
             </span>
@@ -440,7 +441,9 @@ function HomeScreen() {
           Filters
         </OriginButton>
       </TooltipTrigger>
-      <TooltipContent side="bottom">Filter matches</TooltipContent>
+      <TooltipContent side="bottom">
+        {search ? "Filter matches" : "Create a search to use filters"}
+      </TooltipContent>
     </Tooltip>
   );
 

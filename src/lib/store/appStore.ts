@@ -299,18 +299,11 @@ export const useAppStore = create<AppStore>()(
 
       deleteSearch: (id) => {
         const remaining = get().searches.filter((s) => s.id !== id);
-        // If we just deleted the last non-archived search, auto-bootstrap a
-        // fresh default so the app never sits in an empty state.
-        if (remaining.filter((s) => s.status !== "archived").length === 0) {
-          const fresh = buildSearch({ cityId: "nyc" }, remaining);
-          set({ searches: [...remaining, fresh], activeSearchId: fresh.id });
-          return;
-        }
         const nextActive =
           get().activeSearchId === id
             ? (remaining.find((s) => s.status !== "archived")?.id ?? null)
             : get().activeSearchId;
-        set({ searches: remaining, activeSearchId: nextActive });
+        set({ searches: remaining, activeSearchId: remaining.length === 0 ? null : nextActive });
       },
 
       setActiveSearch: (id) => {

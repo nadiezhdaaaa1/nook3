@@ -316,6 +316,28 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   const planLimit = Number.isFinite(max) ? max : 3;
   const emptySlots = Array.from({ length: Math.max(0, 3 - live.length) }, (_, i) => live.length + i);
 
+  if (searches.length === 0) {
+    return (
+      <div className="rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
+        <h3 className="text-[22px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">
+          No saved searches yet
+        </h3>
+        <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
+          A search is what powers your alerts and the listings on your home screen. Create one to
+          start getting matches.
+        </p>
+        <div className="mt-6 flex justify-center">
+          <OriginButton variant="main" size="medium" onClick={handleNew}>
+            Create a search
+          </OriginButton>
+        </div>
+        {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
+      </div>
+    );
+  }
+
+
+
   return (
     <div className="space-y-4">
       <ul className="grid gap-3 lg:grid-cols-3">
