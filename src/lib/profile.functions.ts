@@ -140,6 +140,7 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
         deletion_scheduled_at: scheduled.toISOString(),
         deletion_reason: data.reason ?? null,
         deletion_feedback: data.feedback ?? null,
+        deletion_cancel_subscription: data.cancelSubscription ?? null,
       } as never)
       .eq("id", context.userId)
       .select("*")
