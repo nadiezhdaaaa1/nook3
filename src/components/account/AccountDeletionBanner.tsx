@@ -50,14 +50,14 @@ export function AccountDeletionBanner() {
       className="sticky top-0 z-50 bg-danger text-white"
     >
       <div className="mx-auto max-w-[1440px] px-6 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col items-center gap-2.5 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start gap-2.5 sm:flex-row sm:items-center">
           <img
             src={trashAsset.url}
             alt=""
             aria-hidden
             className="h-10 w-10 shrink-0 object-contain"
           />
-          <p className="text-sm leading-relaxed text-center sm:text-left">
+          <p className="text-sm leading-relaxed text-left">
             <span className="font-semibold">
               Your account is scheduled for deletion on {formatDate(scheduledAt)}
             </span>{" "}
