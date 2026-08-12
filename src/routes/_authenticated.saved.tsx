@@ -301,6 +301,8 @@ function summaryBits(s: Search): string[] {
 function SearchesTab({ searches }: { searches: Search[] }) {
   const navigate = useNavigate();
   const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const deleteSearch = useAppStore((s) => s.deleteSearch);
+  const deleteMut = useDeleteSearchMutation();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
