@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import trashAsset from "@/assets/Trash.png.asset.json";
+import trashAsset from "@/assets/trash-2.png.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
   profileQueryOptions,
