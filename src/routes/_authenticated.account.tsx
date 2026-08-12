@@ -1398,6 +1398,16 @@ function PlanCard({
 
       {isCurrent && plan.id === "free" ? (
         <div className="w-full h-[56px]" />
+      ) : isCurrent && plan.id !== "free" ? (
+        <OriginButton
+          className="w-full"
+          variant={ctaVariant}
+          style={{ borderRadius: 12 }}
+          disabled={updatePlanMut.isPending}
+          onClick={() => onCancelRequest()}
+        >
+          {ctaLabel}
+        </OriginButton>
       ) : (
         <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
@@ -1406,7 +1416,6 @@ function PlanCard({
               variant={ctaVariant}
               style={{ borderRadius: 12 }}
               disabled={updatePlanMut.isPending}
-              onClick={handleClick}
             >
               {ctaLabel}
             </OriginButton>
@@ -1452,6 +1461,7 @@ function PlanCard({
           </AlertDialogContent>
         </AlertDialog>
       )}
+
 
       <div
         className="text-xs leading-5"
