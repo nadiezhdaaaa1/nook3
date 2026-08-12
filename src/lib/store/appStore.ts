@@ -21,6 +21,11 @@ interface AppState {
   activeSearchId: string | null;
   /** Set true after first hydration so consumers can avoid SSR flicker. */
   hydrated: boolean;
+  /**
+   * Ids of searches deleted from this browser. Tombstones so background sync
+   * (onboarding hand-off / local reconcile) can never resurrect them.
+   */
+  deletedSearchIds: string[];
 }
 
 interface AppActions {
@@ -101,6 +106,7 @@ const initialState: AppState = {
   searches: [],
   activeSearchId: null,
   hydrated: false,
+  deletedSearchIds: [],
 };
 
 function buildSearch(seed: Partial<Search> & { cityId: CityId }, existing: Search[]): Search {
@@ -303,7 +309,13 @@ export const useAppStore = create<AppStore>()(
           get().activeSearchId === id
             ? (remaining.find((s) => s.status !== "archived")?.id ?? null)
             : get().activeSearchId;
-        set({ searches: remaining, activeSearchId: remaining.length === 0 ? null : nextActive });
+        const tombstones = [...get().deletedSearchIds.filter((x) => x !== id), id].slice(-50);
+        set({
+          searches: remaining,
+          activeSearchId: remaining.length === 0 ? null : nextActive,
+          deletedSearchIds: tombstones,
+        });
+        clearEditingBufferFor(id, nextActive, remaining);
       },
 
       setActiveSearch: (id) => {

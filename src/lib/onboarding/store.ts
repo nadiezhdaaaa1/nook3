@@ -71,6 +71,13 @@ export interface OnboardingState {
    */
   editingSearchId: string | null;
 
+  /**
+   * True once these onboarding answers have been persisted as an account's
+   * first Search. Prevents the hand-off from re-inserting a search after the
+   * user deletes their last one.
+   */
+  handoffCompleted: boolean;
+
   // Move-out
   moveOut?: MoveOutInfo;
 }
@@ -86,6 +93,7 @@ export interface OnboardingActions {
   cycleTransit: (id: string) => void;
   setTransit: (id: string, state: TriState | null) => void;
   setEditingSearch: (id: string | null) => void;
+  setHandoffCompleted: (v: boolean) => void;
   reset: () => void;
 }
 
@@ -113,6 +121,7 @@ const initial: OnboardingState = {
   lastStep: 1,
   completedAt: null,
   editingSearchId: null,
+  handoffCompleted: false,
 };
 
 
@@ -178,7 +187,10 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
         set({ transit: { ...get().transit, lines } });
       },
       setEditingSearch: (id) => set({ editingSearchId: id }),
-      reset: () => set({ ...initial }),
+      setHandoffCompleted: (v) => set({ handoffCompleted: v }),
+      // Clearing the buffer must not clear the hand-off flag, otherwise the
+      // answers could be re-persisted as a brand-new search.
+      reset: () => set({ ...initial, handoffCompleted: get().handoffCompleted }),
     }),
     {
       name: "nook.onboarding.v1",
