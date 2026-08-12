@@ -97,10 +97,10 @@ export const updateProfile = createServerFn({ method: "POST" })
     if (data.hasPassword !== undefined) patch.has_password = data.hasPassword;
     if (data.moveOut !== undefined) patch.move_out = data.moveOut;
 
+    // Upsert so the write still lands when the profile row is missing.
     const { data: updated, error } = await context.supabase
       .from("profiles")
-      .update(patch as never)
-      .eq("id", context.userId)
+      .upsert({ id: context.userId, ...patch } as never, { onConflict: "id" })
       .select("*")
       .single();
     if (error) throw new Error(error.message);
