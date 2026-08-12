@@ -27,15 +27,7 @@ export const listAlerts = createServerFn({ method: "GET" })
     return (data ?? []).map(rowToAlert);
   });
 
-const paginationSchema = z.object({
-  limit: z.number().int().min(1).max(100),
-  offset: z.number().int().min(0),
-});
 
-export type PaginatedAlertsResult = {
-  alerts: AlertRow[];
-  total: number;
-};
 
 export const listAlertsPage = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
