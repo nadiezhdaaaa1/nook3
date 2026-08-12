@@ -2002,6 +2002,8 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const user = useAppStore((s) => s.user);
+  const setLocalProfile = useAppStore((s) => s.updateProfile);
+  const saveProfile = useUpdateProfileMutation();
 
   const strength = passwordStrength(next);
   const canSubmit = current.length > 0 && next.length >= 8 && next === confirm && !loading;
