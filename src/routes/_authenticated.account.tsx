@@ -183,7 +183,9 @@ function AccountPage() {
             label="Last 7 days"
             value={String(stats.alerts7d)}
             illustration={lastDaysArt.url}
+            className="sm:col-span-2 lg:col-span-1"
           />
+
         </div>
 
       </section>
