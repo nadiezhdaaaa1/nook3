@@ -309,6 +309,12 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   const disabledIds = useDisabledSearchIds();
   const max = SEARCH_LIMITS[plan];
   const canCreate = live.length < max;
+  const isUuid = (id: string) =>
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  const dbAwareDelete = (id: string) => {
+    if (isUuid(id)) deleteMut.mutate(id);
+    deleteSearch(id);
+  };
   const handleNew = () => {
     if (!canCreate) {
       setUpgradeOpen(true);
