@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Gift, Copy, Check } from "lucide-react";
 import { getReferralCode } from "@/lib/onboarding/store";
 import { referralStatsQueryOptions } from "@/lib/queries/referrals";
-import presentAsset from "@/assets/present.png.asset.json";
+import presentAsset from "@/assets/Present-2.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/referrals")({
   component: () => (
