@@ -249,6 +249,7 @@ export type Database = {
           email_verified: boolean
           email_verified_at: string | null
           entitlement_state: Database["public"]["Enums"]["entitlement_state"]
+          has_password: boolean
           id: string
           is_affiliate: boolean
           matches_per_digest: number | null
@@ -273,6 +274,7 @@ export type Database = {
           email_verified?: boolean
           email_verified_at?: string | null
           entitlement_state?: Database["public"]["Enums"]["entitlement_state"]
+          has_password?: boolean
           id: string
           is_affiliate?: boolean
           matches_per_digest?: number | null
@@ -297,6 +299,7 @@ export type Database = {
           email_verified?: boolean
           email_verified_at?: string | null
           entitlement_state?: Database["public"]["Enums"]["entitlement_state"]
+          has_password?: boolean
           id?: string
           is_affiliate?: boolean
           matches_per_digest?: number | null
@@ -722,6 +725,7 @@ export type Database = {
           email_verified: boolean
           email_verified_at: string | null
           entitlement_state: Database["public"]["Enums"]["entitlement_state"]
+          has_password: boolean
           id: string
           is_affiliate: boolean
           matches_per_digest: number | null
