@@ -993,7 +993,7 @@ function CancelSubscriptionDialog({
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <DialogTitle>Cancel subscription</DialogTitle>
           {step === "reason" && (
@@ -1020,27 +1020,22 @@ function CancelSubscriptionDialog({
                 {r.label}
               </button>
             ))}
-            <DialogFooter className="!justify-between pt-3">
-              <button
-                type="button"
+            <DialogFooter className="!justify-between pt-4 gap-2">
+              <OriginButton
+                variant="tertiary"
+                size="medium"
                 onClick={() => { setReason("other"); setStep("confirm"); }}
-                className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
               >
                 Cancel anyway
-              </button>
-              <button
-                type="button"
+              </OriginButton>
+              <OriginButton
+                variant="main"
+                size="medium"
                 disabled={!reason}
                 onClick={() => setStep("offer")}
-                className={cn(
-                  "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
-                  reason
-                    ? "bg-charcoal-950 text-paper hover:bg-charcoal-800"
-                    : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-                )}
               >
                 Continue
-              </button>
+              </OriginButton>
             </DialogFooter>
           </div>
         )}
@@ -1061,34 +1056,36 @@ function CancelSubscriptionDialog({
         {step === "confirm" && (
           <div className="space-y-4">
             <p className="text-sm text-charcoal-700 leading-relaxed">
-              You'll keep your paid features until <span className="font-semibold text-charcoal-950">{periodEnd}</span>,
-              then move to Free. Your searches pause; data is kept per our Privacy Policy.
+              You're about to cancel your Pro subscription. You'll keep paid features until{" "}
+              <span className="font-semibold text-charcoal-950">{periodEnd}</span>,
+              then move to Intro. Auto-renewal stops and no further charges will be made.
             </p>
-            <DialogFooter>
-              <button
-                type="button"
-                onClick={close}
-                className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-              >
-                Keep my plan
-              </button>
-              <button
-                type="button"
+            <DialogFooter className="!justify-between pt-2 gap-2">
+              <OriginButton
+                variant="secondary"
+                size="medium"
                 onClick={() => {
                   updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
                   close();
                   toast.success(`Subscription canceled — active until ${periodEnd}`);
                 }}
-                className="h-10 px-5 rounded-pill text-sm font-semibold border border-danger/40 text-danger hover:bg-danger/10"
               >
-                Cancel subscription
-              </button>
+                Cancel
+              </OriginButton>
+              <OriginButton
+                variant="main"
+                size="medium"
+                onClick={close}
+              >
+                Keep
+              </OriginButton>
             </DialogFooter>
           </div>
         )}
       </DialogContent>
     </Dialog>
   );
+
 }
 
 function CancelOffer({
