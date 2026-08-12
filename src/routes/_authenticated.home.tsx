@@ -513,7 +513,8 @@ function HomeScreen() {
             : "order-2 w-full px-6 pb-10 pt-6 md:order-1 md:w-[55%]"
         }
       >
-        <div className="mx-auto flex max-w-[960px] flex-col">
+        {!noSearches && (
+          <div className="mx-auto flex max-w-[960px] flex-col">
           <header className="p-2">
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
               <SearchSelector />
