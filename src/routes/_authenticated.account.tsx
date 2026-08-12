@@ -177,12 +177,14 @@ function AccountPage() {
             label="Alerts received"
             value={String(stats.totalAlerts)}
             illustration={alertsArt.url}
+            nudgeY={4}
           />
           <StatCard
             icon={Clock}
             label="Last 7 days"
             value={String(stats.alerts7d)}
             illustration={lastDaysArt.url}
+            nudgeY={5}
             className="sm:col-span-2 lg:col-span-1"
           />
 
