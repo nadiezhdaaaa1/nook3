@@ -75,7 +75,7 @@ function ReferralsPage() {
             style={{
               top: "15px",
               left: "21px",
-              right: "calc(33.3333% - 45px)",
+              right: "calc(33.3333% - 15px)",
               height: "2px",
               background: "rgba(168,184,154,0.7)",
               zIndex: 0,
