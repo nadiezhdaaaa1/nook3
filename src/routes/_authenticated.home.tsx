@@ -645,8 +645,16 @@ function HomeScreen() {
         )}
         {noSearches && hydrated && (
           <div className="mx-auto flex h-full max-w-[960px] flex-col items-center justify-center p-2">
-            <div className="w-full rounded-[16px] border border-black/10 bg-white px-6 py-12 text-center">
-              <h3 className="text-[22px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">
+            <div className="w-full px-6 py-12 text-center">
+              <img
+                src={searchIllustration.url}
+                alt=""
+                aria-hidden
+                width={48}
+                height={64}
+                className="mx-auto mb-4 h-16 w-12"
+              />
+              <h3 className="font-display text-[22px] font-semibold text-[#241c12]">
                 No searches yet
               </h3>
               <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
