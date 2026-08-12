@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { SampleListingsMap, type SampleListingsMapRef } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { SearchSelector } from "@/components/app/SearchSelector";
-import { useActiveSearch } from "@/lib/store";
+import { useActiveSearch, useAppStore } from "@/lib/store";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
 import { type SampleListing } from "@/data/sampleListings";
