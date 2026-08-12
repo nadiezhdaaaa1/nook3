@@ -573,6 +573,22 @@ function PasswordField({
 
 function DeleteAccountButton() {
   const [open, setOpen] = useState(false);
+  const scheduledAt = useAppStore((s) => s.user?.deletionScheduledAt);
+  const cancel = useCancelAccountDeletionMutation();
+
+  if (scheduledAt) {
+    return (
+      <OriginButton
+        variant="dark"
+        size="medium"
+        onClick={() => cancel.mutate()}
+        disabled={cancel.isPending}
+      >
+        {cancel.isPending ? "Restoring…" : "Keep my account"}
+      </OriginButton>
+    );
+  }
+
   return (
     <>
       <OriginButton
