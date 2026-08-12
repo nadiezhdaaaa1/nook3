@@ -333,8 +333,8 @@ function SyncProfile({
 }
 
 function StatCard({
-  icon: Icon, label, value, illustration, loading,
-}: {
+  icon: Icon, label, value, illustration, loading, className,
+
   icon: typeof Sparkles;
   label: string;
   value: string;
