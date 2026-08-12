@@ -385,8 +385,10 @@ function StatCard({
         src={illustration}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 h-[80px] w-[96px] select-none object-contain"
+        className="pointer-events-none absolute bottom-0 right-0 h-[96px] w-[80px] select-none object-contain object-bottom-right"
+        style={nudgeY ? { transform: `translateY(${nudgeY}px)` } : undefined}
       />
+
     </section>
   );
 }
