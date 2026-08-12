@@ -1455,11 +1455,11 @@ function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="h-8 w-8 shrink-0 flex items-center justify-center">
+          <span className="h-9 w-9 shrink-0 flex items-center justify-center">
             <img
               src={globeAsset.url}
               alt=""
-              className="h-7 w-7 object-contain shrink-0"
+              className="h-8 w-8 object-contain shrink-0"
               aria-hidden="true"
             />
           </span>
@@ -1618,8 +1618,8 @@ function SignInMethodRows() {
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="h-8 w-8 shrink-0 rounded-full bg-charcoal-950/[0.06] flex items-center justify-center">
-            <Mail className="h-5 w-5 text-charcoal-700" />
+          <span className="h-9 w-9 shrink-0 rounded-full bg-charcoal-950/[0.06] flex items-center justify-center">
+            <Mail className="h-6 w-6 text-charcoal-700" />
           </span>
           <div className="min-w-0">
             <div className="text-sm font-semibold text-charcoal-950">Login / Email</div>
@@ -1640,11 +1640,11 @@ function SignInMethodRows() {
       {methods.hasGoogle && (
         <div className="px-5 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <span className="h-8 w-8 shrink-0 flex items-center justify-center">
+            <span className="h-9 w-9 shrink-0 flex items-center justify-center">
               <img
                 src={googleIcon.url}
                 alt=""
-                className="h-7 w-7 object-contain shrink-0"
+                className="h-8 w-8 object-contain shrink-0"
                 aria-hidden="true"
               />
             </span>
@@ -1905,11 +1905,11 @@ function ProfilePasswordRow() {
     <>
       <div className="px-5 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="h-8 w-8 shrink-0 flex items-center justify-center">
+          <span className="h-9 w-9 shrink-0 flex items-center justify-center">
             <img
               src={lockAsset.url}
               alt=""
-              className="h-7 w-7 object-contain shrink-0"
+              className="h-8 w-8 object-contain shrink-0"
               aria-hidden="true"
             />
           </span>
