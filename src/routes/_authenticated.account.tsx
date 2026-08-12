@@ -4,7 +4,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Eye, EyeOff, ChevronRight, LogOut, Lock,
+  Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
   MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
