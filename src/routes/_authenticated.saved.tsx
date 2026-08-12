@@ -425,11 +425,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                   size="medium"
                   aria-label={`Delete ${s.name}`}
                   className="h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger hover:text-danger hover:bg-danger/10"
-                  onClick={() => {
-                    if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
-                      dbAwareDelete(s.id);
-                    }
-                  }}
+                  onClick={() => openDeleteDialog(s)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </OriginButton>
