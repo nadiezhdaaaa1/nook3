@@ -1366,6 +1366,40 @@ function SignInMethodRows() {
   const methods = useSignInMethods();
   const [enableOpen, setEnableOpen] = useState(false);
   const [disconnectOpen, setDisconnectOpen] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+
+  // If Google came back linked under a different email than the account email,
+  // unlink it again — only the account's own email may be connected.
+  useEffect(() => {
+    if (methods.loading || !methods.hasGoogle || !methods.googleIdentity) return;
+    const linked = (methods.googleIdentity.identity_data?.email ?? "").toLowerCase();
+    const own = (methods.email ?? "").toLowerCase();
+    if (!linked || !own || linked === own) return;
+    (async () => {
+      await supabase.auth.unlinkIdentity(methods.googleIdentity);
+      toast.error("That Google account doesn't match your email", {
+        description: `Connect the Google account for ${methods.email}.`,
+      });
+      methods.refresh();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [methods.loading, methods.hasGoogle, methods.googleIdentity, methods.email]);
+
+  async function handleConnectGoogle() {
+    setConnecting(true);
+    const { error } = await supabase.auth.linkIdentity({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/account`,
+        queryParams: { login_hint: methods.email, prompt: "select_account" },
+      },
+    });
+    setConnecting(false);
+    if (error) {
+      toast.error("Couldn't connect Google", { description: error.message });
+    }
+  }
+
 
   if (methods.loading) {
     return (
