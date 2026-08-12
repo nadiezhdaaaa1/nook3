@@ -6,6 +6,7 @@ import {
   IconHeart,
   IconHomeSearch,
   IconMenu2,
+  IconMessageChatbot,
   IconUser,
 } from "@tabler/icons-react";
 
@@ -147,6 +148,7 @@ const ICON_BUTTON_CLASS = "rounded-[8px] p-2";
 const NAV_ITEMS = [
   { to: "/home", label: "Searches", Icon: IconHomeSearch, disabled: false },
   { to: "/saved", label: "Saved", Icon: IconHeart, disabled: false },
+  { to: "/wren", label: "Wren AI chat", Icon: IconMessageChatbot, disabled: true },
   { to: "/referrals", label: "Referrals", Icon: IconGift, disabled: false },
   { to: "/account", label: "Account", Icon: IconUser, disabled: false },
 ] as const;
@@ -178,6 +180,23 @@ export function AppHeader({ plan }: { plan?: PlanKey }) {
             <IconHeart {...ICON_PROPS} aria-hidden />
             <span className={LABEL_CLASS}>Saved</span>
           </NavHoverItem>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <NavHoverItem
+                disabled
+                className={ICON_BUTTON_CLASS}
+                aria-label="Wren AI chat"
+              >
+                <IconMessageChatbot {...ICON_PROPS} aria-hidden />
+              </NavHoverItem>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <div className="text-center leading-tight">
+                <div>Wren AI chat</div>
+                <div className="text-xs opacity-70">(coming soon)</div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <NavHoverItem to="/referrals" className={ICON_BUTTON_CLASS} aria-label="Referrals">
