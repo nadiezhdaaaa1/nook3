@@ -12,6 +12,7 @@ import {
   Search as SearchIcon,
   ThumbsDown,
   RotateCcw,
+  Trash2,
 } from "lucide-react";
 
 import { AppPage } from "@/components/app/AppPage";
