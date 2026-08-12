@@ -969,19 +969,21 @@ function AltRow({
    ========================================================================= */
 
 type CancelReason = "expensive" | "found" | "matches" | "break" | "other";
-type CancelStep = "reason" | "offer" | "confirm";
 
 function CancelSubscriptionDialog({
-  open, onOpenChange, periodEnd,
-}: { open: boolean; onOpenChange: (v: boolean) => void; periodEnd: string }) {
-  const [step, setStep] = useState<CancelStep>("reason");
+  open, onOpenChange, periodEnd, onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  periodEnd: string;
+  onConfirm: (reason: CancelReason, note: string) => void;
+}) {
   const [reason, setReason] = useState<CancelReason | null>(null);
   const [otherReason, setOtherReason] = useState("");
-  const updatePlanMut = useUpdatePlanMutation();
 
   const close = () => {
     onOpenChange(false);
-    setTimeout(() => { setStep("reason"); setReason(null); setOtherReason(""); }, 200);
+    setTimeout(() => { setReason(null); setOtherReason(""); }, 200);
   };
 
   const reasons: { id: CancelReason; label: string }[] = [
@@ -996,225 +998,68 @@ function CancelSubscriptionDialog({
     <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
-          <DialogTitle>
-            {step === "reason" ? "We’re sorry to see you go" : "Confirm cancellation"}
-          </DialogTitle>
-          {step === "reason" && (
-            <DialogDescription>
-              Before you cancel, tell us what changed. Your feedback helps us make Nook better for the next apartment hunt.
-            </DialogDescription>
-          )}
+          <DialogTitle>We’re sorry to see you go</DialogTitle>
+          <DialogDescription>
+            Before you cancel, tell us what changed. Your feedback helps us make Nook better for the next apartment hunt.
+          </DialogDescription>
         </DialogHeader>
 
-        {step === "reason" && (
-          <div className="space-y-2">
-            {reasons.map((r) => (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => setReason(r.id)}
-                className={cn(
-                  "w-full text-left px-4 py-3 rounded-[12px] border text-sm font-medium transition-colors",
-                  reason === r.id
-                    ? "border-[#2B2521] bg-[#2B2521] text-white"
-                    : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
-                )}
-              >
-                {r.label}
-              </button>
-            ))}
-            {reason === "other" && (
-              <Input
-                placeholder="What happened? (optional)"
-                value={otherReason}
-                onChange={(e) => setOtherReason(e.target.value)}
-                className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
-                autoFocus
-              />
-            )}
-            <DialogFooter className="justify-end gap-2 pt-4">
-              <OriginButton
-                variant="main"
-                size="medium"
-                onClick={close}
-              >
-                Keep subscription
-              </OriginButton>
-              <OriginButton
-                variant="secondary"
-                size="medium"
-                disabled={!reason}
-                onClick={() => setStep("offer")}
-              >
-                Cancel subscription
-              </OriginButton>
-            </DialogFooter>
-          </div>
-        )}
-
-        {step === "offer" && reason && (
-          <CancelOffer
-            reason={reason}
-            onAccept={(msg) => { toast.success(msg); close(); }}
-            onDecline={() => setStep("confirm")}
-            onDowngradeFree={() => {
-              updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
-              toast.success("Moved to Free plan — kept 1 search");
-              close();
-            }}
-          />
-        )}
-
-        {step === "confirm" && (
-          <div className="space-y-4">
-            <p className="text-sm text-charcoal-700 leading-relaxed">
-              You're about to cancel your Pro subscription. You'll keep paid features until{" "}
-              <span className="font-semibold text-charcoal-950">{periodEnd}</span>,
-              then move to Intro. Auto-renewal stops and no further charges will be made.
-            </p>
-            <DialogFooter className="justify-end gap-2 pt-2">
-              <OriginButton
-                variant="secondary"
-                size="medium"
-                onClick={() => {
-                  updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
-                  close();
-                  toast.success(`Subscription canceled — active until ${periodEnd}`);
-                }}
-              >
-                Cancel subscription
-              </OriginButton>
-              <OriginButton
-                variant="main"
-                size="medium"
-                onClick={close}
-              >
-                Keep subscription
-              </OriginButton>
-            </DialogFooter>
-          </div>
-        )}
+        <div className="space-y-2">
+          {reasons.map((r) => (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => setReason(r.id)}
+              className={cn(
+                "w-full text-left px-4 py-3 rounded-[12px] border text-sm font-medium transition-colors",
+                reason === r.id
+                  ? "border-[#2B2521] bg-[#2B2521] text-white"
+                  : "border-border bg-paper-warm hover:border-charcoal-400 text-charcoal-800",
+              )}
+            >
+              {r.label}
+            </button>
+          ))}
+          {reason === "other" && (
+            <Input
+              placeholder="What happened? (optional)"
+              value={otherReason}
+              onChange={(e) => setOtherReason(e.target.value)}
+              className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
+              autoFocus
+            />
+          )}
+          <p className="pt-2 text-xs text-charcoal-600 leading-relaxed">
+            You’ll keep Pro until <span className="font-semibold text-charcoal-950">{periodEnd}</span>.
+            Auto-renewal stops and nothing is deleted — you can renew anytime.
+          </p>
+          <DialogFooter className="justify-end gap-2 pt-4">
+            <OriginButton
+              variant="main"
+              size="medium"
+              onClick={close}
+            >
+              Keep subscription
+            </OriginButton>
+            <OriginButton
+              variant="secondary"
+              size="medium"
+              disabled={!reason}
+              onClick={() => {
+                if (!reason) return;
+                onConfirm(reason, otherReason.trim());
+                close();
+              }}
+            >
+              Cancel subscription
+            </OriginButton>
+          </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
-
 }
 
-function CancelOffer({
-  reason, onAccept, onDecline, onDowngradeFree,
-}: {
-  reason: CancelReason;
-  onAccept: (toastMsg: string) => void;
-  onDecline: () => void;
-  onDowngradeFree: () => void;
-}) {
-  type OfferAction =
-    | { kind: "accept"; label: string; toast: string }
-    | { kind: "downgrade-free"; label: string }
-    | { kind: "decline"; label: string };
-
-  const config: Record<CancelReason, {
-    icon: typeof Mail;
-    title: string;
-    desc: string;
-    actions: OfferAction[];
-  }> = {
-    expensive: {
-      icon: Tag,
-      title: "50% off for the next 2 months",
-      desc: "Stay on Premium at half price — automatic, no code needed.",
-      actions: [
-        { kind: "accept", label: "Apply 50% off", toast: "50% off applied for 2 months" },
-        { kind: "downgrade-free", label: "Switch to Free (keep 1 search)" },
-        { kind: "decline", label: "No thanks, cancel" },
-      ],
-    },
-    found: {
-      icon: Heart,
-      title: "Congrats! Pause instead of canceling",
-      desc: "Your searches wait quietly for your next move — no charges while paused. You can also list your move-out and earn $50.",
-      actions: [
-        { kind: "accept", label: "Pause for 1 month", toast: "Paused for 1 month" },
-        { kind: "accept", label: "List my move-out · earn $50", toast: "Move-out listing started" },
-        { kind: "decline", label: "No thanks, cancel" },
-      ],
-    },
-    matches: {
-      icon: MessageCircle,
-      title: "Let Wren retune your search",
-      desc: "A free Wren session to refine filters — plus 1 month free to give it another shot.",
-      actions: [
-        { kind: "accept", label: "Retune with Wren + 1 month free", toast: "1 month free added — open Wren to retune" },
-        { kind: "decline", label: "No thanks, cancel" },
-      ],
-    },
-    break: {
-      icon: PauseCircle,
-      title: "Pause — no charges while you're away",
-      desc: "Pick how long. We'll resume right where you left off.",
-      actions: [
-        { kind: "accept", label: "Pause 1 month", toast: "Paused for 1 month" },
-        { kind: "accept", label: "Pause 2 months", toast: "Paused for 2 months" },
-        { kind: "accept", label: "Pause 3 months", toast: "Paused for 3 months" },
-        { kind: "decline", label: "No thanks, cancel" },
-      ],
-    },
-    other: {
-      icon: MessageCircle,
-      title: "Talk to us — or pause instead",
-      desc: "Tell us what's off and we'll try to help. Or pause and decide later.",
-      actions: [
-        { kind: "accept", label: "Pause 1 month", toast: "Paused for 1 month" },
-        { kind: "accept", label: "Contact support", toast: "Support thread opened" },
-        { kind: "decline", label: "No thanks, cancel" },
-      ],
-    },
-  };
-
-  const c = config[reason];
-  const Icon = c.icon;
-
-  return (
-    <div className="space-y-4">
-      <div className="rounded-card border border-sage-300/60 bg-sage-100/40 p-4">
-        <div className="flex items-start gap-3">
-          <Icon className="h-5 w-5 text-sage-700 shrink-0 mt-0.5" />
-          <div>
-            <div className="font-display text-base font-semibold text-charcoal-950">{c.title}</div>
-            <p className="text-xs text-charcoal-700 mt-1 leading-relaxed">{c.desc}</p>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        {c.actions.map((a, i) => {
-          const primary = i === 0;
-          const handle = () => {
-            if (a.kind === "accept") onAccept(a.toast);
-            else if (a.kind === "downgrade-free") onDowngradeFree();
-            else onDecline();
-          };
-          return (
-            <button
-              key={a.label}
-              type="button"
-              onClick={handle}
-              className={cn(
-                "h-11 px-4 rounded-pill text-sm font-semibold transition-colors",
-                primary
-                  ? "bg-sage-700 text-paper hover:bg-sage-800"
-                  : a.kind === "decline"
-                    ? "border border-charcoal-950/15 text-charcoal-800 hover:bg-paper"
-                    : "border border-charcoal-950/15 text-charcoal-950 hover:bg-paper",
-              )}
-            >
-              {a.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 
 function PlanCard({
