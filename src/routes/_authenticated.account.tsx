@@ -647,11 +647,16 @@ function DeleteAccountDialog({
         cancelSubscription,
       },
       {
-        onSuccess: () => {
+        onSuccess: (user) => {
           closeAll();
+          updateStoreProfile({
+            subscriptionCanceledAt: user.subscriptionCanceledAt,
+            subscriptionPeriodEnd: user.subscriptionPeriodEnd,
+          } as any);
           toast.success("Account scheduled for deletion", {
-            description:
-              "Nothing is deleted for 30 days — you can reverse this from any screen.",
+            description: user.subscriptionCanceledAt
+              ? "Auto-renewal is off and nothing is deleted for 30 days — you can reverse this from any screen."
+              : "Nothing is deleted for 30 days — you can reverse this from any screen.",
             duration: 6000,
           });
         },
