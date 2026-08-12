@@ -74,11 +74,10 @@ function ReferralsPage() {
             className="pointer-events-none absolute hidden sm:block"
             style={{
               top: "15px",
-              left: "calc(16.6667% - 0px)",
-              right: "calc(16.6667% - 24px)",
+              left: "21px",
+              right: "calc(33.3333% - 45px)",
               height: "2px",
               background: "rgba(168,184,154,0.7)",
-              transform: "translateX(-15px)",
               zIndex: 0,
             }}
           />
