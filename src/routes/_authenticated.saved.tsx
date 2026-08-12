@@ -30,14 +30,15 @@ import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/aler
 import { useReportListingMutation } from "@/lib/queries/listingReports";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const TABS = [
   {
