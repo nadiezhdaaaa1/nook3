@@ -1151,13 +1151,7 @@ function PlanCard({
   const checkColor = dark ? "#c2dd93" : "#6a820a";
   const lockColor = "#db5919";
   const badge = plan.cycle === "annual" ? { text: "Save 47%", bg: "#6a820a" } : null;
-  const stateBadge = isCurrent
-    ? plan.id === "free"
-      ? "Current"
-      : isCanceledCurrent
-        ? `Cancels on ${periodEnd}`
-        : "Your plan"
-    : null;
+  const stateBadge = isCurrent ? (plan.id === "free" ? "Current" : "Your plan") : null;
 
   const cardStyle: React.CSSProperties = dark
     ? {
