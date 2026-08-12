@@ -525,28 +525,29 @@ function PasswordField({
   autoFocus?: boolean; autoComplete?: string;
 }) {
   return (
-    <div className="space-y-1.5">
-      <label htmlFor={id} className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+    <div className="space-y-2">
+      <label htmlFor={id} className="block text-sm font-medium text-charcoal-800">
         {label}
       </label>
       <div className="relative">
-        <input
+        <Input
           id={id}
           type={show ? "text" : "password"}
           autoFocus={autoFocus}
           autoComplete={autoComplete}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          size="big"
           className={cn(
-            "w-full h-11 pl-4 pr-11 rounded-md bg-surface-elevated border focus:outline-none text-sm",
-            error ? "border-danger/60 focus:border-danger" : "border-border focus:border-charcoal-950",
+            "pr-11",
+            error && "border-danger/60 focus-visible:border-danger",
           )}
         />
         <button
           type="button"
           onClick={onToggle}
           aria-label={show ? "Hide password" : "Show password"}
-          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-charcoal-500 hover:text-charcoal-950 hover:bg-paper"
+          className="absolute right-3 top-1/2 -translate-y-1/2 h-7 w-7 inline-flex items-center justify-center rounded-md text-charcoal-500 hover:text-charcoal-950 hover:bg-paper"
         >
           {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>
