@@ -7,7 +7,7 @@ import {
   Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
   ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
 import globeAsset from "@/assets/Globe.png.asset.json";
@@ -752,25 +752,32 @@ function DeleteAccountDialog({
               />
             </div>
 
-            <div className="flex items-start gap-3 rounded-[12px] border border-border bg-paper-warm p-4">
-              <Checkbox
+            <label
+              className="flex items-start cursor-pointer"
+              style={{
+                background: "#EAE0CD",
+                border: "1px solid #B5AB98",
+                borderRadius: 16,
+                padding: "16px 20px",
+                gap: 16,
+              }}
+            >
+              <input
                 id="cancel-subscription"
+                type="checkbox"
                 checked={cancelSubscription}
-                onCheckedChange={(v) => setCancelSubscription(v === true)}
-                className="mt-0.5"
+                onChange={(e) => setCancelSubscription(e.target.checked)}
+                className="ob-check ob-check--muted"
               />
-              <div className="space-y-1">
-                <label
-                  htmlFor="cancel-subscription"
-                  className="text-sm font-semibold text-charcoal-950 cursor-pointer"
-                >
+              <div>
+                <div style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2b2521" }}>
                   Also cancel my subscription
-                </label>
-                <p className="text-xs text-charcoal-600">
+                </div>
+                <div style={{ fontSize: 14, lineHeight: "24px", color: "#4a4a46" }}>
                   Stops billing at the end of your current period. You can keep the subscription if you only want to delete the account data.
-                </p>
+                </div>
               </div>
-            </div>
+            </label>
 
             <div className="rounded-[12px] border border-danger/30 bg-danger p-4">
               <p className="text-sm text-white leading-relaxed">
