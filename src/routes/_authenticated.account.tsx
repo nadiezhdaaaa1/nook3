@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
-  MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
+  ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
@@ -573,7 +573,7 @@ function DeleteAccountButton() {
   );
 }
 
-type DeleteStep = "reason" | "alternatives" | "losses" | "reauth" | "confirm";
+type DeleteStep = "reason" | "feedback";
 type DeleteReason = "found" | "expensive" | "matches" | "privacy" | "unused" | "other";
 
 const DELETE_REASONS: { id: DeleteReason; label: string }[] = [
@@ -590,49 +590,42 @@ function DeleteAccountDialog({
 }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const [step, setStep] = useState<DeleteStep>("reason");
   const [reason, setReason] = useState<DeleteReason | null>(null);
-  const [feedback, setFeedback] = useState("");
-  const [pw, setPw] = useState("");
-  const [pwError, setPwError] = useState<string | null>(null);
-  const [confirmText, setConfirmText] = useState("");
+  const [reasonNote, setReasonNote] = useState("");
+  const [stayFeedback, setStayFeedback] = useState("");
   const resetApp = useAppStore((s) => s.reset);
   const plan = useAppStore((s) => s.user?.plan ?? "free");
-  const isPaid = plan !== "free";
-  const updatePlanMut = useUpdatePlanMutation();
-  const prefs = usePreferencesStore();
 
   const closeAll = () => {
     onOpenChange(false);
     setTimeout(() => {
       setStep("reason");
-      setReason(null); setFeedback("");
-      setPw(""); setPwError(null); setConfirmText("");
+      setReason(null);
+      setReasonNote("");
+      setStayFeedback("");
     }, 200);
   };
 
-  const goToOffer = () => {
+  const handleDelete = () => {
     // Log feedback (analytics stub)
-    if (reason || feedback) {
-      // eslint-disable-next-line no-console
-      console.log("[deletion_feedback]", { reason, feedback, plan });
-    }
-    setStep("alternatives");
+    // eslint-disable-next-line no-console
+    console.log("[deletion_feedback]", { reason, reasonNote, stayFeedback, plan });
+    resetApp();
+    closeAll();
+    toast.success("Account scheduled for deletion", {
+      description: "You have 30 days to restore it by signing back in.",
+      duration: 6000,
+    });
   };
-
-  const stepLabels: DeleteStep[] = ["reason", "alternatives", "losses", "reauth", "confirm"];
-  const stepIndex = stepLabels.indexOf(step) + 1;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <div className="flex items-center gap-3">
-            {step !== "reason" && (
+            {step === "feedback" && (
               <button
                 type="button"
-                onClick={() => {
-                  const i = stepLabels.indexOf(step);
-                  if (i > 0) setStep(stepLabels[i - 1]);
-                }}
+                onClick={() => setStep("reason")}
                 className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-paper text-charcoal-600"
                 aria-label="Back"
               >
@@ -669,28 +662,28 @@ function DeleteAccountDialog({
             {reason === "other" && (
               <Input
                 placeholder="What happened? (optional)"
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value.slice(0, 1000))}
+                value={reasonNote}
+                onChange={(e) => setReasonNote(e.target.value.slice(0, 1000))}
                 className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
                 autoFocus
               />
             )}
             <DialogFooter className="justify-between gap-2 pt-4">
               <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
-                Step {stepIndex} of 5
+                Step 1 of 2
               </span>
               <div className="flex items-center gap-2">
                 <OriginButton
                   variant="tertiary"
                   size="medium"
-                  onClick={() => { setReason(null); setFeedback(""); setStep("losses"); }}
+                  onClick={() => setStep("feedback")}
                 >
                   Skip
                 </OriginButton>
                 <OriginButton
                   variant="secondary"
                   size="medium"
-                  onClick={goToOffer}
+                  onClick={() => setStep("feedback")}
                 >
                   Continue
                 </OriginButton>
@@ -699,333 +692,56 @@ function DeleteAccountDialog({
           </div>
         )}
 
-        {step === "alternatives" && (
-          <DeleteAlternatives
-            reason={reason}
-            isPaid={isPaid}
-            stepCounter={
-              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
-                Step {stepIndex} of 5
-              </span>
-            }
-            onAccept={(msg) => { toast.success(msg); closeAll(); }}
-            onDowngradeFree={() => {
-              updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
-              toast.success("Moved to Free plan");
-              closeAll();
-            }}
-            onTurnOffEmails={() => {
-              prefs.setPref("productUpdates", false);
-              prefs.setPref("marketingEmails", false);
-              toast.success("Optional emails turned off");
-              closeAll();
-            }}
-            onContinue={() => setStep("losses")}
-            onKeep={closeAll}
-          />
-        )}
-
-        {step === "losses" && (
+        {step === "feedback" && (
           <div className="space-y-4">
-            <p className="text-sm text-charcoal-700">
-              When you delete, you'll lose:
-            </p>
-            <ul className="space-y-2 text-sm text-charcoal-800 rounded-card bg-paper-warm border border-border p-4">
-              {[
-                "All saved searches and filter settings",
-                "Alert history and saved listings",
-                "Your Wren AI chats",
-                "Referral credits and bonuses",
-                "Your profile and preferences",
-              ].map((t) => (
-                <li key={t} className="flex items-start gap-2">
-                  <span className="mt-1.5 h-1 w-1 rounded-full bg-charcoal-500 shrink-0" />
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-            {isPaid && (
-              <div className="rounded-card border border-charcoal-950/12 bg-paper-warm p-3 text-xs text-charcoal-700 leading-relaxed">
-                This also cancels your <span className="font-semibold text-charcoal-950">{plan}</span> subscription.
-                No refund for the current period (see Refund Policy).
-              </div>
-            )}
-            <p className="text-xs text-charcoal-600 leading-relaxed">
-              Some records required by law (tax and transaction history) are retained per our Privacy Policy.
-              After the 30-day grace period, deletion can't be undone.
-            </p>
+            <div className="space-y-2">
+              <label htmlFor="stay-feedback" className="text-sm font-medium text-charcoal-950">
+                Is there anything that we can do to make you stay?
+              </label>
+              <p className="text-xs text-charcoal-500">
+                This is optional — your answer helps us improve Nook.
+              </p>
+              <textarea
+                id="stay-feedback"
+                value={stayFeedback}
+                onChange={(e) => setStayFeedback(e.target.value.slice(0, 1000))}
+                placeholder="Tell us what would have changed your mind..."
+                className="w-full min-h-[96px] px-4 py-3 rounded-[12px] border border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus:border-charcoal-950 focus:outline-none resize-none"
+                autoFocus
+              />
+            </div>
+
+            <div className="rounded-[12px] border border-danger/30 bg-danger p-4">
+              <p className="text-sm text-white leading-relaxed">
+                Your account will be deactivated now and permanently deleted after a 30-day grace period. During that window you can restore it by signing back in. After that, your data is gone for good.
+              </p>
+            </div>
+
             <DialogFooter className="justify-between gap-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
-                Step {stepIndex} of 5
+                Step 2 of 2
               </span>
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
+                <OriginButton
+                  variant="tertiary"
+                  size="medium"
                   onClick={closeAll}
-                  className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-                >
-                  Keep my account
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStep("reauth")}
-                  className="h-10 px-5 rounded-pill text-sm font-semibold border border-danger/40 text-danger hover:bg-danger/10"
-                >
-                  Continue
-                </button>
-              </div>
-            </DialogFooter>
-          </div>
-        )}
-
-        {step === "reauth" && (
-          <div className="space-y-4">
-            <p className="text-sm text-charcoal-700">
-              For your security, please re-enter your password.
-            </p>
-            <PasswordField
-              id="del-pw"
-              label="Current password"
-              value={pw}
-              onChange={(v) => { setPw(v); setPwError(null); }}
-              show={false}
-              onToggle={() => {}}
-              error={pwError ?? undefined}
-              autoFocus
-              autoComplete="current-password"
-            />
-            <DialogFooter className="justify-between gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
-                Step {stepIndex} of 5
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={closeAll}
-                  className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
                 >
                   Cancel
-                </button>
-                <button
-                  type="button"
-                  disabled={pw.length === 0}
-                  onClick={() => {
-                    if (pw === "wrongpass") {
-                      setPwError("That password doesn't match.");
-                      return;
-                    }
-                    setStep("confirm");
-                  }}
-                  className={cn(
-                    "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
-                    pw.length > 0
-                      ? "border border-danger/40 text-danger hover:bg-danger/10"
-                      : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-                  )}
+                </OriginButton>
+                <OriginButton
+                  variant="danger"
+                  size="medium"
+                  onClick={handleDelete}
                 >
-                  Verify
-                </button>
-              </div>
-            </DialogFooter>
-          </div>
-        )}
-
-        {step === "confirm" && (
-          <div className="space-y-4">
-            <p className="text-sm text-charcoal-700">
-              Type <span className="font-mono font-semibold text-charcoal-950">DELETE</span> to confirm.
-              Your account will be deactivated immediately and permanently removed after a 30-day grace period.
-            </p>
-            <input
-              autoFocus
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
-              placeholder="DELETE"
-              className="w-full h-11 px-4 rounded-md bg-surface-elevated border border-border focus:border-danger focus:outline-none text-sm font-mono"
-            />
-            <DialogFooter className="justify-between gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
-                Step {stepIndex} of 5
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={closeAll}
-                  className="h-10 px-4 rounded-pill border border-charcoal-950/15 text-sm font-semibold text-charcoal-950 hover:bg-paper"
-                >
-                  Keep my account
-                </button>
-                <button
-                  type="button"
-                  disabled={confirmText !== "DELETE"}
-                  onClick={() => {
-                    resetApp();
-                    closeAll();
-                    toast.success("Account scheduled for deletion", {
-                      description: "You have 30 days to restore by signing back in.",
-                      duration: 6000,
-                    });
-                  }}
-                  className={cn(
-                    "h-10 px-5 rounded-pill text-sm font-semibold transition-colors",
-                    confirmText === "DELETE"
-                      ? "bg-danger text-paper hover:bg-danger/90"
-                      : "bg-charcoal-950/10 text-charcoal-500 cursor-not-allowed",
-                  )}
-                >
-                  Delete my account
-                </button>
+                  Delete account
+                </OriginButton>
               </div>
             </DialogFooter>
           </div>
         )}
       </DialogContent>
     </Dialog>
-  );
-}
-
-function DeleteAlternatives({
-  reason, isPaid, stepCounter, onAccept, onDowngradeFree, onTurnOffEmails, onContinue, onKeep,
-}: {
-  reason: DeleteReason | null;
-  isPaid: boolean;
-  stepCounter: React.ReactNode;
-  onAccept: (msg: string) => void;
-  onDowngradeFree: () => void;
-  onTurnOffEmails: () => void;
-  onContinue: () => void;
-  onKeep: () => void;
-}) {
-  // Privacy reason: no retention offer. Show data-control alternatives.
-  if (reason === "privacy") {
-    return (
-      <div className="space-y-3">
-        <p className="text-sm text-charcoal-700">
-          Before you delete — you may also want to:
-        </p>
-        <AltRow
-          icon={Download}
-          label="Export your data first"
-          desc="Download a JSON copy of your searches, alerts, and profile."
-          onClick={() => {
-            toast.success("Export downloaded");
-          }}
-        />
-        <AltRow
-          icon={Bell}
-          label="Turn off all tracking & emails"
-          desc="Stop all optional emails and analytics. Keep your account inactive."
-          onClick={onTurnOffEmails}
-        />
-        <p className="text-xs text-charcoal-600">
-          See our <a href="/privacy" className="text-sage-700 underline-offset-2 hover:underline">Privacy Policy</a> for what's retained.
-        </p>
-        <DialogFooter className="!justify-between pt-2">
-          {stepCounter}
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={onKeep}
-              className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
-            >
-              Keep my account
-            </button>
-            <button
-              type="button"
-              onClick={onContinue}
-              className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
-            >
-              Continue to delete <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </DialogFooter>
-      </div>
-    );
-  }
-
-  type Alt =
-    | { kind: "accept"; icon: typeof Mail; label: string; desc: string; toast: string }
-    | { kind: "downgrade"; icon: typeof Mail; label: string; desc: string }
-    | { kind: "emails-off"; icon: typeof Mail; label: string; desc: string };
-
-  const alts: Alt[] = [];
-
-  if (reason === "expensive") {
-    if (isPaid) {
-      alts.push({ kind: "accept", icon: Tag, label: "50% off for 3 months", desc: "Stay on your plan at half price.", toast: "50% off applied for 3 months" });
-      alts.push({ kind: "downgrade", icon: Sparkles, label: "Downgrade to Free", desc: "Keep 1 saved search. No charges." });
-    } else {
-      alts.push({ kind: "emails-off", icon: Bell, label: "Turn off all emails", desc: "Quiet the inbox. Keep your account dormant." });
-    }
-  } else if (reason === "found") {
-    alts.push({ kind: "accept", icon: Heart, label: "List your move-out · earn $50", desc: "Help someone else find your spot.", toast: "Move-out listing started" });
-    alts.push({ kind: "accept", icon: Sparkles, label: "Refer a friend", desc: "Both get a free week of Premium.", toast: "Referral link copied" });
-  } else if (reason === "matches") {
-    alts.push({ kind: "accept", icon: MessageCircle, label: "Let Wren retune your search", desc: "Free session — refine filters with AI.", toast: "Open Wren to retune your search" });
-    if (isPaid) {
-      alts.push({ kind: "accept", icon: Tag, label: "1 month free to retry", desc: "Give it another shot on us.", toast: "1 month free added" });
-    }
-  } else if (reason === "unused" || reason === "other" || reason === null) {
-    alts.push({ kind: "emails-off", icon: Bell, label: "Keep account dormant", desc: "Turn off optional emails. We'll be here when you're ready." });
-  }
-
-  return (
-    <div className="space-y-3">
-      <p className="text-sm text-charcoal-700">
-        Deleting is permanent. Would one of these work instead?
-      </p>
-      {alts.map((a) => (
-        <AltRow
-          key={a.label}
-          icon={a.icon}
-          label={a.label}
-          desc={a.desc}
-          onClick={() => {
-            if (a.kind === "accept") onAccept(a.toast);
-            else if (a.kind === "downgrade") onDowngradeFree();
-            else onTurnOffEmails();
-          }}
-        />
-      ))}
-      <DialogFooter className="!justify-between pt-2">
-        {stepCounter}
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={onKeep}
-            className="text-sm text-charcoal-600 hover:text-charcoal-950 underline-offset-4 hover:underline"
-          >
-            Keep my account
-          </button>
-          <button
-            type="button"
-            onClick={onContinue}
-            className="text-sm font-semibold text-danger underline-offset-4 hover:underline inline-flex items-center gap-1"
-          >
-            No — delete my account <ChevronRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </DialogFooter>
-    </div>
-  );
-}
-
-function AltRow({
-  icon: Icon, label, desc, onClick,
-}: { icon: typeof Mail; label: string; desc: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="w-full text-left rounded-card border border-border bg-paper-warm hover:border-charcoal-400 transition-colors px-4 py-3 flex items-center gap-3 group"
-    >
-      <Icon className="h-4 w-4 text-sage-700 shrink-0" />
-      <div className="min-w-0 flex-1">
-        <div className="text-sm font-semibold text-charcoal-950">{label}</div>
-        <div className="text-xs text-charcoal-600 mt-0.5">{desc}</div>
-      </div>
-      <ChevronRight className="h-4 w-4 text-charcoal-400 group-hover:text-charcoal-950 shrink-0" />
-    </button>
   );
 }
 
