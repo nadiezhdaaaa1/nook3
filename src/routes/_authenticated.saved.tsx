@@ -3,7 +3,6 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useMemo, useState, type ReactNode } from "react";
 import {
-  ArrowLeft,
   Heart,
   Inbox,
   Loader2,
