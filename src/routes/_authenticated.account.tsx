@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
   Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
-  PauseCircle, MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
+  MessageCircle, Tag, Heart, ArrowLeft, CreditCard, Receipt, Plus,
 } from "lucide-react";
 import cardAsset from "@/assets/Card.png.asset.json";
 import lockAsset from "@/assets/Lock.png.asset.json";
@@ -884,14 +884,12 @@ function DeleteAlternatives({
   if (reason === "expensive") {
     if (isPaid) {
       alts.push({ kind: "accept", icon: Tag, label: "50% off for 3 months", desc: "Stay on your plan at half price.", toast: "50% off applied for 3 months" });
-      alts.push({ kind: "accept", icon: PauseCircle, label: "Pause billing", desc: "Keep your data; no charges while paused.", toast: "Billing paused" });
       alts.push({ kind: "downgrade", icon: Sparkles, label: "Downgrade to Free", desc: "Keep 1 saved search. No charges." });
     } else {
       alts.push({ kind: "emails-off", icon: Bell, label: "Turn off all emails", desc: "Quiet the inbox. Keep your account dormant." });
     }
   } else if (reason === "found") {
     if (isPaid) {
-      alts.push({ kind: "accept", icon: PauseCircle, label: "Pause — your data waits for next move", desc: "No charges while paused.", toast: "Subscription paused" });
     }
     alts.push({ kind: "accept", icon: Heart, label: "List your move-out · earn $50", desc: "Help someone else find your spot.", toast: "Move-out listing started" });
     alts.push({ kind: "accept", icon: Sparkles, label: "Refer a friend", desc: "Both get a free week of Premium.", toast: "Referral link copied" });
@@ -902,7 +900,6 @@ function DeleteAlternatives({
     }
   } else if (reason === "unused" || reason === "other" || reason === null) {
     if (isPaid) {
-      alts.push({ kind: "accept", icon: PauseCircle, label: "Pause billing", desc: "Keep your account and data. No charges.", toast: "Billing paused" });
     }
     alts.push({ kind: "emails-off", icon: Bell, label: "Keep account dormant", desc: "Turn off optional emails. We'll be here when you're ready." });
   }
