@@ -13,6 +13,10 @@ import globeAsset from "@/assets/Globe.png.asset.json";
 import doorAsset from "@/assets/Door-2.png.asset.json";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 import mailAsset from "@/assets/Mail.png.asset.json";
+import savedSearchesArt from "@/assets/Saved-searches.png.asset.json";
+import alertsArt from "@/assets/Alerts-received.png.asset.json";
+import lastDaysArt from "@/assets/Last-days.png.asset.json";
+
 
 import { z } from "zod";
 import { toast } from "sonner";
