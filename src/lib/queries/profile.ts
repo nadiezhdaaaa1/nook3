@@ -8,6 +8,7 @@ import {
   cancelAccountDeletion,
   setSubscriptionCanceled,
 } from "@/lib/profile.functions";
+import { useAppStore } from "@/lib/store/appStore";
 
 export const profileQueryKey = ["profile"] as const;
 
@@ -34,13 +35,35 @@ export function useUpdateProfileMutation() {
   });
 }
 
+/** Mirror server-side deletion/subscription state onto the in-memory store so
+ *  UI reading the store (Privacy & data row, delete button) updates instantly. */
+export function syncDeletionStateToStore(user: {
+  deletionRequestedAt?: string | null;
+  deletionScheduledAt?: string | null;
+  subscriptionCanceledAt?: string | null;
+  subscriptionPeriodEnd?: string | null;
+} | null | undefined) {
+  if (!user) return;
+  const store = useAppStore.getState();
+  if (!store.user) return;
+  store.updateProfile({
+    deletionRequestedAt: user.deletionRequestedAt ?? null,
+    deletionScheduledAt: user.deletionScheduledAt ?? null,
+    subscriptionCanceledAt: user.subscriptionCanceledAt ?? null,
+    subscriptionPeriodEnd: user.subscriptionPeriodEnd ?? null,
+  } as any);
+}
+
 export function useScheduleAccountDeletionMutation() {
   const qc = useQueryClient();
   const fn = useServerFn(scheduleAccountDeletion);
   return useMutation({
     mutationFn: (data: { reason?: string; feedback?: string; cancelSubscription?: boolean }) =>
       fn({ data }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: profileQueryKey }),
+    onSuccess: (user) => {
+      syncDeletionStateToStore(user as any);
+      qc.invalidateQueries({ queryKey: profileQueryKey });
+    },
     onError: (e) =>
       toast.error("Couldn't schedule deletion", {
         description: e instanceof Error ? e.message : "Try again",
@@ -54,6 +77,7 @@ export function useCancelAccountDeletionMutation() {
   return useMutation({
     mutationFn: () => fn(),
     onSuccess: (user) => {
+      syncDeletionStateToStore(user as any);
       qc.invalidateQueries({ queryKey: profileQueryKey });
       toast.success("Account restored", {
         description: user?.subscriptionCanceledAt
