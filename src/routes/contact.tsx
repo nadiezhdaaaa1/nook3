@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, AlertTriangle, X, ArrowUpRight, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertTriangle, X, ArrowUpRight } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { OriginButton } from "@/components/ui/origin-button";
 
 type Topic =
   | "general"
@@ -542,32 +543,16 @@ function ContactFormSection() {
               </p>
 
               <div className="flex justify-stretch md:justify-end">
-                <button
+                <OriginButton
                   type="submit"
+                  variant="main"
+                  size="medium"
+                  loading={submitting}
                   disabled={!canSubmit}
-                  aria-busy={submitting}
-                  className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-pill text-[15px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{
-                    backgroundColor: "var(--color-brand-terracotta)",
-                    color: "var(--color-brand-cream)",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!submitting && canSubmit)
-                      e.currentTarget.style.backgroundColor = "var(--color-brand-terracotta-dark)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--color-brand-terracotta)";
-                  }}
+                  className="w-full md:w-auto"
                 >
-                  {submitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    "Send message"
-                  )}
-                </button>
+                  Send message
+                </OriginButton>
               </div>
             </motion.form>
           )}
