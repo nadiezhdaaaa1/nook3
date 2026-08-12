@@ -1448,9 +1448,8 @@ function SignInMethodRows() {
 
       {methods.hasEmailPassword && <ProfilePasswordRow />}
 
-      {methods.hasGoogle && (
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
+      <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
           <span className="h-10 w-10 shrink-0 flex items-center justify-center">
             <img
               src={googleIcon.url}
@@ -1459,18 +1458,29 @@ function SignInMethodRows() {
               aria-hidden="true"
             />
           </span>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-charcoal-950">Google Account</div>
-              <div className="text-xs text-charcoal-600 mt-0.5 truncate">
-                Connected {methods.googleEmail}
-              </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-charcoal-950">Google Account</div>
+            <div className="text-xs text-charcoal-600 mt-0.5 truncate">
+              {methods.hasGoogle ? `Connected ${methods.googleEmail}` : "Disconnected"}
             </div>
           </div>
+        </div>
+        {methods.hasGoogle ? (
           <OriginButton variant="tertiary" size="medium" onClick={() => setDisconnectOpen(true)}>
             Disconnect
           </OriginButton>
-        </div>
-      )}
+        ) : (
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            disabled={connecting}
+            onClick={handleConnectGoogle}
+          >
+            {connecting ? "Connecting…" : "Connect"}
+          </OriginButton>
+        )}
+      </div>
+
 
       <EnableEmailPasswordDialog
         open={enableOpen}
