@@ -27,7 +27,10 @@ export function SaveBar({ signal }: { signal: unknown }) {
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
       }`}
     >
-      <div className="px-4 h-10 inline-flex items-center gap-2 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold shadow-lg">
+      <div
+        className="px-4 h-10 inline-flex items-center gap-2 rounded-pill text-paper text-sm font-semibold shadow-lg"
+        style={{ backgroundColor: "#2B2521" }}
+      >
         <Check className="h-4 w-4 text-sage-300" /> Changes saved
       </div>
     </div>
