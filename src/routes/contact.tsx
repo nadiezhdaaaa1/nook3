@@ -186,15 +186,15 @@ function ChannelCards() {
             whileHover={{ y: -2 }}
             className="group block rounded-[12px] p-5 transition-all duration-200 min-h-[120px] md:min-h-[140px]"
             style={{
-              backgroundColor: "var(--color-brand-soft)",
-              border: "1px solid var(--color-brand-clay)",
+              backgroundColor: "#FFFFFF",
+              border: "1px solid rgba(0, 0, 0, 0.2)",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = "var(--color-brand-terracotta)";
               e.currentTarget.style.boxShadow = "0 10px 24px rgba(43, 37, 33, 0.08)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "var(--color-brand-clay)";
+              e.currentTarget.style.borderColor = "rgba(0, 0, 0, 0.2)";
               e.currentTarget.style.boxShadow = "none";
             }}
           >
