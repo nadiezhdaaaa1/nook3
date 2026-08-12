@@ -774,7 +774,7 @@ function DeleteAccountDialog({
                   Also cancel my subscription
                 </div>
                 <div style={{ fontSize: 14, lineHeight: "24px", color: "#4a4a46" }}>
-                  Stops billing at the end of your current period. You can keep the subscription if you only want to delete the account data.
+                  Stops billing at the end of your current period.
                 </div>
               </div>
             </label>
