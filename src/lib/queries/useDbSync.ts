@@ -61,6 +61,7 @@ export function useDbSync() {
             referralCode: profile.referralCode,
             isAffiliate: profile.isAffiliate,
             completedAt: profile.completedAt,
+            hasPassword: profile.hasPassword,
           }
         : null,
       searches: rows,
