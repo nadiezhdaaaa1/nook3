@@ -996,10 +996,10 @@ function CancelSubscriptionDialog({
     <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
-          <DialogTitle>Cancel subscription</DialogTitle>
+          <DialogTitle>We’re sorry to see you go</DialogTitle>
           {step === "reason" && (
             <DialogDescription>
-              Before you go — what's prompting this? It helps us improve.
+              Before you cancel, tell us what changed. Your feedback helps us make Nook better for the next apartment hunt.
             </DialogDescription>
           )}
         </DialogHeader>
@@ -1023,28 +1023,28 @@ function CancelSubscriptionDialog({
             ))}
             {reason === "other" && (
               <Input
-                placeholder="Tell us what happened..."
+                placeholder="What happened?"
                 value={otherReason}
                 onChange={(e) => setOtherReason(e.target.value)}
                 className="h-11 rounded-[12px] border-border bg-paper-warm text-sm text-charcoal-950 placeholder:text-charcoal-400 focus-visible:border-charcoal-950 focus-visible:ring-0"
                 autoFocus
               />
             )}
-            <DialogFooter className="!justify-between pt-4 gap-2">
+            <DialogFooter className="justify-end gap-2 pt-4">
               <OriginButton
-                variant="tertiary"
-                size="medium"
-                onClick={() => { setReason("other"); setStep("confirm"); }}
-              >
-                Cancel anyway
-              </OriginButton>
-              <OriginButton
-                variant="main"
+                variant="secondary"
                 size="medium"
                 disabled={!reason || (reason === "other" && !otherReason.trim())}
                 onClick={() => setStep("offer")}
               >
-                Continue
+                Cancel subscription
+              </OriginButton>
+              <OriginButton
+                variant="main"
+                size="medium"
+                onClick={close}
+              >
+                Keep subscription
               </OriginButton>
             </DialogFooter>
           </div>
