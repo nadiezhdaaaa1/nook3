@@ -658,6 +658,11 @@ function DeleteAccountDialog({
           <DeleteAlternatives
             reason={reason}
             isPaid={isPaid}
+            stepCounter={
+              <span className="text-[10px] font-mono uppercase tracking-wider text-charcoal-500 self-center">
+                Step {stepIndex} of 5
+              </span>
+            }
             onAccept={(msg) => { toast.success(msg); closeAll(); }}
             onDowngradeFree={() => {
               updatePlanMut.mutate({ plan: "free", billingCycle: "monthly" });
