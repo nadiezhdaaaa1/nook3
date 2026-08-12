@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, AlertTriangle, X, ArrowUpRight } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { OriginButton } from "@/components/ui/origin-button";
 
 type Topic =
   | "general"
@@ -540,8 +541,6 @@ function ContactFormSection() {
               >
                 We reply within 24h on business days.
               </p>
-
-import { OriginButton } from "@/components/ui/origin-button";
 
               <div className="flex justify-stretch md:justify-end">
                 <OriginButton
