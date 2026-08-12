@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 
 
+import searchIllustration from "@/assets/search-3.png.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
