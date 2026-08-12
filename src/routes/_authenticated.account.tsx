@@ -1053,6 +1053,55 @@ function CancelSubscriptionDialog({
   );
 }
 
+function RenewSubscriptionDialog({
+  open, onOpenChange, periodEnd, onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  periodEnd: string;
+  onConfirm: () => void;
+}) {
+  const close = () => onOpenChange(false);
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
+      <DialogContent className="max-w-md bg-white">
+        <DialogHeader>
+          <DialogTitle>Glad to see you back</DialogTitle>
+          <DialogDescription>
+            You’re about to keep your Pro subscription active. Your access will continue and auto-renew on{" "}
+            <span className="font-semibold text-charcoal-950">{periodEnd}</span>. You can cancel anytime in Account → Subscription.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-start gap-3 rounded-[12px] bg-paper-warm border border-border p-4 text-sm text-charcoal-700">
+          <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" />
+          <span>
+            All your saved searches, filters, and Wren chats stay exactly as you left them — nothing is lost.
+          </span>
+        </div>
+        <DialogFooter className="justify-end gap-3 pt-2">
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            onClick={close}
+          >
+            Cancel
+          </OriginButton>
+          <OriginButton
+            variant="main"
+            size="medium"
+            onClick={() => {
+              onConfirm();
+              close();
+            }}
+          >
+            Renew
+          </OriginButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 
 function PlanCard({
@@ -1643,6 +1692,7 @@ function SubscriptionSection({
   activeCycle: BillingCycle;
 }) {
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [renewOpen, setRenewOpen] = useState(false);
   const [canceled, setCanceled] = useState(false);
   const periodEnd = useMemo(() => {
     const d = new Date();
@@ -1674,6 +1724,15 @@ function SubscriptionSection({
 
   return (
     <>
+      <RenewSubscriptionDialog
+        open={renewOpen}
+        onOpenChange={setRenewOpen}
+        periodEnd={periodEnd}
+        onConfirm={() => {
+          setCanceledState(false);
+          toast.success("Subscription renewed — auto-renewal is back on");
+        }}
+      />
       <CancelSubscriptionDialog
         open={cancelOpen}
         onOpenChange={setCancelOpen}
@@ -1704,10 +1763,7 @@ function SubscriptionSection({
               periodEnd={periodEnd}
               onCancelRequest={() => setCancelOpen(true)}
               canceled={canceled}
-              onRenew={() => {
-                setCanceledState(false);
-                toast.success("Subscription renewed — auto-renewal is back on");
-              }}
+              onRenew={() => setRenewOpen(true)}
             />
           ))}
         </div>
