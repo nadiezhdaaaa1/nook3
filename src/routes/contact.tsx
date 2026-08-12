@@ -324,7 +324,7 @@ function ContactFormSection() {
   };
 
   return (
-    <section className="px-6 mt-12 md:mt-20">
+    <section className="px-6 mt-4 md:mt-12">
       <div
         className="max-w-[600px] mx-auto rounded-[16px] p-6 md:p-8 relative"
         style={{
