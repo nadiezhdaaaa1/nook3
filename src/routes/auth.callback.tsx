@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth/callback")({
@@ -29,6 +30,28 @@ function AuthCallback() {
       typeof sessionStorage !== "undefined" ? sessionStorage.getItem("nook:postAuthPath") : null,
     );
 
+    const expected = (() => {
+      try {
+        return sessionStorage.getItem("nook:expectedEmail");
+      } catch {
+        return null;
+      }
+    })();
+
+    /** A locked-email flow must reject a different Google address by name. */
+    const rejectMismatch = async (email: string | null | undefined) => {
+      try {
+        sessionStorage.removeItem("nook:expectedEmail");
+      } catch {
+        /* ignore */
+      }
+      await supabase.auth.signOut();
+      toast.error("Wrong Google account", {
+        description: `This flow is locked to ${expected}. You signed in as ${email ?? "another address"}.`,
+      });
+      navigate({ to: "/signup", search: { redirect: target, lockEmail: 1 }, replace: true });
+    };
+
     const go = () => {
       if (cancelled) return;
       try {
@@ -42,7 +65,12 @@ function AuthCallback() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) go();
+      if (!session) return;
+      if (expected && session.user.email?.toLowerCase() !== expected.toLowerCase()) {
+        void rejectMismatch(session.user.email);
+        return;
+      }
+      go();
     });
 
     void (async () => {
@@ -50,6 +78,10 @@ function AuthCallback() {
       for (let i = 0; i < 40 && !cancelled; i++) {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
+          if (expected && data.session.user.email?.toLowerCase() !== expected.toLowerCase()) {
+            await rejectMismatch(data.session.user.email);
+            return;
+          }
           go();
           return;
         }

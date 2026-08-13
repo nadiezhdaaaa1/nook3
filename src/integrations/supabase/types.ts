@@ -838,6 +838,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      commit_onboarding: {
+        Args: { _phone?: string; _search?: Json; _user_id: string }
+        Returns: Json
+      }
       dev_set_account_state: {
         Args: {
           _billing_cycle?: Database["public"]["Enums"]["billing_cycle"]

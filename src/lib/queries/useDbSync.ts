@@ -33,9 +33,7 @@ export function useDbSync() {
 
 
   const hydratedRef = useRef(false);
-  const handoffRef = useRef(false);
   const lastSyncedRef = useRef<Map<string, string>>(new Map());
-  const completedWriteRef = useRef(false);
   const persistProfile = useServerFn(updateProfile);
   const qc = useQueryClient();
 
@@ -103,71 +101,9 @@ export function useDbSync() {
     syncDeletionStateToStore(profileQ.data as any);
   }, [profileQ.data]);
 
-  // 1a-bis) Persist onboarding completion. `completed_at` is what the route
-  // gate reads as "onboarded", so it must live in the DB, not only in the
-  // browser's onboarding store. Written once: either the browser finished
-  // onboarding (store `completedAt`) or the account already owns a search.
-  useEffect(() => {
-    if (completedWriteRef.current) return;
-    const profile = profileQ.data;
-    if (!profile || profile.completedAt) return;
-    const rows = (searchesQ.data as Search[] | undefined) ?? [];
-    const localCompleted = useOnboardingStore.getState().completedAt;
-    const completedAt = localCompleted ?? (rows.length > 0 ? new Date().toISOString() : null);
-    if (!completedAt) return;
-    completedWriteRef.current = true;
-    void (async () => {
-      try {
-        await persistProfile({ data: { completedAt } as any });
-        useAppStore.getState().updateProfile({ completedAt } as any);
-        qc.invalidateQueries({ queryKey: accessQueryKey });
-      } catch {
-        completedWriteRef.current = false;
-      }
-    })();
-  }, [profileQ.data, searchesQ.data, persistProfile, qc]);
-
-  // 1b) Onboarding handoff: the account has no searches yet, but the browser
-  // still holds the onboarding answers — persist them as the first Search.
-  useEffect(() => {
-    if (handoffRef.current) return;
-    if (!searchesQ.data || !profileQ.data) return;
-    if ((searchesQ.data as Search[]).length > 0) return;
-
-    const o = useOnboardingStore.getState();
-    if (!o.city) return;
-    // One-time per account: once the answers have been persisted (or the user
-    // has deleted searches), an empty list must stay empty.
-    if (o.handoffCompleted) return;
-    if (useAppStore.getState().deletedSearchIds.length > 0) {
-      useOnboardingStore.getState().setHandoffCompleted(true);
-      return;
-    }
-
-    handoffRef.current = true;
-    useOnboardingStore.getState().setHandoffCompleted(true);
-    createMutation.mutate({
-      name: getDefaultSearchName(o.city, []),
-      cityId: o.city,
-      budget: o.budget,
-      moveIn: o.moveIn,
-      bedrooms: o.bedrooms,
-      bathrooms: o.bathrooms,
-      rentProtection: o.rentProtection,
-      includeBrokerFee: o.includeBrokerFee,
-      neighborhoods: o.neighborhoods,
-      amenities: o.amenities,
-      transit: o.transit,
-      commute: o.commute,
-      alertChannel: "email",
-      frequency: o.frequency,
-    });
-    // Re-hydrate from the DB once the insert lands.
-    hydratedRef.current = false;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchesQ.data, profileQ.data]);
-
-
+  // 1b) NOTE: onboarding answers and `completed_at` are no longer written
+  // here. Both are committed together by `commitOnboarding` from the
+  // /onboarding/success CTA, so merely loading the app can't create a search.
 
   // 1c) Reconcile searches that were created locally but never persisted
   // (non-uuid ids). Without a real row id, saved/disliked listings can't be

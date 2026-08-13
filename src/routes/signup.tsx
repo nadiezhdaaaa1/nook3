@@ -16,14 +16,18 @@ import {
 } from "@/lib/consents";
 import { getReferralAttribution, getReferralIpHash } from "@/lib/referral/attribution";
 
-type Search = { redirect?: string };
+type Search = { redirect?: string; lockEmail?: 1 };
 
 export const Route = createFileRoute("/signup")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+    lockEmail: search.lockEmail === 1 || search.lockEmail === "1" ? 1 : undefined,
   }),
   beforeLoad: async ({ search }) => {
     if (typeof window === "undefined") return;
+    // With `lockEmail` the visitor is an already-paid account that has no
+    // credentials yet — they must be able to set a password while signed in.
+    if (search.lockEmail) return;
     const { data } = await supabase.auth.getUser();
     if (data.user) {
       throw redirect({ to: search.redirect ?? "/home" });
@@ -42,7 +46,8 @@ export const Route = createFileRoute("/signup")({
 
 function SignupPage() {
   const navigate = useNavigate();
-  const { redirect: redirectTo } = Route.useSearch();
+  const { redirect: redirectTo, lockEmail } = Route.useSearch();
+  const [lockedSession, setLockedSession] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -61,6 +66,21 @@ function SignupPage() {
     setReferralCode(getReferralAttribution());
   }, []);
 
+  // Email locking: the address on file is the only one allowed.
+  useEffect(() => {
+    if (!lockEmail) return;
+    void supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) return;
+      setLockedSession(true);
+      if (data.user.email) setEmail(data.user.email);
+      try {
+        sessionStorage.setItem("nook:expectedEmail", data.user.email ?? "");
+      } catch {
+        /* ignore */
+      }
+    });
+  }, [lockEmail]);
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const emailRes = emailSchema.safeParse(email);
@@ -73,6 +93,21 @@ function SignupPage() {
     if (Object.keys(nextErrors).length) return;
 
     setSubmitting(true);
+
+    if (lockEmail && lockedSession) {
+      const { error: pwError } = await supabase.auth.updateUser({ password: pwRes.data! });
+      setSubmitting(false);
+      if (pwError) {
+        setErrors({ form: pwError.message });
+        toast.error("Couldn't set your password", { description: pwError.message });
+        return;
+      }
+      await persistConsentsForCurrentUser(buildConsents({ marketing, source: "signup_email" }));
+      toast.success("Password set");
+      navigate({ to: redirectTo ?? "/home", replace: true });
+      return;
+    }
+
     const ipHash = getReferralIpHash();
     const metadata = referralCode
       ? { referral_code: referralCode, ...(ipHash ? { referral_ip_hash: ipHash } : {}) }
@@ -112,6 +147,7 @@ function SignupPage() {
     setSubmitting(true);
     try {
       sessionStorage.setItem("nook:postAuthPath", redirectTo ?? "/home");
+      if (!lockEmail) sessionStorage.removeItem("nook:expectedEmail");
     } catch {
       /* ignore */
     }
@@ -136,8 +172,12 @@ function SignupPage() {
         </Link>
 
         <div className="sgn-head">
-          <h1 className="sgn-title">Create your account</h1>
-          <p className="sgn-sub">Save searches and get alerts.</p>
+          <h1 className="sgn-title">{lockEmail ? "Pick a password" : "Create your account"}</h1>
+          <p className="sgn-sub">
+            {lockEmail
+              ? "Your plan is already active. Set a password so you can sign back in."
+              : "Save searches and get alerts."}
+          </p>
         </div>
 
         {referralCode && !sent && (
@@ -188,6 +228,8 @@ function SignupPage() {
                     aria-invalid={!!errors.email}
                     placeholder="you@email.com"
                     size="big"
+                    readOnly={!!lockEmail}
+                    disabled={!!lockEmail}
                   />
                   {errors.email && <p className="sgn-err">{errors.email}</p>}
                 </div>
@@ -248,7 +290,13 @@ function SignupPage() {
                 disabled={submitting}
                 className="w-full"
               >
-                {submitting ? "Creating account…" : "Create account"}
+                {submitting
+                  ? lockEmail
+                    ? "Saving…"
+                    : "Creating account…"
+                  : lockEmail
+                    ? "Save password"
+                    : "Create account"}
               </OriginButton>
             </form>
           </>
