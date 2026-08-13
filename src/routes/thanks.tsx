@@ -150,7 +150,7 @@ function Thanks() {
         aria-hidden="true"
       />
 
-      <div className="w-full max-w-[520px] text-center">
+      <div className="relative z-10 w-full max-w-[520px] text-center">
         <img
           src={crownAsset.url}
           alt=""
