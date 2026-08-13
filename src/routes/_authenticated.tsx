@@ -5,26 +5,84 @@ import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanne
 import { AppHeader } from "@/components/app/AppHeader";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
+import { accessQueryOptions, clampOnboardingStep } from "@/lib/queries/access";
+import { useOnboardingStore } from "@/lib/onboarding/store";
 
 /**
  * Pathless layout route that gates every child under `_authenticated`.
  *
  * Supabase persists the session in `localStorage`, so on the SERVER
  * `getUser()` always returns null and would bounce every direct navigation
- * to /login. We skip the check during SSR and rely on the client-side re-run
- * after hydration — that's when the session is actually available.
+ * to /login. The whole subtree is `ssr: false`, so both the session check and
+ * the access-state fetch run client-side after hydration — that's when the
+ * session (and therefore the bearer token) is actually available.
+ *
+ * Access gate. Three server-derived flags (see getAccessState):
+ *   credentials  — the account can sign in on its own (password OR social).
+ *   subscription — trialing/active grant access; past_due grants a 7-day
+ *                  grace period; none/canceled do not.
+ *   onboarded    — `completed_at` is set. Means "finished setting up", not
+ *                  "finished paying". Set once, never unset — deleting every
+ *                  search does not send a returning user back to onboarding.
+ *
+ * `/account` is exempt: a canceled or deletion-scheduled user must still be
+ * able to pay, export their data, reverse a deletion, or sign out.
  */
+const GATE_EXEMPT_PREFIXES = ["/account"];
+
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async ({ location }) => {
+  beforeLoad: async ({ location, context }) => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }
-    return { userId: data.user.id };
+
+    if (GATE_EXEMPT_PREFIXES.some((p) => location.pathname.startsWith(p))) {
+      return { userId: data.user.id };
+    }
+
+    // Awaited here, so the route does not render until access resolves — no
+    // flash of app content. `pendingComponent` covers the wait.
+    const access = await context.queryClient.ensureQueryData(accessQueryOptions());
+
+    const step = clampOnboardingStep(useOnboardingStore.getState().lastStep);
+
+    // No credentials of their own: the account exists and may already be paid
+    // for (e.g. created by a checkout webhook from a Stripe customer email,
+    // reached through an emailed sign-in token). Their next step is setting up
+    // credentials on the account that already exists.
+    if (!access.credentials) {
+      throw redirect({ to: "/onboarding/success" });
+    }
+
+    if (!access.accessAllowed) {
+      throw redirect(
+        access.onboarded
+          ? { to: "/onboarding/pricing" }
+          : { to: "/onboarding/step/$step", params: { step: String(step) } },
+      );
+    }
+
+    if (!access.onboarded) {
+      throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
+    }
+
+    return { userId: data.user.id, access };
   },
+  pendingComponent: GatePending,
   component: AppLayout,
 });
+
+function GatePending() {
+  return (
+    <div className="min-h-dvh bg-paper">
+      <div className="mx-auto max-w-[1440px] px-6 py-10">
+        <HydrationSkeleton />
+      </div>
+    </div>
+  );
+}
 
 function AppLayout() {
   const { isHydrating } = useDbSync();
