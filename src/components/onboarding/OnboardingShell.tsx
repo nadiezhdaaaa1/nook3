@@ -10,8 +10,8 @@ export function OnboardingShell() {
       {!isPreview && <OnboardingHeader fixed />}
 
       <main
-        className={`w-full mx-auto ${isPreview ? "h-full" : "flex-1 px-5"}`}
-        style={isPreview ? { height: "100vh" } : { maxWidth: 800, paddingTop: 160, paddingBottom: 40 }}
+        className={`w-full mx-auto ${isPreview ? "" : "flex-1 px-5"}`}
+        style={isPreview ? undefined : { maxWidth: 800, paddingTop: 160, paddingBottom: 40 }}
       >
         <Outlet />
       </main>
