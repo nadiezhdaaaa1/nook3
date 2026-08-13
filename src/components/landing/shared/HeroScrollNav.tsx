@@ -81,6 +81,15 @@ export function HeroScrollNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const onChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
   return (
     <header className="hero-nav-root" data-scrolled={scrolled ? "true" : "false"} style={uiFont}>
       <div className="hero-nav-shell">
@@ -91,7 +100,7 @@ export function HeroScrollNav() {
             <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
           </Link>
 
-          <div className="hidden items-center gap-7 lg:flex">
+          <div className="hidden items-center gap-7 md:flex">
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
@@ -117,7 +126,7 @@ export function HeroScrollNav() {
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
               <>
-                <span className="hidden lg:inline-flex">
+                <span className="hidden md:inline-flex">
                   <button
                     type="button"
                     onClick={onLogout}
@@ -141,7 +150,7 @@ export function HeroScrollNav() {
               </>
             ) : (
               <>
-                <span className="hidden lg:inline-flex">
+                <span className="hidden md:inline-flex">
                   <Link
                     to="/login"
                     data-label="Sign in"
@@ -167,7 +176,7 @@ export function HeroScrollNav() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="hero-nav-burger hero-nav-ring inline-flex lg:hidden"
+              className="hero-nav-burger hero-nav-ring inline-flex md:hidden"
             >
               <Menu className="h-5 w-5" strokeWidth={2} />
             </button>
@@ -176,7 +185,7 @@ export function HeroScrollNav() {
       </div>
 
       {open && (
-        <div className="hero-nav-sheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+        <div className="hero-nav-sheet md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="hero-nav-sheet-top">
             <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
               <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
