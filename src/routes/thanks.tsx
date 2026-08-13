@@ -111,35 +111,55 @@ function Thanks() {
     );
   }
 
-  const variant: "A" | "B" | "C" =
-    a?.onboarded && a?.hasEverSubscribed && searchCount > 0
-      ? "B"
-      : a?.hasEverSubscribed && a?.onboarded
-        ? "C"
-        : a?.onboarded
-          ? "B"
-          : "A";
+  const variant: "A" | "B" | "C" = !a?.onboarded
+    ? "A"
+    : a?.onboarded && a?.hasEverSubscribed
+      ? "C"
+      : "B";
 
   const copy = {
     A: {
-      title: "Payment confirmed",
-      body: "Your subscription is active. Finish setting up your search and Nook starts watching for listings right away.",
-      cta: "Finish my search",
-      to: () => navigate({ to: "/onboarding/step/$step", params: { step: String(clampOnboardingStep(lastStep)) } }),
+      title: "Thank you! You just took the first real step toward your apartment",
+      body1:
+        "While everyone else is still refreshing fifteen tabs with their coffee — you're already ahead.",
+      body2:
+        "One last thing: set your filters — budget, neighborhood, size. That's it. From there, Nook's watching every listing site for you, and the moment your match drops, it lands straight in your inbox.",
+      italic: "Your dream apartment isn't a someday. It's an email away.",
+      cta: "Set my filters",
+      to: () =>
+        navigate({
+          to: "/onboarding/step/$step",
+          params: { step: String(clampOnboardingStep(lastStep)) },
+        }),
     },
     B: {
-      title: "You're all set",
-      body: "Your subscription is active and your searches are live. New matches will land in your alerts as they appear.",
-      cta: "Go to my searches",
+      title: "You're all set — Nook starts watching now",
+      body1:
+        "While everyone else is still refreshing fifteen tabs with their coffee, your search is already running.",
+      body2:
+        "Your filters are live. From here Nook watches every listing site for you, and the moment your match drops, it lands straight in your inbox. Nothing else to do — just keep an eye on your email.",
+      italic: "Your dream apartment isn't a someday. It's an email away.",
+      cta: "Go to my alerts",
       to: () => navigate({ to: "/home" }),
     },
     C: {
-      title: "Welcome back",
-      body: "Your subscription is active again. Your saved searches and listings are exactly where you left them.",
-      cta: "Back to my searches",
+      title: "You're all set — Nook starts watching now",
+      body1:
+        "While everyone else is still refreshing fifteen tabs with their coffee, your search is already running.",
+      body2:
+        "Your searches are back on, exactly as you left them. Nook watches every listing site for you, and the moment your match drops, it lands straight in your inbox.",
+      italic: "Your dream apartment isn't a someday. It's an email away.",
+      cta: "Go to my alerts",
       to: () => navigate({ to: "/home" }),
     },
   }[variant];
+
+  const introTrialLine =
+    a?.plan === "intro"
+      ? variant === "A"
+        ? "Your 3 free days start when your search goes live — not today."
+        : "Your 3 free days start now."
+      : null;
 
   return (
     <div className="relative grid min-h-dvh place-items-center bg-[#FAF6EE] px-6 py-16">
@@ -162,7 +182,13 @@ function Thanks() {
           {copy.title}
         </h1>
         <p className="mx-auto mt-3 max-w-[420px] text-[16px] leading-[1.5] text-charcoal-500">
-          {copy.body}
+          {copy.body1}
+        </p>
+        <p className="mx-auto mt-3 max-w-[420px] text-[16px] leading-[1.5] text-charcoal-500">
+          {copy.body2}
+        </p>
+        <p className="mx-auto mt-3 max-w-[420px] text-[14px] italic leading-[1.5] text-charcoal-500">
+          {copy.italic}
         </p>
         <div className="mt-8 flex flex-col items-center gap-3">
           <OriginButton
@@ -174,15 +200,11 @@ function Thanks() {
           >
             {copy.cta}
           </OriginButton>
-          <OriginButton
-            type="button"
-            variant="tertiary"
-            size="big"
-            className="w-full max-w-[320px]"
-            onClick={() => navigate({ to: "/account" })}
-          >
-            View my plan
-          </OriginButton>
+          {introTrialLine && (
+            <p className="m-0 text-[14px] leading-[1.5] text-charcoal-500">
+              {introTrialLine}
+            </p>
+          )}
         </div>
       </div>
     </div>
