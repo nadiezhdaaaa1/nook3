@@ -142,7 +142,14 @@ function Thanks() {
   }[variant];
 
   return (
-    <div className="grid min-h-dvh place-items-center bg-[#FAF6EE] px-6 py-16">
+    <div className="relative grid min-h-dvh place-items-center bg-[#FAF6EE] px-6 py-16">
+      <Confetti
+        ref={confettiRef}
+        manualstart
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
+        aria-hidden="true"
+      />
+
       <div className="w-full max-w-[520px] text-center">
         <img
           src={crownAsset.url}
