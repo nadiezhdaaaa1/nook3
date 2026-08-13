@@ -76,11 +76,3 @@ export const devSetAccountState = createServerFn({ method: "POST" })
     if (!updated) throw new Error("Profile not found");
     return dbRowToUser(updated);
   });
-
-/** Wipes every gate-relevant flag back to a brand-new, unpaid, un-onboarded account. */
-export const devResetAccount = createServerFn({ method: "POST" }).handler(
-  async () => {
-    assertNotProduction();
-    return { ok: true };
-  },
-);
