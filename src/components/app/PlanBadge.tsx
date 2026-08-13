@@ -33,7 +33,7 @@ export function PlanBadge({
   const base =
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-2 py-1";
 
-  if (plan === "free") {
+  if (plan === "intro") {
     return (
       <span
         className={cn(

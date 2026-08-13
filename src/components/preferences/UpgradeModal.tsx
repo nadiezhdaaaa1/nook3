@@ -24,7 +24,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
     };
   }, [onClose]);
 
-  const isIntro = plan === "free";
+  const isIntro = plan === "intro";
 
   const goPlans = () => {
     navigate({ to: "/account", hash: "plans" });

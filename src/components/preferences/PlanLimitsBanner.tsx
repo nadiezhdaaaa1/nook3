@@ -31,7 +31,7 @@ export function PlanLimitsBanner() {
     setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
   }, []);
 
-  if (plan !== "free") return null;
+  if (plan !== "intro") return null;
   if (dismissed) return null;
 
   const headline = "One search is part of the intro.";
