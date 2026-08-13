@@ -62,7 +62,7 @@ const TIERS: Tier[] = [
       monthly: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
       annual: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
     },
-    cta: "Find My Apartment",
+    cta: "Start 3 days free",
     ctaTo: "/onboarding",
     variant: "light",
     features: [

@@ -154,7 +154,7 @@ export function HeroScrollNav() {
                   onClick={onSignup}
                   className="hero-nav-ring h-[40px] px-4 text-sm"
                 >
-                  Find My Apartment
+                  Get free alerts
                 </OriginButton>
               </>
             )}
@@ -254,7 +254,7 @@ export function HeroScrollNav() {
                   }}
                   className="hero-nav-ring h-12 text-[15px]"
                 >
-                  Find My Apartment
+                  Get free alerts
                 </OriginButton>
               </>
             )}
