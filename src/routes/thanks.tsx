@@ -72,6 +72,32 @@ function Thanks() {
   const a = access.data;
   const waiting = provisioning || (hasSession && access.isPending);
 
+  // One restrained brand-coloured burst, once per visit, only after the real
+  // content is on screen. Reduced motion opts out entirely.
+  const confettiRef = useRef<ConfettiRef>(null);
+  const firedRef = useRef(false);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (waiting || reduceMotion || firedRef.current) return;
+    firedRef.current = true;
+    const t = setTimeout(() => {
+      confettiRef.current?.fire({
+        particleCount: 70,
+        spread: 70,
+        startVelocity: 34,
+        gravity: 0.9,
+        ticks: 90,
+        scalar: 0.9,
+        origin: { x: 0.5, y: 0.78 },
+        colors: ["#6A820A", "#C2664E", "#FAF6EE", "#1a1a18"],
+        disableForReducedMotion: true,
+      });
+    }, 120);
+    return () => clearTimeout(t);
+  }, [waiting, reduceMotion]);
+
+
   if (waiting) {
     return (
       <div className="grid min-h-dvh place-items-center bg-[#FAF6EE] px-6">
