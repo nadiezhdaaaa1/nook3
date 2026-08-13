@@ -41,6 +41,7 @@ import { Route as CheckoutMockRouteImport } from './routes/checkout.mock'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BillingMockPortalRouteImport } from './routes/billing.mock-portal'
+import { Route as BillingMockInvoiceRouteImport } from './routes/billing.mock-invoice'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ApiWrenTranscribeRouteImport } from './routes/api/wren-transcribe'
 import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
@@ -220,6 +221,11 @@ const BillingMockPortalRoute = BillingMockPortalRouteImport.update({
   path: '/billing/mock-portal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BillingMockInvoiceRoute = BillingMockInvoiceRouteImport.update({
+  id: '/billing/mock-invoice',
+  path: '/billing/mock-invoice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -353,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/billing/mock-invoice': typeof BillingMockInvoiceRoute
   '/billing/mock-portal': typeof BillingMockPortalRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
@@ -405,6 +412,7 @@ export interface FileRoutesByTo {
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/billing/mock-invoice': typeof BillingMockInvoiceRoute
   '/billing/mock-portal': typeof BillingMockPortalRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
@@ -458,6 +466,7 @@ export interface FileRoutesById {
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/billing/mock-invoice': typeof BillingMockInvoiceRoute
   '/billing/mock-portal': typeof BillingMockPortalRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
@@ -512,6 +521,7 @@ export interface FileRouteTypes {
     | '/api/wren-chat'
     | '/api/wren-transcribe'
     | '/auth/callback'
+    | '/billing/mock-invoice'
     | '/billing/mock-portal'
     | '/blog/$slug'
     | '/blog/rss.xml'
@@ -564,6 +574,7 @@ export interface FileRouteTypes {
     | '/api/wren-chat'
     | '/api/wren-transcribe'
     | '/auth/callback'
+    | '/billing/mock-invoice'
     | '/billing/mock-portal'
     | '/blog/$slug'
     | '/blog/rss.xml'
@@ -616,6 +627,7 @@ export interface FileRouteTypes {
     | '/api/wren-chat'
     | '/api/wren-transcribe'
     | '/auth/callback'
+    | '/billing/mock-invoice'
     | '/billing/mock-portal'
     | '/blog/$slug'
     | '/blog/rss.xml'
@@ -665,6 +677,7 @@ export interface RootRouteChildren {
   ApiWrenChatRoute: typeof ApiWrenChatRoute
   ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  BillingMockInvoiceRoute: typeof BillingMockInvoiceRoute
   BillingMockPortalRoute: typeof BillingMockPortalRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
@@ -899,6 +912,13 @@ declare module '@tanstack/react-router' {
       path: '/billing/mock-portal'
       fullPath: '/billing/mock-portal'
       preLoaderRoute: typeof BillingMockPortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing/mock-invoice': {
+      id: '/billing/mock-invoice'
+      path: '/billing/mock-invoice'
+      fullPath: '/billing/mock-invoice'
+      preLoaderRoute: typeof BillingMockInvoiceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
@@ -1149,6 +1169,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWrenChatRoute: ApiWrenChatRoute,
   ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  BillingMockInvoiceRoute: BillingMockInvoiceRoute,
   BillingMockPortalRoute: BillingMockPortalRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,

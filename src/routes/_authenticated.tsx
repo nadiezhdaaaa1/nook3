@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect, isRedirect, useRouterState } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanner";
+import { BillingDunningBanner } from "@/components/billing/BillingDunningBanner";
 import { AppHeader } from "@/components/app/AppHeader";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
@@ -107,6 +108,7 @@ function AppLayout() {
   return (
     <div className="min-h-dvh bg-paper">
       <AccountDeletionBanner />
+      <BillingDunningBanner />
       <EmailVerificationBanner />
       {!hideHeader && <AppHeader />}
       {isHydrating ? (
