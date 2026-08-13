@@ -66,7 +66,11 @@ export interface AccessState {
   accessAllowed: boolean;
   onboarded: boolean;
   plan: "intro" | "pro";
+  billingCycle: "monthly" | "annual";
+  hasEverSubscribed: boolean;
+  pastDueSince: string | null;
 }
+
 
 export const getAccessState = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
