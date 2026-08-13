@@ -9,13 +9,23 @@ import {
   setSubscriptionCanceled,
 } from "@/lib/profile.functions";
 import { useAppStore } from "@/lib/store/appStore";
+import { isUnauthorizedError } from "./authError";
 
 export const profileQueryKey = ["profile"] as const;
 
 export const profileQueryOptions = () =>
   queryOptions({
     queryKey: profileQueryKey,
-    queryFn: () => getProfile(),
+    queryFn: async () => {
+      try {
+        return await getProfile();
+      } catch (e) {
+        // Signed out (or session just expired): report "no profile" instead of
+        // throwing, so no screen crashes on a post-sign-out refetch.
+        if (isUnauthorizedError(e)) return null;
+        throw e;
+      }
+    },
     staleTime: 60_000,
   });
 
