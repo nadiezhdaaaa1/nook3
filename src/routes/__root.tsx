@@ -281,6 +281,13 @@ function RootComponent() {
         <Toaster />
         <CookieBanner />
         <ConsentScripts />
+        {/* Dev-only account state panel; tree-shaken out of production builds. */}
+        {import.meta.env.DEV ? (
+          <ClientOnly fallback={null}>
+            <DevPanel />
+          </ClientOnly>
+        ) : null}
+
       </TooltipProvider>
     </QueryClientProvider>
   );
