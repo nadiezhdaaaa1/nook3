@@ -113,9 +113,13 @@ function Thanks() {
   return (
     <div className="grid min-h-dvh place-items-center bg-[#FAF6EE] px-6 py-16">
       <div className="w-full max-w-[520px] text-center">
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#6A820A]">
-          <Check className="h-7 w-7 text-white" aria-hidden="true" strokeWidth={2.5} />
-        </div>
+        <img
+          src={crownAsset.url}
+          alt=""
+          aria-hidden="true"
+          className="mx-auto h-20 w-20 rounded-full object-contain"
+        />
+
         <h1 className="font-display mt-6 mb-0 text-[32px] font-bold leading-[1.15] text-charcoal-950">
           {copy.title}
         </h1>
