@@ -89,7 +89,7 @@ function Thanks() {
         gravity: 0.9,
         ticks: 90,
         scalar: 0.9,
-        origin: { x: 0.5, y: 0.78 },
+        origin: { x: 0.5, y: 0.55 },
         colors: ["#6A820A", "#C2664E", "#FAF6EE", "#1a1a18"],
         disableForReducedMotion: true,
       });
