@@ -44,7 +44,20 @@ export const Route = createFileRoute("/_authenticated")({
 
     // Awaited here, so the route does not render until access resolves — no
     // flash of app content. `pendingComponent` covers the wait.
-    const access = await context.queryClient.ensureQueryData(accessQueryOptions());
+    let access: Awaited<ReturnType<typeof getAccessStateType>>;
+    try {
+      access = await context.queryClient.ensureQueryData(accessQueryOptions());
+    } catch (err) {
+      if (isRedirect(err)) throw err;
+      // A session that exists locally but is rejected by the server (expired /
+      // revoked token) must land on /login, not blank the app with an
+      // unhandled loader error.
+      if (isUnauthorizedError(err)) {
+        context.queryClient.removeQueries({ queryKey: accessQueryKey });
+        throw redirect({ to: "/login", search: { redirect: location.href } });
+      }
+      throw err;
+    }
 
     const step = clampOnboardingStep(useOnboardingStore.getState().lastStep);
 
