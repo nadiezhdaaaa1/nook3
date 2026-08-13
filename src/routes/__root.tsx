@@ -16,6 +16,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { OfflineBanner } from "@/components/system/OfflineBanner";
 import { CookieBanner } from "@/components/legal/CookieBanner";
 import { ConsentScripts } from "@/components/legal/ConsentScripts";
+import { ClientOnly } from "@tanstack/react-router";
+import { DevPanel } from "@/components/dev/DevPanel";
+
 
 function NotFoundComponent() {
   useEffect(() => {
