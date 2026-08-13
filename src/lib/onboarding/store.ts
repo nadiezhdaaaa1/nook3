@@ -208,8 +208,8 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
         }
         if (version < 4) {
           // Tier rename: free -> intro, premium|max -> pro.
-          if (s.selectedPlan === "free") s.selectedPlan = "intro";
-          else if (s.selectedPlan === "premium" || s.selectedPlan === "max") s.selectedPlan = "pro";
+          if ((s.selectedPlan as unknown) === "free") s.selectedPlan = "intro";
+          else if ((s.selectedPlan as unknown) === "premium" || (s.selectedPlan as unknown) === "max") s.selectedPlan = "pro";
           else if (s.selectedPlan !== "intro" && s.selectedPlan !== "pro") s.selectedPlan = null;
         }
         return s as OnboardingState;

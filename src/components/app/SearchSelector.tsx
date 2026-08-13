@@ -75,7 +75,7 @@ function summary(s: Search) {
 export function SearchSelector() {
   const active = useAppStore(selectActiveSearch);
   const searches = useAppStore((s) => s.searches);
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const restoreSearch = useAppStore((s) => s.restoreSearch);
 
   const [open, setOpen] = useState(false);

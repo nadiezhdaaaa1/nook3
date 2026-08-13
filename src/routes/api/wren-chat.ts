@@ -100,7 +100,7 @@ export const Route = createFileRoute("/api/wren-chat")({
           .eq("id", userId)
           .maybeSingle();
         if (profileErr) return json({ error: profileErr.message }, 500);
-        const plan = (profile?.plan as string | undefined) ?? "free";
+        const plan = (profile?.plan as string | undefined) ?? "intro";
         if (plan !== "premium" && plan !== "max") {
           return json({ error: "Wren is part of Premium." }, 403);
         }

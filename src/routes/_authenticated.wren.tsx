@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/wren")({
 type Msg = { role: "user" | "assistant"; content: string };
 
 function WrenChatPage() {
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const search = Route.useSearch();
   const navigate = useNavigate();
   const locked = plan !== "premium" && plan !== "max";

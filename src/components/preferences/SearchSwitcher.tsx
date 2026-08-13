@@ -38,7 +38,7 @@ export function SearchSwitcher() {
   const searches = useAppStore((s) => s.searches);
   const user = useAppStore((s) => s.user);
   const quota = useMemo(() => {
-    const plan = user?.plan ?? "free";
+    const plan = user?.plan ?? "intro";
     const max = SEARCH_LIMITS[plan];
     const used = searches.filter((x) => x.status !== "archived").length;
     const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
@@ -88,7 +88,7 @@ export function SearchSwitcher() {
   if (!active) return null;
 
   const canCreate = quota.remaining > 0;
-  const plan = user?.plan ?? "free";
+  const plan = user?.plan ?? "intro";
 
   const liveSearches = searches.filter((s) => s.status !== "archived");
   const archivedSearches = searches.filter((s) => s.status === "archived");

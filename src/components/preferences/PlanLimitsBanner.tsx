@@ -10,7 +10,7 @@ const DISMISS_KEY = "nook.banner.planlimits.dismissed.v1";
  * Dismissible (persisted to localStorage), hidden entirely on Pro.
  */
 export function PlanLimitsBanner() {
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const searches = useAppStore((s) => s.searches);
   const quota = useMemo(() => {
     const max = SEARCH_LIMITS[plan];

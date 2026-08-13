@@ -11,7 +11,7 @@ export function dbRowToUser(row: any) {
     phone: row.phone ?? "",
     phoneVerified: !!row.phone_verified,
     timezone: row.timezone ?? "America/New_York",
-    plan: row.plan ?? "free",
+    plan: row.plan ?? "intro",
     billingCycle: row.billing_cycle ?? "monthly",
     trialActive: !!row.trial_active,
     trialStartedAt: row.trial_started_at ?? undefined,
