@@ -26,7 +26,7 @@ function WrenChatPage() {
   const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const search = Route.useSearch();
   const navigate = useNavigate();
-  const locked = plan !== "premium" && plan !== "max";
+  const locked = plan !== "pro";
 
   const [conversationId, setConversationId] = useState<string | null>(search.c ?? null);
   const [messages, setMessages] = useState<Msg[]>([]);
