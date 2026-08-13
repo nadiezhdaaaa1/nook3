@@ -15,12 +15,10 @@ export function useUpdatePlanMutation() {
     onSuccess: (user) => {
       updateProfile({ plan: user.plan, billingCycle: user.billingCycle, trialActive: user.trialActive });
       qc.invalidateQueries({ queryKey: profileQueryKey });
-      if (user.plan === "free") {
-        toast.success("Subscription cancelled", { description: "You're back on the Free plan." });
+      if (user.plan === "intro") {
+        toast.success("Subscription cancelled", { description: "You're on the Intro plan." });
       } else {
-        toast.success(`Welcome to ${user.plan === "premium" ? "Premium" : "Max"}!`, {
-          description: "Your plan has been updated.",
-        });
+        toast.success("Welcome to Pro!", { description: "Your plan has been updated." });
       }
     },
     onError: (e) =>
