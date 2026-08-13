@@ -415,7 +415,7 @@ function Success() {
               <li className="px-6 py-4 text-[14px] text-charcoal-500">Checking for new matches…</li>
             )}
             {freshness.map((f) => {
-              const searchCity = getCity(f.cityId as never);
+              const searchCity = getCity(f.cityId as never) as { displayName?: string } | null;
               return (
                 <li key={f.searchId} className="px-6 py-4">
                   <div className="text-[16px] font-semibold text-charcoal-950">{f.name}</div>
@@ -424,7 +424,7 @@ function Success() {
                       ? `${f.count} new ${f.count === 1 ? "match" : "matches"} in the last ${
                           f.window === "24h" ? "24 hours" : "7 days"
                         }`
-                      : `${city?.displayName ?? f.cityId} · we're watching your saved criteria`}
+                      : `${searchCity?.displayName ?? f.cityId} · we're watching your saved criteria`}
                   </div>
                 </li>
               );
