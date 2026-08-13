@@ -79,6 +79,9 @@ export interface User {
   deletionCancelSubscription?: boolean | null;
   subscriptionCanceledAt?: string | null;
   subscriptionPeriodEnd?: string | null;
+  /** Whether the subscription is paid for. Backend-owned. */
+  subscriptionStatus?: "none" | "trialing" | "active" | "past_due" | "canceled";
+  pastDueSince?: string | null;
   updatedAt?: string;
 }
 
