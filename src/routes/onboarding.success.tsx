@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
-import { CreditCard, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
 import { WARM_BG } from "@/components/landing/PricingThreeTiers";
 
@@ -321,33 +321,6 @@ function Success() {
         </dl>
       </motion.div>
 
-      {/* Payment note */}
-      <motion.div
-        variants={sectionVariants}
-        className="mt-4 flex items-start gap-3 rounded-[16px] border border-black/10 bg-[#ebf0d5] px-5 py-4"
-      >
-        <CreditCard
-          className="mt-0.5 h-4 w-4 shrink-0"
-          style={{ color: "#6a820a" }}
-          strokeWidth={1.33}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <p className="m-0 text-[14px] leading-[22px]" style={{ color: "#3a3a37" }}>
-          {isPaid ? (
-            <>
-              After creating your account you'll be taken to the payment screen to start your{" "}
-              {planMeta.name} plan. Payments aren't live yet, so for now we'll take you straight
-              into the app with {planMeta.name} enabled.
-            </>
-          ) : (
-            <>
-              No payment needed for the Free plan — you'll go straight into the app after creating
-              your account.
-            </>
-          )}
-        </p>
-      </motion.div>
 
       </motion.div>
 
