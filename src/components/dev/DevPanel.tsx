@@ -88,6 +88,12 @@ export function DevPanel() {
   const access = useQuery({ ...accessQueryOptions(), enabled: !!hasSession && open });
 
   async function apply(patch: DevAccountStateInput, to?: string) {
+    if (!hasSession) {
+      toast.error("Not signed in", {
+        description: "Sign in first — dev state writes need a session.",
+      });
+      return;
+    }
     setBusy(true);
     try {
       await setState({ data: patch as never });
@@ -106,21 +112,24 @@ export function DevPanel() {
 
   async function resetToAnonymous() {
     setBusy(true);
-    try {
-      await setState({
-        data: {
-          plan: "intro",
-          billingCycle: "monthly",
-          status: "none",
-          clearPastDue: true,
-          onboarded: false,
-          hasEverSubscribed: false,
-          noCredentials: false,
-        } as never,
-      });
-    } catch {
-      /* not signed in — nothing to reset server-side */
+    if (hasSession) {
+      try {
+        await setState({
+          data: {
+            plan: "intro",
+            billingCycle: "monthly",
+            status: "none",
+            clearPastDue: true,
+            onboarded: false,
+            hasEverSubscribed: false,
+            noCredentials: false,
+          } as never,
+        });
+      } catch {
+        /* best effort — continue with local reset */
+      }
     }
+
     useOnboardingStore.getState().setHandoffCompleted(false);
     useOnboardingStore.getState().reset();
     try {
