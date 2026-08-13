@@ -659,7 +659,7 @@ function HomeScreen() {
                 No searches yet
               </h3>
               <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-                Create a search to start seeing matches on your home screen.
+                Create a search to start seeing matches on your home screen. Also, your inbox stays quiet until you have a search running.
               </p>
               <div className="mt-6 flex justify-center">
                 <OriginButton
