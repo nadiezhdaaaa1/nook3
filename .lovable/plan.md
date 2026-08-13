@@ -1,100 +1,151 @@
-# Subscription gate: plan rename, subscription status, routing gate
+# Onboarding Success — commit-on-CTA plus four variants
 
-Data model + gate only. No new screens, no visual work.
+## 1. The write problem
 
-## Things I found that change the approach — read first
+Today `onboarding.success.tsx` runs a mount effect that stamps `completedAt` and calls
+`syncOnboardingToActiveSearch()` / `syncOnboardingToUser()`. Anyone who merely lands on the
+page gets a search written, and the Success ↔ step-1 edit loop re-runs it. There is a second
+writer too: `useDbSync.ts` has a "handoff" effect that inserts the first search and a separate
+effect that persists `completed_at`. So the same intent is expressed in three places with no
+ordering guarantee.
 
-1. **`profiles.completed_at` is NULL for every existing profile (all 7 rows).** `completedAt` is written only into the onboarding zustand store (`onboarding.success.tsx`); nothing ever pushes it to the DB, even though `updateProfile` already accepts it. So gating on `completed_at` today would bounce **every existing user, including yours, into onboarding**. Two mandatory pieces before the gate can ship: wire the write, and backfill existing rows.
-2. **`profiles.entitlement_state` is already an enum `('intro','pro','expired')`** and is what `enforce_search_quota()` actually reads for the 1-vs-3 search limit. Renaming `app_plan` to `intro | pro` gives us two columns with near-identical names and meanings. Recommendation: keep `plan` as the tier of record (renamed as you asked), and treat `entitlement_state` as deprecated — kept in sync by `admin_set_plan` as it is today, with a follow-up pass to delete it and derive quota from `plan` + `subscription_status`. Deleting it in this pass would mean rewriting the quota trigger in the same migration that swaps the enum; doable, but it widens blast radius. Flagging so you choose.
-3. **`has_password` is a user-writable profile column** (`profilePatchSchema` allows it). Using it as half of the `credentials` flag means a user can flip their own gate input. The trustworthy source is Supabase Auth identities (`email` / `google` providers). Plan below derives `credentials` from auth, not from the profile boolean.
-4. **`credentials = none` + `subscription = active` is close to unreachable**: every sign-up path today produces either a password identity or a Google identity. That row of your table will effectively be dead code. Keeping it as a defensive fallback is fine, just don't expect traffic.
-5. **Gate lock-out risk:** users with `canceled`/`none` get sent to `/onboarding/pricing`, which means they can no longer reach `/account` — where cancel-subscription, data export and account deletion live. Suggest exempting `/account` (and sign-out) from the gate. Also, a scheduled-for-deletion account still needs `/account` to reverse deletion.
-6. **`past_due` expiry must be computed server-side.** `past_due_since + 7 days` evaluated on the client is trivially bypassable by clock change. The profile server fn returns a computed `accessAllowed` / `effectiveStatus`; the client gate only reads that.
+### Fix: one server function, one call site
 
-## 1. Plan enum rename (`free|premium|max` → `intro|pro`)
+New authenticated server function `commitOnboarding` (`src/lib/onboarding.functions.ts`):
 
-DB migration:
-- `CREATE TYPE public.app_plan_v2 AS ENUM ('intro','pro')`.
-- `ALTER TABLE profiles ALTER COLUMN plan DROP DEFAULT`, then `TYPE app_plan_v2 USING CASE plan WHEN 'free' THEN 'intro' ELSE 'pro' END`, then default `'intro'`.
-- Recreate `admin_set_plan(uuid, app_plan_v2, billing_cycle)`; drop the old signature; re-apply the `REVOKE ... FROM anon/authenticated` + `GRANT EXECUTE ... TO service_role` block (per security memory).
-- `DROP TYPE public.app_plan`. Rename `app_plan_v2` → `app_plan` last so type name stays stable for generated types.
-- Guard trigger `prevent_billing_field_self_update` is column-based, not value-based — unchanged.
-- `enforce_search_quota` unchanged (reads `entitlement_state`).
+- input: the full validated search payload (same shape `createSearch` already validates) plus
+  `billingCycle` / `selectedPlan` for the profile mirror
+- handler order, all inside one call:
+  1. if the account already owns a search or `handoffCompleted` was recorded, skip the insert
+     (idempotent — safe to retry)
+  2. insert the search row
+  3. mirror the profile contact/preference fields
+  4. **last:** set `profiles.completed_at`
+- returns `{ searchId, completedAt }`
 
-Client:
-- `src/lib/onboarding/store.ts`: `type Plan = "intro" | "pro"`; persist `version: 4` with a migrate step mapping `selectedPlan` `free→intro`, `premium|max→pro`.
-- `src/lib/store/types.ts`: `SEARCH_LIMITS = { intro: 1, pro: 3 }`; drop the "Infinity for max" comments.
-- `src/lib/billing.functions.ts`: `z.enum(["intro","pro"])`.
-- `src/lib/queries/billing.ts`: replace the three toast strings (`"You're on Intro"` / `"Welcome to Pro!"`).
+There is no cross-statement transaction available through the Data API, so atomicity is
+achieved by ordering rather than by a transaction: `completed_at` is written last and is the
+only thing the gate reads as "onboarded". Any failure before that leaves the account
+not-onboarded, so the gate sends the user back through onboarding — where the idempotency check
+in step 1 adopts the already-inserted search instead of duplicating it. A duplicate-search bug
+is the failure mode I care most about, and step 1 plus the existing `handoffCompleted` flag
+covers it.
 
-## 2. New profile columns
+If you want true atomicity we can move steps 2–4 into a single `SECURITY DEFINER` SQL function
+(`public.commit_onboarding(...)`) and call that from the server fn — one statement, one
+transaction. I recommend this; it costs one migration and removes the partial-write reasoning
+entirely. Plan assumes we do it, with the ordered fallback as the non-migration path.
 
+### Call sites
+
+- mount effect in `onboarding.success.tsx`: deleted
+- `useDbSync.ts`: the handoff insert and the `completed_at` write are removed for the onboarding
+  path. `useDbSync` keeps only reconciliation of pre-existing local searches, so it can no
+  longer race the commit.
+- `handoffCompleted` stays as the local guard and is set only after `commitOnboarding` resolves.
+
+### Ordering vs. credentials
+
+A search can only be written for an authenticated user, so on variant A the CTA sequence is:
+authenticate → commit → redirect to `/checkout/mock`. The answers already live in the persisted
+onboarding store, so after a Google round-trip or email signup the Success screen resumes,
+sees a session and a pending-commit flag, runs `commitOnboarding`, then redirects.
+`completed_at` is therefore set **before** payment: an abandoned checkout returns as an
+onboarded account that owes money, which is what you asked for.
+
+## 2. Variant structure
+
+Selection is a pure function, not four screens:
+
+```text
+src/lib/onboarding/successVariant.ts
+  pickSuccessVariant({ credentials, status, onboarded }) -> "A" | "B" | "C" | "D"
 ```
-subscription_status  enum app_subscription_status ('none','trialing','active','past_due','canceled')  not null default 'none'
-past_due_since       timestamptz null
-```
-Backfill: existing `plan='premium'` rows → `'active'`; `plan='free'` rows → `'trialing'` if `trial_active` else `'none'`. Both columns added to the guard trigger's protected list (service-role / `admin_set_plan` writes only). Reuse existing `subscription_canceled_at`, `subscription_period_end`, `completed_at`, `has_password` — nothing duplicated.
 
-Backfill `completed_at` for existing accounts: `completed_at = created_at` for any profile that owns at least one row in `searches` (and, given only 7 rows exist and all are yours/testers, optionally all rows — your call).
+- A: `!credentials && !paid`
+- B: `!credentials && paid`
+- C: `credentials && onboarded && !paid`
+- D: `credentials && paid && !onboarded`
 
-## 3. The three flags
+Input comes from `accessQueryOptions()`; while it is loading we render the existing skeleton
+rather than guessing (a guess would flash the wrong heading).
 
-Computed in one place — a new `getAccessState` server fn (in `src/lib/profile.functions.ts`, `requireSupabaseAuth`), returning:
+One layout, driven by a per-variant config object:
 
-```
-{ credentials: boolean, status: 'none'|'trialing'|'active'|'past_due'|'canceled',
-  accessAllowed: boolean, onboarded: boolean, plan: 'intro'|'pro' }
-```
-
-- `credentials` — from Auth identities (password identity present OR `google` identity linked), read via the admin Auth API inside the handler; not from `has_password`.
-- `status` — `subscription_status`, with `past_due` downgraded to `canceled` server-side once `now() - past_due_since > 7 days` (and the row updated, so it self-heals).
-- `onboarded` — `completed_at is not null`. Set once, never unset. Deleting all searches does not touch it. `handoffCompleted` in the onboarding store stays as-is and is not consulted by routing.
-
-`onboarding.success.tsx` starts persisting `completedAt` through `useUpdateProfileMutation` instead of only into zustand.
-
-## 4. The gate
-
-`src/routes/_authenticated.tsx` keeps `ssr: false`. `beforeLoad` after the existing `getUser()` check:
-
-```ts
-const access = await context.queryClient.ensureQueryData(accessQueryOptions())
+```text
+{ heading, subhead, planCard: "editable" | "fact", body: "summary" | "searches",
+  auth: "none" | "open" | "locked", cta: { label, action } }
 ```
 
-Because `beforeLoad` is awaited, the route does not render until access resolves — no flash of app content, and no SSR bounce (the whole subtree is client-only already). While it resolves, the router shows the route's `pendingComponent`, which will render the existing `HydrationSkeleton`. `useDbSync`'s profile query reuses the same cache entry, so this adds no extra round trip in practice.
+The screen renders: heading/subhead → plan card → body → CTA block. Each slot reads the config,
+so copy and CTA differences are data and the four variants share one JSX tree. Two body
+components (`SearchSummary`, existing markup extracted as-is; `ExistingSearchesList`, new) and
+one auth block with a `lockedEmail?: string` prop.
 
-Routing, in order:
+Per variant:
 
-| credentials | status | onboarded | → |
-|---|---|---|---|
-| any | past_due (within 7d) | any | app |
-| set | active / trialing | yes | app |
-| set | active / trialing | no | `/onboarding/step/{lastStep}` |
-| set | none / canceled | yes | `/onboarding/pricing` |
-| set | none / canceled | no | `/onboarding/step/{lastStep}` |
-| none | active / trialing | any | `/onboarding/success` |
+- **A** — plan card with Change plan → `/onboarding/pricing`; summary with Edit → step 1;
+  auth open; CTA "Pay and start watching" → commit → `/checkout/mock`.
+- **B** — "Last step — pick a password"; subhead as specified; plan card as fact plus the line
+  "Plan changes are in Account after setup"; summary keeps Edit; auth locked to the email on
+  file; CTA "Start my apartment search" → commit → `/home`.
+- **C** — no summary, no Edit; `ExistingSearchesList` with a freshness count per search; plan
+  card editable; CTA "Turn my alerts back on" → `/checkout/mock` (no commit — already onboarded).
+- **D** — no auth block, no commit of credentials; CTA "Start my apartment search" → commit
+  (search + `completed_at`) → `/home`.
 
-`lastStep` read from `useOnboardingStore.getState().lastStep` (clamped 1–4, default 1). Exempt paths (proposed): `/account`, so a canceled or deletion-scheduled user can still pay, export or reverse.
+## 3. Variant C freshness counts
 
-## 5. Other `free` / `premium` / `max` readers I found (not in your list)
+New server fn `getSearchFreshness` returning per search
+`{ searchId, count, window: "24h" | "7d" | "none" }`.
 
-Must change (functional):
-- `src/lib/store/appStore.ts` — default `plan: "free"` and five `?? "free"` fallbacks.
-- `src/lib/store/bridge.ts:138`, `src/lib/store/migrate.ts:65` — `?? "free"`.
-- `src/lib/store/lockHooks.ts:7`, `src/routes/_authenticated.saved.tsx:313`.
-- `src/routes/api/wren-chat.ts:103` — gate is `plan !== "premium" && plan !== "max"`; becomes `plan !== "pro"` (or status-based).
-- `src/routes/_authenticated.search.$searchId.notifications.tsx` — `PLAN_COPY.premium`, `minPlan: "premium"|"free"`, `freeFallback`.
-- `src/components/app/PlanBadge.tsx` — `PlanKey = "free"|"premium"|"max"`.
-- `src/components/landing/PricingThreeTiers.tsx` — `Tier.plan: "free"|"premium"` on three tiers; feeds `/onboarding/pricing`.
-- `src/routes/_authenticated.account.tsx` — `PLANS` ids `"free"/"premium"`, ~20 `plan.id === "free"` branches, plan-rank helper.
-- `src/routes/onboarding.success.tsx` — `PLAN_META`/`PLAN_VARIANT` keyed by `Plan`, `plan !== "free"`, button variant switch.
+The count must come from the same code the digest uses, so the matcher is extracted into one
+shared module (`src/lib/matching.shared.ts`) built from today's `applyFilters` /
+`deriveFilterScope`, and both the digest path and this endpoint import it. If the two ever
+disagree the number is a refund request, so a single import is the whole point.
 
-Cosmetic only, left alone unless you say otherwise: `origin-button` variant names `premium`/`max`, and marketing/legal copy mentioning Free/Premium/Max in `terms.tsx`, `refunds.tsx`, `index.tsx`, `signup.tsx`, `r.$code.tsx`, `_authenticated.referrals.tsx`, `data/blog/articles.ts`, `data/cities/chicago.ts`.
+Rules: try `created_at > now() - 24h`; if the count is below a small threshold, retry with 7d
+and label the window; if 7d is also zero, return `window: "none"` and the UI renders the search
+criteria with no number. A zero is never rendered next to a pay button.
 
-## 6. Order of work
+## 4. Email locking
 
-1. Migration: new status enum + columns + `completed_at` backfill + plan enum swap + `admin_set_plan` rebuild + guard-trigger column list.
-2. Regenerated types land; then client type rename and all readers above.
-3. Persist `completedAt` to the profile on onboarding success.
-4. `getAccessState` server fn + query options.
-5. Gate in `_authenticated.tsx` + `pendingComponent`.
-6. Verify with a browser pass: existing pro account reaches the app; a fresh `/signup` account lands on step 1.
+- `/signup` gains a `lockEmail` search param (validated string). When present the email input
+  renders read-only with its value, and the field is not part of the editable form state.
+- Variant B's "Continue with email" navigates to
+  `/signup?redirect=/home&lockEmail=<email on file>`.
+- Google: after the OAuth round-trip, compare the session email to the expected address. On a
+  mismatch, sign out immediately and show "That Google account is name@example.com. This setup
+  belongs to expected@example.com — sign in with that account instead." Naming both addresses
+  is the point; a generic auth error strands the user.
+
+Server side still re-checks: `lockEmail` is a URL param, so `commitOnboarding` verifies the
+session's email matches the profile on file before writing. UI locking is UX, not security.
+
+## 5. Risks I want to flag
+
+- **`completed_at` before payment** is correct for your requirement, but it means the gate must
+  route an onboarded-and-unpaid account to a paywall rather than to onboarding. That is the
+  current `_authenticated` gate behaviour; I will verify it with a dev-panel pass through all
+  four rows rather than assume.
+- **Variant B is the riskiest path**: the account was created by payment and has no credentials,
+  so a failed password step leaves a paying user unable to sign in. The mitigation is that
+  variant B is re-enterable — they land back on it every time until credentials exist — plus a
+  visible "we emailed you a sign-in link" fallback if you want one (say the word; not in scope
+  as written).
+- **The `useDbSync` handoff removal** is a behaviour change for accounts mid-flow with answers
+  in localStorage and no search row. Variant D covers them: they land on Success, see the
+  summary, and commit on the CTA.
+- **Google returning a different address on variant A** (no email on file yet) has nothing to
+  compare against, so the lock only applies to B/C/D. That is intended, but worth stating.
+
+## 6. Files
+
+- new: `src/lib/onboarding.functions.ts`, `src/lib/onboarding/successVariant.ts`,
+  `src/lib/matching.shared.ts`, `src/components/onboarding/SearchSummary.tsx`,
+  `src/components/onboarding/ExistingSearchesList.tsx`,
+  `src/components/onboarding/SuccessAuthBlock.tsx`
+- edited: `src/routes/onboarding.success.tsx` (restructured), `src/routes/signup.tsx`
+  (`lockEmail`), `src/lib/queries/useDbSync.ts` (remove the two onboarding writers),
+  `src/lib/searches.functions.ts` (share the insert payload validator)
+- migration (recommended): `public.commit_onboarding(...)` `SECURITY DEFINER`
