@@ -259,6 +259,7 @@ export type Database = {
           is_affiliate: boolean
           matches_per_digest: number | null
           move_out: Json | null
+          past_due_since: string | null
           phone: string
           phone_verified: boolean
           plan: Database["public"]["Enums"]["app_plan"]
@@ -266,6 +267,7 @@ export type Database = {
           referred_by: string | null
           subscription_canceled_at: string | null
           subscription_period_end: string | null
+          subscription_status: Database["public"]["Enums"]["app_subscription_status"]
           timezone: string
           trial_active: boolean
           trial_ends_at: string | null
@@ -291,6 +293,7 @@ export type Database = {
           is_affiliate?: boolean
           matches_per_digest?: number | null
           move_out?: Json | null
+          past_due_since?: string | null
           phone?: string
           phone_verified?: boolean
           plan?: Database["public"]["Enums"]["app_plan"]
@@ -298,6 +301,7 @@ export type Database = {
           referred_by?: string | null
           subscription_canceled_at?: string | null
           subscription_period_end?: string | null
+          subscription_status?: Database["public"]["Enums"]["app_subscription_status"]
           timezone?: string
           trial_active?: boolean
           trial_ends_at?: string | null
@@ -323,6 +327,7 @@ export type Database = {
           is_affiliate?: boolean
           matches_per_digest?: number | null
           move_out?: Json | null
+          past_due_since?: string | null
           phone?: string
           phone_verified?: boolean
           plan?: Database["public"]["Enums"]["app_plan"]
@@ -330,6 +335,7 @@ export type Database = {
           referred_by?: string | null
           subscription_canceled_at?: string | null
           subscription_period_end?: string | null
+          subscription_status?: Database["public"]["Enums"]["app_subscription_status"]
           timezone?: string
           trial_active?: boolean
           trial_ends_at?: string | null
@@ -731,10 +737,54 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_expire_past_due: {
+        Args: { _user_id: string }
+        Returns: {
+          billing_cycle: Database["public"]["Enums"]["billing_cycle"]
+          completed_at: string | null
+          consents: Json
+          created_at: string
+          deletion_cancel_subscription: boolean | null
+          deletion_feedback: string | null
+          deletion_reason: string | null
+          deletion_requested_at: string | null
+          deletion_scheduled_at: string | null
+          email: string
+          email_verified: boolean
+          email_verified_at: string | null
+          entitlement_state: Database["public"]["Enums"]["entitlement_state"]
+          has_password: boolean
+          id: string
+          is_affiliate: boolean
+          matches_per_digest: number | null
+          move_out: Json | null
+          past_due_since: string | null
+          phone: string
+          phone_verified: boolean
+          plan: Database["public"]["Enums"]["app_plan"]
+          referral_code: string
+          referred_by: string | null
+          subscription_canceled_at: string | null
+          subscription_period_end: string | null
+          subscription_status: Database["public"]["Enums"]["app_subscription_status"]
+          timezone: string
+          trial_active: boolean
+          trial_ends_at: string | null
+          trial_started_at: string | null
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       admin_set_plan: {
         Args: {
           _billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
           _plan: Database["public"]["Enums"]["app_plan"]
+          _subscription_status?: Database["public"]["Enums"]["app_subscription_status"]
           _user_id: string
         }
         Returns: {
@@ -756,6 +806,7 @@ export type Database = {
           is_affiliate: boolean
           matches_per_digest: number | null
           move_out: Json | null
+          past_due_since: string | null
           phone: string
           phone_verified: boolean
           plan: Database["public"]["Enums"]["app_plan"]
@@ -763,6 +814,7 @@ export type Database = {
           referred_by: string | null
           subscription_canceled_at: string | null
           subscription_period_end: string | null
+          subscription_status: Database["public"]["Enums"]["app_subscription_status"]
           timezone: string
           trial_active: boolean
           trial_ends_at: string | null
@@ -792,8 +844,14 @@ export type Database = {
       alert_channel: "email" | "text" | "both"
       alert_freq: "minimal" | "balanced" | "maximum" | "weekly"
       alert_status: "new" | "saved" | "contacted" | "dismissed"
-      app_plan: "free" | "premium" | "max"
+      app_plan: "intro" | "pro"
       app_role: "admin" | "user"
+      app_subscription_status:
+        | "none"
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "canceled"
       billing_cycle: "monthly" | "annual"
       contact_topic:
         | "general"
@@ -943,8 +1001,15 @@ export const Constants = {
       alert_channel: ["email", "text", "both"],
       alert_freq: ["minimal", "balanced", "maximum", "weekly"],
       alert_status: ["new", "saved", "contacted", "dismissed"],
-      app_plan: ["free", "premium", "max"],
+      app_plan: ["intro", "pro"],
       app_role: ["admin", "user"],
+      app_subscription_status: [
+        "none",
+        "trialing",
+        "active",
+        "past_due",
+        "canceled",
+      ],
       billing_cycle: ["monthly", "annual"],
       contact_topic: [
         "general",
