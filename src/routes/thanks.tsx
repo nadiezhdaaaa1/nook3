@@ -1,16 +1,19 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
 import crownAsset from "@/assets/crown.png.asset.json";
 
 
 import { OriginButton } from "@/components/ui/origin-button";
+import { Confetti, type ConfettiRef } from "@/components/ui/confetti";
 import { accessQueryOptions } from "@/lib/queries/access";
 import { useHasSession } from "@/lib/queries/useHasSession";
 import { clampOnboardingStep } from "@/lib/queries/access";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
+
 
 /**
  * Post-checkout confirmation. Three variants, picked from server-derived
