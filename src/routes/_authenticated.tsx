@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect, isRedirect, useRouterState } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanner";
+import { BillingDunningBanner } from "@/components/billing/BillingDunningBanner";
 import { AppHeader } from "@/components/app/AppHeader";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
@@ -72,10 +73,15 @@ export const Route = createFileRoute("/_authenticated")({
     }
 
     if (!access.accessAllowed) {
+      if (!access.onboarded) {
+        throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
+      }
+      // A dunning-caused cancellation gets the "alerts are paused" screen
+      // (Success variant E), not the pricing pitch — they never chose to leave.
       throw redirect(
-        access.onboarded
-          ? { to: "/onboarding/pricing" }
-          : { to: "/onboarding/step/$step", params: { step: String(step) } },
+        access.status === "canceled" && access.pastDueSince
+          ? { to: "/onboarding/success" }
+          : { to: "/onboarding/pricing" },
       );
     }
 
@@ -107,6 +113,7 @@ function AppLayout() {
   return (
     <div className="min-h-dvh bg-paper">
       <AccountDeletionBanner />
+      <BillingDunningBanner />
       <EmailVerificationBanner />
       {!hideHeader && <AppHeader />}
       {isHydrating ? (

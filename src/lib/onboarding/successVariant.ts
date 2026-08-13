@@ -1,6 +1,6 @@
 import type { AccessState } from "@/lib/profile.functions";
 
-export type SuccessVariant = "A" | "B" | "C" | "D";
+export type SuccessVariant = "A" | "B" | "C" | "D" | "E";
 
 export interface SuccessConfig {
   variant: SuccessVariant;
@@ -34,7 +34,13 @@ export function pickSuccessVariant(access: AccessState | null): SuccessVariant {
   const paid = access.accessAllowed;
   if (paid && !access.credentials) return "B";
   if (paid && access.credentials && !access.onboarded) return "D";
-  if (!paid && access.credentials && access.onboarded) return "C";
+  if (!paid && access.credentials && access.onboarded) {
+    // E is C with a different opening: they did not choose to leave, the card
+    // did. "We couldn't take payment" converts better than a re-sell, so it
+    // must not share copy with the churn pitch.
+    if (access.status === "canceled" && access.pastDueSince) return "E";
+    return "C";
+  }
   return "A";
 }
 
@@ -58,6 +64,25 @@ export function successConfig(variant: SuccessVariant, access: AccessState | nul
         ctaTarget: "/home",
         commitOnCta: true,
       };
+    case "E": {
+      const last4 = "4242";
+      return {
+        variant,
+        heading: "Your alerts are paused.",
+        sub: `We tried your card ending ${last4} a few times over the past week and couldn't take payment, so we've paused your subscription. Nothing's lost — your searches are exactly where you left them.`,
+        showPlan: true,
+        allowChangePlan: true,
+        showSummary: false,
+        showExistingSearches: true,
+        showAuth: false,
+        lockEmail: false,
+        // The subscription is gone by now, so Checkout is correct here —
+        // unlike the past_due window, which is repaired in the portal.
+        ctaLabel: "Restart my alerts",
+        ctaTarget: "/checkout/mock",
+        commitOnCta: false,
+      };
+    }
     case "C":
       return {
         variant,
