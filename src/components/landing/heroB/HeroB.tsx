@@ -166,7 +166,7 @@ export function HeroB() {
                   onClick={startSignup}
                   className="focus-visible-ring"
                 >
-                  Start 3 days free
+                  Start free
                 </OriginButton>
               )}
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
