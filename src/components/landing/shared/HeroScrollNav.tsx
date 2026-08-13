@@ -154,7 +154,7 @@ export function HeroScrollNav() {
                   onClick={onSignup}
                   className="hero-nav-ring h-[40px] px-4 text-sm"
                 >
-                  Get free alerts
+                  Start 3 days free
                 </OriginButton>
               </>
             )}
@@ -254,7 +254,7 @@ export function HeroScrollNav() {
                   }}
                   className="hero-nav-ring h-12 text-[15px]"
                 >
-                  Get free alerts
+                  Start 3 days free
                 </OriginButton>
               </>
             )}
