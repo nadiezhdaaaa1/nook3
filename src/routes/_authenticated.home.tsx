@@ -124,6 +124,10 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 function HomeScreen() {
   const search = useActiveSearch();
   const noSearches = useAppStore((s) => s.searches.length === 0);
+  const userPlan = useAppStore((s) => s.user?.plan);
+  const userCycle = useAppStore((s) => s.user?.billingCycle);
+  const planLabel = userPlan === "pro" ? "Pro" : "Intro";
+  const cycleLabel = userCycle === "annual" ? "annually" : "monthly";
   const hydrated = useAppStore((s) => s.hydrated);
   const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
@@ -659,7 +663,10 @@ function HomeScreen() {
                 No searches yet
               </h3>
               <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-                Create a search to start seeing matches on your home screen and receive them in your inbox
+                You&rsquo;re on {planLabel}, billed {cycleLabel}.
+              </p>
+              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
+                No searches, no emails. Set one up and Nook starts watching.
               </p>
               <div className="mt-6 flex justify-center">
                 <OriginButton

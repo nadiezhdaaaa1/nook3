@@ -32,3 +32,24 @@ export function matchesForSearch(
 export function countMatchesForSearch(listings: SampleListing[], search: Search): number {
   return matchesForSearch(listings, search).length;
 }
+
+/* -------------------------------------------------------------------------
+   Digest entitlement. The digest engine MUST key off entitlement, never off
+   search existence: a canceled account can hold three perfectly valid
+   searches and nothing should send.
+   ------------------------------------------------------------------------- */
+
+export interface DigestEntitlement {
+  subscriptionStatus?: string | null;
+  completedAt?: string | null;
+  deletionScheduledAt?: string | null;
+}
+
+export function isDigestEntitled(profile: DigestEntitlement | null | undefined): boolean {
+  if (!profile) return false;
+  if (profile.deletionScheduledAt) return false;
+  // Setup unfinished means the trial clock hasn't started yet.
+  if (!profile.completedAt) return false;
+  const s = profile.subscriptionStatus ?? "none";
+  return s === "active" || s === "trialing" || s === "past_due";
+}
