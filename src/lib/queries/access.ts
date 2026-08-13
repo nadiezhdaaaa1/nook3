@@ -12,6 +12,7 @@ export const accessQueryOptions = () =>
   queryOptions({
     queryKey: accessQueryKey,
     queryFn: () => getAccessState() as Promise<AccessState>,
+    // The gate turns an unauthorized result into a /login redirect itself.
     staleTime: 30_000,
     retry: false,
   });

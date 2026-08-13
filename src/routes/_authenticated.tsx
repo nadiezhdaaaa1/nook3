@@ -1,11 +1,13 @@
-import { createFileRoute, Outlet, redirect, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, isRedirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanner";
 import { AppHeader } from "@/components/app/AppHeader";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
-import { accessQueryOptions, clampOnboardingStep } from "@/lib/queries/access";
+import { accessQueryOptions, accessQueryKey, clampOnboardingStep } from "@/lib/queries/access";
+import { isUnauthorizedError } from "@/lib/queries/authError";
+import type { AccessState } from "@/lib/profile.functions";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 
 /**
@@ -44,7 +46,20 @@ export const Route = createFileRoute("/_authenticated")({
 
     // Awaited here, so the route does not render until access resolves — no
     // flash of app content. `pendingComponent` covers the wait.
-    const access = await context.queryClient.ensureQueryData(accessQueryOptions());
+    let access: AccessState;
+    try {
+      access = await context.queryClient.ensureQueryData(accessQueryOptions());
+    } catch (err) {
+      if (isRedirect(err)) throw err;
+      // A session that exists locally but is rejected by the server (expired /
+      // revoked token) must land on /login, not blank the app with an
+      // unhandled loader error.
+      if (isUnauthorizedError(err)) {
+        context.queryClient.removeQueries({ queryKey: accessQueryKey });
+        throw redirect({ to: "/login", search: { redirect: location.href } });
+      }
+      throw err;
+    }
 
     const step = clampOnboardingStep(useOnboardingStore.getState().lastStep);
 
