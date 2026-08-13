@@ -63,7 +63,7 @@ export function MarketingHeader() {
             to="/onboarding"
             className="inline-flex h-11 items-center px-5 rounded-pill text-sm font-semibold bg-charcoal-950 text-paper hover:bg-charcoal-800 transition-colors"
           >
-            Start 3 days free
+            Find My Apartment
           </RollText>
 
           <button
