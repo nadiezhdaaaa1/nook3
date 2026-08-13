@@ -42,6 +42,8 @@ export function syncDeletionStateToStore(user: {
   deletionScheduledAt?: string | null;
   subscriptionCanceledAt?: string | null;
   subscriptionPeriodEnd?: string | null;
+  subscriptionStatus?: string | null;
+  pastDueSince?: string | null;
 } | null | undefined) {
   if (!user) return;
   const store = useAppStore.getState();
@@ -51,6 +53,8 @@ export function syncDeletionStateToStore(user: {
     deletionScheduledAt: user.deletionScheduledAt ?? null,
     subscriptionCanceledAt: user.subscriptionCanceledAt ?? null,
     subscriptionPeriodEnd: user.subscriptionPeriodEnd ?? null,
+    subscriptionStatus: user.subscriptionStatus ?? "none",
+    pastDueSince: user.pastDueSince ?? null,
   } as any);
 }
 
