@@ -119,7 +119,7 @@ function Thanks() {
           src={crownAsset.url}
           alt=""
           aria-hidden="true"
-          className="mx-auto h-20 w-20 rounded-full object-contain"
+          className="mx-auto h-[120px] w-[120px] rounded-full object-contain"
         />
 
         <h1 className="font-display mt-6 mb-0 text-[32px] font-bold leading-[1.15] text-charcoal-950">
