@@ -1985,7 +1985,7 @@ function SubscriptionSection({
 
   // Cancellation is account state, not a browser flag: it must survive reload,
   // sign-out and other devices, and it's also set by the delete-account flow.
-  const profileQ = useQuery(profileQueryOptions());
+  const profileQ = useQuery({ ...profileQueryOptions(), retry: false });
   const setCanceledMutation = useSetSubscriptionCanceledMutation();
   const updateStoreProfile = useAppStore((s) => s.updateProfile);
   const canceled = Boolean(profileQ.data?.subscriptionCanceledAt);
