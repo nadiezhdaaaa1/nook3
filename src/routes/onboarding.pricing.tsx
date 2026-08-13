@@ -28,7 +28,7 @@ function PricingScreen() {
         onTierSelect={handleTierSelect}
         compactTop
         tierCta={{
-          intro: "Start 3 days free",
+          intro: "Find My Apartment",
           pro: "Get Pro now",
           pro_annual: "Get Pro annual",
         }}
