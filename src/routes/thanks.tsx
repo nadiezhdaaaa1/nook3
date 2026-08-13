@@ -53,7 +53,6 @@ function Thanks() {
   const hasSession = useHasSession();
   const [provisioning, setProvisioning] = useState(true);
 
-  const searchCount = useAppStore((s) => s.searches.length);
   const lastStep = useOnboardingStore((s) => s.lastStep);
 
   const access = useQuery({ ...accessQueryOptions(), enabled: hasSession });
