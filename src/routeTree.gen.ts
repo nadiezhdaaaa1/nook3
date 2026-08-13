@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ThanksRouteImport } from './routes/thanks'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SubprocessorsRouteImport } from './routes/subprocessors'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -59,6 +60,11 @@ import { Route as AuthenticatedSearchSearchIdLocationRouteImport } from './route
 import { Route as AuthenticatedSearchSearchIdBudgetRouteImport } from './routes/_authenticated.search.$searchId.budget'
 import { Route as AuthenticatedSearchSearchIdApartmentRouteImport } from './routes/_authenticated.search.$searchId.apartment'
 
+const ThanksRoute = ThanksRouteImport.update({
+  id: '/thanks',
+  path: '/thanks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -331,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
+  '/thanks': typeof ThanksRoute
   '/account': typeof AuthenticatedAccountRoute
   '/home': typeof AuthenticatedHomeRoute
   '/referrals': typeof AuthenticatedReferralsRoute
@@ -381,6 +388,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
+  '/thanks': typeof ThanksRoute
   '/account': typeof AuthenticatedAccountRoute
   '/home': typeof AuthenticatedHomeRoute
   '/referrals': typeof AuthenticatedReferralsRoute
@@ -432,6 +440,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/subprocessors': typeof SubprocessorsRoute
   '/terms': typeof TermsRoute
+  '/thanks': typeof ThanksRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/referrals': typeof AuthenticatedReferralsRoute
@@ -484,6 +493,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
+    | '/thanks'
     | '/account'
     | '/home'
     | '/referrals'
@@ -534,6 +544,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
+    | '/thanks'
     | '/account'
     | '/home'
     | '/referrals'
@@ -584,6 +595,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/subprocessors'
     | '/terms'
+    | '/thanks'
     | '/_authenticated/account'
     | '/_authenticated/home'
     | '/_authenticated/referrals'
@@ -636,6 +648,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubprocessorsRoute: typeof SubprocessorsRoute
   TermsRoute: typeof TermsRoute
+  ThanksRoute: typeof ThanksRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiWrenChatRoute: typeof ApiWrenChatRoute
   ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
@@ -651,6 +664,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/thanks': {
+      id: '/thanks'
+      path: '/thanks'
+      fullPath: '/thanks'
+      preLoaderRoute: typeof ThanksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -1104,6 +1124,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubprocessorsRoute: SubprocessorsRoute,
   TermsRoute: TermsRoute,
+  ThanksRoute: ThanksRoute,
   ApiContactRoute: ApiContactRoute,
   ApiWrenChatRoute: ApiWrenChatRoute,
   ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
