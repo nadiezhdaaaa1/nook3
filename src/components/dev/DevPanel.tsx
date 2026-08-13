@@ -199,7 +199,8 @@ export function DevPanel() {
                 apply(
                   s === "past_due"
                     ? { status: s, pastDueDayOffset: dayOffset }
-                    { status: s, clearPastDue: true },
+                    : { status: s, clearPastDue: true },
+
                 )
               }
             >
