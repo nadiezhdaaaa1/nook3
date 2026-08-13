@@ -141,7 +141,7 @@ function SamplePreview() {
                 {matched.length === 1 ? "" : "es"} in your area this past week
               </h1>
               <p style={OB_SUB}>
-                This is only a preview; you will see all matches with links inside your account and in your inbox.
+                This is only a preview. You will see all matches with links inside your account and in your inbox
               </p>
             </motion.header>
 
