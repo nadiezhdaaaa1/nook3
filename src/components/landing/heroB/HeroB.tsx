@@ -166,7 +166,7 @@ export function HeroB() {
                   onClick={startSignup}
                   className="focus-visible-ring"
                 >
-                  Start apartment search
+                  Find my apartment
                 </OriginButton>
               )}
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
