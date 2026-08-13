@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import crownAsset from "@/assets/crown.png.asset.json";
+
 
 import { OriginButton } from "@/components/ui/origin-button";
 import { accessQueryOptions } from "@/lib/queries/access";
