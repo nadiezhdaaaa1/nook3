@@ -241,6 +241,14 @@ export function HeroScrollNav() {
               </>
             ) : (
               <>
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="hero-nav-sheet-signin hero-nav-ring"
+                  style={{ ...uiFont, color: INK }}
+                >
+                  Sign in
+                </Link>
                 <OriginButton
                   variant="main"
                   onClick={() => {
