@@ -129,7 +129,7 @@ function SamplePreview() {
               <h1 className="font-display" style={PREVIEW_H1}>
                 You'd have gotten{" "}
                 <span className="text-brand-logo">{matched.length}</span> match
-                {matched.length === 1 ? "" : "es"} in your area this past week.
+                {matched.length === 1 ? "" : "es"} in your area this past week
               </h1>
               <p style={OB_SUB}>
                 {budget
