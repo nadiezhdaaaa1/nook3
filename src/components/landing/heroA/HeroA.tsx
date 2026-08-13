@@ -150,7 +150,7 @@ export function HeroA() {
                   onClick={startSignup}
                   className="focus-visible-ring"
                 >
-                  Start free
+                  Start apartment search
                 </OriginButton>
               )}
 

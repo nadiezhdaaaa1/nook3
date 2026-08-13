@@ -88,7 +88,7 @@ export function HeroCityAware() {
                   className="group inline-flex items-center justify-center gap-2 h-11 px-5 rounded-pill text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-elevated whitespace-nowrap"
                   style={{ backgroundColor: "var(--color-brand-terracotta)" }}
                 >
-                  Start free
+                  Start apartment search
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </div>

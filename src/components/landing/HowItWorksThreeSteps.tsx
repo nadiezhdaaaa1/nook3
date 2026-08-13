@@ -197,7 +197,7 @@ export function HowItWorksThreeSteps() {
           >
             Most users find their place within 3 weeks
           </div>
-          <HiwCta to="/onboarding" label="Start free" />
+          <HiwCta to="/onboarding" label="Start apartment search" />
         </div>
       </div>
     </section>
