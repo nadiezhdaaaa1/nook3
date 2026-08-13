@@ -205,13 +205,13 @@ export function TiredOfSection() {
 
         <div className="prob-close">
           <div className="prob-close-line">
-            Start free — see what comes in this week.
+            Start&nbsp;— see what comes in this week.
           </div>
           <OriginButton
             variant="main"
             onClick={() => navigate({ to: "/onboarding" })}
           >
-            Get started →
+            Find my apartment
           </OriginButton>
         </div>
       </div>
