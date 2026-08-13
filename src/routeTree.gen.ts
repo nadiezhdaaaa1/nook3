@@ -40,6 +40,7 @@ import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loadi
 import { Route as CheckoutMockRouteImport } from './routes/checkout.mock'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BillingMockPortalRouteImport } from './routes/billing.mock-portal'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ApiWrenTranscribeRouteImport } from './routes/api/wren-transcribe'
 import { Route as ApiWrenChatRouteImport } from './routes/api/wren-chat'
@@ -214,6 +215,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BillingMockPortalRoute = BillingMockPortalRouteImport.update({
+  id: '/billing/mock-portal',
+  path: '/billing/mock-portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -347,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/billing/mock-portal': typeof BillingMockPortalRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/checkout/mock': typeof CheckoutMockRoute
@@ -398,6 +405,7 @@ export interface FileRoutesByTo {
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/billing/mock-portal': typeof BillingMockPortalRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/checkout/mock': typeof CheckoutMockRoute
@@ -450,6 +458,7 @@ export interface FileRoutesById {
   '/api/wren-chat': typeof ApiWrenChatRoute
   '/api/wren-transcribe': typeof ApiWrenTranscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/billing/mock-portal': typeof BillingMockPortalRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/checkout/mock': typeof CheckoutMockRoute
@@ -503,6 +512,7 @@ export interface FileRouteTypes {
     | '/api/wren-chat'
     | '/api/wren-transcribe'
     | '/auth/callback'
+    | '/billing/mock-portal'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/checkout/mock'
@@ -554,6 +564,7 @@ export interface FileRouteTypes {
     | '/api/wren-chat'
     | '/api/wren-transcribe'
     | '/auth/callback'
+    | '/billing/mock-portal'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/checkout/mock'
@@ -605,6 +616,7 @@ export interface FileRouteTypes {
     | '/api/wren-chat'
     | '/api/wren-transcribe'
     | '/auth/callback'
+    | '/billing/mock-portal'
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/checkout/mock'
@@ -653,6 +665,7 @@ export interface RootRouteChildren {
   ApiWrenChatRoute: typeof ApiWrenChatRoute
   ApiWrenTranscribeRoute: typeof ApiWrenTranscribeRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  BillingMockPortalRoute: typeof BillingMockPortalRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
   CheckoutMockRoute: typeof CheckoutMockRoute
@@ -879,6 +892,13 @@ declare module '@tanstack/react-router' {
       path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing/mock-portal': {
+      id: '/billing/mock-portal'
+      path: '/billing/mock-portal'
+      fullPath: '/billing/mock-portal'
+      preLoaderRoute: typeof BillingMockPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
@@ -1129,6 +1149,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWrenChatRoute: ApiWrenChatRoute,
   ApiWrenTranscribeRoute: ApiWrenTranscribeRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  BillingMockPortalRoute: BillingMockPortalRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
   CheckoutMockRoute: CheckoutMockRoute,
