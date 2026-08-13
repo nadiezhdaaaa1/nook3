@@ -139,7 +139,7 @@ function AccountPage() {
 
   const prefs = usePreferencesStore();
 
-  // Current card matching plan + billing cycle (legacy "max" behaves like Pro monthly)
+  // Current card matching plan + billing cycle
   const currentPlan =
     PLANS.find((p) => p.id === plan && (plan === "intro" || p.cycle === activeCycle)) ??
     (plan === "intro" ? PLANS[0] : PLANS[1]);

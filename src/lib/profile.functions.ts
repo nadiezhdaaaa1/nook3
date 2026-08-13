@@ -232,7 +232,7 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
       .maybeSingle();
 
     const cancelNow =
-      data.cancelSubscription === true && (current as any)?.plan && (current as any).plan !== "free";
+      data.cancelSubscription === true && (current as any)?.plan && (current as any).plan !== "intro";
 
     const patch: Record<string, unknown> = {
       deletion_requested_at: now.toISOString(),
