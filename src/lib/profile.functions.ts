@@ -79,7 +79,9 @@ export const getAccessState = createServerFn({ method: "GET" })
 
     let { data: row } = await context.supabase
       .from("profiles")
-      .select("plan, subscription_status, past_due_since, completed_at")
+      .select(
+        "plan, billing_cycle, subscription_status, past_due_since, completed_at, has_ever_subscribed, dev_no_credentials",
+      )
       .eq("id", context.userId)
       .maybeSingle();
 
@@ -113,13 +115,26 @@ export const getAccessState = createServerFn({ method: "GET" })
     const identities = authUser?.user?.identities ?? [];
     credentials = identities.some((i) => i.provider !== "anonymous");
 
+    // Dev-only override so the "no credentials" gate row is reachable in
+    // testing without deleting the account's real auth identities.
+    if (
+      (process.env["NODE_ENV"] ?? "development") !== "production" &&
+      (row as any)?.dev_no_credentials
+    ) {
+      credentials = false;
+    }
+
     return {
       credentials,
       status,
       accessAllowed: status === "active" || status === "trialing" || status === "past_due",
       onboarded: !!(row as any)?.completed_at,
       plan: (((row as any)?.plan ?? "intro") as "intro" | "pro"),
+      billingCycle: (((row as any)?.billing_cycle ?? "monthly") as "monthly" | "annual"),
+      hasEverSubscribed: !!(row as any)?.has_ever_subscribed,
+      pastDueSince: ((row as any)?.past_due_since ?? null) as string | null,
     };
+
   });
 
 export const getProfile = createServerFn({ method: "GET" })
