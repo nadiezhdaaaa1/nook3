@@ -169,14 +169,6 @@ function SamplePreview() {
 
                   ))}
                 </motion.div>
-
-                <motion.p
-                  variants={itemVariants}
-                  className="text-xs uppercase tracking-[0.16em] text-charcoal-500"
-                  style={{ marginTop: 24 }}
-                >
-                  Sample preview · Real alerts after signup
-                </motion.p>
               </>
             )}
 
