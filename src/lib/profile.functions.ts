@@ -52,6 +52,8 @@ export function dbRowToUser(row: any) {
    ------------------------------------------------------------------------- */
 
 export const PAST_DUE_GRACE_DAYS = 7;
+/** Paid-but-unfinished setup is canceled after this many days. */
+export const SETUP_GRACE_DAYS = 14;
 
 export type SubscriptionStatus =
   | "none"
@@ -80,7 +82,7 @@ export const getAccessState = createServerFn({ method: "GET" })
     let { data: row } = await context.supabase
       .from("profiles")
       .select(
-        "plan, billing_cycle, subscription_status, past_due_since, completed_at, has_ever_subscribed, dev_no_credentials",
+        "plan, billing_cycle, subscription_status, past_due_since, completed_at, has_ever_subscribed, dev_no_credentials, created_at",
       )
       .eq("id", context.userId)
       .maybeSingle();
@@ -106,6 +108,25 @@ export const getAccessState = createServerFn({ method: "GET" })
         } else {
           status = "canceled";
         }
+      }
+    }
+
+    // Paid but never finished setup: the trial clock only starts at
+    // `completed_at`, so cap the wait instead of leaving it open-ended.
+    if (
+      !(row as any)?.completed_at &&
+      (status === "trialing" || status === "active") &&
+      (row as any)?.created_at &&
+      Date.now() - new Date((row as any).created_at).getTime() >
+        SETUP_GRACE_DAYS * 24 * 60 * 60 * 1000
+    ) {
+      const { data: expired } = await supabaseAdmin.rpc("expire_unfinished_setup", {
+        _user_id: context.userId,
+      } as never);
+      const updated = Array.isArray(expired) ? expired[0] : expired;
+      if (updated) {
+        row = updated as never;
+        status = ((updated as any).subscription_status ?? "canceled") as SubscriptionStatus;
       }
     }
 

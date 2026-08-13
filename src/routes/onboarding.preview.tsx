@@ -6,6 +6,10 @@ import { ShieldCheck, ArrowRight } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { OnboardingHeader } from "@/components/onboarding/OnboardingHeader";
+import { useQuery } from "@tanstack/react-query";
+import { useHasSession } from "@/lib/queries/useHasSession";
+import { accessQueryOptions } from "@/lib/queries/access";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { type SampleListing } from "@/data/sampleListings";
@@ -32,6 +36,10 @@ const PREVIEW_H1: React.CSSProperties = {
 
 function SamplePreview() {
   const navigate = useNavigate();
+  const hasSession = useHasSession();
+  const accessQ = useQuery({ ...accessQueryOptions(), enabled: hasSession, retry: false });
+  const subscribed =
+    accessQ.data?.status === "active" || accessQ.data?.status === "trialing";
   const reduce = useReducedMotion();
   const { city, budget, neighborhoods } = useOnboardingStore();
   const cityConfig = getCity(city);
@@ -48,7 +56,8 @@ function SamplePreview() {
     let pool = allListings;
     if (budget) {
       const [lo, hi] = budget;
-      pool = pool.filter((l) => l.rent >= lo * 0.85 && l.rent <= hi);
+      // Budgets mean budgets: never surface anything under the stated floor.
+      pool = pool.filter((l) => l.rent >= lo && l.rent <= hi);
     }
     if (neighborhoods.length > 0) {
       const wanted = pool.filter((l) => neighborhoods.includes(l.neighborhood));
@@ -204,9 +213,18 @@ function SamplePreview() {
               variant="main"
               size="big"
               className="w-full"
-              onClick={() => navigate({ to: "/onboarding/pricing" })}
+              onClick={() => {
+                if (subscribed) {
+                  trackEvent(ANALYTICS_EVENTS.previewCtaStartSearch);
+                  navigate({ to: "/onboarding/success" });
+                  return;
+                }
+                trackEvent(ANALYTICS_EVENTS.previewCtaSeePlans);
+                navigate({ to: "/onboarding/pricing" });
+              }}
             >
-              See my plan options <ArrowRight style={{ width: 16, height: 16 }} />
+              {subscribed ? "Start my apartment search" : "See my plan options"}{" "}
+              <ArrowRight style={{ width: 16, height: 16 }} />
             </OriginButton>
           </div>
         </div>
