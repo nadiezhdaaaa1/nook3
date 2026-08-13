@@ -52,7 +52,7 @@ export function CtaStrip() {
           className="ctab-btn-origin"
           onClick={() => navigate({ to: "/signup" })}
         >
-          Get alerts — Free
+          Start apartment search
         </OriginButton>
       </div>
     </section>
