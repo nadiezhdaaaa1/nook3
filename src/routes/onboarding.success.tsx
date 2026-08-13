@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
@@ -16,9 +18,14 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS } from "@/data/amenities";
 import { RENT_PROTECTION_OPTIONS } from "@/data/cities/types";
-import { syncOnboardingToActiveSearch, syncOnboardingToUser } from "@/lib/store";
+import { getDefaultSearchName } from "@/lib/store";
 import { lovable } from "@/integrations/lovable";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
+import { useHasSession } from "@/lib/queries/useHasSession";
+import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
+import { commitOnboarding, getSearchFreshness } from "@/lib/onboarding.functions";
+import { pickSuccessVariant, successConfig } from "@/lib/onboarding/successVariant";
+import type { AccessState } from "@/lib/profile.functions";
 
 
 export const Route = createFileRoute("/onboarding/success")({
@@ -55,6 +62,8 @@ const money = (n: number) => `$${n.toLocaleString("en-US")}`;
 function Success() {
   const navigate = useNavigate();
   const reduce = useReducedMotion();
+  const qc = useQueryClient();
+  const hasSession = useHasSession();
   const [busy, setBusy] = useState(false);
 
   const {
@@ -72,19 +81,32 @@ function Success() {
     selectedPlan,
     billingCycle,
     trialActive,
-    set,
+    frequency,
   } = useOnboardingStore();
 
-  useEffect(() => {
-    if (!useOnboardingStore.getState().completedAt) {
-      set("completedAt", new Date().toISOString());
-    }
-    syncOnboardingToActiveSearch();
-    syncOnboardingToUser();
-  }, [set]);
+  const accessQ = useQuery({
+    ...accessQueryOptions(),
+    enabled: hasSession,
+    retry: false,
+  });
+  const access = (accessQ.data ?? null) as AccessState | null;
+
+  const variant = pickSuccessVariant(hasSession ? access : null);
+  const cfg = successConfig(variant, access);
+
+  const freshnessQ = useQuery({
+    queryKey: ["search-freshness"],
+    queryFn: () => getSearchFreshness(),
+    enabled: hasSession && cfg.showExistingSearches,
+    retry: false,
+    staleTime: 60_000,
+  });
+
+  const commit = useServerFn(commitOnboarding);
 
   const cityConfig = getCity(city);
-  const plan = selectedPlan ?? "intro";
+  const plan = (access?.plan ?? selectedPlan ?? "intro") as Plan;
+  const cycle = (access?.billingCycle ?? billingCycle) as "monthly" | "annual";
   const planMeta = PLAN_META[plan];
   const planVariant = PLAN_VARIANT[plan];
   const isPaid = plan !== "intro";
@@ -201,7 +223,7 @@ function Success() {
   async function onGoogle() {
     setBusy(true);
     try {
-      sessionStorage.setItem("nook:postAuthPath", "/home");
+      sessionStorage.setItem("nook:postAuthPath", "/onboarding/success");
     } catch {
       /* ignore */
     }
@@ -214,9 +236,61 @@ function Success() {
       return;
     }
     if (res?.redirected) return;
-    navigate({ to: "/home", replace: true });
+    navigate({ to: "/onboarding/success", replace: true });
   }
 
+  /**
+   * The single write point. Search insert + `completed_at` are committed
+   * together server-side; `completed_at` means "finished setting up", so it is
+   * written before checkout — an abandoned payment returns as an onboarded user
+   * who owes payment, not into onboarding again.
+   */
+  async function onPrimary() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      if (cfg.commitOnCta) {
+        const o = useOnboardingStore.getState();
+        const payload =
+          o.city && !o.handoffCompleted
+            ? {
+                name: getDefaultSearchName(o.city, []),
+                cityId: o.city,
+                budget: o.budget,
+                moveIn: o.moveIn,
+                bedrooms: o.bedrooms,
+                bathrooms: o.bathrooms,
+                rentProtection: o.rentProtection,
+                includeBrokerFee: o.includeBrokerFee,
+                neighborhoods: o.neighborhoods,
+                amenities: o.amenities,
+                transit: o.transit,
+                commute: o.commute,
+                frequency: o.frequency ?? frequency,
+              }
+            : null;
+
+        const res = await commit({ data: { search: payload, phone: o.phone || undefined } });
+        if (res?.searchId) {
+          useOnboardingStore.getState().setHandoffCompleted(true);
+          useOnboardingStore.getState().setEditingSearch(res.searchId);
+        }
+        if (res?.completedAt) {
+          useOnboardingStore.getState().set("completedAt", res.completedAt);
+        }
+        await qc.invalidateQueries({ queryKey: accessQueryKey });
+      }
+      navigate({ to: cfg.ctaTarget, replace: cfg.ctaTarget === "/home" });
+    } catch (e) {
+      toast.error("We couldn't finish setting up", {
+        description: e instanceof Error ? e.message : "Please try again.",
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const freshness = freshnessQ.data ?? [];
 
   return (
     <>
@@ -228,14 +302,13 @@ function Success() {
     >
       <motion.div variants={sectionVariants}>
         <h1 className="font-display ob-h1" style={OB_H1}>
-          Create your account to go live.
+          {cfg.heading}
         </h1>
-        <p style={OB_SUB}>
-          Here's what we'll watch for you. You can change any of it later in your preferences.
-        </p>
+        <p style={OB_SUB}>{cfg.sub}</p>
       </motion.div>
 
       {/* Chosen plan */}
+      {cfg.showPlan && (
       <motion.div
         variants={sectionVariants}
         className="mt-8 p-8"
@@ -255,13 +328,13 @@ function Success() {
                 style={{ fontWeight: 700, fontSize: 26, color: ink }}
               >
                 {planMeta.name}
-                {isPaid && billingCycle === "annual" ? " (annual)" : ""}
+                {isPaid && cycle === "annual" ? " (annual)" : ""}
               </span>
               <span
                 className="text-[16px] font-semibold"
                 style={{ color: ink }}
               >
-                {planMeta.price[billingCycle]}
+                {planMeta.price[cycle]}
               </span>
               <span className="text-[14px]" style={{ color: subtle }}>
                 {planMeta.suffix}
@@ -273,23 +346,31 @@ function Success() {
                 style={{ color: muted }}
               >
                 {trialActive ? "3-day free trial, then " : ""}
-                billed {billingCycle === "annual" ? "annually" : "monthly"} · cancel anytime
+                billed {cycle === "annual" ? "annually" : "monthly"} · cancel anytime
               </div>
             )}
           </div>
-          <OriginButton
-            size="medium"
-            variant={plan === "pro" ? "premium" : "tertiary"}
-            style={{ borderRadius: 12 }}
-            onClick={() => navigate({ to: "/onboarding/pricing" })}
-          >
-            Change plan
-          </OriginButton>
+          {cfg.allowChangePlan ? (
+            <OriginButton
+              size="medium"
+              variant={plan === "pro" ? "premium" : "tertiary"}
+              style={{ borderRadius: 12 }}
+              onClick={() => navigate({ to: "/onboarding/pricing" })}
+            >
+              Change plan
+            </OriginButton>
+          ) : (
+            <div className="text-[14px]" style={{ color: muted }}>
+              Plan changes are in Account after setup.
+            </div>
+          )}
         </div>
       </motion.div>
+      )}
 
 
       {/* Summary */}
+      {cfg.showSummary && (
       <motion.div
         variants={sectionVariants}
         className="mt-12 overflow-hidden rounded-[16px] border border-black/20 bg-white"
@@ -318,11 +399,49 @@ function Success() {
           ))}
         </dl>
       </motion.div>
+      )}
+
+      {/* Existing searches + freshness (reactivation) */}
+      {cfg.showExistingSearches && (
+        <motion.div
+          variants={sectionVariants}
+          className="mt-12 overflow-hidden rounded-[16px] border border-black/20 bg-white"
+        >
+          <div className="border-b border-black/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
+            Your searches
+          </div>
+          <ul className="m-0 list-none divide-y divide-black/10 p-0">
+            {freshnessQ.isLoading && (
+              <li className="px-6 py-4 text-[14px] text-charcoal-500">Checking for new matches…</li>
+            )}
+            {freshness.map((f) => {
+              const city = getCity(f.cityId);
+              return (
+                <li key={f.searchId} className="px-6 py-4">
+                  <div className="text-[16px] font-semibold text-charcoal-950">{f.name}</div>
+                  <div className="mt-1 text-[14px] text-charcoal-500">
+                    {f.count != null
+                      ? `${f.count} new ${f.count === 1 ? "match" : "matches"} in the last ${
+                          f.window === "24h" ? "24 hours" : "7 days"
+                        }`
+                      : `${city?.displayName ?? f.cityId} · we're watching your saved criteria`}
+                  </div>
+                </li>
+              );
+            })}
+            {!freshnessQ.isLoading && freshness.length === 0 && (
+              <li className="px-6 py-4 text-[14px] text-charcoal-500">
+                Your saved searches are ready to resume.
+              </li>
+            )}
+          </ul>
+        </motion.div>
+      )}
 
 
       </motion.div>
 
-      {/* Account creation — sticky bottom bar */}
+      {/* Sticky bottom bar */}
       <div
         className="fixed bottom-0 left-1/2 z-40 w-full max-w-[800px] -translate-x-1/2"
         style={{
@@ -332,41 +451,63 @@ function Success() {
         }}
       >
         <div className="flex flex-col items-center gap-4">
-          <div className="flex w-full gap-3">
-            <OriginButton
-              type="button"
-              variant="tertiary"
-              size="big"
-              className="flex-1"
-              onClick={onGoogle}
-              disabled={busy}
-            >
-              <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
-              <span>Continue with Google</span>
-            </OriginButton>
+          {cfg.showAuth ? (
+            <>
+              <div className="flex w-full gap-3">
+                <OriginButton
+                  type="button"
+                  variant="tertiary"
+                  size="big"
+                  className="flex-1"
+                  onClick={onGoogle}
+                  disabled={busy}
+                >
+                  <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
+                  <span>Continue with Google</span>
+                </OriginButton>
 
+                <OriginButton
+                  type="button"
+                  variant="main"
+                  size="big"
+                  className="flex-1"
+                  disabled={busy}
+                  onClick={() =>
+                    navigate({
+                      to: "/signup",
+                      search: {
+                        redirect: "/onboarding/success",
+                        ...(cfg.lockEmail ? { lockEmail: 1 as const } : {}),
+                      },
+                    })
+                  }
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>{cfg.lockEmail ? "Pick a password" : "Continue with email"}</span>
+                </OriginButton>
+              </div>
+
+              <p className="m-0 text-center text-[14px] text-[#6e6459]">
+                Already have an account?{" "}
+                <Link to="/login" search={{ redirect: "/onboarding/success" }} className="text-charcoal-950 underline">
+                  Sign in
+                </Link>
+              </p>
+            </>
+          ) : (
             <OriginButton
               type="button"
               variant="main"
               size="big"
-              className="flex-1"
-              disabled={busy}
-              onClick={() => navigate({ to: "/signup", search: { redirect: "/home" } })}
+              className="w-full"
+              disabled={busy || accessQ.isLoading}
+              onClick={onPrimary}
             >
-              <Mail className="h-4 w-4" />
-              <span>Continue with email</span>
+              {busy ? "Setting things up…" : cfg.ctaLabel}
             </OriginButton>
-          </div>
-
-          <p className="m-0 text-center text-[14px] text-[#6e6459]">
-            Already have an account?{" "}
-            <Link to="/login" search={{ redirect: "/home" }} className="text-charcoal-950 underline">
-              Sign in
-            </Link>
-          </p>
+          )}
         </div>
       </div>
     </>
   );
 }
-
