@@ -117,15 +117,17 @@ export function HeroScrollNav() {
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
               <>
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  data-label="Log out"
-                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-                >
-                  Log out
-                </button>
+                <span className="hidden lg:inline-flex">
+                  <button
+                    type="button"
+                    onClick={onLogout}
+                    data-label="Log out"
+                    className="hero-nav-link rounded-sm px-3 text-sm hero-nav-ring"
+                    style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                  >
+                    Log out
+                  </button>
+                </span>
 
                 <OriginButton
                   variant="secondary"
@@ -139,15 +141,16 @@ export function HeroScrollNav() {
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  data-label="Sign in"
-                  className="hero-nav-link hidden rounded-sm px-3 text-sm hero-nav-ring lg:inline-flex"
-                  style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
-                >
-                  Sign in
-                </Link>
-
+                <span className="hidden lg:inline-flex">
+                  <Link
+                    to="/login"
+                    data-label="Sign in"
+                    className="hero-nav-link rounded-sm px-3 text-sm hero-nav-ring"
+                    style={{ fontFamily: FONT_UI, color: NAV_TEXT }}
+                  >
+                    Sign in
+                  </Link>
+                </span>
 
                 <OriginButton
                   variant="main"
