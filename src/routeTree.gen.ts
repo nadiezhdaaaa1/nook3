@@ -36,6 +36,7 @@ import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.succe
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
+import { Route as CheckoutMockRouteImport } from './routes/checkout.mock'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog.rss[.]xml'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -192,6 +193,11 @@ const OnboardingLoadingRoute = OnboardingLoadingRouteImport.update({
   path: '/loading',
   getParentRoute: () => OnboardingRoute,
 } as any)
+const CheckoutMockRoute = CheckoutMockRouteImport.update({
+  id: '/checkout/mock',
+  path: '/checkout/mock',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
   id: '/blog/rss.xml',
   path: '/blog/rss.xml',
@@ -336,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/checkout/mock': typeof CheckoutMockRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -385,6 +392,7 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/checkout/mock': typeof CheckoutMockRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -435,6 +443,7 @@ export interface FileRoutesById {
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/checkout/mock': typeof CheckoutMockRoute
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
@@ -486,6 +495,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/blog/$slug'
     | '/blog/rss.xml'
+    | '/checkout/mock'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -535,6 +545,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/blog/$slug'
     | '/blog/rss.xml'
+    | '/checkout/mock'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -584,6 +595,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/blog/$slug'
     | '/blog/rss.xml'
+    | '/checkout/mock'
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
@@ -630,6 +642,7 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
+  CheckoutMockRoute: typeof CheckoutMockRoute
   PostsSlugRoute: typeof PostsSlugRoute
   RCodeRoute: typeof RCodeRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -826,6 +839,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/onboarding/loading'
       preLoaderRoute: typeof OnboardingLoadingRouteImport
       parentRoute: typeof OnboardingRoute
+    }
+    '/checkout/mock': {
+      id: '/checkout/mock'
+      path: '/checkout/mock'
+      fullPath: '/checkout/mock'
+      preLoaderRoute: typeof CheckoutMockRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/blog/rss.xml': {
       id: '/blog/rss.xml'
@@ -1090,6 +1110,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogRssDotxmlRoute: BlogRssDotxmlRoute,
+  CheckoutMockRoute: CheckoutMockRoute,
   PostsSlugRoute: PostsSlugRoute,
   RCodeRoute: RCodeRoute,
   BlogIndexRoute: BlogIndexRoute,
