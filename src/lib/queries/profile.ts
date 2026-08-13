@@ -17,6 +17,12 @@ export const profileQueryOptions = () =>
   queryOptions({
     queryKey: profileQueryKey,
     queryFn: async () => {
+      // getProfile requires a bearer token. During SSR (no localStorage) and in
+      // the window before the session hydrates, there is none — calling it
+      // anyway throws "Unauthorized: No authorization header provided" and
+      // blanks the screen. Treat "no session" as "no profile".
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return null;
       try {
         return await getProfile();
       } catch (e) {
@@ -26,8 +32,10 @@ export const profileQueryOptions = () =>
         throw e;
       }
     },
+    retry: false,
     staleTime: 60_000,
   });
+
 
 export function useUpdateProfileMutation() {
   const qc = useQueryClient();
