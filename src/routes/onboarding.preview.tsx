@@ -38,19 +38,6 @@ function SamplePreview() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  // Mobile: keep the preview container as the only scrollport so the sticky header behaves.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const lock = () => {
-      document.body.style.overflow = window.innerWidth < 768 ? "hidden" : "";
-    };
-    lock();
-    window.addEventListener("resize", lock);
-    return () => {
-      window.removeEventListener("resize", lock);
-      document.body.style.overflow = "";
-    };
-  }, []);
 
   const allListings: SampleListing[] = useCityListings(city);
 
