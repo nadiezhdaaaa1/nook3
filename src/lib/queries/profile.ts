@@ -9,7 +9,9 @@ import {
   setSubscriptionCanceled,
 } from "@/lib/profile.functions";
 import { useAppStore } from "@/lib/store/appStore";
+import { supabase } from "@/integrations/supabase/client";
 import { isUnauthorizedError } from "./authError";
+
 
 export const profileQueryKey = ["profile"] as const;
 
