@@ -361,7 +361,7 @@ function Success() {
             </OriginButton>
           ) : (
             <div className="text-[14px]" style={{ color: muted }}>
-              Plan changes are in Account after setup.
+              You will be able to change the plan in your Account
             </div>
           )}
         </div>
