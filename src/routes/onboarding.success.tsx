@@ -86,7 +86,7 @@ function Success() {
   }, [set]);
 
   const cityConfig = getCity(city);
-  const plan = selectedPlan ?? "free";
+  const plan = selectedPlan ?? "intro";
   const planMeta = PLAN_META[plan];
   const planVariant = PLAN_VARIANT[plan];
   const isPaid = plan !== "free";

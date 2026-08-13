@@ -129,7 +129,7 @@ function AccountPage() {
   const searches = useAppStore((s) => s.searches);
   const updateProfile = useAppStore((s) => s.updateProfile);
 
-  const plan: Plan = user?.plan ?? "free";
+  const plan: Plan = user?.plan ?? "intro";
   const trialActive = user?.trialActive ?? false;
   const trialEndsAt = user?.trialEndsAt;
   const activeCycle: BillingCycle = user?.billingCycle ?? "monthly";

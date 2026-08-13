@@ -75,7 +75,7 @@ const DEFAULT_USER = (): User => ({
   phone: "",
   phoneVerified: false,
   timezone: typeof Intl !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : "America/New_York",
-  plan: "free",
+  plan: "intro",
   billingCycle: "monthly",
   trialActive: false,
   referralCode: generateReferralCode(),
@@ -193,7 +193,7 @@ export const useAppStore = create<AppStore>()(
 
       createSearch: (initial) => {
         const { searches, user } = get();
-        const plan = user?.plan ?? "free";
+        const plan = user?.plan ?? "intro";
         const limit = SEARCH_LIMITS[plan];
         const activeCount = searches.filter((s) => s.status !== "archived").length;
         if (activeCount >= limit) {
@@ -253,7 +253,7 @@ export const useAppStore = create<AppStore>()(
         const { searches, user } = get();
         const src = searches.find((s) => s.id === id);
         if (!src) return { ok: false, error: "Search not found" };
-        const plan = user?.plan ?? "free";
+        const plan = user?.plan ?? "intro";
         if (isSearchDisabled(searches, plan, id)) {
           return { ok: false, error: DISABLED_SEARCH_REASON };
         }
@@ -290,7 +290,7 @@ export const useAppStore = create<AppStore>()(
         const { searches, user } = get();
         const src = searches.find((s) => s.id === id);
         if (!src) return { ok: false, error: "Search not found" };
-        const plan = user?.plan ?? "free";
+        const plan = user?.plan ?? "intro";
         const limit = SEARCH_LIMITS[plan];
         const activeCount = searches.filter((s) => s.status !== "archived").length;
         if (activeCount >= limit) return { ok: false, error: "Plan limit reached" };
@@ -302,7 +302,7 @@ export const useAppStore = create<AppStore>()(
         const { searches, user } = get();
         const src = searches.find((s) => s.id === id);
         if (!src) return { ok: false, error: "Search not found" };
-        const plan = user?.plan ?? "free";
+        const plan = user?.plan ?? "intro";
         const limit = SEARCH_LIMITS[plan];
         const activeCount = searches.filter((s) => s.status !== "archived").length;
         if (activeCount >= limit) {
@@ -398,7 +398,7 @@ export function selectActiveSearch(s: AppStore): Search | null {
 }
 
 export function selectQuota(s: AppStore): SearchQuota {
-  const plan = s.user?.plan ?? "free";
+  const plan = s.user?.plan ?? "intro";
   const max = SEARCH_LIMITS[plan];
   const used = s.searches.filter((x) => x.status !== "archived").length;
   const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);

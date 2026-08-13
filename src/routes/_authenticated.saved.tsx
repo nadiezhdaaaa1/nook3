@@ -310,7 +310,7 @@ function summaryBits(s: Search): string[] {
 
 function SearchesTab({ searches }: { searches: Search[] }) {
   const navigate = useNavigate();
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const deleteSearch = useAppStore((s) => s.deleteSearch);
   const deleteMut = useDeleteSearchMutation();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
