@@ -21,6 +21,13 @@ import { cn } from "@/lib/utils";
  * through `devSetAccountState`, which refuses to run in production.
  */
 
+const REASON_KEY_DEFAULT: DunningReason = "card_declined";
+import {
+  getDunningReasonOverride,
+  setDunningReasonOverride,
+  type DunningReason,
+} from "@/lib/dunning";
+
 const STATUSES = ["none", "trialing", "active", "past_due", "canceled"] as const;
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -63,6 +70,14 @@ function Chip({
 export function DevPanel() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [reason, setReason] = useState<DunningReason>(
+    () => getDunningReasonOverride() ?? REASON_KEY_DEFAULT,
+  );
+  const [sessionError, setSessionError] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.localStorage.getItem("nook.dev.dunningSessionError") === "1",
+  );
   const [dayOffset, setDayOffset] = useState(0);
   const qc = useQueryClient();
   const router = useRouter();
@@ -224,6 +239,40 @@ export function DevPanel() {
           ))}
         </Row>
 
+        <Row label="dunning reason">
+          <Chip
+            active={reason !== "requires_confirmation"}
+            onClick={() => {
+              setDunningReasonOverride("card_declined");
+              setReason("card_declined");
+            }}
+          >
+            declined
+          </Chip>
+          <Chip
+            active={reason === "requires_confirmation"}
+            onClick={() => {
+              setDunningReasonOverride("requires_confirmation");
+              setReason("requires_confirmation");
+            }}
+          >
+            bank confirmation
+          </Chip>
+          <Chip
+            active={sessionError}
+            onClick={() => {
+              const next = !sessionError;
+              setSessionError(next);
+              if (typeof window !== "undefined") {
+                if (next) window.localStorage.setItem("nook.dev.dunningSessionError", "1");
+                else window.localStorage.removeItem("nook.dev.dunningSessionError");
+              }
+            }}
+          >
+            force session error
+          </Chip>
+        </Row>
+
         <Row label="onboarded">
           <Chip active={a?.onboarded === true} onClick={() => apply({ onboarded: true })}>
             yes
@@ -347,6 +396,22 @@ export function DevPanel() {
             }
           >
             6 · past_due grace
+          </Chip>
+          <Chip
+            onClick={() =>
+              apply(
+                {
+                  noCredentials: false,
+                  status: "past_due",
+                  pastDueDayOffset: 7,
+                  onboarded: true,
+                  hasEverSubscribed: true,
+                },
+                "/onboarding/success",
+              )
+            }
+          >
+            7 · alerts paused
           </Chip>
         </Row>
 
