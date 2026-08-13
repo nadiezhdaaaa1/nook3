@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { ShieldCheck, ArrowRight } from "lucide-react";
@@ -38,19 +38,6 @@ function SamplePreview() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  // Mobile: keep the preview container as the only scrollport so the sticky header behaves.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const lock = () => {
-      document.body.style.overflow = window.innerWidth < 768 ? "hidden" : "";
-    };
-    lock();
-    window.addEventListener("resize", lock);
-    return () => {
-      window.removeEventListener("resize", lock);
-      document.body.style.overflow = "";
-    };
-  }, []);
 
   const allListings: SampleListing[] = useCityListings(city);
 
@@ -97,7 +84,7 @@ function SamplePreview() {
   const itemVariants = reduce ? undefined : OB_SECTION_VARIANTS;
 
   return (
-    <div className="flex h-full min-h-[calc(100vh-96px)] flex-col overflow-y-auto md:flex-row md:overflow-y-visible" style={{ background: "#faf6ee" }}>
+    <div className="flex min-h-screen flex-col md:flex-row" style={{ background: "#faf6ee" }}>
       {/* Mobile top header */}
       <div className="sticky top-0 z-40 px-6 pt-6 md:hidden">
         <OnboardingHeader fixed={false} />
@@ -107,7 +94,7 @@ function SamplePreview() {
 
       <aside
         aria-label="Map of sample matches"
-        className="order-2 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-full md:w-1/2 md:pl-0"
+        className="order-2 h-[420px] w-full shrink-0 p-6 md:order-2 md:sticky md:top-0 md:h-screen md:w-1/2 md:pl-0"
       >
         {cityConfig && (
           <SampleListingsMap
@@ -129,7 +116,7 @@ function SamplePreview() {
         variants={variants}
         initial="hidden"
         animate="visible"
-        className="order-3 w-full px-6 pb-0 pt-6 md:order-1 md:h-full md:w-1/2 md:overflow-y-auto md:px-6 md:pt-6 md:pb-0"
+        className="order-3 w-full px-6 pb-0 pt-6 md:order-1 md:w-1/2 md:px-6 md:pt-6 md:pb-0"
       >
         <div className="sticky top-6 z-10 mb-8 hidden md:block md:top-0">
           <OnboardingHeader fixed={false} />
