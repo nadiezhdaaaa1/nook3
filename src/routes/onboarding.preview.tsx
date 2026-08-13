@@ -94,7 +94,7 @@ function SamplePreview() {
 
       <aside
         aria-label="Map of sample matches"
-        className="order-2 h-[420px] w-full shrink-0 p-6 md:order-2 md:h-full md:w-1/2 md:pl-0"
+        className="order-2 h-[420px] w-full shrink-0 p-6 md:order-2 md:sticky md:top-0 md:h-screen md:w-1/2 md:pl-0"
       >
         {cityConfig && (
           <SampleListingsMap
