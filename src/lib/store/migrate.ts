@@ -62,7 +62,7 @@ export function ensureMigratedFromLegacy(): void {
       typeof Intl !== "undefined"
         ? Intl.DateTimeFormat().resolvedOptions().timeZone
         : "America/New_York",
-    plan: legacyState.selectedPlan ?? "free",
+    plan: legacyState.selectedPlan ?? "intro",
     billingCycle: legacyState.billingCycle ?? "monthly",
     trialActive: legacyState.trialActive ?? false,
     moveOut: legacyState.moveOut,

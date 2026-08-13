@@ -9,7 +9,7 @@ import { dbRowToUser } from "@/lib/profile.functions";
 // write billing/plan fields on `profiles`, and the DB guard trigger only
 // allows it through the service-role-only admin_set_plan() function.
 const updatePlanSchema = z.object({
-  plan: z.enum(["free", "premium", "max"]),
+  plan: z.enum(["intro", "pro"]),
   billingCycle: z.enum(["monthly", "annual"]).optional(),
 });
 

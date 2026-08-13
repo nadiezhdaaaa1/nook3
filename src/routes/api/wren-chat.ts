@@ -93,16 +93,16 @@ export const Route = createFileRoute("/api/wren-chat")({
         if (userErr || !userData?.user) return json({ error: "Unauthorized" }, 401);
         const userId = userData.user.id;
 
-        // Plan gate: only premium/max
+        // Plan gate: Pro only
         const { data: profile, error: profileErr } = await supabase
           .from("profiles")
           .select("plan")
           .eq("id", userId)
           .maybeSingle();
         if (profileErr) return json({ error: profileErr.message }, 500);
-        const plan = (profile?.plan as string | undefined) ?? "free";
-        if (plan !== "premium" && plan !== "max") {
-          return json({ error: "Wren is part of Premium." }, 403);
+        const plan = (profile?.plan as string | undefined) ?? "intro";
+        if (plan !== "pro") {
+          return json({ error: "Wren is part of Pro." }, 403);
         }
 
         // Parse body

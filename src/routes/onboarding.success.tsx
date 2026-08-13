@@ -36,15 +36,13 @@ export const Route = createFileRoute("/onboarding/success")({
 });
 
 const PLAN_META: Record<Plan, { name: string; price: Record<"monthly" | "annual", string>; suffix: string }> = {
-  free: { name: "Intro", price: { monthly: "$0", annual: "$0" }, suffix: "for 3 days" },
-  premium: { name: "Pro", price: { monthly: "$14.99", annual: "$7.99" }, suffix: "/month" },
-  max: { name: "Pro", price: { monthly: "$14.99", annual: "$7.99" }, suffix: "/month" },
+  intro: { name: "Intro", price: { monthly: "$0", annual: "$0" }, suffix: "for 3 days" },
+  pro: { name: "Pro", price: { monthly: "$14.99", annual: "$7.99" }, suffix: "/month" },
 };
 
 const PLAN_VARIANT: Record<Plan, "light" | "warm" | "cool"> = {
-  free: "light",
-  premium: "warm",
-  max: "warm",
+  intro: "light",
+  pro: "warm",
 };
 
 const AMENITY_LABELS: Record<string, string> = Object.fromEntries(
@@ -86,10 +84,10 @@ function Success() {
   }, [set]);
 
   const cityConfig = getCity(city);
-  const plan = selectedPlan ?? "free";
+  const plan = selectedPlan ?? "intro";
   const planMeta = PLAN_META[plan];
   const planVariant = PLAN_VARIANT[plan];
-  const isPaid = plan !== "free";
+  const isPaid = plan !== "intro";
   const dark = planVariant !== "light";
 
   const cardStyle: React.CSSProperties = dark
@@ -281,7 +279,7 @@ function Success() {
           </div>
           <OriginButton
             size="medium"
-            variant={plan === "premium" ? "premium" : plan === "max" ? "max" : "tertiary"}
+            variant={plan === "pro" ? "premium" : "tertiary"}
             style={{ borderRadius: 12 }}
             onClick={() => navigate({ to: "/onboarding/pricing" })}
           >

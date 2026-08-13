@@ -72,7 +72,7 @@ type PlanDef = {
 const PLANS: PlanDef[] = [
   {
     key: "intro",
-    id: "free",
+    id: "intro",
     cycle: "monthly",
     label: "3 days free",
     tagline: "See how it works, on your real search.",
@@ -87,7 +87,7 @@ const PLANS: PlanDef[] = [
   },
   {
     key: "pro_monthly",
-    id: "premium",
+    id: "pro",
     cycle: "monthly",
     label: "Pro",
     tagline: "When you're actively looking.",
@@ -102,7 +102,7 @@ const PLANS: PlanDef[] = [
   },
   {
     key: "pro_annual",
-    id: "premium",
+    id: "pro",
     cycle: "annual",
     label: "Pro annual",
     tagline: "Same plan, paid once a year.",
@@ -129,7 +129,7 @@ function AccountPage() {
   const searches = useAppStore((s) => s.searches);
   const updateProfile = useAppStore((s) => s.updateProfile);
 
-  const plan: Plan = user?.plan ?? "free";
+  const plan: Plan = user?.plan ?? "intro";
   const trialActive = user?.trialActive ?? false;
   const trialEndsAt = user?.trialEndsAt;
   const activeCycle: BillingCycle = user?.billingCycle ?? "monthly";
@@ -139,10 +139,10 @@ function AccountPage() {
 
   const prefs = usePreferencesStore();
 
-  // Current card matching plan + billing cycle (legacy "max" behaves like Pro monthly)
+  // Current card matching plan + billing cycle
   const currentPlan =
-    PLANS.find((p) => p.id === plan && (plan === "free" || p.cycle === activeCycle)) ??
-    (plan === "free" ? PLANS[0] : PLANS[1]);
+    PLANS.find((p) => p.id === plan && (plan === "intro" || p.cycle === activeCycle)) ??
+    (plan === "intro" ? PLANS[0] : PLANS[1]);
 
   // Usage stats
   const stats = useMemo(() => {
@@ -981,9 +981,9 @@ function PlanCard({
   onRenew?: () => void;
 }) {
 
-  const isCurrent = plan.id === currentPlan && (plan.id === "free" || plan.cycle === activeCycle);
-  const priceLabel = plan.id === "free" ? "$0" : `$${plan.monthly}`;
-  const suffix = plan.id === "free" ? "for 3 days" : "/month";
+  const isCurrent = plan.id === currentPlan && (plan.id === "intro" || plan.cycle === activeCycle);
+  const priceLabel = plan.id === "intro" ? "$0" : `$${plan.monthly}`;
+  const suffix = plan.id === "intro" ? "for 3 days" : "/month";
   const updatePlanMut = useUpdatePlanMutation();
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
@@ -991,7 +991,7 @@ function PlanCard({
 
   // Rank: Intro (0) < Pro monthly (1) < Pro annual (2)
   const rankOf = (p: Plan, c: BillingCycle) =>
-    p === "free" ? 0 : 1 + (c === "annual" ? 1 : 0);
+    p === "intro" ? 0 : 1 + (c === "annual" ? 1 : 0);
   const targetRank = rankOf(plan.id, plan.cycle);
   const currentRank = rankOf(currentPlan, activeCycle);
   const isUpgrade = targetRank > currentRank;
@@ -1015,15 +1015,15 @@ function PlanCard({
 
   const CANCEL_TAIL = "Cancel anytime in Account → Subscription in two steps.";
 
-  const isCanceledCurrent = Boolean(isCurrent && canceled && plan.id !== "free");
+  const isCanceledCurrent = Boolean(isCurrent && canceled && plan.id !== "intro");
 
   const billLine = isCurrent
-    ? plan.id === "free"
+    ? plan.id === "intro"
       ? `${trialDaysLeft} day${trialDaysLeft === 1 ? "" : "s"} left`
       : isCanceledCurrent
         ? `Cancels on ${periodEnd}`
         : `next charge ${periodEnd}`
-    : plan.id === "free"
+    : plan.id === "intro"
       ? "then $14.99/month"
       : plan.cycle === "annual"
         ? "billed $95.88/year"
@@ -1032,21 +1032,21 @@ function PlanCard({
           : "billed today";
 
   const disclaimer = isCurrent
-    ? plan.id === "free"
+    ? plan.id === "intro"
       ? `First charge $14.99 on ${firstChargeDate}.`
       : isCanceledCurrent
         ? `Your subscription will be canceled on ${periodEnd}. You keep Pro until then — renew anytime to stay on.`
         : plan.cycle === "annual"
           ? `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`
           : `You keep Pro until then. Nothing is deleted.`
-    : plan.id === "free"
+    : plan.id === "intro"
       ? `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`
       : plan.cycle === "annual"
         ? `$95.88 charged on ${periodEnd}, then yearly until cancelled. ${CANCEL_TAIL}`
         : `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`;
 
   const ctaLabel = isCurrent
-    ? plan.id === "free"
+    ? plan.id === "intro"
       ? ""
       : isCanceledCurrent
         ? "Renew subscription"
@@ -1059,12 +1059,12 @@ function PlanCard({
       : "Switch to monthly";
 
 
-  const dark = plan.id !== "free";
+  const dark = plan.id !== "intro";
   const text = dark ? "#f8f3e1" : "#241c12";
   const checkColor = dark ? "#c2dd93" : "#6a820a";
   const lockColor = "#db5919";
   const badge = plan.cycle === "annual" ? { text: "Save 47%", bg: "#6a820a" } : null;
-  const stateBadge = isCurrent ? (plan.id === "free" ? "Current" : "Your plan") : null;
+  const stateBadge = isCurrent ? (plan.id === "intro" ? "Current" : "Your plan") : null;
 
   const cardStyle: React.CSSProperties = dark
     ? {
@@ -1079,7 +1079,7 @@ function PlanCard({
         color: text,
       };
 
-  const ctaVariant = isCanceledCurrent ? (plan.cycle === "annual" ? "max" : "premium") : isCurrent && plan.id !== "free" ? "cancel" : plan.id === "free" ? "tertiary" : plan.cycle === "annual" ? "max" : "premium";
+  const ctaVariant = isCanceledCurrent ? (plan.cycle === "annual" ? "max" : "premium") : isCurrent && plan.id !== "intro" ? "cancel" : plan.id === "intro" ? "tertiary" : plan.cycle === "annual" ? "max" : "premium";
 
   return (
     <div
@@ -1161,9 +1161,9 @@ function PlanCard({
         {billLine}
       </div>
 
-      {isCurrent && plan.id === "free" ? (
+      {isCurrent && plan.id === "intro" ? (
         <div className="w-full h-[56px]" />
-      ) : isCurrent && plan.id !== "free" ? (
+      ) : isCurrent && plan.id !== "intro" ? (
         <OriginButton
           className="w-full"
           variant={ctaVariant}
@@ -2016,7 +2016,7 @@ function SubscriptionSection({
     if (!legacy) return;
     migratedRef.current = true;
     window.localStorage.removeItem("nook:subCanceled");
-    if (!profileQ.data.subscriptionCanceledAt && plan !== "free") {
+    if (!profileQ.data.subscriptionCanceledAt && plan !== "intro") {
       setCanceledMutation.mutate(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2024,7 +2024,7 @@ function SubscriptionSection({
 
   // Determine which two cards to show so the user only sees actionable options.
   const visiblePlanKeys = useMemo(() => {
-    if (plan === "free") return ["intro", "pro_monthly"];
+    if (plan === "intro") return ["intro", "pro_monthly"];
     if (activeCycle === "annual") return ["pro_annual", "pro_monthly"];
     return ["pro_monthly", "pro_annual"];
   }, [plan, activeCycle]);
@@ -2054,7 +2054,7 @@ function SubscriptionSection({
       <section id="plan-options">
         <div className="mb-5">
           <h2 className="font-display text-xl font-semibold text-charcoal-950">
-            {plan === "free" ? "Upgrade your plan" : "Plan options"}
+            {plan === "intro" ? "Upgrade your plan" : "Plan options"}
           </h2>
           <p className="text-sm text-charcoal-600 mt-1">
             Every match we find, plus up to 3 searches.
@@ -2090,7 +2090,7 @@ function SubscriptionSection({
 /* ------------------------- Payment method (Stripe) ------------------------- */
 
 function PaymentMethodSection({ plan }: { plan: Plan }) {
-  const hasCard = plan !== "free";
+  const hasCard = plan !== "intro";
   return (
     <section>
       <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
@@ -2158,7 +2158,7 @@ function PaymentHistorySection({
   currentPlan: PlanDef;
 }) {
   const invoices = useMemo(() => {
-    if (plan === "free") return [];
+    if (plan === "intro") return [];
     const amount =
       cycle === "annual"
         ? currentPlan.annual

@@ -2,6 +2,10 @@ import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchesQueryOptions, useUpdateSearchMutation, useCreateSearchMutation } from "./searches";
 import { profileQueryOptions, syncDeletionStateToStore } from "./profile";
+import { useServerFn } from "@tanstack/react-start";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateProfile } from "@/lib/profile.functions";
+import { accessQueryKey } from "./access";
 import { useAppStore, getDefaultSearchName, hydrateOnboardingFromSearch } from "@/lib/store";
 import type { Search } from "@/lib/store";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -31,6 +35,9 @@ export function useDbSync() {
   const hydratedRef = useRef(false);
   const handoffRef = useRef(false);
   const lastSyncedRef = useRef<Map<string, string>>(new Map());
+  const completedWriteRef = useRef(false);
+  const persistProfile = useServerFn(updateProfile);
+  const qc = useQueryClient();
 
 
   // 1) Hydration: replace zustand state with DB data once both queries resolve.
@@ -66,6 +73,8 @@ export function useDbSync() {
             deletionScheduledAt: profile.deletionScheduledAt,
             subscriptionCanceledAt: profile.subscriptionCanceledAt,
             subscriptionPeriodEnd: profile.subscriptionPeriodEnd,
+            subscriptionStatus: profile.subscriptionStatus,
+            pastDueSince: profile.pastDueSince,
           }
         : null,
       searches: rows,
@@ -93,6 +102,30 @@ export function useDbSync() {
     if (!profileQ.data) return;
     syncDeletionStateToStore(profileQ.data as any);
   }, [profileQ.data]);
+
+  // 1a-bis) Persist onboarding completion. `completed_at` is what the route
+  // gate reads as "onboarded", so it must live in the DB, not only in the
+  // browser's onboarding store. Written once: either the browser finished
+  // onboarding (store `completedAt`) or the account already owns a search.
+  useEffect(() => {
+    if (completedWriteRef.current) return;
+    const profile = profileQ.data;
+    if (!profile || profile.completedAt) return;
+    const rows = (searchesQ.data as Search[] | undefined) ?? [];
+    const localCompleted = useOnboardingStore.getState().completedAt;
+    const completedAt = localCompleted ?? (rows.length > 0 ? new Date().toISOString() : null);
+    if (!completedAt) return;
+    completedWriteRef.current = true;
+    void (async () => {
+      try {
+        await persistProfile({ data: { completedAt } as any });
+        useAppStore.getState().updateProfile({ completedAt } as any);
+        qc.invalidateQueries({ queryKey: accessQueryKey });
+      } catch {
+        completedWriteRef.current = false;
+      }
+    })();
+  }, [profileQ.data, searchesQ.data, persistProfile, qc]);
 
   // 1b) Onboarding handoff: the account has no searches yet, but the browser
   // still holds the onboarding answers — persist them as the first Search.

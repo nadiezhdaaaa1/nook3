@@ -18,21 +18,20 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/notificat
 });
 
 const PLAN_PILL: Record<Plan, { text: string; cta: string | null }> = {
-  free: { text: "Free plan — 1 search, email alerts only", cta: "Upgrade" },
-  premium: { text: "Premium — 3 searches, real-time email alerts", cta: "Manage plan" },
-  max: { text: "Max — Unlimited searches, all features unlocked", cta: null },
+  intro: { text: "Intro — 1 search, email alerts only", cta: "Upgrade" },
+  pro: { text: "Pro — 3 searches, real-time email alerts", cta: "Manage plan" },
 };
 
-const PLAN_RANK: Record<Plan, number> = { free: 0, premium: 1, max: 2 };
+const PLAN_RANK: Record<Plan, number> = { intro: 0, pro: 1 };
 
 const FREQS: {
   id: Frequency; label: string; desc: string; bestFor: string;
   icon: typeof Zap; minPlan: Plan; recommended?: boolean; freeFallback?: string;
 }[] = [
-  { id: "maximum", label: "Maximum", desc: "Every match, the moment it's listed.", bestFor: "Best for fast markets, urgent moves", icon: Zap, minPlan: "premium", freeFallback: "You're on Free — alerts arrive ~3h later" },
-  { id: "balanced", label: "Balanced", desc: "Top matches, 2–3 times a day.", bestFor: "Best for most renters", icon: CalendarDays, minPlan: "free", recommended: true },
-  { id: "minimal", label: "Minimal", desc: "Once daily — only strong matches.", bestFor: "Best for browse mode, exploring", icon: CalendarRange, minPlan: "free" },
-  { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", bestFor: "Best for casual interest", icon: Sparkles, minPlan: "free" },
+  { id: "maximum", label: "Maximum", desc: "Every match, the moment it's listed.", bestFor: "Best for fast markets, urgent moves", icon: Zap, minPlan: "pro", freeFallback: "You're on Intro — alerts arrive ~3h later" },
+  { id: "balanced", label: "Balanced", desc: "Top matches, 2–3 times a day.", bestFor: "Best for most renters", icon: CalendarDays, minPlan: "intro", recommended: true },
+  { id: "minimal", label: "Minimal", desc: "Once daily — only strong matches.", bestFor: "Best for browse mode, exploring", icon: CalendarRange, minPlan: "intro" },
+  { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", bestFor: "Best for casual interest", icon: Sparkles, minPlan: "intro" },
 ];
 
 function detectTimezone(): string {
@@ -55,12 +54,12 @@ function formatTimeLabel(hhmm: string): string {
 
 function NotificationsTab() {
   const { frequency, set } = useOnboardingStore();
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const activeSearchId = useAppStore((s) => s.activeSearchId);
   const activeSearch = useAppStore((s) => s.searches.find((x) => x.id === s.activeSearchId));
   const { quietHours, setQuiet } = usePreferencesStore();
 
-  const pill = PLAN_PILL[plan] ?? PLAN_PILL.free;
+  const pill = PLAN_PILL[plan] ?? PLAN_PILL.intro;
   const userRank = PLAN_RANK[plan];
   const searchName = activeSearch?.name ?? "this search";
 
@@ -119,13 +118,13 @@ function NotificationsTab() {
                       )}
                       {locked && (
                         <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider opacity-70">
-                          <Lock className="h-3 w-3" /> Premium
+                          <Lock className="h-3 w-3" /> Pro
                         </span>
                       )}
                     </span>
                     <span className="block text-[13px] opacity-80 mt-1 font-normal whitespace-normal">{f.desc}</span>
                     <span className="block text-[12px] italic opacity-70 mt-2 font-normal whitespace-normal leading-snug">
-                      {locked && plan === "free" && f.freeFallback ? f.freeFallback : f.bestFor}
+                      {locked && plan === "intro" && f.freeFallback ? f.freeFallback : f.bestFor}
                     </span>
                   </span>
                 </span>

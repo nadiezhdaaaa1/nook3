@@ -32,7 +32,7 @@ interface FeatureItem {
 export interface Tier {
   id: string;
   /** Stored plan value this tier maps to. */
-  plan: "free" | "premium";
+  plan: "intro" | "pro";
   /** Billing cycle this tier maps to. */
   billingCycle: Cycle;
   name: string;
@@ -52,7 +52,7 @@ const CANCEL_TAIL =
 const TIERS: Tier[] = [
   {
     id: "intro",
-    plan: "free",
+    plan: "intro",
     billingCycle: "monthly",
     name: "3 days free",
     tagline: "See how it works, on your real search.",
@@ -74,7 +74,7 @@ const TIERS: Tier[] = [
   },
   {
     id: "pro",
-    plan: "premium",
+    plan: "pro",
     billingCycle: "monthly",
     name: "Pro",
     tagline: "When you're actively looking.",
@@ -96,7 +96,7 @@ const TIERS: Tier[] = [
   },
   {
     id: "pro_annual",
-    plan: "premium",
+    plan: "pro",
     billingCycle: "annual",
     name: "Pro annual",
     tagline: "Same plan, paid once a year.",

@@ -4,7 +4,7 @@ import type { CityId } from "@/data/cities";
 
 export type TriState = "nice" | "required";
 export type AlertChannel = "email";
-export type Plan = "free" | "premium" | "max";
+export type Plan = "intro" | "pro";
 export type BillingCycle = "monthly" | "annual";
 export type Frequency = "minimal" | "balanced" | "maximum" | "weekly";
 export type RentProtection = "all" | "likely" | "verified";
@@ -194,14 +194,23 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
     }),
     {
       name: "nook.onboarding.v1",
-      version: 3,
+      version: 4,
       migrate: (persisted: unknown, version) => {
-        const s = (persisted ?? {}) as Partial<OnboardingState> & { budget?: unknown };
+        const s = (persisted ?? {}) as Partial<OnboardingState> & {
+          budget?: unknown;
+          selectedPlan?: unknown;
+        };
         if (version < 2 && typeof s.budget === "number") {
           s.budget = [Math.max(0, Math.round(s.budget * 0.5)), s.budget] as [number, number];
         }
         if (version < 3 && s.rentProtection === "likely") {
           s.rentProtection = "all";
+        }
+        if (version < 4) {
+          // Tier rename: free -> intro, premium|max -> pro.
+          if ((s.selectedPlan as unknown) === "free") s.selectedPlan = "intro";
+          else if ((s.selectedPlan as unknown) === "premium" || (s.selectedPlan as unknown) === "max") s.selectedPlan = "pro";
+          else if (s.selectedPlan !== "intro" && s.selectedPlan !== "pro") s.selectedPlan = null;
         }
         return s as OnboardingState;
       },

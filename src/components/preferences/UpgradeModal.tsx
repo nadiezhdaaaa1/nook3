@@ -10,7 +10,7 @@ import { OriginButton } from "@/components/ui/origin-button";
  */
 export function UpgradeModal({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
-  const plan = useAppStore((s) => s.user?.plan ?? "free");
+  const plan = useAppStore((s) => s.user?.plan ?? "intro");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -24,7 +24,7 @@ export function UpgradeModal({ onClose }: { onClose: () => void }) {
     };
   }, [onClose]);
 
-  const isIntro = plan === "free";
+  const isIntro = plan === "intro";
 
   const goPlans = () => {
     navigate({ to: "/account", hash: "plans" });

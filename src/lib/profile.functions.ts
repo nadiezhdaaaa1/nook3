@@ -11,7 +11,7 @@ export function dbRowToUser(row: any) {
     phone: row.phone ?? "",
     phoneVerified: !!row.phone_verified,
     timezone: row.timezone ?? "America/New_York",
-    plan: row.plan ?? "free",
+    plan: row.plan ?? "intro",
     billingCycle: row.billing_cycle ?? "monthly",
     trialActive: !!row.trial_active,
     trialStartedAt: row.trial_started_at ?? undefined,
@@ -26,9 +26,97 @@ export function dbRowToUser(row: any) {
     deletionCancelSubscription: row.deletion_cancel_subscription ?? null,
     subscriptionCanceledAt: row.subscription_canceled_at ?? null,
     subscriptionPeriodEnd: row.subscription_period_end ?? null,
+    subscriptionStatus: (row.subscription_status ?? "none") as
+      | "none"
+      | "trialing"
+      | "active"
+      | "past_due"
+      | "canceled",
+    pastDueSince: row.past_due_since ?? null,
     updatedAt: row.updated_at ?? undefined,
   };
 }
+
+/* -------------------------------------------------------------------------
+   Access state — the single computation point for routing decisions.
+
+   Three flags, all server-derived:
+     credentials  — the account can sign in on its own: a password identity
+                    OR a linked social identity. Never inferred from the
+                    self-writable `has_password` column, and never assumes an
+                    authenticated user has a password identity (a Stripe-first
+                    signup arrives with neither password nor Google).
+     subscription — `subscription_status`, with `past_due` expiring to
+                    `canceled` server-side after 7 days (self-healing).
+     onboarded    — `completed_at is not null`. Set once, never unset.
+   ------------------------------------------------------------------------- */
+
+export const PAST_DUE_GRACE_DAYS = 7;
+
+export type SubscriptionStatus =
+  | "none"
+  | "trialing"
+  | "active"
+  | "past_due"
+  | "canceled";
+
+export interface AccessState {
+  credentials: boolean;
+  status: SubscriptionStatus;
+  accessAllowed: boolean;
+  onboarded: boolean;
+  plan: "intro" | "pro";
+}
+
+export const getAccessState = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<AccessState> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    let { data: row } = await context.supabase
+      .from("profiles")
+      .select("plan, subscription_status, past_due_since, completed_at")
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    let status = ((row as any)?.subscription_status ?? "none") as SubscriptionStatus;
+    const pastDueSince = (row as any)?.past_due_since as string | null | undefined;
+
+    // Self-heal an expired past_due window. Computed server-side so a client
+    // clock can never extend the grace period.
+    if (status === "past_due") {
+      const started = pastDueSince ? new Date(pastDueSince).getTime() : 0;
+      const expired =
+        !pastDueSince ||
+        Date.now() - started > PAST_DUE_GRACE_DAYS * 24 * 60 * 60 * 1000;
+      if (expired) {
+        const { data: healed } = await supabaseAdmin.rpc("admin_expire_past_due", {
+          _user_id: context.userId,
+        } as never);
+        const updated = Array.isArray(healed) ? healed[0] : healed;
+        if (updated) {
+          row = updated as never;
+          status = ((updated as any).subscription_status ?? "canceled") as SubscriptionStatus;
+        } else {
+          status = "canceled";
+        }
+      }
+    }
+
+    // Credentials: read identities from Auth, not from the profile.
+    let credentials = false;
+    const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(context.userId);
+    const identities = authUser?.user?.identities ?? [];
+    credentials = identities.some((i) => i.provider !== "anonymous");
+
+    return {
+      credentials,
+      status,
+      accessAllowed: status === "active" || status === "trialing" || status === "past_due",
+      onboarded: !!(row as any)?.completed_at,
+      plan: (((row as any)?.plan ?? "intro") as "intro" | "pro"),
+    };
+  });
 
 export const getProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -144,7 +232,7 @@ export const scheduleAccountDeletion = createServerFn({ method: "POST" })
       .maybeSingle();
 
     const cancelNow =
-      data.cancelSubscription === true && (current as any)?.plan && (current as any).plan !== "free";
+      data.cancelSubscription === true && (current as any)?.plan && (current as any).plan !== "intro";
 
     const patch: Record<string, unknown> = {
       deletion_requested_at: now.toISOString(),

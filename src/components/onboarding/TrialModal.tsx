@@ -9,23 +9,14 @@ interface Props {
   onConfirm: () => void;
 }
 
-const COPY: Record<Exclude<Plan, "free">, { name: string; price: string; bullets: string[] }> = {
-  premium: {
-    name: "Premium",
+const COPY: Record<Exclude<Plan, "intro">, { name: string; price: string; bullets: string[] }> = {
+  pro: {
+    name: "Pro",
     price: "$14.99/mo",
     bullets: [
       "3 days free, cancel anytime",
-      "Unlimited email + 1 text/day",
+      "Up to 3 searches",
       "Real-time alerts (no delay)",
-    ],
-  },
-  max: {
-    name: "Max",
-    price: "$29/mo",
-    bullets: [
-      "3 days free, cancel anytime",
-      "Unlimited texts + upcoming listings forecast",
-      "Roommate mode included",
     ],
   },
 };
@@ -34,7 +25,7 @@ export function TrialModal({ plan, onClose, onConfirm }: Props) {
   const [busy, setBusy] = useState(false);
   const { set } = useOnboardingStore();
 
-  if (plan === "free") return null;
+  if (plan === "intro") return null;
   const copy = COPY[plan];
 
   return (

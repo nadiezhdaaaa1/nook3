@@ -135,7 +135,7 @@ export function syncOnboardingToUser(): void {
   app.updateProfile({
     email: o.email,
     phone: o.phone,
-    plan: o.selectedPlan ?? app.user?.plan ?? "free",
+    plan: o.selectedPlan ?? app.user?.plan ?? "intro",
     billingCycle: o.billingCycle,
     trialActive: o.trialActive,
     completedAt: o.completedAt ?? app.user?.completedAt ?? null,

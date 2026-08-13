@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export type PlanKey = "free" | "premium" | "max";
+export type PlanKey = "intro" | "pro";
 
 const LABEL_CLASS =
   "text-[11px] font-bold leading-[14px] tracking-[1.5px] uppercase";
@@ -33,7 +33,7 @@ export function PlanBadge({
   const base =
     "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[999px] px-2 py-1";
 
-  if (plan === "free") {
+  if (plan === "intro") {
     return (
       <span
         className={cn(

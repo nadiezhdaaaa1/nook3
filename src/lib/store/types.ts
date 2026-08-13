@@ -79,25 +79,25 @@ export interface User {
   deletionCancelSubscription?: boolean | null;
   subscriptionCanceledAt?: string | null;
   subscriptionPeriodEnd?: string | null;
+  /** Whether the subscription is paid for. Backend-owned. */
+  subscriptionStatus?: "none" | "trialing" | "active" | "past_due" | "canceled";
+  pastDueSince?: string | null;
   updatedAt?: string;
 }
 
 export interface SearchQuota {
   used: number;
-  max: number; // Infinity for "max" plan
-  remaining: number; // Infinity for "max"
-  label: string; // "1 of 1 used" | "2 of 3 used" | "3 of Unlimited"
+  max: number;
+  remaining: number;
+  label: string; // "1 of 1 used" | "2 of 3 used"
 }
 
 /**
- * Search limits by entitlement state.
- * `free` = Intro (3 days) → 1 search. `premium` = Pro → 3 searches.
- * `max` is legacy (stored on old profiles) and behaves like Pro.
+ * Search limits by tier. `intro` (3-day intro) → 1 search, `pro` → 3.
  */
 export const SEARCH_LIMITS: Record<Plan, number> = {
-  free: 1,
-  premium: 3,
-  max: 3,
+  intro: 1,
+  pro: 3,
 };
 
 export type { OnboardingState, MoveOutInfo, Plan, Frequency, AlertChannel, BillingCycle };
