@@ -194,7 +194,7 @@ export function HeroDemo() {
                 type="submit"
                 className="group w-full h-12 inline-flex items-center justify-center gap-2 px-6 rounded-pill bg-charcoal-950 text-paper text-sm font-semibold hover:bg-charcoal-800 transition-colors"
               >
-                Get free alerts
+                Start 3 days free
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
