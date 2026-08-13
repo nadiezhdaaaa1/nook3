@@ -33,9 +33,7 @@ export function useDbSync() {
 
 
   const hydratedRef = useRef(false);
-  const handoffRef = useRef(false);
   const lastSyncedRef = useRef<Map<string, string>>(new Map());
-  const completedWriteRef = useRef(false);
   const persistProfile = useServerFn(updateProfile);
   const qc = useQueryClient();
 
