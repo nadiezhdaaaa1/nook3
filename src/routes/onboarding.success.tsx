@@ -415,7 +415,7 @@ function Success() {
               <li className="px-6 py-4 text-[14px] text-charcoal-500">Checking for new matches…</li>
             )}
             {freshness.map((f) => {
-              const city = getCity(f.cityId);
+              const searchCity = getCity(f.cityId as never);
               return (
                 <li key={f.searchId} className="px-6 py-4">
                   <div className="text-[16px] font-semibold text-charcoal-950">{f.name}</div>
