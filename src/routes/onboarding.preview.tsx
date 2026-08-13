@@ -132,10 +132,7 @@ function SamplePreview() {
                 {matched.length === 1 ? "" : "es"} in your area this past week
               </h1>
               <p style={OB_SUB}>
-                {budget
-                  ? `Within $${budget[0].toLocaleString()}–$${budget[1].toLocaleString()}/mo. `
-                  : "Here's what they looked like. "}
-                We'll send these straight to your inbox. This is only a preview; you will see all matches with links inside your account and in your inbox.
+                This is only a preview; you will see all matches with links inside your account and in your inbox.
               </p>
             </motion.header>
 
