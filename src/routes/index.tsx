@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Nook watches the rental market 24/7 and pings you the moment a real match appears. Verified listings, rent-regulated units flagged, no spam. Free tier · Premium $14.99/mo.",
+          "Nook watches the rental market 24/7 and pings you the moment a real match appears. Verified listings, rent-regulated units flagged, no spam. 3-day trial · Pro $14.99/mo.",
       },
       { property: "og:title", content: "Nook — Find your next apartment before it's gone" },
       {
