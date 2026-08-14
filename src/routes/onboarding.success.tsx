@@ -490,10 +490,7 @@ function Success() {
             <>
               {variant === "B" && accountEmail ? (
                 <div className="w-full text-center">
-                  <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8a8177]">
-                    Paid with
-                  </p>
-                  <p className="m-0 mt-1 text-[16px] font-semibold text-charcoal-950">
+                  <p className="m-0 text-[16px] font-semibold text-charcoal-950">
                     {accountEmail}
                   </p>
                   <p className="m-0 mt-2 text-[14px] leading-[1.45] text-[#6e6459]">
