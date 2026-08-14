@@ -430,7 +430,7 @@ export function HeroScrollNav() {
         }
         .hero-nav-sheet-link:hover { background: rgba(36,28,18,0.05); }
         .hero-nav-sheet-signin {
-          margin-top: 16px;
+          margin-top: 28px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
