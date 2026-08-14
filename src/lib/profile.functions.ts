@@ -71,6 +71,8 @@ export interface AccessState {
   billingCycle: "monthly" | "annual";
   hasEverSubscribed: boolean;
   pastDueSince: string | null;
+  /** The authenticated user's address, resolved server-side. */
+  email: string;
 }
 
 
@@ -154,6 +156,7 @@ export const getAccessState = createServerFn({ method: "GET" })
       billingCycle: (((row as any)?.billing_cycle ?? "monthly") as "monthly" | "annual"),
       hasEverSubscribed: !!(row as any)?.has_ever_subscribed,
       pastDueSince: ((row as any)?.past_due_since ?? null) as string | null,
+      email: (authUser?.user?.email ?? (context.claims as any)?.email ?? "") as string,
     };
 
   });
