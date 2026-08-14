@@ -20,6 +20,7 @@ import { AMENITY_GROUPS } from "@/data/amenities";
 import { RENT_PROTECTION_OPTIONS } from "@/data/cities/types";
 import { getDefaultSearchName } from "@/lib/store";
 import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 import { useHasSession } from "@/lib/queries/useHasSession";
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
@@ -220,15 +221,25 @@ function Success() {
   const stepVariants = reduce ? undefined : OB_STEP_VARIANTS;
   const sectionVariants = reduce ? undefined : OB_SECTION_VARIANTS;
 
+  const accountEmail = access?.email ?? "";
+
   async function onGoogle() {
     setBusy(true);
     try {
       sessionStorage.setItem("nook:postAuthPath", "/onboarding/success");
+      if (cfg.lockEmail && accountEmail) {
+        sessionStorage.setItem("nook:expectedEmail", accountEmail);
+      } else {
+        sessionStorage.removeItem("nook:expectedEmail");
+      }
     } catch {
       /* ignore */
     }
     const res = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin + "/auth/callback",
+      ...(cfg.lockEmail && accountEmail
+        ? { extraParams: { login_hint: accountEmail, prompt: "select_account" } }
+        : {}),
     });
     setBusy(false);
     if (res?.error) {
@@ -236,6 +247,30 @@ function Success() {
       return;
     }
     if (res?.redirected) return;
+
+    // Popup flow: the session is already set here, so the lock has to be
+    // enforced on this path too — the callback route never runs.
+    if (cfg.lockEmail && accountEmail) {
+      const { data } = await supabase.auth.getSession();
+      const got = data.session?.user.email ?? "";
+      if (got && got.toLowerCase() !== accountEmail.toLowerCase()) {
+        await supabase.auth.signOut();
+        try {
+          sessionStorage.removeItem("nook:expectedEmail");
+        } catch {
+          /* ignore */
+        }
+        toast.error("Wrong Google account", {
+          description: `That Google account is ${got}. Your subscription is on ${accountEmail} — use that account, or pick a password instead.`,
+        });
+        return;
+      }
+      try {
+        sessionStorage.removeItem("nook:expectedEmail");
+      } catch {
+        /* ignore */
+      }
+    }
     navigate({ to: "/onboarding/success", replace: true });
   }
 
@@ -453,6 +488,21 @@ function Success() {
         <div className="flex flex-col items-center gap-4">
           {cfg.showAuth ? (
             <>
+              {variant === "B" && accountEmail ? (
+                <div className="w-full">
+                  <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8a8177]">
+                    Paid with
+                  </p>
+                  <p className="m-0 mt-1 text-[16px] font-semibold text-charcoal-950">
+                    {accountEmail}
+                  </p>
+                  <p className="m-0 mt-2 text-[14px] leading-[1.45] text-[#6e6459]">
+                    Your subscription is on this email. Pick a password for it, or continue with the
+                    Google account that uses it.
+                  </p>
+                </div>
+              ) : null}
+
               <div className="flex w-full gap-3">
                 <OriginButton
                   type="button"
@@ -487,12 +537,14 @@ function Success() {
                 </OriginButton>
               </div>
 
+              {variant === "B" ? null : (
               <p className="m-0 text-center text-[14px] text-[#6e6459]">
                 Already have an account?{" "}
                 <Link to="/login" search={{ redirect: "/onboarding/success" }} className="text-charcoal-950 underline">
                   Sign in
                 </Link>
               </p>
+              )}
             </>
           ) : (
             <OriginButton
