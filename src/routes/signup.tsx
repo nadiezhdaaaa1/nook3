@@ -37,6 +37,12 @@ export const Route = createFileRoute("/signup")({
     meta: [
       { title: "Create account — Nook" },
       { name: "description", content: "Create your Nook account to save apartment alerts." },
+      { property: "og:title", content: "Create your Nook account" },
+      {
+        property: "og:description",
+        content: "Set up real-time apartment alerts and save your searches with Nook.",
+      },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://thenook.rent/signup" }
     ],
     links: [{ rel: "canonical", href: "https://thenook.rent/signup" }],
