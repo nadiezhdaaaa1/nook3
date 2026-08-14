@@ -360,7 +360,7 @@ function Success() {
               Change plan
             </OriginButton>
           ) : (
-            <div className="text-[14px]" style={{ color: muted }}>
+            <div className="max-w-[88px] text-[14px]" style={{ color: muted }}>
               You will be able to change the plan in your Account
             </div>
           )}
