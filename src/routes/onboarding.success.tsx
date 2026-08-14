@@ -480,7 +480,7 @@ function Success() {
       <div
         className="fixed bottom-0 left-1/2 z-40 w-full max-w-[800px] -translate-x-1/2"
         style={{
-          padding: "40px 20px 24px",
+          padding: "40px 20px 40px",
           background:
             "linear-gradient(180deg, rgba(250,246,238,0) 0%, #FAF6EE 16%, #FAF6EE 100%)",
         }}
