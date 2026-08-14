@@ -26,7 +26,17 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Sign in — Nook" },
-      { name: "description", content: "Sign in to manage your apartment alerts." },
+      {
+        name: "description",
+        content:
+          "Sign in to your Nook account to manage your real-time apartment alerts, update your search preferences, and view your latest matches.",
+      },
+      { property: "og:title", content: "Sign in — Nook" },
+      {
+        property: "og:description",
+        content:
+          "Sign in to your Nook account to manage your real-time apartment alerts, update your search preferences, and view your latest matches.",
+      },
       { property: "og:url", content: "https://thenook.rent/login" }
     ],
     links: [{ rel: "canonical", href: "https://thenook.rent/login" }],

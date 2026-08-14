@@ -99,12 +99,12 @@ export const Route = createFileRoute("/contact")({
     meta: [
       { title: PAGE_TITLE },
       { name: "description", content: PAGE_DESC },
-      { property: "og:title", content: "Contact Nook" },
+      { property: "og:title", content: "Contact Nook — Talk to a human" },
       { property: "og:description", content: "Talk to a human. Real people, fast replies." },
       { property: "og:url", content: CANONICAL },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Contact Nook" },
+      { name: "twitter:title", content: "Contact Nook — Talk to a human" },
       { name: "twitter:description", content: PAGE_DESC },
     ],
     links: [{ rel: "canonical", href: CANONICAL }],
@@ -165,7 +165,10 @@ function ContactHero() {
 
 function ChannelCards() {
   return (
-    <section className="px-6 pb-8">
+    <section className="px-6 pb-8" aria-labelledby="contact-channels-heading">
+      <h2 id="contact-channels-heading" className="sr-only">
+        Ways to reach Nook
+      </h2>
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {CHANNELS.map((c, i) => (
           <motion.a
@@ -324,7 +327,10 @@ function ContactFormSection() {
   };
 
   return (
-    <section className="px-6 mt-4 md:mt-12">
+    <section className="px-6 mt-4 md:mt-12" aria-labelledby="contact-form-heading">
+      <h2 id="contact-form-heading" className="sr-only">
+        Send us a message
+      </h2>
       <div
         className="max-w-[600px] mx-auto rounded-[16px] p-6 md:p-8 relative"
         style={{
