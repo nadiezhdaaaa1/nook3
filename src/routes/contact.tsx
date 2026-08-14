@@ -104,7 +104,7 @@ export const Route = createFileRoute("/contact")({
       { property: "og:url", content: CANONICAL },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Contact Nook" },
+      { name: "twitter:title", content: "Contact Nook — Talk to a human" },
       { name: "twitter:description", content: PAGE_DESC },
     ],
     links: [{ rel: "canonical", href: CANONICAL }],
@@ -327,7 +327,10 @@ function ContactFormSection() {
   };
 
   return (
-    <section className="px-6 mt-4 md:mt-12">
+    <section className="px-6 mt-4 md:mt-12" aria-labelledby="contact-form-heading">
+      <h2 id="contact-form-heading" className="sr-only">
+        Send us a message
+      </h2>
       <div
         className="max-w-[600px] mx-auto rounded-[16px] p-6 md:p-8 relative"
         style={{
