@@ -99,7 +99,7 @@ export const Route = createFileRoute("/contact")({
     meta: [
       { title: PAGE_TITLE },
       { name: "description", content: PAGE_DESC },
-      { property: "og:title", content: "Contact Nook" },
+      { property: "og:title", content: "Contact Nook — Talk to a human" },
       { property: "og:description", content: "Talk to a human. Real people, fast replies." },
       { property: "og:url", content: CANONICAL },
       { property: "og:type", content: "website" },
