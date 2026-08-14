@@ -82,13 +82,14 @@ export function HeroScrollNav() {
   }, []);
 
   useEffect(() => {
-    const mql = window.matchMedia("(min-width: 768px)");
+    const mql = window.matchMedia("(min-width: 1024px)");
     const onChange = (e: MediaQueryListEvent) => {
       if (e.matches) setOpen(false);
     };
     mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
   }, []);
+
 
   return (
     <header className="hero-nav-root" data-scrolled={scrolled ? "true" : "false"} style={uiFont}>
