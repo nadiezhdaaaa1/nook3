@@ -168,45 +168,75 @@ function Thanks() {
       <Confetti
         ref={confettiRef}
         manualstart
-        className="pointer-events-none absolute inset-0 z-20 h-full w-full"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
         aria-hidden="true"
       />
 
-      <div className="relative z-10 w-full max-w-[520px] text-center">
-        <img
-          src={crownAsset.url}
-          alt=""
-          aria-hidden="true"
-          className="mx-auto h-[120px] w-[120px] rounded-full object-contain"
-        />
-
-        <h1 className="font-display mt-6 mb-0 text-[32px] font-bold leading-[1.15] text-charcoal-950">
-          {copy.title}
-        </h1>
-        <p className="mx-auto mt-3 max-w-[420px] text-[16px] leading-[1.5] text-charcoal-500">
-          {copy.body1}
-        </p>
-        <p className="mx-auto mt-3 max-w-[420px] text-[16px] leading-[1.5] text-charcoal-500">
-          {copy.body2}
-        </p>
-        <p className="mx-auto mt-3 max-w-[420px] text-[14px] italic leading-[1.5] text-charcoal-500">
-          {copy.italic}
-        </p>
-        <div className="mt-8 flex flex-col items-center gap-3">
-          <OriginButton
-            type="button"
-            variant="main"
-            size="big"
-            className="w-full max-w-[320px]"
-            onClick={() => copy.to()}
+      <div className="relative z-10 w-full max-w-[520px]">
+        <div className="flex flex-col items-center gap-8">
+          <div
+            className="flex flex-col items-center gap-3 text-center"
+            style={{ color: "#241C12", lineHeight: 1.2, letterSpacing: "-0.48px" }}
           >
-            {copy.cta}
-          </OriginButton>
-          {introTrialLine && (
-            <p className="m-0 text-[14px] leading-[1.5] text-charcoal-500">
-              {introTrialLine}
+            <p
+              className="font-display text-[40px] font-semibold"
+              style={{ fontVariationSettings: '"SOFT" 0, "WONK" 1' }}
+            >
+              {copy.title1}
             </p>
-          )}
+            <p
+              className="font-display text-[32px] font-bold"
+              style={{ fontVariationSettings: '"SOFT" 0, "WONK" 1' }}
+            >
+              {copy.title2}
+            </p>
+          </div>
+
+          <div className="relative w-full overflow-hidden rounded-[16px] border border-black/20 bg-[#F9D3C1] py-6 pr-[120px] pl-[31px]">
+            <p
+              className="text-left text-[16px] font-normal leading-[24px] text-[#241C12]"
+              style={{ fontVariationSettings: '"GRAD" 0, "ROND" 0, "wdth" 100' }}
+            >
+              {copy.body1}
+            </p>
+            <img
+              src={crownAsset.url}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute right-[-18px] top-1/2 size-[108px] -translate-y-1/2 rounded-full object-contain"
+            />
+          </div>
+
+          <p
+            className="w-full px-4 text-center text-[16px] font-normal leading-[24px] text-[#241C12]"
+            style={{ fontVariationSettings: '"GRAD" 0, "ROND" 0, "wdth" 100' }}
+          >
+            {copy.body2}
+          </p>
+
+          <p
+            className="max-w-[420px] px-4 text-center text-[14px] italic leading-[21px] text-[#6E6459]"
+            style={{ fontVariationSettings: '"GRAD" 0, "ROND" 0, "slnt" -14, "wdth" 100' }}
+          >
+            {copy.italic}
+          </p>
+
+          <div className="flex flex-col items-center gap-3">
+            <OriginButton
+              type="button"
+              variant="main"
+              size="big"
+              className="h-[56px] w-[320px] rounded-[12px]"
+              onClick={() => copy.to()}
+            >
+              {copy.cta}
+            </OriginButton>
+            {introTrialLine && (
+              <p className="m-0 text-[14px] leading-[1.5] text-charcoal-500">
+                {introTrialLine}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
