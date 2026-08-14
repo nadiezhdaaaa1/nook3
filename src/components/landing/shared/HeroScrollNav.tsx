@@ -188,7 +188,8 @@ export function HeroScrollNav() {
       </div>
 
       {open && (
-        <div className="hero-nav-sheet md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+        <div className="hero-nav-sheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+
           <div className="hero-nav-sheet-top">
             <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
               <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
