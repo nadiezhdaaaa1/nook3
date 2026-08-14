@@ -408,7 +408,7 @@ function Success() {
       {cfg.showSummary && (
       <motion.div
         variants={sectionVariants}
-        className="mt-12 overflow-hidden rounded-[16px] border border-black/20 bg-white pb-[240px]"
+        className="mt-12 overflow-hidden rounded-[16px] border border-black/20 bg-white mb-[240px]"
       >
         <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
           <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
