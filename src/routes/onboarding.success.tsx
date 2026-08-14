@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
-import { Mail } from "lucide-react";
+import { Lock } from "lucide-react";
 import { useOnboardingStore, type Plan } from "@/lib/onboarding/store";
 import { WARM_BG } from "@/components/landing/PricingThreeTiers";
 
@@ -532,7 +532,7 @@ function Success() {
                     })
                   }
                 >
-                  <Mail className="h-4 w-4" />
+                  <Lock className="h-4 w-4" />
                   <span>{cfg.lockEmail ? "Pick a password" : "Continue with email"}</span>
                 </OriginButton>
               </div>
