@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
-import crownAsset from "@/assets/crown.png.asset.json";
-
+import checkAsset from "@/assets/check.png.asset.json";
 
 import { OriginButton } from "@/components/ui/origin-button";
 import { Confetti, type ConfettiRef } from "@/components/ui/confetti";
