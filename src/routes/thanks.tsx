@@ -118,7 +118,8 @@ function Thanks() {
 
   const copy = {
     A: {
-      title: "Thank you! You just took the first real step toward your apartment",
+      title1: "Thank you!",
+      title2: "You just took the first real step toward your apartment",
       body1:
         "While everyone else is still refreshing fifteen tabs with their coffee — you're already ahead.",
       body2:
@@ -132,7 +133,8 @@ function Thanks() {
         }),
     },
     B: {
-      title: "You're all set — Nook starts watching now",
+      title1: "You're all set",
+      title2: "Nook starts watching now",
       body1:
         "While everyone else is still refreshing fifteen tabs with their coffee, your search is already running.",
       body2:
@@ -142,7 +144,8 @@ function Thanks() {
       to: () => navigate({ to: "/home" }),
     },
     C: {
-      title: "You're all set — Nook starts watching now",
+      title1: "You're all set",
+      title2: "Nook starts watching now",
       body1:
         "While everyone else is still refreshing fifteen tabs with their coffee, your search is already running.",
       body2:
