@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
-import crownAsset from "@/assets/crown.png.asset.json";
-
+import checkAsset from "@/assets/check.png.asset.json";
 
 import { OriginButton } from "@/components/ui/origin-button";
 import { Confetti, type ConfettiRef } from "@/components/ui/confetti";
@@ -173,7 +172,7 @@ function Thanks() {
       />
 
       <div className="relative z-10 w-full max-w-[520px]">
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col gap-8">
           <div
             className="flex flex-col items-center gap-3 text-center"
             style={{ color: "#241C12", lineHeight: 1.2, letterSpacing: "-0.48px" }}
@@ -192,18 +191,18 @@ function Thanks() {
             </p>
           </div>
 
-          <div className="relative w-full overflow-hidden rounded-[16px] border border-black/20 bg-[#F9D3C1] py-6 pr-[120px] pl-[31px]">
+          <div className="flex w-full items-center gap-5 overflow-hidden rounded-[16px] border border-black/20 bg-[#D9DEC3] px-8 py-6">
             <p
-              className="text-left text-[16px] font-normal leading-[24px] text-[#241C12]"
+              className="flex-1 text-left text-[16px] font-normal leading-[24px] text-[#241C12]"
               style={{ fontVariationSettings: '"GRAD" 0, "ROND" 0, "wdth" 100' }}
             >
               {copy.body1}
             </p>
             <img
-              src={crownAsset.url}
+              src={checkAsset.url}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute right-[-18px] top-1/2 size-[108px] -translate-y-1/2 rounded-full object-contain"
+              className="pointer-events-none h-14 w-14 shrink-0 object-contain max-[520px]:h-10 max-[520px]:w-10"
             />
           </div>
 
@@ -215,7 +214,7 @@ function Thanks() {
           </p>
 
           <p
-            className="max-w-[420px] px-4 text-center text-[14px] italic leading-[21px] text-[#6E6459]"
+            className="max-w-[420px] px-4 text-center text-[14px] italic leading-[21px] text-[#241C12]"
             style={{ fontVariationSettings: '"GRAD" 0, "ROND" 0, "slnt" -14, "wdth" 100' }}
           >
             {copy.italic}
@@ -224,9 +223,9 @@ function Thanks() {
           <div className="flex flex-col items-center gap-3">
             <OriginButton
               type="button"
-              variant="main"
+              variant="green"
               size="big"
-              className="h-[56px] w-[320px] rounded-[12px]"
+              className="h-[56px] w-[320px] rounded-[12px] max-[520px]:w-full"
               onClick={() => copy.to()}
             >
               {copy.cta}
