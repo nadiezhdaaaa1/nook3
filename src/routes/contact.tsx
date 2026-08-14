@@ -165,7 +165,10 @@ function ContactHero() {
 
 function ChannelCards() {
   return (
-    <section className="px-6 pb-8">
+    <section className="px-6 pb-8" aria-labelledby="contact-channels-heading">
+      <h2 id="contact-channels-heading" className="sr-only">
+        Ways to reach Nook
+      </h2>
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {CHANNELS.map((c, i) => (
           <motion.a
