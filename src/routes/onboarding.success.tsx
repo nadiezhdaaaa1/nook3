@@ -489,7 +489,7 @@ function Success() {
           {cfg.showAuth ? (
             <>
               {variant === "B" && accountEmail ? (
-                <div className="w-full">
+                <div className="w-full text-center">
                   <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8a8177]">
                     Paid with
                   </p>
