@@ -145,20 +145,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Nook" },
       { name: "robots", content: "index, follow" },
       { property: "og:site_name", content: "Nook" },
-      { property: "og:type", content: "website" },
-      { property: "og:title", content: "Nook — Real-time apartment alerts" },
+      // og:title / og:description / og:type are set per-route so scrapers
+      // never see duplicated values.
+      { property: "og:image", content: "https://thenook.rent/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       {
-        property: "og:description",
-        content:
-          "Verified rental matches the moment they hit the market. No spam, no stale listings.",
+        property: "og:image:alt",
+        content: "Nook — real-time apartment alerts",
       },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Nook — Real-time apartment alerts" },
-      {
-        name: "twitter:description",
-        content:
-          "Verified rental matches the moment they hit the market. No spam, no stale listings.",
-      },
+      { name: "twitter:image", content: "https://thenook.rent/og-image.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
