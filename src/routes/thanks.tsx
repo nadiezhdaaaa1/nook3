@@ -124,7 +124,7 @@ function Thanks() {
         "While everyone else is still refreshing fifteen tabs with their coffee — you're already ahead",
       body2:
         "One last thing: set your filters — budget, neighborhood, size. That's it. From there, Nook's watching every listing site for you, and the moment your match drops, it lands straight in your inbox.",
-      italic: "Your dream apartment isn't a someday. It's an email away.",
+      italic: "Your dream apartment isn't a someday. It's an email away",
       cta: "Set my filters",
       to: () =>
         navigate({
@@ -139,7 +139,7 @@ function Thanks() {
         "While everyone else is still refreshing fifteen tabs with their coffee, your search is already running.",
       body2:
         "Your filters are live. From here Nook watches every listing site for you, and the moment your match drops, it lands straight in your inbox. Nothing else to do — just keep an eye on your email.",
-      italic: "Your dream apartment isn't a someday. It's an email away.",
+      italic: "Your dream apartment isn't a someday. It's an email away",
       cta: "Go to my alerts",
       to: () => navigate({ to: "/home" }),
     },
@@ -150,7 +150,7 @@ function Thanks() {
         "While everyone else is still refreshing fifteen tabs with their coffee, your search is already running.",
       body2:
         "Your searches are back on, exactly as you left them. Nook watches every listing site for you, and the moment your match drops, it lands straight in your inbox.",
-      italic: "Your dream apartment isn't a someday. It's an email away.",
+      italic: "Your dream apartment isn't a someday. It's an email away",
       cta: "Go to my alerts",
       to: () => navigate({ to: "/home" }),
     },
