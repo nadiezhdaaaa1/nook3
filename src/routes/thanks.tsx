@@ -202,7 +202,7 @@ function Thanks() {
               src={checkAsset.url}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none h-14 w-14 shrink-0 object-contain"
+              className="pointer-events-none h-14 w-14 shrink-0 object-contain max-[520px]:h-10 max-[520px]:w-10"
             />
           </div>
 
