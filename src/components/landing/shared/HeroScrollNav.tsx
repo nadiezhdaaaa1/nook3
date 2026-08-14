@@ -128,7 +128,7 @@ export function HeroScrollNav() {
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
               <>
-                <span className="hidden md:inline-flex">
+                <span className="hidden lg:inline-flex">
                   <button
                     type="button"
                     onClick={onLogout}
@@ -152,7 +152,7 @@ export function HeroScrollNav() {
               </>
             ) : (
               <>
-                <span className="hidden md:inline-flex">
+                <span className="hidden lg:inline-flex">
                   <Link
                     to="/login"
                     data-label="Sign in"
@@ -178,11 +178,12 @@ export function HeroScrollNav() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="hero-nav-burger hero-nav-ring inline-flex md:hidden"
+              className="hero-nav-burger hero-nav-ring inline-flex lg:hidden"
             >
               <Menu className="h-5 w-5" strokeWidth={2} />
             </button>
           </div>
+
         </nav>
       </div>
 
