@@ -47,7 +47,7 @@ function AuthCallback() {
       }
       await supabase.auth.signOut();
       toast.error("Wrong Google account", {
-        description: `This flow is locked to ${expected}. You signed in as ${email ?? "another address"}.`,
+        description: `That Google account is ${email ?? "another address"}. Your subscription is on ${expected} — use that account, or pick a password instead.`,
       });
       navigate({ to: "/signup", search: { redirect: target, lockEmail: 1 }, replace: true });
     };
