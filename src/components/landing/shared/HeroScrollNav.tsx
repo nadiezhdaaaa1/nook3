@@ -101,7 +101,7 @@ export function HeroScrollNav() {
             <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
           </Link>
 
-          <div className="hidden items-center gap-7 md:flex">
+          <div className="hidden items-center gap-7 lg:flex">
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
@@ -123,6 +123,7 @@ export function HeroScrollNav() {
               Blog
             </Link>
           </div>
+
 
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
