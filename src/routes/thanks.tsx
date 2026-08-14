@@ -214,7 +214,7 @@ function Thanks() {
           </p>
 
           <p
-            className="max-w-[420px] px-4 text-center text-[14px] italic leading-[21px] text-[#241C12]"
+            className="mx-auto max-w-[420px] px-4 text-center text-[14px] italic leading-[21px] text-[#241C12]"
             style={{ fontVariationSettings: '"GRAD" 0, "ROND" 0, "slnt" -14, "wdth" 100' }}
           >
             {copy.italic}
