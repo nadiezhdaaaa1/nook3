@@ -532,7 +532,7 @@ function Success() {
                     })
                   }
                 >
-                  <Mail className="h-4 w-4" />
+                  <Lock className="h-4 w-4" />
                   <span>{cfg.lockEmail ? "Pick a password" : "Continue with email"}</span>
                 </OriginButton>
               </div>
