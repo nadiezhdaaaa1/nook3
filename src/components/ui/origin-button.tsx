@@ -343,7 +343,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           aria-hidden
           className={cn(
             "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full",
-            variant === "dark" ? "bg-[#000000]" : variant === "nice" ? "bg-[#FED9C7]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : variant === "cancel" ? "bg-[#DF4400]" : variant === "danger" ? "bg-[#7a3030]" : "bg-[#CE4F12]",
+            variant === "green" ? "bg-[#536605]" : variant === "dark" ? "bg-[#000000]" : variant === "nice" ? "bg-[#FED9C7]" : variant === "tertiary" ? "bg-[#EBE2CF]" : variant === "premium" ? "bg-[#BBD453]" : variant === "max" ? "bg-[#D0B4FF]" : variant === "cancel" ? "bg-[#DF4400]" : variant === "danger" ? "bg-[#7a3030]" : "bg-[#CE4F12]",
           )}
           initial={false}
           style={{
