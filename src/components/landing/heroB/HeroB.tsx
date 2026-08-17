@@ -461,26 +461,27 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         .hero-b-card::after {
           content: "";
           position: absolute;
-          inset: calc(var(--border) * -1px);
-          border-radius: calc((var(--radius) + var(--border)) * 1px);
-          border: calc(var(--border) * 1px) solid transparent;
+          inset: 0;
+          border-radius: inherit;
+          padding: calc(var(--border) * 1px);
           pointer-events: none;
           background-attachment: scroll;
-
           background-repeat: no-repeat;
-          -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
-          mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
-          -webkit-mask-clip: padding-box, border-box;
-          mask-clip: padding-box, border-box;
-          -webkit-mask-composite: source-in;
-          mask-composite: intersect;
+          -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
           opacity: var(--glow-o);
           transition: opacity 200ms ease;
         }
         .hero-b-card::before {
           background-image: radial-gradient(
             calc(var(--size) * 0.75px) circle at
-              calc(var(--lx) * 1px + var(--border) * 1px) calc(var(--ly) * 1px + var(--border) * 1px),
+              calc(var(--lx) * 1px) calc(var(--ly) * 1px),
             rgb(var(--glow-rgb) / var(--border-spot-opacity)),
             transparent 100%
           );
@@ -488,7 +489,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         .hero-b-card::after {
           background-image: radial-gradient(
             calc(var(--size) * 0.5px) circle at
-              calc(var(--lx) * 1px + var(--border) * 1px) calc(var(--ly) * 1px + var(--border) * 1px),
+              calc(var(--lx) * 1px) calc(var(--ly) * 1px),
             hsl(0 0% 100% / var(--border-light-opacity)),
             transparent 100%
           );
@@ -496,27 +497,28 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         /* outer bloom */
         .hero-b-card-bloom {
           position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          border: calc(var(--border) * 1px) solid transparent;
+          inset: calc(var(--border) * -1px);
+          border-radius: calc((var(--radius) + var(--border)) * 1px);
+          padding: calc(var(--border) * 1px);
           pointer-events: none;
           opacity: var(--glow-o);
           transition: opacity 200ms ease;
-          filter: blur(calc(var(--border) * 2px));
           background-attachment: scroll;
           background-repeat: no-repeat;
           background-image: radial-gradient(
-            calc(var(--size) * 0.75px) circle at var(--spot),
-            rgb(var(--glow-rgb) / var(--border-spot-opacity)),
+            calc(var(--size) * 0.75px) circle at
+              calc(var(--lx) * 1px + var(--border) * 1px) calc(var(--ly) * 1px + var(--border) * 1px),
+            rgb(var(--glow-rgb) / 0.28),
             transparent 100%
           );
-
-          -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
-          mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
-          -webkit-mask-clip: padding-box, border-box;
-          mask-clip: padding-box, border-box;
-          -webkit-mask-composite: source-in;
-          mask-composite: intersect;
+          -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
         }
         @media (prefers-reduced-motion: reduce) {
           .hero-b-card::before,
