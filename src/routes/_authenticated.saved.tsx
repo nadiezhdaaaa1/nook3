@@ -311,6 +311,36 @@ function summaryBits(s: Search): string[] {
   return bits;
 }
 
+/**
+ * Digest timing lines on a search card. Times are always rendered in the
+ * user's own timezone (browser), never the search city's. Computed after
+ * mount to avoid SSR/client timezone mismatches.
+ */
+function DigestMeta({ search, alertsEnabled }: { search: Search; alertsEnabled: boolean }) {
+  const [lines, setLines] = useState<{ next: string | null; last: string | null; first: string | null } | null>(null);
+
+  useEffect(() => {
+    setLines(
+      digestLines({
+        alertsEnabled,
+        frequency: search.frequency,
+        lastDigestAt: search.lastDigestAt,
+        lastDigestCount: search.lastDigestCount,
+      }),
+    );
+  }, [alertsEnabled, search.frequency, search.lastDigestAt, search.lastDigestCount]);
+
+  if (!lines) return <p className="mt-1 h-4 text-[12px] text-charcoal-500" aria-hidden />;
+
+  return (
+    <div className="mt-1 space-y-0.5 text-[12px] text-charcoal-500">
+      {lines.first && <p>{lines.first}</p>}
+      {lines.next && <p>{lines.next}</p>}
+      {lines.last && <p>{lines.last}</p>}
+    </div>
+  );
+}
+
 function SearchesTab({ searches }: { searches: Search[] }) {
   const navigate = useNavigate();
   const plan = useAppStore((s) => s.user?.plan ?? "intro");
