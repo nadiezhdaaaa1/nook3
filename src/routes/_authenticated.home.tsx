@@ -209,30 +209,6 @@ function HomeScreen() {
   }, [alertsQ.data, cityId, search?.id, catalogByKey]);
 
 
-  /** Catalog listings have their own ids, so match persisted dislikes by title+price. */
-  const dismissedKeys = useMemo(
-    () =>
-      new Set(
-        (alertsQ.data ?? [])
-          .filter((a) => a.status === "dismissed")
-          .map((a) => `${a.listing?.title ?? ""}|${a.listing?.price ?? ""}`),
-      ),
-    [alertsQ.data],
-  );
-
-  /** Scope filters derived from the saved search — budget, beds, min baths, neighborhoods. */
-  const scopeFilters = useMemo<MatchFilters>(
-    () => ({
-      budget: scope.budget,
-      bedrooms: scope.bedrooms,
-      bathrooms: scope.bathroomsMin,
-      neighborhoods: scope.neighborhoods,
-      amenities: [],
-      transit: [],
-      noFeeOnly: false,
-    }),
-    [scope],
-  );
 
   /** Only the user's own digest matches ever render here — never sample listings. */
   const listings = useMemo(
