@@ -4,9 +4,7 @@ import {
   Check,
   ChevronDown,
   Copy,
-  Pause,
   Pencil,
-  Play,
   Plus,
   Trash2,
   Lock,
@@ -50,8 +48,6 @@ export function SearchSwitcher() {
     };
   }, [searches, user?.plan]);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
-  const pauseSearch = useAppStore((s) => s.pauseSearch);
-  const resumeSearch = useAppStore((s) => s.resumeSearch);
   const archiveSearch = useAppStore((s) => s.archiveSearch);
   const restoreSearch = useAppStore((s) => s.restoreSearch);
   const deleteSearch = useAppStore((s) => s.deleteSearch);
@@ -149,7 +145,6 @@ export function SearchSwitcher() {
           <span className="text-sm font-semibold text-charcoal-950 truncate max-w-[180px]">
             {active.name}
           </span>
-          <StatusDot status={active.status} />
           <ChevronDown
             className={cn("h-3.5 w-3.5 text-charcoal-500 transition-transform", open && "rotate-180")}
           />
@@ -189,14 +184,6 @@ export function SearchSwitcher() {
                   }}
                   onCancelRename={() => setRenamingId(null)}
                   onDuplicate={() => handleDuplicate(s.id)}
-                  onPauseToggle={() => {
-                    if (s.status !== "paused") {
-                      pauseSearch(s.id);
-                      return;
-                    }
-                    const res = resumeSearch(s.id);
-                    if (!res.ok) toast.error("Can't turn alerts on", { description: res.error });
-                  }}
                   onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
                     if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
@@ -270,7 +257,6 @@ function SearchRow({
   onSubmitRename,
   onCancelRename,
   onDuplicate,
-  onPauseToggle,
   onArchive,
   onDelete,
 }: {
@@ -284,7 +270,6 @@ function SearchRow({
   onSubmitRename: (name: string) => void;
   onCancelRename: () => void;
   onDuplicate: () => void;
-  onPauseToggle: () => void;
   onArchive: () => void;
   onDelete: () => void;
 }) {
@@ -334,7 +319,6 @@ function SearchRow({
               <span className="text-sm font-semibold text-charcoal-950 truncate">
                 {search.name}
               </span>
-              <StatusDot status={search.status} />
             </div>
             <div className="text-[11px] text-charcoal-500 mt-0.5 truncate">
               {city?.displayName ?? search.cityId} ·{" "}
@@ -345,16 +329,6 @@ function SearchRow({
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100">
             <IconBtn title="Rename" onClick={onStartRename}>
               <Pencil className="h-3.5 w-3.5" />
-            </IconBtn>
-            <IconBtn
-              title={search.status === "paused" ? "Turn alerts on" : "Turn alerts off"}
-              onClick={onPauseToggle}
-            >
-              {search.status === "paused" ? (
-                <Play className="h-3.5 w-3.5" />
-              ) : (
-                <Pause className="h-3.5 w-3.5" />
-              )}
             </IconBtn>
             <IconBtn title="Duplicate" onClick={onDuplicate} disabled={!canDuplicate}>
               <Copy className="h-3.5 w-3.5" />
@@ -442,20 +416,3 @@ function IconBtn({
   );
 }
 
-function StatusDot({ status }: { status: Search["status"] }) {
-  if (status === "active") {
-    return (
-      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-pill bg-sage-100 text-[9px] font-mono uppercase tracking-[0.14em] text-sage-700">
-        <span className="h-1.5 w-1.5 rounded-full bg-sage-700" /> Alerts on
-      </span>
-    );
-  }
-  if (status === "paused") {
-    return (
-      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-pill bg-peach-100 text-[9px] font-mono uppercase tracking-[0.14em] text-peach-700">
-        <span className="h-1.5 w-1.5 rounded-full bg-peach-700" /> Alerts off
-      </span>
-    );
-  }
-  return null;
-}

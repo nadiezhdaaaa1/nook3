@@ -3,6 +3,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useMemo, useState, type ReactNode } from "react";
 import {
+  Check,
   Heart,
   Inbox,
   Loader2,
@@ -20,7 +21,7 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
 import { cn } from "@/lib/utils";
-import { useAppStore, useDisabledSearchIds, type Search, SEARCH_LIMITS } from "@/lib/store";
+import { useAppStore, useDisabledSearchIds, switchActiveSearch, type Search, SEARCH_LIMITS } from "@/lib/store";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
@@ -321,6 +322,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
   const disabledIds = useDisabledSearchIds();
+  const activeSearchId = useAppStore((st) => st.activeSearchId);
   const max = SEARCH_LIMITS[plan];
   const canCreate = live.length < max;
   const isUuid = (id: string) =>
@@ -372,51 +374,41 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
           <li
             key={s.id}
+            onClick={() => {
+              if (s.status !== "archived") switchActiveSearch(s.id);
+            }}
             className={cn(
-              "rounded-[16px] border border-black/10 bg-white p-6",
+              "cursor-pointer rounded-[16px] border border-black/10 bg-white p-6 transition-colors hover:border-black/25",
               (s.status === "archived" || disabledIds.has(s.id)) && "opacity-60",
+              s.id === activeSearchId && "border-charcoal-950/40",
             )}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "h-2 w-2 shrink-0 rounded-full",
-                      disabledIds.has(s.id)
-                        ? "bg-charcoal-400"
-                        : s.status === "active"
-                          ? "bg-sage-700"
-                          : s.status === "paused"
-                            ? "border-2 border-peach-700"
-                            : "bg-charcoal-300",
-                    )}
-                  />
+                  {s.id === activeSearchId && (
+                    <Check className="h-4 w-4 shrink-0 text-sage-700" aria-label="Selected search" />
+                  )}
                   <h3 className="truncate text-[19px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">{s.name}</h3>
                 </div>
                 <p className="mt-1 text-[12px] text-charcoal-500">
-                  {getCity(s.cityId)?.shortName ?? s.cityId} ·{" "}
-                  {disabledIds.has(s.id)
-                    ? "Disabled"
-                    : s.status === "active"
-                      ? "Alerts on"
-                      : s.status === "paused"
-                        ? "Alerts off"
-                        : "Archived"}{" "}
-                  ·{" "}
+                  {getCity(s.cityId)?.shortName ?? s.cityId}
+                  {disabledIds.has(s.id) ? " · Disabled" : s.status === "archived" ? " · Archived" : ""}
+                  {" · "}
                   {s.totalAlertsReceived} alerts
                 </p>
               </div>
+
               <div className="flex items-center gap-1">
                 <OriginButton
                   variant="tertiary"
                   size="medium"
                   aria-label={`Edit ${s.name}`}
                   className="h-9 w-9 shrink-0 rounded-[8px] p-0"
-                  onClick={() =>
-                    navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } })
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
+                  }}
                 >
                   <Pencil className="h-4 w-4" />
                 </OriginButton>
@@ -425,7 +417,10 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                   size="medium"
                   aria-label={`Delete ${s.name}`}
                   className="h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger hover:text-danger hover:bg-danger/10"
-                  onClick={() => openDeleteDialog(s)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openDeleteDialog(s);
+                  }}
                 >
                   <Trash2 className="h-4 w-4" />
                 </OriginButton>

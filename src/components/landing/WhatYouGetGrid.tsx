@@ -47,8 +47,8 @@ const ITEMS = [
   },
   {
     icon: pauseAsset.url,
-    title: "Alerts off whenever",
-    body: "Need a break? Turn alerts off. Your filters stay put. One click to turn them back on.",
+    title: "Your filters stay put",
+    body: "Set it once and it keeps running. Edit or delete a search any time — nothing to re-enter.",
   },
 ];
 

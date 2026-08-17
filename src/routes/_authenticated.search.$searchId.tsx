@@ -1,11 +1,10 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
+import { Bell, DollarSign, Home as HomeIcon, MapPin, Pencil, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useAppStore, switchActiveSearch, useIsSearchDisabled } from "@/lib/store";
+import { useAppStore, switchActiveSearch } from "@/lib/store";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
-import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -80,7 +79,7 @@ function SearchEditLayout() {
         <ArrowLeft className="h-3.5 w-3.5" /> Back to listings
       </Link>
 
-      <PageHeader searchId={search.id} name={search.name} status={search.status} cityId={search.cityId} sectionLabel={sectionLabel} />
+      <PageHeader searchId={search.id} name={search.name} cityId={search.cityId} sectionLabel={sectionLabel} />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
         <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
@@ -89,7 +88,6 @@ function SearchEditLayout() {
 
         <main>
           <MobileNav searchId={search.id} pathname={pathname} sectionLabel={sectionLabel} />
-          <PausedSearchBanner />
           <Outlet />
         </main>
       </div>
@@ -100,20 +98,15 @@ function SearchEditLayout() {
 function PageHeader({
   searchId,
   name,
-  status,
   cityId,
   sectionLabel,
 }: {
   searchId: string;
   name: string;
-  status: "active" | "paused" | "archived";
   cityId: CityId;
   sectionLabel: string;
 }) {
-  const pauseSearch = useAppStore((s) => s.pauseSearch);
-  const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
-  const isDisabled = useIsSearchDisabled(searchId);
 
   
 
@@ -187,30 +180,6 @@ function PageHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          disabled={isDisabled}
-          title={isDisabled ? "Over your plan limit — upgrade to run this search again." : undefined}
-          onClick={() => {
-            if (status === "paused") {
-              const res = resumeSearch(searchId);
-              if (res.ok) toast.success(`Alerts turned on for ${name}`);
-              else toast.error("Can't turn alerts on", { description: res.error });
-            } else {
-              pauseSearch(searchId);
-              toast.success(`Alerts turned off for ${name}`);
-            }
-          }}
-        >
-          {isDisabled ? (
-            <><Pause className="h-4 w-4" /> Disabled</>
-          ) : status === "paused" ? (
-            <><Play className="h-4 w-4" /> Turn alerts on</>
-          ) : (
-            <><Pause className="h-4 w-4" /> Turn alerts off</>
-          )}
-        </OriginButton>
         <OriginButton
           variant="tertiary"
           size="medium"

@@ -29,28 +29,8 @@ function cityLabel(cityId: string) {
   return getCity(cityId as never)?.shortName ?? cityId;
 }
 
-function statusLabel(s: Search, disabled = false) {
-  if (disabled) return "Disabled";
-  return s.status === "active" ? "Alerts on" : s.status === "paused" ? "Alerts off" : "Archived";
-}
 
-function StatusDot({ status, disabled }: { status: Search["status"]; disabled?: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "h-2 w-2 rounded-full shrink-0",
-        disabled
-          ? "bg-charcoal-400"
-          : status === "active"
-          ? "bg-sage-700"
-          : status === "paused"
-            ? "border-2 border-peach-700"
-            : "bg-charcoal-300",
-      )}
-    />
-  );
-}
+
 
 function summary(s: Search) {
   const bits: string[] = [];
@@ -138,8 +118,8 @@ export function SearchSelector() {
         >
           {active ? (
             <>
-              <StatusDot status={active.status} disabled={disabledIds.has(active.id)} />
               <span className="min-w-0 truncate text-sm font-semibold text-charcoal-950">
+
                 {active.name}
               </span>
               <span className="shrink-0 text-sm text-charcoal-500">
@@ -194,17 +174,18 @@ export function SearchSelector() {
                           className="min-w-0 flex-1 text-left"
                         >
                           <span className="flex items-center gap-1.5">
-                            <StatusDot status={s.status} disabled={isDisabled} />
+                            {s.id === active?.id && (
+                              <Check className="h-4 w-4 shrink-0 text-sage-700" />
+                            )}
                             <span className="truncate text-[15px] font-semibold text-charcoal-950">
                               {s.name}
                             </span>
-                            {s.id === active?.id && (
-                              <Check className="h-3.5 w-3.5 shrink-0 text-sage-700" />
-                            )}
                           </span>
                           <span className="mt-1 block truncate text-xs text-charcoal-500">
-                            {cityLabel(s.cityId)} · {statusLabel(s, isDisabled)} · {summary(s)}
+                            {cityLabel(s.cityId)}
+                            {isDisabled ? " · Disabled" : ""} · {summary(s)}
                           </span>
+
                         </button>
                         <OriginButton
                           variant="tertiary"

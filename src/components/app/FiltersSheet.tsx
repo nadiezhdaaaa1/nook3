@@ -72,10 +72,6 @@ function cityLabel(cityId: string) {
   return getCity(cityId as never)?.shortName ?? cityId;
 }
 
-function statusLabel(s: Search) {
-  return s.status === "active" ? "Alerts on" : s.status === "paused" ? "Alerts off" : "Archived";
-}
-
 function summary(s: Search) {
   const bits: string[] = [];
   if (s.budget) {
@@ -89,18 +85,6 @@ function summary(s: Search) {
   );
   if (s.totalAlertsReceived > 0) bits.push(`${s.totalAlertsReceived} alerts`);
   return bits.join(" · ");
-}
-
-function StatusDot({ status }: { status: Search["status"] }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "h-2 w-2 rounded-full shrink-0",
-        status === "active" ? "bg-sage-700" : status === "paused" ? "bg-peach-700" : "bg-charcoal-300",
-      )}
-    />
-  );
 }
 
 /**
@@ -145,14 +129,10 @@ export function FiltersSheet({
               onClick={onEditSearch}
               className="mt-3 flex w-full items-center gap-3 rounded-[12px] border border-black/[0.20] bg-charcoal-950/[0.02] px-3 py-2.5 text-left transition-colors hover:bg-charcoal-950/[0.04]"
             >
-              <StatusDot status={search.status} />
               <div className="min-w-0 flex-1">
                 <span className="flex items-center gap-1.5">
                   <span className="truncate text-sm font-semibold text-charcoal-950">
                     {search.name}
-                  </span>
-                  <span className="rounded-pill border border-black/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-charcoal-600">
-                    {statusLabel(search)}
                   </span>
                 </span>
                 <span className="mt-0.5 block truncate text-[11px] text-charcoal-500">
