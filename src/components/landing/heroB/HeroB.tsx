@@ -428,7 +428,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           align-items: flex-start;
           will-change: transform, opacity;
 
-          /* GlowCard config — terracotta, tamed spread */
+          /* GlowCard config — terracotta, subtle */
           --x: 0;
           --y: 0;
           --lx: 150;
@@ -436,13 +436,13 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           --xp: 0.5;
           --yp: 0.5;
           --glow-o: 0;
-          --size: 200;
-          --border: 3;
+          --size: 150;
+          --border: 2;
           --radius: 24;
           --glow-rgb: 214 108 56;
-          --bg-spot-opacity: 0.1;
-          --border-spot-opacity: 0.95;
-          --border-light-opacity: 0.3;
+          --bg-spot-opacity: 0.06;
+          --border-spot-opacity: 0.55;
+          --border-light-opacity: 0.18;
           --spot: calc(var(--lx) * 1px) calc(var(--ly) * 1px);
 
           background-color: #ffffff;
