@@ -170,7 +170,9 @@ export function SearchSelector() {
                         >
                           <span className="flex items-center gap-1.5">
                             {s.id === active?.id && (
-                              <Check className="h-4 w-4 shrink-0 text-sage-700" />
+                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage-700" aria-label="Selected search">
+                                <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                              </span>
                             )}
                             <span className="truncate text-[15px] font-semibold text-charcoal-950">
                               {s.name}
