@@ -576,6 +576,14 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
     inner.style.pointerEvents = "auto";
     container.appendChild(inner);
 
+    // Taps/clicks inside the card must never reach the map surface underneath,
+    // otherwise the map's "tap empty space" handler clears the selection and
+    // the card disappears (notably on iOS Safari).
+    google.maps.OverlayView.preventMapHitsAndGesturesFrom?.(inner);
+    const stop = (e: Event) => e.stopPropagation();
+    const stopEvents = ["pointerdown", "mousedown", "touchstart", "touchend", "click", "dblclick"];
+    stopEvents.forEach((type) => inner.addEventListener(type, stop));
+
     const root = createRoot(inner);
     root.render(card);
 
@@ -584,6 +592,7 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
     overlayRef.current = { overlay, root };
 
     return () => {
+      stopEvents.forEach((type) => inner.removeEventListener(type, stop));
       if (overlayRef.current) {
         overlayRef.current.root.unmount();
         overlayRef.current.overlay.setMap(null);
@@ -591,6 +600,7 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
       }
     };
   }, [ready, activeId, card, listings]);
+
 
   // Re-layout tiles and pins when the map container size changes.
   useEffect(() => {
