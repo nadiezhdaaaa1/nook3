@@ -30,6 +30,7 @@ export type CardTilt = {
     onPointerMove?: (e: React.PointerEvent) => void;
     onPointerEnter?: (e: React.PointerEvent) => void;
     onPointerLeave?: () => void;
+    onTouchStart?: () => void;
   };
 };
 
