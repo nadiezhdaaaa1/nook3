@@ -53,7 +53,7 @@ const TABS = [
     label: "My searches",
     icon: SearchIcon,
     title: "My searches",
-    subtitle: "Active and paused searches across your cities.",
+    subtitle: "Your searches across cities",
   },
   {
     key: "disliked",
