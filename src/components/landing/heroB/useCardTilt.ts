@@ -142,8 +142,8 @@ export function useCardTilt(disabled: boolean): CardTilt {
       if (node && visible) {
         const r = node.getBoundingClientRect();
         // hotspot slides toward the edge tilted down
-        const gx = r.width / 2 + (-current.y / MAX_TILT) * (r.width / 2);
-        const gy = r.height / 2 + (current.x / MAX_TILT) * (r.height / 2);
+        const gx = r.left + r.width / 2 + (-current.y / MAX_TILT) * (r.width / 2);
+        const gy = r.top + r.height / 2 + (current.x / MAX_TILT) * (r.height / 2);
         setVars(gx, gy, visible ? 1 : 0);
       }
       raf = requestAnimationFrame(loop);
