@@ -262,51 +262,50 @@ export function HeroScrollNav() {
               <div className="hero-nav-menu-actions">
                 {isAuthenticated ? (
                   <>
-                    <button
-                      type="button"
+                    <OriginButton
+                      variant="tertiary"
+                      className="h-[48px] w-full"
                       onClick={() => {
                         closeMenu();
                         onLogout();
                       }}
-                      className="hero-nav-btn-ghost hero-nav-ring"
-                      style={uiFont}
                     >
                       Log out
-                    </button>
-                    <button
-                      type="button"
+                    </OriginButton>
+                    <OriginButton
+                      variant="secondary"
+                      className="h-[48px] w-full"
                       onClick={() => {
                         closeMenu();
                         navigate({ to: "/home" });
                       }}
-                      className="hero-nav-btn-outline hero-nav-ring"
-                      style={uiFont}
                     >
                       <IconHomeSearch size={20} stroke={1.5} aria-hidden />
                       Searches
-                    </button>
+                    </OriginButton>
                   </>
                 ) : (
                   <>
-                    <Link
-                      to="/login"
-                      onClick={closeMenu}
-                      className="hero-nav-btn-ghost hero-nav-ring"
-                      style={uiFont}
+                    <OriginButton
+                      variant="tertiary"
+                      className="h-[48px] w-full"
+                      onClick={() => {
+                        closeMenu();
+                        navigate({ to: "/login" });
+                      }}
                     >
                       Sign in
-                    </Link>
-                    <button
-                      type="button"
+                    </OriginButton>
+                    <OriginButton
+                      variant="main"
+                      className="h-[48px] w-full"
                       onClick={() => {
                         closeMenu();
                         onSignup();
                       }}
-                      className="hero-nav-btn-primary hero-nav-ring"
-                      style={uiFont}
                     >
                       Find my apartment
-                    </button>
+                    </OriginButton>
                   </>
                 )}
               </div>
