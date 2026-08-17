@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Check,
   Heart,
@@ -21,6 +21,7 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
 import { cn } from "@/lib/utils";
+import { digestLines } from "@/lib/digest";
 import { useAppStore, useDisabledSearchIds, switchActiveSearch, type Search, SEARCH_LIMITS } from "@/lib/store";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { getCity, type CityId } from "@/data/cities";
