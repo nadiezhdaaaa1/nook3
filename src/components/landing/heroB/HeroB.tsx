@@ -616,20 +616,6 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           line-height: 1.3;
           color: #3A3A37;
         }
-        .hero-b-card-motion {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          z-index: 3;
-          background: #EBF0D5;
-          border: 1px solid rgba(0,0,0,0.12);
-          border-radius: 80px;
-          padding: 4px 10px;
-          font-size: 11.5px;
-          line-height: 1.3;
-          color: #3A3A37;
-          cursor: pointer;
-        }
         .hero-b-card-debug {
           position: absolute;
           bottom: 8px;
