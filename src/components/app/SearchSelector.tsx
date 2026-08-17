@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
-  Archive,
   Check,
   Lock,
   ChevronDown,
   Pencil,
   Plus,
-  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
