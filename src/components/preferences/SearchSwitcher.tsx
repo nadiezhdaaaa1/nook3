@@ -4,9 +4,7 @@ import {
   Check,
   ChevronDown,
   Copy,
-  Pause,
   Pencil,
-  Play,
   Plus,
   Trash2,
   Lock,
@@ -259,7 +257,6 @@ function SearchRow({
   onSubmitRename,
   onCancelRename,
   onDuplicate,
-  onPauseToggle,
   onArchive,
   onDelete,
 }: {
@@ -273,7 +270,6 @@ function SearchRow({
   onSubmitRename: (name: string) => void;
   onCancelRename: () => void;
   onDuplicate: () => void;
-  onPauseToggle: () => void;
   onArchive: () => void;
   onDelete: () => void;
 }) {
@@ -420,20 +416,3 @@ function IconBtn({
   );
 }
 
-function StatusDot({ status }: { status: Search["status"] }) {
-  if (status === "active") {
-    return (
-      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-pill bg-sage-100 text-[9px] font-mono uppercase tracking-[0.14em] text-sage-700">
-        <span className="h-1.5 w-1.5 rounded-full bg-sage-700" /> Alerts on
-      </span>
-    );
-  }
-  if (status === "paused") {
-    return (
-      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-pill bg-peach-100 text-[9px] font-mono uppercase tracking-[0.14em] text-peach-700">
-        <span className="h-1.5 w-1.5 rounded-full bg-peach-700" /> Alerts off
-      </span>
-    );
-  }
-  return null;
-}
