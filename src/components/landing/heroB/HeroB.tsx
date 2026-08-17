@@ -436,21 +436,19 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           --xp: 0.5;
           --yp: 0.5;
           --glow-o: 0;
-          --base: 18;
-          --spread: 25;
           --size: 200;
           --border: 3;
           --radius: 24;
-          --bg-spot-opacity: 0.08;
-          --border-spot-opacity: 0.8;
-          --border-light-opacity: 0.5;
-          --hue: calc(var(--base) + (var(--xp) * var(--spread)));
+          --glow-rgb: 214 108 56;
+          --bg-spot-opacity: 0.1;
+          --border-spot-opacity: 0.95;
+          --border-light-opacity: 0.3;
           --spot: calc(var(--lx) * 1px) calc(var(--ly) * 1px);
 
           background-color: #ffffff;
           background-image: radial-gradient(
             calc(var(--size) * 1px) circle at var(--spot),
-            hsl(var(--hue) 66% 53% / var(--bg-spot-opacity)),
+            rgb(var(--glow-rgb) / var(--bg-spot-opacity)),
             transparent 100%
           );
           background-attachment: scroll;
@@ -464,7 +462,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           content: "";
           position: absolute;
           inset: calc(var(--border) * -1px);
-          border-radius: inherit;
+          border-radius: calc((var(--radius) + var(--border)) * 1px);
           border: calc(var(--border) * 1px) solid transparent;
           pointer-events: none;
           background-attachment: scroll;
@@ -481,15 +479,16 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         }
         .hero-b-card::before {
           background-image: radial-gradient(
-            calc(var(--size) * 0.75px) circle at var(--spot),
-            hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
+            calc(var(--size) * 0.75px) circle at
+              calc(var(--lx) * 1px + var(--border) * 1px) calc(var(--ly) * 1px + var(--border) * 1px),
+            rgb(var(--glow-rgb) / var(--border-spot-opacity)),
             transparent 100%
           );
-          filter: brightness(2);
         }
         .hero-b-card::after {
           background-image: radial-gradient(
-            calc(var(--size) * 0.5px) circle at var(--spot),
+            calc(var(--size) * 0.5px) circle at
+              calc(var(--lx) * 1px + var(--border) * 1px) calc(var(--ly) * 1px + var(--border) * 1px),
             hsl(0 0% 100% / var(--border-light-opacity)),
             transparent 100%
           );
@@ -503,13 +502,12 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           pointer-events: none;
           opacity: var(--glow-o);
           transition: opacity 200ms ease;
-          filter: blur(calc(var(--border) * 2px)) brightness(1.4);
+          filter: blur(calc(var(--border) * 2px));
           background-attachment: scroll;
           background-repeat: no-repeat;
           background-image: radial-gradient(
-            calc(var(--size) * 0.75px) circle at
-              calc(var(--lx) * 1px - var(--border) * 1px) calc(var(--ly) * 1px - var(--border) * 1px),
-            hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
+            calc(var(--size) * 0.75px) circle at var(--spot),
+            rgb(var(--glow-rgb) / var(--border-spot-opacity)),
             transparent 100%
           );
 
