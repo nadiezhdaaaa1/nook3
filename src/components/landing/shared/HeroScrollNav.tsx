@@ -467,7 +467,7 @@ export function HeroScrollNav() {
           display: flex;
           flex-direction: column;
           gap: 4px;
-          padding: 8px 16px;
+          padding: 0;
         }
         .hero-nav-menu-link {
           display: flex;
