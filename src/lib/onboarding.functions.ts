@@ -90,7 +90,7 @@ export interface SearchFreshness {
 export const getSearchFreshness = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<SearchFreshness[]> => {
-    const { dbRowToSearch } = await import("@/lib/searches.functions");
+    const { dbRowToSearch } = await import("@/lib/searches.shared");
     const { countMatchesForSearch } = await import("@/lib/matching.shared");
 
     const { data: rows, error } = await context.supabase
