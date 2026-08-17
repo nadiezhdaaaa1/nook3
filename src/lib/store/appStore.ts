@@ -95,7 +95,6 @@ const EMPTY_SEARCH_DEFAULTS = (cityId: CityId): Omit<Search, "id" | "name" | "ci
   amenities: {},
   transit: { hasPreference: false, lines: {} },
   commute: { maxMinutes: null },
-  alertChannel: "email",
   frequency: "balanced",
   totalAlertsReceived: 0,
   alertsLast7Days: 0,
@@ -131,7 +130,6 @@ function clearEditingBufferFor(deletedId: string, nextActiveId: string | null, r
       amenities: next.amenities,
       transit: next.transit,
       commute: next.commute,
-      alertChannel: next.alertChannel,
       frequency: next.frequency,
       editingSearchId: next.id,
     });

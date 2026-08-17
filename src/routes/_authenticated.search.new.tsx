@@ -110,7 +110,6 @@ function NewSearchLayout() {
       amenities: o.amenities,
       transit: o.transit,
       commute: o.commute,
-      alertChannel: "email" as const,
       frequency: o.frequency,
     };
 

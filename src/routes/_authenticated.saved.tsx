@@ -304,7 +304,7 @@ function summaryBits(s: Search): string[] {
     if (lines > 0) bits.push(`${lines} transit line${lines === 1 ? "" : "s"}`);
   }
   if (s.commute.maxMinutes) bits.push(`≤${s.commute.maxMinutes} min commute`);
-  bits.push(`${s.alertChannel} alerts · ${s.frequency}`);
+  bits.push(`${s.frequency} alerts`);
   return bits;
 }
 

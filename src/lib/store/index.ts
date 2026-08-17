@@ -31,6 +31,5 @@ export type {
   MoveOutInfo,
   Plan,
   Frequency,
-  AlertChannel,
   BillingCycle,
 } from "./types";

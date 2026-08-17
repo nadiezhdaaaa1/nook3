@@ -26,7 +26,6 @@ const searchPayloadSchema = z.object({
 
 const commitSchema = z.object({
   search: searchPayloadSchema.nullable().optional(),
-  phone: z.string().max(40).optional(),
 });
 
 /**
@@ -56,7 +55,6 @@ export const commitOnboarding = createServerFn({ method: "POST" })
           amenities: s.amenities ?? {},
           transit: s.transit ?? { hasPreference: false, lines: {} },
           commute: s.commute ?? { maxMinutes: null },
-          alert_channel: "email",
           frequency: s.frequency ?? "balanced",
         }
       : null;
@@ -65,7 +63,6 @@ export const commitOnboarding = createServerFn({ method: "POST" })
     const { data: result, error } = await supabaseAdmin.rpc("commit_onboarding", {
       _user_id: context.userId,
       _search: searchJson,
-      _phone: data.phone ?? null,
     } as never);
     if (error) throw new Error(error.message);
 
