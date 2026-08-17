@@ -14,6 +14,12 @@ export interface HeroBCity {
   listingTitle: string;
   neighborhood: string;
   price: string;
+  /** "1 bed · 1 bath · 620 sq ft" */
+  specs: string;
+  /** "L at Bedford Av · 4 min walk" */
+  transit: string;
+  /** concrete match reasons, never generic tags */
+  reasons: string[];
   cardImg: string;
   mapImg: string;
 }
@@ -24,8 +30,11 @@ export const HERO_B_CITIES: HeroBCity[] = [
     pillLabel: "New York City",
     comingSoon: false,
     listingTitle: "Renovated 1BR, South-Facing, Near McCarren Park",
-    neighborhood: "Williamsburg, New York City",
+    neighborhood: "Williamsburg · New York City",
     price: "$3,050",
+    specs: "1 bed · 1 bath · 620 sq ft",
+    transit: "L at Bedford Av · 4 min walk",
+    reasons: ["$950 under budget", "South-facing", "Near the park"],
     cardImg: nycCard.url,
     mapImg: nycMap.url,
   },
@@ -33,9 +42,12 @@ export const HERO_B_CITIES: HeroBCity[] = [
     key: "la",
     pillLabel: "Los Angeles",
     comingSoon: true,
-    listingTitle: "Bright Upper 1BR — Hardwood, Yard Access",
-    neighborhood: "Highland Park, Los Angeles",
-    price: "$1,995",
+    listingTitle: "Bright Studio with Private Courtyard",
+    neighborhood: "Silver Lake · Los Angeles",
+    price: "$2,150",
+    specs: "Studio · 1 bath · 480 sq ft",
+    transit: "Metro B at Vermont/Santa Monica · 12 min",
+    reasons: ["$350 under budget", "Pet-friendly", "Near the reservoir"],
     cardImg: laCard.url,
     mapImg: laMap.url,
   },
@@ -43,9 +55,12 @@ export const HERO_B_CITIES: HeroBCity[] = [
     key: "sf",
     pillLabel: "San Francisco Bay",
     comingSoon: true,
-    listingTitle: "Sunny Studio — Half Block to Golden Gate Park",
-    neighborhood: "Inner Sunset, San Francisco",
-    price: "$2,250",
+    listingTitle: "Sunny 1BR Near Dolores Park",
+    neighborhood: "Mission District · San Francisco",
+    price: "$2,895",
+    specs: "1 bed · 1 bath · 560 sq ft",
+    transit: "J Church at 18th St · 5 min walk",
+    reasons: ["$605 under budget", "South-facing", "Near the park"],
     cardImg: sfCard.url,
     mapImg: sfMap.url,
   },
@@ -53,9 +68,12 @@ export const HERO_B_CITIES: HeroBCity[] = [
     key: "chi",
     pillLabel: "Chicago",
     comingSoon: true,
-    listingTitle: "Ukrainian Village 2BR in Rehabbed Greystone",
-    neighborhood: "Ukrainian Village, Chicago",
-    price: "$2,650",
+    listingTitle: "Rehabbed 2BR Walk-Up",
+    neighborhood: "Logan Square · Chicago",
+    price: "$1,850",
+    specs: "2 bed · 1 bath · 900 sq ft",
+    transit: "Blue Line at Logan Square · 6 min walk",
+    reasons: ["$450 under budget", "In-unit laundry", "Near the 606"],
     cardImg: chiCard.url,
     mapImg: chiMap.url,
   },
