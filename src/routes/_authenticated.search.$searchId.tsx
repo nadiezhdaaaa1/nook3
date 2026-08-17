@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bell, DollarSign, Home as HomeIcon, MapPin, Pencil, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useAppStore, switchActiveSearch, useIsSearchDisabled } from "@/lib/store";
+import { useAppStore, switchActiveSearch } from "@/lib/store";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,

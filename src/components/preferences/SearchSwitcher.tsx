@@ -50,8 +50,6 @@ export function SearchSwitcher() {
     };
   }, [searches, user?.plan]);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
-  const pauseSearch = useAppStore((s) => s.pauseSearch);
-  const resumeSearch = useAppStore((s) => s.resumeSearch);
   const archiveSearch = useAppStore((s) => s.archiveSearch);
   const restoreSearch = useAppStore((s) => s.restoreSearch);
   const deleteSearch = useAppStore((s) => s.deleteSearch);
@@ -149,7 +147,6 @@ export function SearchSwitcher() {
           <span className="text-sm font-semibold text-charcoal-950 truncate max-w-[180px]">
             {active.name}
           </span>
-          <StatusDot status={active.status} />
           <ChevronDown
             className={cn("h-3.5 w-3.5 text-charcoal-500 transition-transform", open && "rotate-180")}
           />
@@ -189,14 +186,6 @@ export function SearchSwitcher() {
                   }}
                   onCancelRename={() => setRenamingId(null)}
                   onDuplicate={() => handleDuplicate(s.id)}
-                  onPauseToggle={() => {
-                    if (s.status !== "paused") {
-                      pauseSearch(s.id);
-                      return;
-                    }
-                    const res = resumeSearch(s.id);
-                    if (!res.ok) toast.error("Can't turn alerts on", { description: res.error });
-                  }}
                   onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
                     if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
@@ -334,7 +323,6 @@ function SearchRow({
               <span className="text-sm font-semibold text-charcoal-950 truncate">
                 {search.name}
               </span>
-              <StatusDot status={search.status} />
             </div>
             <div className="text-[11px] text-charcoal-500 mt-0.5 truncate">
               {city?.displayName ?? search.cityId} ·{" "}
@@ -345,16 +333,6 @@ function SearchRow({
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100">
             <IconBtn title="Rename" onClick={onStartRename}>
               <Pencil className="h-3.5 w-3.5" />
-            </IconBtn>
-            <IconBtn
-              title={search.status === "paused" ? "Turn alerts on" : "Turn alerts off"}
-              onClick={onPauseToggle}
-            >
-              {search.status === "paused" ? (
-                <Play className="h-3.5 w-3.5" />
-              ) : (
-                <Pause className="h-3.5 w-3.5" />
-              )}
             </IconBtn>
             <IconBtn title="Duplicate" onClick={onDuplicate} disabled={!canDuplicate}>
               <Copy className="h-3.5 w-3.5" />
