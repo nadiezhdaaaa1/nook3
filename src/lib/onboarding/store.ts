@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import type { CityId } from "@/data/cities";
 
 export type TriState = "nice" | "required";
-export type AlertChannel = "email";
+// Alerts are email-only by design — there is no delivery-channel concept.
 export type Plan = "intro" | "pro";
 export type BillingCycle = "monthly" | "annual";
 export type Frequency = "minimal" | "balanced" | "maximum" | "weekly";
