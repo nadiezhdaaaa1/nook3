@@ -505,17 +505,26 @@ function HomeScreen() {
               {filtersButton}
             </div>
 
-            <h1 className="font-display" style={H1}>
-              {search
-                ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}`
-                : "Create your first search"}
-            </h1>
+            {(() => {
+              const displayListings = pagedVisibleListings;
+              const showEmptyState = displayListings.length === 0 && (forcedEmpty || !alertsQ.isLoading);
+              if (showEmptyState) return null;
+              return (
+                <>
+                  <h1 className="font-display" style={H1}>
+                    {search
+                      ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}`
+                      : "Create your first search"}
+                  </h1>
 
-            <p className="mt-2 text-sm text-charcoal-600">
-              {search
-                ? `Listings in ${cityConfig?.displayName ?? "your city"} matching this search, lowest rent first`
-                : "Set a city, budget and neighborhoods to start receiving alerts"}
-            </p>
+                  <p className="mt-2 text-sm text-charcoal-600">
+                    {search
+                      ? `Listings in ${cityConfig?.displayName ?? "your city"} matching this search, lowest rent first`
+                      : "Set a city, budget and neighborhoods to start receiving alerts"}
+                  </p>
+                </>
+              );
+            })()}
 
           </header>
 
