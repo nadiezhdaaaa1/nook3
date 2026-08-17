@@ -151,7 +151,8 @@ function SavedPage() {
         <div
           role="tablist"
           aria-label="Library sections"
-          className="flex flex-wrap gap-3"
+          className="flex flex-nowrap gap-3 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0"
+          style={{ scrollbarWidth: "none" }}
         >
           {TABS.map((t) => {
             const Icon = t.icon;
@@ -164,7 +165,7 @@ function SavedPage() {
                 onClick={() => setTab(t.key)}
                 variant={active ? "dark" : "tertiary"}
                 size="medium"
-                className="px-5"
+                className="shrink-0 px-5"
               >
                 <Icon
                   className={cn(
