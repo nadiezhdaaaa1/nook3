@@ -84,7 +84,7 @@ export function ensureMigratedFromLegacy(): void {
       cityId,
       createdAt: nowIso(),
       updatedAt: nowIso(),
-      status: "active",
+      alertsEnabled: true,
       budget: (legacyState.budget as [number, number] | null) ?? null,
       moveIn: legacyState.moveIn ?? { mode: "flexible" },
       bedrooms: legacyState.bedrooms ?? [],

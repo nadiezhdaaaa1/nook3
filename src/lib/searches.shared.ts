@@ -40,7 +40,7 @@ export function toDbRow(input: z.infer<typeof searchInputSchema>) {
   return {
     name: input.name,
     city_id: input.cityId,
-    status: input.alertsEnabled === false ? "paused" : "active",
+    status: (input.alertsEnabled === false ? "paused" : "active") as "active" | "paused",
     budget_min: input.budget?.[0] ?? null,
     budget_max: input.budget?.[1] ?? null,
     move_in: input.moveIn ?? { mode: "flexible" },
@@ -61,7 +61,7 @@ export function toUpdatePatch(p: Partial<z.infer<typeof searchInputSchema>>) {
   if (p.name !== undefined) patch.name = p.name;
   if (p.cityId !== undefined) patch.city_id = p.cityId;
   if (p.alertsEnabled !== undefined) {
-    patch.status = p.alertsEnabled ? "active" : "paused";
+    patch.status = (p.alertsEnabled ? "active" : "paused") as "active" | "paused";
   }
   if (p.budget !== undefined) {
     patch.budget_min = p.budget?.[0] ?? null;

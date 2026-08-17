@@ -322,11 +322,13 @@ export const useAppStore = create<AppStore>()(
       name: "nook.app.v1",
       version: 2,
       migrate: (persisted: unknown, version: number) => {
-        const state = persisted as (AppState & { searches?: (Search & { status?: string })[] }) | undefined;
+        const state = persisted as
+          | (AppState & { searches?: (Search & { status?: string; archivedAt?: string })[] })
+          | undefined;
         if (!state) return state as never;
         if (version < 2) {
           const searches = (state.searches ?? [])
-            .filter((s) => s.status !== "archived")
+            .filter((s) => (s as { status?: string }).status !== "archived")
             .map((s) => {
               const { status, archivedAt, ...rest } = s as Search & {
                 status?: string;

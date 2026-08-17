@@ -25,7 +25,6 @@ export {
 } from "./types";
 export type {
   Search,
-  SearchStatus,
   SearchQuota,
   User,
   MoveOutInfo,
