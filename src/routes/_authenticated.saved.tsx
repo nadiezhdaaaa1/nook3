@@ -46,7 +46,7 @@ const TABS = [
     label: "Saved listings",
     icon: Heart,
     title: "Saved listings",
-    subtitle: "Listings you kept to revisit later.",
+    subtitle: "Listings you kept to revisit later",
   },
   {
     key: "searches",
