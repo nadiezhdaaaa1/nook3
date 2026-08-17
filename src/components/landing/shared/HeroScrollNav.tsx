@@ -455,56 +455,6 @@ export function HeroScrollNav() {
           gap: 4px;
           padding: 24px 0 8px;
         }
-        .hero-nav-menu-link {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          height: 52px;
-          padding: 0 8px;
-          border-radius: 10px;
-          font-size: 17px;
-          font-weight: 500;
-          text-align: left;
-        }
-        .hero-nav-menu-link:hover,
-        .hero-nav-menu-link:active { background: rgba(36,28,18,0.08); }
-
-        .hero-nav-menu-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          padding: 0;
-        }
-        .hero-nav-btn-ghost,
-        .hero-nav-btn-primary,
-        .hero-nav-btn-outline {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          width: 100%;
-          height: 48px;
-          border-radius: 12px;
-          font-size: 15px;
-          font-weight: 500;
-        }
-        .hero-nav-btn-ghost {
-          background: ${SURFACE};
-          border: 1px solid ${BORDER};
-          color: ${INK};
-        }
-        .hero-nav-btn-ghost:hover { background: ${SURFACE_HOVER}; border-color: ${BORDER_HOVER}; }
-        .hero-nav-btn-primary {
-          background: #d66c38;
-          border: none;
-          color: #ffffff;
-          letter-spacing: -0.3px;
-        }
-        .hero-nav-btn-outline {
-          background: transparent;
-          border: 1px solid #d66c38;
-          color: #d66c38;
-        }
 
         .hero-nav-cta {
           display: inline-flex;
