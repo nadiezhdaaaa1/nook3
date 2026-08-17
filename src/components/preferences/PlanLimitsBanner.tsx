@@ -14,7 +14,7 @@ export function PlanLimitsBanner() {
   const searches = useAppStore((s) => s.searches);
   const quota = useMemo(() => {
     const max = SEARCH_LIMITS[plan];
-    const used = searches.filter((x) => x.status !== "archived").length;
+    const used = searches.length;
     const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
     return {
       used,

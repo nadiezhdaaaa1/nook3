@@ -84,7 +84,7 @@ export const duplicateSearch = createServerFn({ method: "POST" })
     const copyName = `${(src as any).name} copy`.slice(0, 50);
     const { data: inserted, error } = await context.supabase
       .from("searches")
-      .insert({ ...rest, name: copyName, status: "active", archived_at: null })
+      .insert({ ...rest, name: copyName, status: "active" })
       .select("*")
       .single();
     if (error) {
