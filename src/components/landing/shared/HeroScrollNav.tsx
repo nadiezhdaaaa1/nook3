@@ -173,16 +173,7 @@ export function HeroScrollNav() {
                   </button>
                 </span>
 
-                {open ? (
-                  <button
-                    type="button"
-                    onClick={() => navigate({ to: "/home" })}
-                    className="hero-nav-cta hero-nav-ring"
-                    style={uiFont}
-                  >
-                    Find my apartment
-                  </button>
-                ) : (
+                {!open && (
                   <OriginButton
                     variant="secondary"
                     size="medium"
@@ -207,16 +198,7 @@ export function HeroScrollNav() {
                   </Link>
                 </span>
 
-                {open ? (
-                  <button
-                    type="button"
-                    onClick={onSignup}
-                    className="hero-nav-cta hero-nav-ring"
-                    style={uiFont}
-                  >
-                    Find my apartment
-                  </button>
-                ) : (
+                {!open && (
                   <OriginButton
                     variant="main"
                     onClick={onSignup}
