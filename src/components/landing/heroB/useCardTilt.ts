@@ -185,15 +185,15 @@ export function useCardTilt(disabled: boolean): CardTilt {
       if (!visible || e.beta == null || e.gamma == null) return;
       if (!baseline) baseline = { beta: e.beta, gamma: e.gamma };
       target = {
-        x: clamp((e.beta - baseline.beta) / 8),
-        y: clamp(-(e.gamma - baseline.gamma) / 8),
+        x: clamp((e.beta - baseline.beta) / SENSOR_DIVISOR),
+        y: clamp(-(e.gamma - baseline.gamma) / SENSOR_DIVISOR),
       };
     };
 
     const loop = () => {
       current = {
-        x: current.x + (target.x - current.x) * 0.08,
-        y: current.y + (target.y - current.y) * 0.08,
+        x: current.x + (target.x - current.x) * SENSOR_LERP,
+        y: current.y + (target.y - current.y) * SENSOR_LERP,
       };
       rawX.set(current.x);
       rawY.set(current.y);
