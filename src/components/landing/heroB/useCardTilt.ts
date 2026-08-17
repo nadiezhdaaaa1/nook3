@@ -42,12 +42,18 @@ export function useCardTilt(disabled: boolean): CardTilt {
     if (!el) return;
     el.style.setProperty("--x", `${clientX}`);
     el.style.setProperty("--y", `${clientY}`);
+    // element-local hotspot: the card carries a 3D tilt transform, which breaks
+    // background-attachment: fixed, so the glow layers use these instead.
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--lx", `${(clientX - r.left).toFixed(2)}`);
+    el.style.setProperty("--ly", `${(clientY - r.top).toFixed(2)}`);
     if (typeof window !== "undefined") {
       el.style.setProperty("--xp", `${(clientX / window.innerWidth).toFixed(4)}`);
       el.style.setProperty("--yp", `${(clientY / window.innerHeight).toFixed(4)}`);
     }
     if (opacity !== undefined) el.style.setProperty("--glow-o", `${opacity}`);
   }, []);
+
 
   const ref = useCallback((node: HTMLElement | null) => {
     nodeRef.current = node;
