@@ -275,6 +275,13 @@ export function useCardTilt(disabled: boolean): CardTilt {
     !disabled && touch && permission !== "granted" && permission !== "denied" &&
     typeof getDOE()?.requestPermission === "function";
 
+  /** tapping the card itself is the gesture that unlocks the sensor on iOS */
+  const onTouchStart = useCallback(() => {
+    if (disabled || !touch) return;
+    if (permission === "granted" || permission === "denied") return;
+    requestMotion();
+  }, [disabled, touch, permission, requestMotion]);
+
   return {
     ref,
     rotateX,
