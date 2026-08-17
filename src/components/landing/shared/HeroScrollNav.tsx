@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { IconHomeSearch } from "@tabler/icons-react";
 import { Menu, X } from "lucide-react";
