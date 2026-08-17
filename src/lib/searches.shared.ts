@@ -56,7 +56,7 @@ export function toDbRow(input: z.infer<typeof searchInputSchema>) {
   };
 }
 
-export function toUpdatePatch(p: z.infer<typeof searchInputSchema>["name"] extends never ? never : Partial<z.infer<typeof searchInputSchema>>) {
+export function toUpdatePatch(p: Partial<z.infer<typeof searchInputSchema>>) {
   const patch: Record<string, unknown> = {};
   if (p.name !== undefined) patch.name = p.name;
   if (p.cityId !== undefined) patch.city_id = p.cityId;
