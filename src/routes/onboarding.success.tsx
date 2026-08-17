@@ -505,7 +505,7 @@ function Success() {
                   type="button"
                   variant="tertiary"
                   size="big"
-                  className="flex-1"
+                  className="w-full sm:flex-1"
                   onClick={onGoogle}
                   disabled={busy}
                 >
