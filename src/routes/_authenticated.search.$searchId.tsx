@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Bell, DollarSign, Home as HomeIcon, MapPin, Pause, Pencil, Play, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
+import { Bell, DollarSign, Home as HomeIcon, MapPin, Pencil, Trash2, ArrowLeft, Menu, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAppStore, switchActiveSearch, useIsSearchDisabled } from "@/lib/store";
@@ -79,7 +79,7 @@ function SearchEditLayout() {
         <ArrowLeft className="h-3.5 w-3.5" /> Back to listings
       </Link>
 
-      <PageHeader searchId={search.id} name={search.name} status={search.status} cityId={search.cityId} sectionLabel={sectionLabel} />
+      <PageHeader searchId={search.id} name={search.name} cityId={search.cityId} sectionLabel={sectionLabel} />
 
       <div className="mt-12 grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
         <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
@@ -98,18 +98,15 @@ function SearchEditLayout() {
 function PageHeader({
   searchId,
   name,
-  status,
   cityId,
   sectionLabel,
 }: {
   searchId: string;
   name: string;
-  status: "active" | "paused" | "archived";
   cityId: CityId;
   sectionLabel: string;
 }) {
   const renameSearch = useAppStore((s) => s.renameSearch);
-  const isDisabled = useIsSearchDisabled(searchId);
 
   
 
