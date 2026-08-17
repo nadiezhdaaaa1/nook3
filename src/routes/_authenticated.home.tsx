@@ -528,8 +528,8 @@ function HomeScreen() {
 
             <h1 className="font-display" style={H1}>
               {search
-                ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}.`
-                : "Create your first search."}
+                ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} for ${search.name}`
+                : "Create your first search"}
             </h1>
 
             <p className="mt-2 text-sm text-charcoal-600">
