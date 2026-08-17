@@ -487,7 +487,7 @@ export function HeroScrollNav() {
           display: flex;
           flex-direction: column;
           gap: 12px;
-          padding: 16px 16px 8px;
+          padding: 0;
         }
         .hero-nav-btn-ghost,
         .hero-nav-btn-primary,
