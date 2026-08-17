@@ -233,25 +233,30 @@ export function HeroScrollNav() {
             <div className="hero-nav-menu-inner">
               <div className="hero-nav-menu-links">
                 {NAV_LINKS.map((l) => (
-                  <a
+                  <OriginButton
                     key={l.href}
-                    href={onHome ? l.href : `/${l.href}`}
-                    onClick={closeMenu}
-                    className="hero-nav-menu-link hero-nav-ring"
-                    style={{ ...uiFont, color: INK }}
+                    variant="tertiary"
+                    align="left"
+                    className="hero-nav-menu-link-btn h-[52px] w-full border-0 px-2"
+                    onClick={() => {
+                      closeMenu();
+                      window.location.href = onHome ? l.href : `/${l.href}`;
+                    }}
                   >
                     {l.label}
-                  </a>
+                  </OriginButton>
                 ))}
-                <Link
-                  to="/blog"
-                  search={{ category: "all" }}
-                  onClick={closeMenu}
-                  className="hero-nav-menu-link hero-nav-ring"
-                  style={{ ...uiFont, color: INK }}
+                <OriginButton
+                  variant="tertiary"
+                  align="left"
+                  className="hero-nav-menu-link-btn h-[52px] w-full border-0 px-2"
+                  onClick={() => {
+                    closeMenu();
+                    navigate({ to: "/blog", search: { category: "all" } });
+                  }}
                 >
                   Blog
-                </Link>
+                </OriginButton>
               </div>
 
               <div className="hero-nav-menu-actions">
