@@ -47,8 +47,29 @@ export function HeroScrollNav() {
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const shellRef = useRef<HTMLDivElement | null>(null);
   const isAuthenticated = useHasSession();
   const onLogout = () => void supabase.auth.signOut();
+
+  const closeMenu = () => setOpen(false);
+
+  const openMenu = () => setOpen(true);
+
+  // Two-phase animation: morph to pill first, then grow in height.
+  useEffect(() => {
+    if (!open) {
+      setExpanded(false);
+      return;
+    }
+    if (scrolled) {
+      setExpanded(true);
+      return;
+    }
+    const t = window.setTimeout(() => setExpanded(true), 170);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -57,10 +78,17 @@ export function HeroScrollNav() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
+    const onPointerDown = (e: PointerEvent) => {
+      if (shellRef.current && !shellRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
     window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointerDown);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointerDown);
     };
   }, [open]);
 
@@ -92,8 +120,13 @@ export function HeroScrollNav() {
 
 
   return (
-    <header className="hero-nav-root" data-scrolled={scrolled ? "true" : "false"} style={uiFont}>
-      <div className="hero-nav-shell">
+    <header
+      className="hero-nav-root"
+      data-scrolled={scrolled || open ? "true" : "false"}
+      data-open={open ? "true" : "false"}
+      style={uiFont}
+    >
+      <div className="hero-nav-shell" ref={shellRef}>
         <div className="hero-nav-glass" aria-hidden="true" />
 
         <nav className="hero-nav-inner" aria-label="Main">
@@ -140,15 +173,26 @@ export function HeroScrollNav() {
                   </button>
                 </span>
 
-                <OriginButton
-                  variant="secondary"
-                  size="medium"
-                  onClick={() => navigate({ to: "/home" })}
-                  className="hero-nav-ring h-[40px] px-4 text-sm"
-                >
-                  <IconHomeSearch size={18} stroke={1.5} aria-hidden />
-                  Searches
-                </OriginButton>
+                {open ? (
+                  <button
+                    type="button"
+                    onClick={() => navigate({ to: "/home" })}
+                    className="hero-nav-cta hero-nav-ring"
+                    style={uiFont}
+                  >
+                    Find my apartment
+                  </button>
+                ) : (
+                  <OriginButton
+                    variant="secondary"
+                    size="medium"
+                    onClick={() => navigate({ to: "/home" })}
+                    className="hero-nav-ring h-[40px] px-4 text-sm"
+                  >
+                    <IconHomeSearch size={18} stroke={1.5} aria-hidden />
+                    Searches
+                  </OriginButton>
+                )}
               </>
             ) : (
               <>
@@ -163,122 +207,127 @@ export function HeroScrollNav() {
                   </Link>
                 </span>
 
-                <OriginButton
-                  variant="main"
-                  onClick={onSignup}
-                  className="hero-nav-ring h-[40px] px-4 text-sm"
-                >
-                  Find my apatment
-                </OriginButton>
+                {open ? (
+                  <button
+                    type="button"
+                    onClick={onSignup}
+                    className="hero-nav-cta hero-nav-ring"
+                    style={uiFont}
+                  >
+                    Find my apartment
+                  </button>
+                ) : (
+                  <OriginButton
+                    variant="main"
+                    onClick={onSignup}
+                    className="hero-nav-ring h-[40px] px-4 text-sm"
+                  >
+                    Find my apartment
+                  </OriginButton>
+                )}
               </>
             )}
 
             <button
               type="button"
-              onClick={() => setOpen(true)}
-              aria-label="Open menu"
+              onClick={() => (open ? closeMenu() : openMenu())}
+              aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               className="hero-nav-burger hero-nav-ring inline-flex lg:hidden"
             >
-              <Menu className="h-5 w-5" strokeWidth={2} />
+              {open ? <X className="h-5 w-5" strokeWidth={2} /> : <Menu className="h-5 w-5" strokeWidth={2} />}
             </button>
           </div>
 
         </nav>
-      </div>
 
-      {open && (
-        <div className="hero-nav-sheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-
-          <div className="hero-nav-sheet-top">
-            <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
-              <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
-            </Link>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close menu"
-              className="hero-nav-burger hero-nav-ring inline-flex"
-            >
-              <X className="h-5 w-5" strokeWidth={2} />
-            </button>
-          </div>
-
-          <div className="hero-nav-sheet-links">
-            {NAV_LINKS.map((l) => (
-              <a
-                key={l.href}
-                href={onHome ? l.href : `/${l.href}`}
-                onClick={() => setOpen(false)}
-                className="hero-nav-sheet-link hero-nav-ring"
-                style={{ ...uiFont, color: INK }}
-              >
-                {l.label}
-              </a>
-            ))}
-            <Link
-              to="/blog"
-              search={{ category: "all" }}
-              onClick={() => setOpen(false)}
-              className="hero-nav-sheet-link hero-nav-ring"
-              style={{ ...uiFont, color: INK }}
-            >
-              Blog
-            </Link>
-
-            {isAuthenticated && (
-              <div className="hero-nav-sheet-actions">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    onLogout();
-                  }}
-                  className="hero-nav-sheet-signin hero-nav-ring"
+        {open && (
+          <div
+            className="hero-nav-menu lg:hidden"
+            data-expanded={expanded ? "true" : "false"}
+            role="dialog"
+            aria-label="Menu"
+          >
+            <div className="hero-nav-menu-inner">
+              <div className="hero-nav-menu-links">
+                {NAV_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={onHome ? l.href : `/${l.href}`}
+                    onClick={closeMenu}
+                    className="hero-nav-menu-link hero-nav-ring"
+                    style={{ ...uiFont, color: INK }}
+                  >
+                    {l.label}
+                  </a>
+                ))}
+                <Link
+                  to="/blog"
+                  search={{ category: "all" }}
+                  onClick={closeMenu}
+                  className="hero-nav-menu-link hero-nav-ring"
                   style={{ ...uiFont, color: INK }}
                 >
-                  Log out
-                </button>
-                <OriginButton
-                  variant="secondary"
-                  size="medium"
-                  onClick={() => {
-                    setOpen(false);
-                    navigate({ to: "/home" });
-                  }}
-                  className="hero-nav-ring h-12 text-[15px]"
-                >
-                  <IconHomeSearch size={20} stroke={1.5} aria-hidden />
-                  Searches
-                </OriginButton>
+                  Blog
+                </Link>
               </div>
-            )}
-          </div>
 
-          {!isAuthenticated && (
-            <div className="hero-nav-sheet-buttons">
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
-                className="hero-nav-sheet-signin hero-nav-ring"
-                style={{ ...uiFont, color: INK }}
-              >
-                Sign in
-              </Link>
-              <OriginButton
-                variant="main"
-                onClick={() => {
-                  setOpen(false);
-                  onSignup();
-                }}
-                className="hero-nav-ring h-12 text-[15px]"
-              >
-                Find my apatment
-              </OriginButton>
+              <div className="hero-nav-menu-actions">
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMenu();
+                        onLogout();
+                      }}
+                      className="hero-nav-btn-ghost hero-nav-ring"
+                      style={uiFont}
+                    >
+                      Log out
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMenu();
+                        navigate({ to: "/home" });
+                      }}
+                      className="hero-nav-btn-outline hero-nav-ring"
+                      style={uiFont}
+                    >
+                      <IconHomeSearch size={20} stroke={1.5} aria-hidden />
+                      Searches
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={closeMenu}
+                      className="hero-nav-btn-ghost hero-nav-ring"
+                      style={uiFont}
+                    >
+                      Sign in
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMenu();
+                        onSignup();
+                      }}
+                      className="hero-nav-btn-primary hero-nav-ring"
+                      style={uiFont}
+                    >
+                      Find my apartment
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
+
 
 
       <style>{`
