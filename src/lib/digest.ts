@@ -27,8 +27,7 @@ export function userTimeZoneAbbr(at: Date = new Date(), timeZone = userTimeZone(
     const parts = new Intl.DateTimeFormat("en-US", {
       timeZone,
       timeZoneName: "short",
-ようない: undefined as never,
-    } as Intl.DateTimeFormatOptions).formatToParts(at);
+    }).formatToParts(at);
     return parts.find((p) => p.type === "timeZoneName")?.value ?? "";
   } catch {
     return "";
