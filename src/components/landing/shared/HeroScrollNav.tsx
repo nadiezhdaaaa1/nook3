@@ -226,8 +226,8 @@ export function HeroScrollNav() {
               Blog
             </Link>
 
-            {isAuthenticated ? (
-              <>
+            {isAuthenticated && (
+              <div className="hero-nav-sheet-actions">
                 <button
                   type="button"
                   onClick={() => {
@@ -251,30 +251,32 @@ export function HeroScrollNav() {
                   <IconHomeSearch size={20} stroke={1.5} aria-hidden />
                   Searches
                 </OriginButton>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  onClick={() => setOpen(false)}
-                  className="hero-nav-sheet-signin hero-nav-ring"
-                  style={{ ...uiFont, color: INK }}
-                >
-                  Sign in
-                </Link>
-                <OriginButton
-                  variant="main"
-                  onClick={() => {
-                    setOpen(false);
-                    onSignup();
-                  }}
-                  className="hero-nav-ring h-12 text-[15px]"
-                >
-                  Find my apatment
-                </OriginButton>
-              </>
+              </div>
             )}
           </div>
+
+          {!isAuthenticated && (
+            <div className="hero-nav-sheet-buttons">
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="hero-nav-sheet-signin hero-nav-ring"
+                style={{ ...uiFont, color: INK }}
+              >
+                Sign in
+              </Link>
+              <OriginButton
+                variant="main"
+                onClick={() => {
+                  setOpen(false);
+                  onSignup();
+                }}
+                className="hero-nav-ring h-12 text-[15px]"
+              >
+                Find my apatment
+              </OriginButton>
+            </div>
+          )}
         </div>
       )}
 
