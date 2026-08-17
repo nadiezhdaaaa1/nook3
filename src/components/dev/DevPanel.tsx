@@ -256,7 +256,14 @@ export function DevPanel() {
           ))}
         </Row>
 
-        <Row label="dashboard state">
+        <Row
+          label={
+            dashboardState === "normal"
+              ? "dashboard state (real data)"
+              : `dashboard state — FORCED: ${dashboardState}`
+          }
+        >
+
           {(
             [
               ["normal", "Normal"],
