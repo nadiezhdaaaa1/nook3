@@ -29,28 +29,8 @@ function cityLabel(cityId: string) {
   return getCity(cityId as never)?.shortName ?? cityId;
 }
 
-function statusLabel(s: Search, disabled = false) {
-  if (disabled) return "Disabled";
-  return s.status === "active" ? "Alerts on" : s.status === "paused" ? "Alerts off" : "Archived";
-}
 
-function StatusDot({ status, disabled }: { status: Search["status"]; disabled?: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "h-2 w-2 rounded-full shrink-0",
-        disabled
-          ? "bg-charcoal-400"
-          : status === "active"
-          ? "bg-sage-700"
-          : status === "paused"
-            ? "border-2 border-peach-700"
-            : "bg-charcoal-300",
-      )}
-    />
-  );
-}
+
 
 function summary(s: Search) {
   const bits: string[] = [];
