@@ -33,17 +33,33 @@ export function useCardTilt(disabled: boolean): CardTilt {
   const rotateX = useSpring(rawX, SPRING);
   const rotateY = useSpring(rawY, SPRING);
 
-  const setVars = useCallback((x: number, y: number, opacity: number) => {
+  /**
+   * Spotlight vars are VIEWPORT coordinates because the glow gradients use
+   * background-attachment: fixed (GlowCard pattern).
+   */
+  const setVars = useCallback((clientX: number, clientY: number, opacity?: number) => {
     const el = nodeRef.current;
     if (!el) return;
-    el.style.setProperty("--x", `${x}px`);
-    el.style.setProperty("--y", `${y}px`);
-    el.style.setProperty("--glow-o", `${opacity}`);
+    el.style.setProperty("--x", `${clientX}`);
+    el.style.setProperty("--y", `${clientY}`);
+    if (typeof window !== "undefined") {
+      el.style.setProperty("--xp", `${(clientX / window.innerWidth).toFixed(4)}`);
+      el.style.setProperty("--yp", `${(clientY / window.innerHeight).toFixed(4)}`);
+    }
+    if (opacity !== undefined) el.style.setProperty("--glow-o", `${opacity}`);
   }, []);
 
   const ref = useCallback((node: HTMLElement | null) => {
     nodeRef.current = node;
   }, []);
+
+  /* ---------- global cursor tracking (spotlight vars) ---------- */
+  useEffect(() => {
+    if (disabled || typeof window === "undefined" || isTouch()) return;
+    const onMove = (e: PointerEvent) => setVars(e.clientX, e.clientY);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [disabled, setVars]);
 
   /* ---------- pointer ---------- */
   const onPointerMove = useCallback(
@@ -57,7 +73,7 @@ export function useCardTilt(disabled: boolean): CardTilt {
       // corner under the cursor presses INTO the page
       rawX.set(((py - r.height / 2) / (r.height / 2)) * MAX_TILT);
       rawY.set(((r.width / 2 - px) / (r.width / 2)) * MAX_TILT);
-      setVars(px, py, 1);
+      setVars(e.clientX, e.clientY, 1);
     },
     [disabled, rawX, rawY, setVars],
   );
@@ -65,10 +81,7 @@ export function useCardTilt(disabled: boolean): CardTilt {
   const onPointerEnter = useCallback(
     (e: React.PointerEvent) => {
       if (disabled || e.pointerType === "touch") return;
-      const el = nodeRef.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      setVars(e.clientX - r.left, e.clientY - r.top, 1);
+      setVars(e.clientX, e.clientY, 1);
     },
     [disabled, setVars],
   );
