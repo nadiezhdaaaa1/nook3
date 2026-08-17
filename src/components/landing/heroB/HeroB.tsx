@@ -436,21 +436,19 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           --xp: 0.5;
           --yp: 0.5;
           --glow-o: 0;
-          --base: 18;
-          --spread: 25;
           --size: 200;
           --border: 3;
           --radius: 24;
-          --bg-spot-opacity: 0.08;
-          --border-spot-opacity: 0.8;
-          --border-light-opacity: 0.5;
-          --hue: calc(var(--base) + (var(--xp) * var(--spread)));
+          --glow-rgb: 214 108 56;
+          --bg-spot-opacity: 0.1;
+          --border-spot-opacity: 0.95;
+          --border-light-opacity: 0.3;
           --spot: calc(var(--lx) * 1px) calc(var(--ly) * 1px);
 
           background-color: #ffffff;
           background-image: radial-gradient(
             calc(var(--size) * 1px) circle at var(--spot),
-            hsl(var(--hue) 66% 53% / var(--bg-spot-opacity)),
+            rgb(var(--glow-rgb) / var(--bg-spot-opacity)),
             transparent 100%
           );
           background-attachment: scroll;
