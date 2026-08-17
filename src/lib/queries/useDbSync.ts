@@ -141,7 +141,6 @@ export function useDbSync() {
         amenities: local.amenities,
         transit: local.transit,
         commute: local.commute,
-        alertChannel: local.alertChannel,
         frequency: local.frequency,
       });
     }
@@ -210,7 +209,6 @@ function toPatch(s: Search) {
     amenities: s.amenities,
     transit: s.transit,
     commute: s.commute,
-    alertChannel: s.alertChannel,
     frequency: s.frequency,
   };
 }

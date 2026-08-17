@@ -47,7 +47,6 @@ function toDbRow(input: z.infer<typeof searchInputSchema>) {
     amenities: input.amenities ?? {},
     transit: input.transit ?? { hasPreference: false, lines: {} },
     commute: input.commute ?? { maxMinutes: null },
-    alert_channel: input.alertChannel ?? "email",
     frequency: input.frequency ?? "balanced",
   };
 }
@@ -74,7 +73,6 @@ export function dbRowToSearch(row: any) {
     amenities: row.amenities ?? {},
     transit: row.transit ?? { hasPreference: false, lines: {} },
     commute: row.commute ?? { maxMinutes: null },
-    alertChannel: row.alert_channel ?? "email",
     frequency: row.frequency ?? "balanced",
     totalAlertsReceived: 0,
     alertsLast7Days: 0,
@@ -141,7 +139,6 @@ export const updateSearch = createServerFn({ method: "POST" })
     if (p.amenities !== undefined) patch.amenities = p.amenities;
     if (p.transit !== undefined) patch.transit = p.transit;
     if (p.commute !== undefined) patch.commute = p.commute;
-    if (p.alertChannel !== undefined) patch.alert_channel = p.alertChannel;
     if (p.frequency !== undefined) patch.frequency = p.frequency;
 
     const { data: updated, error } = await context.supabase
