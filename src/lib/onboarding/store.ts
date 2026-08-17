@@ -109,9 +109,7 @@ const initial: OnboardingState = {
   transit: { hasPreference: false, lines: {} },
   commute: { maxMinutes: null },
 
-  alertChannel: "email",
   email: "",
-  phone: "",
   frequency: "balanced",
   selectedPlan: null,
   billingCycle: "monthly",

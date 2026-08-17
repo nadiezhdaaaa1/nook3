@@ -56,7 +56,7 @@ export function ensureMigratedFromLegacy(): void {
     id: generateId("u"),
     email: legacyState.email ?? "",
     emailVerified: false,
-    phone: legacyState.phone ?? "",
+    phone: "",
     phoneVerified: false,
     timezone:
       typeof Intl !== "undefined"
@@ -95,7 +95,6 @@ export function ensureMigratedFromLegacy(): void {
       amenities: legacyState.amenities ?? {},
       transit: legacyState.transit ?? { hasPreference: false, lines: {} },
       commute: legacyState.commute ?? { maxMinutes: null },
-      alertChannel: legacyState.alertChannel ?? "email",
       frequency: legacyState.frequency ?? "balanced",
       totalAlertsReceived: 0,
       alertsLast7Days: 0,

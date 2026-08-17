@@ -1,6 +1,5 @@
 import type { CityId } from "@/data/cities";
 import type {
-  AlertChannel,
   BillingCycle,
   Frequency,
   MoveOutInfo,
@@ -39,7 +38,6 @@ export interface Search {
   commute: { maxMinutes: number | null };
 
   // Per-search notifications
-  alertChannel: AlertChannel;
   frequency: Frequency;
 
   // Stats (mock for demo)
@@ -100,4 +98,4 @@ export const SEARCH_LIMITS: Record<Plan, number> = {
   pro: 3,
 };
 
-export type { OnboardingState, MoveOutInfo, Plan, Frequency, AlertChannel, BillingCycle };
+export type { OnboardingState, MoveOutInfo, Plan, Frequency, BillingCycle };

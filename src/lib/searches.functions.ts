@@ -28,7 +28,6 @@ const searchInputSchema = z.object({
     })
     .optional(),
   commute: z.object({ maxMinutes: z.number().int().min(5).max(120).nullable() }).optional(),
-  alertChannel: z.literal("email").optional(),
   frequency: z.enum(["minimal", "balanced", "maximum", "weekly"]).optional(),
 });
 

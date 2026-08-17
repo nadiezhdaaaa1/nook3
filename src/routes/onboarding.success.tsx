@@ -305,7 +305,7 @@ function Success() {
               }
             : null;
 
-        const res = await commit({ data: { search: payload, phone: o.phone || undefined } });
+        const res = await commit({ data: { search: payload } });
         if (res?.searchId) {
           useOnboardingStore.getState().setHandoffCompleted(true);
           useOnboardingStore.getState().setEditingSearch(res.searchId);

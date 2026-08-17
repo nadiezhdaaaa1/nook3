@@ -18,8 +18,8 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/notificat
 });
 
 const PLAN_PILL: Record<Plan, { text: string; cta: string | null }> = {
-  intro: { text: "Intro — 1 search, email alerts only", cta: "Upgrade" },
-  pro: { text: "Pro — 3 searches, real-time email alerts", cta: "Manage plan" },
+  intro: { text: "Intro — 1 search, standard alerts", cta: "Upgrade" },
+  pro: { text: "Pro — 3 searches, real-time alerts", cta: "Manage plan" },
 };
 
 const PLAN_RANK: Record<Plan, number> = { intro: 0, pro: 1 };

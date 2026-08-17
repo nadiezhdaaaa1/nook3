@@ -53,7 +53,6 @@ export function syncOnboardingToActiveSearch(): void {
     amenities: o.amenities,
     transit: o.transit,
     commute: o.commute,
-    alertChannel: o.alertChannel,
     frequency: o.frequency,
   });
 }
@@ -75,7 +74,6 @@ export function hydrateOnboardingFromSearch(s: Search): void {
     amenities: s.amenities,
     transit: s.transit,
     commute: s.commute,
-    alertChannel: s.alertChannel,
     frequency: s.frequency,
     editingSearchId: s.id,
   });
@@ -134,7 +132,6 @@ export function syncOnboardingToUser(): void {
   const o = useOnboardingStore.getState();
   app.updateProfile({
     email: o.email,
-    phone: o.phone,
     plan: o.selectedPlan ?? app.user?.plan ?? "intro",
     billingCycle: o.billingCycle,
     trialActive: o.trialActive,
