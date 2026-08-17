@@ -576,19 +576,23 @@ export const SampleListingsMap = forwardRef<SampleListingsMapRef, Props>(functio
     inner.style.pointerEvents = "auto";
     container.appendChild(inner);
 
-    // Taps/clicks inside the card must never reach the map surface underneath,
-    // otherwise the map's "tap empty space" handler clears the selection and
-    // the card disappears (notably on iOS Safari).
-    google.maps.OverlayView.preventMapHitsAndGesturesFrom?.(inner);
-    const stop = (e: Event) => e.stopPropagation();
-    const stopEvents = ["pointerdown", "mousedown", "touchstart", "touchend", "click", "dblclick"];
-    stopEvents.forEach((type) => inner.addEventListener(type, stop));
-
     const root = createRoot(inner);
     root.render(card);
 
     const overlay = createOverlay(position, container);
     overlay.setMap(mapRef.current);
+
+    // Taps/clicks inside the card must never reach the map surface underneath,
+    // otherwise the map's "tap empty space" handler clears the selection and
+    // the card disappears (notably on iOS Safari). Register the interactive
+    // element *after* it has been added to the overlay pane so Maps API can
+    // observe it correctly.
+    google.maps.OverlayView.preventMapHitsAndGesturesFrom?.(inner);
+
+    const stop = (e: Event) => e.stopPropagation();
+    const stopEvents = ["pointerdown", "mousedown", "touchstart", "touchend", "click", "dblclick"];
+    stopEvents.forEach((type) => inner.addEventListener(type, stop));
+
     overlayRef.current = { overlay, root };
 
     return () => {
