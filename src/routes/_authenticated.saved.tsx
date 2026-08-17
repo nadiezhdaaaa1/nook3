@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Check,
   Heart,
@@ -21,6 +21,7 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
 import { cn } from "@/lib/utils";
+import { digestLines } from "@/lib/digest";
 import { useAppStore, useDisabledSearchIds, switchActiveSearch, type Search, SEARCH_LIMITS } from "@/lib/store";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { getCity, type CityId } from "@/data/cities";
@@ -311,6 +312,36 @@ function summaryBits(s: Search): string[] {
   return bits;
 }
 
+/**
+ * Digest timing lines on a search card. Times are always rendered in the
+ * user's own timezone (browser), never the search city's. Computed after
+ * mount to avoid SSR/client timezone mismatches.
+ */
+function DigestMeta({ search, alertsEnabled }: { search: Search; alertsEnabled: boolean }) {
+  const [lines, setLines] = useState<{ next: string | null; last: string | null; first: string | null } | null>(null);
+
+  useEffect(() => {
+    setLines(
+      digestLines({
+        alertsEnabled,
+        frequency: search.frequency,
+        lastDigestAt: search.lastDigestAt,
+        lastDigestCount: search.lastDigestCount,
+      }),
+    );
+  }, [alertsEnabled, search.frequency, search.lastDigestAt, search.lastDigestCount]);
+
+  if (!lines) return <p className="mt-1 h-4 text-[12px] text-charcoal-500" aria-hidden />;
+
+  return (
+    <div className="mt-1 space-y-0.5 text-[12px] text-charcoal-500">
+      {lines.first && <p>{lines.first}</p>}
+      {lines.next && <p>{lines.next}</p>}
+      {lines.last && <p>{lines.last}</p>}
+    </div>
+  );
+}
+
 function SearchesTab({ searches }: { searches: Search[] }) {
   const navigate = useNavigate();
   const plan = useAppStore((s) => s.user?.plan ?? "intro");
@@ -395,10 +426,10 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                 <p className="mt-1 text-[12px] text-charcoal-500">
                   {getCity(s.cityId)?.shortName ?? s.cityId}
                   {disabledIds.has(s.id) ? " · Disabled" : ""}
-                  {" · "}
-                  {s.totalAlertsReceived} alerts
                 </p>
+                <DigestMeta search={s} alertsEnabled={s.alertsEnabled && !disabledIds.has(s.id)} />
               </div>
+
 
               <div className="flex items-center gap-1">
                 <OriginButton

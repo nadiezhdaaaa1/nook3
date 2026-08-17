@@ -96,6 +96,8 @@ export function ensureMigratedFromLegacy(): void {
       transit: legacyState.transit ?? { hasPreference: false, lines: {} },
       commute: legacyState.commute ?? { maxMinutes: null },
       frequency: legacyState.frequency ?? "balanced",
+      lastDigestAt: null,
+      lastDigestCount: null,
       totalAlertsReceived: 0,
       alertsLast7Days: 0,
       alertsToday: 0,

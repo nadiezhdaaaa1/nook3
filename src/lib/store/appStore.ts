@@ -91,6 +91,8 @@ const EMPTY_SEARCH_DEFAULTS = (cityId: CityId): Omit<Search, "id" | "name" | "ci
   transit: { hasPreference: false, lines: {} },
   commute: { maxMinutes: null },
   frequency: "balanced",
+  lastDigestAt: null,
+  lastDigestCount: null,
   totalAlertsReceived: 0,
   alertsLast7Days: 0,
   alertsToday: 0,

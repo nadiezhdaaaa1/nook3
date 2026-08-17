@@ -38,6 +38,12 @@ export interface Search {
   // Per-search notifications
   frequency: Frequency;
 
+  // Digest history
+  /** ISO timestamp of the last digest email sent for this search. */
+  lastDigestAt?: string | null;
+  /** Number of listings included in the last digest. */
+  lastDigestCount?: number | null;
+
   // Stats (mock for demo)
   totalAlertsReceived: number;
   alertsLast7Days: number;

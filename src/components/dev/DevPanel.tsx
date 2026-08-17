@@ -9,6 +9,7 @@ import { devSetAccountState, type DevAccountStateInput } from "@/lib/dev.functio
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
 import { profileQueryKey } from "@/lib/queries/profile";
 import { useOnboardingStore } from "@/lib/onboarding/store";
+import { useAppStore, type Search } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { useHasSession } from "@/lib/queries/useHasSession";
 import { cn } from "@/lib/utils";
@@ -283,6 +284,47 @@ export function DevPanel() {
               {label}
             </Chip>
           ))}
+        </Row>
+
+        <Row label="digest demo data (search cards)">
+          <Chip
+            active={false}
+            onClick={() => {
+              const st = useAppStore.getState();
+              const list = st.searches;
+              if (!list.length) {
+                toast.error("No searches to seed");
+                return;
+              }
+              const day = 24 * 3600 * 1000;
+              const variants: Array<Partial<Search>> = [
+                // Sent yesterday, alerts on
+                { lastDigestAt: new Date(Date.now() - day).toISOString(), lastDigestCount: 3, alertsEnabled: true },
+                // Never sent, alerts on
+                { lastDigestAt: null, lastDigestCount: null, alertsEnabled: true },
+                // Alerts off, with a past digest
+                { lastDigestAt: new Date(Date.now() - 4 * day).toISOString(), lastDigestCount: 5, alertsEnabled: false },
+              ];
+              list.forEach((search, i) => {
+                st.updateSearch(search.id, variants[i % variants.length]);
+              });
+              toast.success("Seeded digest demo values");
+            }}
+          >
+            seed variants
+          </Chip>
+          <Chip
+            active={false}
+            onClick={() => {
+              const st = useAppStore.getState();
+              st.searches.forEach((search) =>
+                st.updateSearch(search.id, { lastDigestAt: null, lastDigestCount: null, alertsEnabled: true }),
+              );
+              toast.success("Cleared digest demo values");
+            }}
+          >
+            clear
+          </Chip>
         </Row>
 
         <Row label="dunning reason">
