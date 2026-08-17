@@ -386,7 +386,9 @@ function SearchesTab({ searches }: { searches: Search[] }) {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   {s.id === activeSearchId && (
-                    <Check className="h-4 w-4 shrink-0 text-sage-700" aria-label="Selected search" />
+                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage-700" aria-label="Selected search">
+                      <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                    </div>
                   )}
                   <h3 className="truncate text-[19px] font-semibold text-[#241c12] font-['Google_Sans_Flex',sans-serif]">{s.name}</h3>
                 </div>
