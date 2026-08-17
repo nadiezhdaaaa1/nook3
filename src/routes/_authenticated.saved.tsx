@@ -40,6 +40,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 const TABS = [
   {
@@ -409,18 +411,17 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                 >
                   <Pencil className="h-4 w-4" />
                 </OriginButton>
-                <OriginButton
-                  variant="tertiary"
-                  size="medium"
-                  aria-label={`Delete ${s.name}`}
-                  className="h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger hover:text-danger hover:bg-danger/10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(s);
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </OriginButton>
+                <DeleteSearchButton
+                  search={s}
+                  reason={
+                    live.length === 1
+                      ? "You need at least one search to get alerts."
+                      : s.id === activeSearchId
+                        ? "This is your active search. Switch to another search first."
+                        : null
+                  }
+                  onDelete={() => openDeleteDialog(s)}
+                />
               </div>
             </div>
 
@@ -478,6 +479,57 @@ function SearchesTab({ searches }: { searches: Search[] }) {
 
       {upgradeOpen && <UpgradeModal onClose={() => setUpgradeOpen(false)} />}
     </div>
+  );
+}
+
+/* ---------- Delete button (with disabled reasons) ---------- */
+
+function DeleteSearchButton({
+  search,
+  reason,
+  onDelete,
+}: {
+  search: Search;
+  reason: string | null;
+  onDelete: () => void;
+}) {
+  const disabled = reason !== null;
+
+  const button = (
+    <OriginButton
+      variant="tertiary"
+      size="medium"
+      aria-label={`Delete ${search.name}`}
+      aria-disabled={disabled || undefined}
+      aria-describedby={disabled ? `delete-reason-${search.id}` : undefined}
+      className={cn(
+        "h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger",
+        disabled
+          ? "cursor-default opacity-40 hover:bg-transparent hover:text-danger"
+          : "hover:bg-danger/10 hover:text-danger",
+      )}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (disabled) {
+          toast(reason);
+          return;
+        }
+        onDelete();
+      }}
+    >
+      <Trash2 className="h-4 w-4" />
+    </OriginButton>
+  );
+
+  if (!disabled) return button;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent id={`delete-reason-${search.id}`} className="max-w-[220px]">
+        {reason}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 

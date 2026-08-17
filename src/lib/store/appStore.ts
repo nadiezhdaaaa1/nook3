@@ -279,14 +279,12 @@ export const useAppStore = create<AppStore>()(
 
       deleteSearch: (id) => {
         const remaining = get().searches.filter((s) => s.id !== id);
-        const nextActive =
-          get().activeSearchId === id
-            ? (remaining[0]?.id ?? null)
-            : get().activeSearchId;
+        // The active search can never be deleted, so the selection never moves.
+        const nextActive = remaining.length === 0 ? null : get().activeSearchId;
         const tombstones = [...get().deletedSearchIds.filter((x) => x !== id), id].slice(-50);
         set({
           searches: remaining,
-          activeSearchId: remaining.length === 0 ? null : nextActive,
+          activeSearchId: nextActive,
           deletedSearchIds: tombstones,
         });
         clearEditingBufferFor(id, nextActive, remaining);
