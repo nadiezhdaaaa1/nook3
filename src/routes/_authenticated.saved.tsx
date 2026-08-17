@@ -3,6 +3,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useMemo, useState, type ReactNode } from "react";
 import {
+  Check,
   Heart,
   Inbox,
   Loader2,
@@ -20,7 +21,7 @@ import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
 import { cn } from "@/lib/utils";
-import { useAppStore, useDisabledSearchIds, type Search, SEARCH_LIMITS } from "@/lib/store";
+import { useAppStore, useDisabledSearchIds, switchActiveSearch, type Search, SEARCH_LIMITS } from "@/lib/store";
 import { UpgradeModal } from "@/components/preferences/UpgradeModal";
 import { getCity, type CityId } from "@/data/cities";
 import { CITY_MAP } from "@/data/cities/mapData";
@@ -321,6 +322,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   const live = searches.filter((s) => s.status !== "archived");
   const archived = searches.filter((s) => s.status === "archived");
   const disabledIds = useDisabledSearchIds();
+  const activeSearchId = useAppStore((st) => st.activeSearchId);
   const max = SEARCH_LIMITS[plan];
   const canCreate = live.length < max;
   const isUuid = (id: string) =>
