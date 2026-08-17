@@ -237,7 +237,7 @@ export function HeroScrollNav() {
                     key={l.href}
                     variant="tertiary"
                     align="left"
-                    className="hero-nav-menu-link-btn h-[52px] w-full border-0 px-2"
+                    className="h-[52px] w-full border-0 px-2"
                     onClick={() => {
                       closeMenu();
                       window.location.href = onHome ? l.href : `/${l.href}`;
