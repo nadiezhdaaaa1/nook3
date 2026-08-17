@@ -395,10 +395,10 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                 <p className="mt-1 text-[12px] text-charcoal-500">
                   {getCity(s.cityId)?.shortName ?? s.cityId}
                   {disabledIds.has(s.id) ? " · Disabled" : ""}
-                  {" · "}
-                  {s.totalAlertsReceived} alerts
                 </p>
+                <DigestMeta search={s} alertsEnabled={s.alertsEnabled && !disabledIds.has(s.id)} />
               </div>
+
 
               <div className="flex items-center gap-1">
                 <OriginButton
