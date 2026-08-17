@@ -248,7 +248,30 @@ export function DevPanel() {
           ))}
         </Row>
 
+        <Row label="dashboard state">
+          {(
+            [
+              ["normal", "Normal"],
+              ["no_digest", "No digest yet"],
+              ["no_matches", "No matches"],
+              ["all_dismissed", "All dismissed"],
+            ] as const
+          ).map(([value, label]) => (
+            <Chip
+              key={value}
+              active={dashboardState === value}
+              onClick={() => {
+                setDashboardState(value);
+                setDashboardStateOverride(value);
+              }}
+            >
+              {label}
+            </Chip>
+          ))}
+        </Row>
+
         <Row label="dunning reason">
+
           <Chip
             active={reason !== "requires_confirmation"}
             onClick={() => {
