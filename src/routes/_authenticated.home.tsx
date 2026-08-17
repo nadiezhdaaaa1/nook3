@@ -687,38 +687,7 @@ function HomeScreen() {
 
         </div>
         )}
-        {noSearches && hydrated && (
-          <div className="mx-auto flex h-full max-w-[960px] flex-col items-center justify-center p-2">
-            <div className="w-full px-6 py-12 text-center">
-              <img
-                src={searchIllustration.url}
-                alt=""
-                aria-hidden
-                width={48}
-                height={64}
-                className="mx-auto mb-4 h-16 w-12"
-              />
-              <h3 className="font-display text-[22px] font-semibold text-[#241c12]">
-                No searches yet
-              </h3>
-              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-                You&rsquo;re on {planLabel}, billed {cycleLabel}.
-              </p>
-              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-                No searches, no emails. Set one up and Nook starts watching.
-              </p>
-              <div className="mt-6 flex justify-center">
-                <OriginButton
-                  variant="main"
-                  size="medium"
-                  onClick={() => navigate({ to: "/search/new/$step", params: { step: "1" } })}
-                >
-                  Create a search
-                </OriginButton>
-              </div>
-            </div>
-          </div>
-        )}
+
       </section>
 
       <FiltersSheet
