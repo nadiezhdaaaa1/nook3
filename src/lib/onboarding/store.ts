@@ -46,10 +46,8 @@ export interface OnboardingState {
   commute: { maxMinutes: number | null };
 
 
-  // Step 5
-  alertChannel: AlertChannel;
+  // Contact
   email: string;
-  phone: string;
 
   // Settings
   frequency: Frequency;
