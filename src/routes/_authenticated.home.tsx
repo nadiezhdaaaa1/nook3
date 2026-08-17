@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 
 
-import searchIllustration from "@/assets/search-3.png.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { EmptyState } from "@/components/app/EmptyState";
+import { useDashboardStateOverride } from "@/lib/dev/dashboardState";
+
 
 import { SampleListingsMap, type SampleListingsMapRef } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
@@ -124,11 +126,7 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 function HomeScreen() {
   const search = useActiveSearch();
   const noSearches = useAppStore((s) => s.searches.length === 0);
-  const userPlan = useAppStore((s) => s.user?.plan);
-  const userCycle = useAppStore((s) => s.user?.billingCycle);
-  const planLabel = userPlan === "pro" ? "Pro" : "Intro";
-  const cycleLabel = userCycle === "annual" ? "annually" : "monthly";
-  const hydrated = useAppStore((s) => s.hydrated);
+
   const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
   const cityConfig = getCity(cityId);
@@ -207,55 +205,13 @@ function HomeScreen() {
   }, [alertsQ.data, cityId, search?.id, catalogByKey]);
 
 
-  /** Catalog listings have their own ids, so match persisted dislikes by title+price. */
-  const dismissedKeys = useMemo(
-    () =>
-      new Set(
-        (alertsQ.data ?? [])
-          .filter((a) => a.status === "dismissed")
-          .map((a) => `${a.listing?.title ?? ""}|${a.listing?.price ?? ""}`),
-      ),
-    [alertsQ.data],
+
+  /** Only the user's own digest matches ever render here — never sample listings. */
+  const listings = useMemo(
+    () => [...allAlertListings].sort((a, b) => a.rent - b.rent),
+    [allAlertListings],
   );
 
-  /** Scope filters derived from the saved search — budget, beds, min baths, neighborhoods. */
-  const scopeFilters = useMemo<MatchFilters>(
-    () => ({
-      budget: scope.budget,
-      bedrooms: scope.bedrooms,
-      bathrooms: scope.bathroomsMin,
-      neighborhoods: scope.neighborhoods,
-      amenities: [],
-      transit: [],
-      noFeeOnly: false,
-    }),
-    [scope],
-  );
-
-  /** Catalog narrowed to the saved search, with the user's own alert rows merged in. */
-  const listings = useMemo(() => {
-    const pool = applyFilters(cityListings, scopeFilters, scope).filter(
-      (l) => !dismissedKeys.has(`${l.address}|${l.rent}`),
-    );
-    const seen = new Set(allAlertListings.map((l) => `${l.address}|${l.rent}`));
-    const merged = [...allAlertListings, ...pool.filter((l) => !seen.has(`${l.address}|${l.rent}`))];
-    return merged.sort((a, b) => a.rent - b.rent);
-  }, [cityListings, scopeFilters, scope, dismissedKeys, allAlertListings]);
-
-  /** Which saved-search criterion emptied the pool — drives the empty state copy. */
-  const emptyReason = useMemo(() => {
-    if (cityListings.length === 0) return "city" as const;
-    const budgetOnly = applyFilters(
-      cityListings,
-      { ...scopeFilters, neighborhoods: [], bedrooms: [], bathrooms: null },
-      scope,
-    );
-    if (budgetOnly.length === 0) return "budget" as const;
-    const withBeds = applyFilters(cityListings, { ...scopeFilters, neighborhoods: [] }, scope);
-    if (withBeds.length === 0) return "beds" as const;
-    if (scope.neighborhoods.length > 0) return "neighborhoods" as const;
-    return "filters" as const;
-  }, [cityListings, scopeFilters, scope]);
 
   const visibleListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
@@ -269,6 +225,21 @@ function HomeScreen() {
 
   const totalMatches = visibleListings.length;
   const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
+
+  /** Which empty state the active search is in.
+   *  no digest rows at all → "no_digest"; rows exist but every one is dismissed
+   *  → "all_dismissed"; a digest ran and left nothing → "no_matches". */
+  const stateOverride = useDashboardStateOverride();
+  const dashboardState = useMemo(() => {
+    if (stateOverride !== "normal") return stateOverride;
+    const rows = (alertsQ.data ?? []).filter(
+      (a) => !search || !a.searchId || a.searchId === search.id,
+    );
+    if (rows.length === 0) return "no_digest" as const;
+    if (rows.every((a) => a.status === "dismissed")) return "all_dismissed" as const;
+    return "no_matches" as const;
+  }, [stateOverride, alertsQ.data, search?.id]);
+
 
   useEffect(() => {
     setPage(1);
@@ -543,26 +514,83 @@ function HomeScreen() {
           {(() => {
             const displayListings = pagedVisibleListings;
             const isEmpty = displayListings.length === 0 && !alertsQ.isLoading;
-            const emptyCopy: Record<typeof emptyReason, string> = {
-              city: `We're still loading listings for ${cityConfig?.displayName ?? "your city"}.`,
-              budget: "No listings inside your saved budget range — widen the budget on this search.",
-              beds: "No listings with the bedroom or bathroom mix you saved — loosen those on this search.",
-              neighborhoods:
-                "No listings in your selected neighborhoods yet — add a few more neighborhoods to this search.",
-              filters: "No listings match the filters you applied — try clearing a couple.",
+            if (!isEmpty) return null;
+
+            const goEdit = () => {
+              if (search) navigate({ to: "/search/$searchId/budget", params: { searchId: search.id } });
             };
-            return isEmpty ? (
-              <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
-                <p className="text-sm text-charcoal-700">
-                  {filtersActive
-                    ? "No listings match the filters you applied — try clearing a couple."
-                    : emptyCopy[emptyReason]}
-                </p>
-                <p className="mt-2 text-xs text-charcoal-500">
-                  Edit this search to widen its range and we'll start matching.
-                </p>
-              </div>
-            ) : (
+
+            if (filtersActive && stateOverride === "normal" && dashboardState !== "no_digest") {
+              return (
+                <EmptyState
+                  title="No matches with these filters"
+                  body="Nothing here matches the filters you applied — try clearing a couple."
+                  action={
+                    <OriginButton
+                      variant="tertiary"
+                      size="medium"
+                      onClick={() => setFilters(defaultFilters(scope))}
+                    >
+                      Clear filters
+                    </OriginButton>
+                  }
+                />
+              );
+            }
+
+            if (dashboardState === "all_dismissed") {
+              return (
+                <EmptyState
+                  title="You've cleared this digest"
+                  body="Every match from this period is in your disliked list. You can bring any of them back."
+                  action={
+                    <OriginButton
+                      variant="main"
+                      size="medium"
+                      onClick={() => navigate({ to: "/saved", search: { tab: "disliked" } as never })}
+                    >
+                      View disliked listings
+                    </OriginButton>
+                  }
+                />
+              );
+            }
+
+            if (dashboardState === "no_matches") {
+              return (
+                <EmptyState
+                  title="No new matches this period"
+                  body="Nothing slipped through your filters. Broadening your budget or neighborhoods usually helps."
+                  action={
+                    <OriginButton variant="main" size="medium" onClick={goEdit}>
+                      Edit search
+                    </OriginButton>
+                  }
+                />
+              );
+            }
+
+            return (
+              <EmptyState
+                title="Your first digest arrives within 24 hours"
+                body={`We're watching ${cityConfig?.displayName ?? "your city"} for you right now.`}
+                action={
+                  <button
+                    type="button"
+                    onClick={goEdit}
+                    className="text-sm font-medium text-charcoal-600 underline underline-offset-4 transition-colors hover:text-charcoal-900"
+                  >
+                    Review your search
+                  </button>
+                }
+              />
+            );
+          })()}
+
+          {pagedVisibleListings.length > 0 && !alertsQ.isLoading && (() => {
+            const displayListings = pagedVisibleListings;
+            return (
+
               <>
                 <div className="mt-6 flex flex-col gap-2">
                   {displayListings.map((listing) => (
@@ -648,38 +676,7 @@ function HomeScreen() {
 
         </div>
         )}
-        {noSearches && hydrated && (
-          <div className="mx-auto flex h-full max-w-[960px] flex-col items-center justify-center p-2">
-            <div className="w-full px-6 py-12 text-center">
-              <img
-                src={searchIllustration.url}
-                alt=""
-                aria-hidden
-                width={48}
-                height={64}
-                className="mx-auto mb-4 h-16 w-12"
-              />
-              <h3 className="font-display text-[22px] font-semibold text-[#241c12]">
-                No searches yet
-              </h3>
-              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-                You&rsquo;re on {planLabel}, billed {cycleLabel}.
-              </p>
-              <p className="mx-auto mt-2 max-w-[420px] text-[15px] leading-[22px] text-charcoal-600">
-                No searches, no emails. Set one up and Nook starts watching.
-              </p>
-              <div className="mt-6 flex justify-center">
-                <OriginButton
-                  variant="main"
-                  size="medium"
-                  onClick={() => navigate({ to: "/search/new/$step", params: { step: "1" } })}
-                >
-                  Create a search
-                </OriginButton>
-              </div>
-            </div>
-          </div>
-        )}
+
       </section>
 
       <FiltersSheet

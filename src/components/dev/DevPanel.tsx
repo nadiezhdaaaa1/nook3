@@ -27,6 +27,11 @@ import {
   setDunningReasonOverride,
   type DunningReason,
 } from "@/lib/dunning";
+import {
+  getDashboardStateOverride,
+  setDashboardStateOverride,
+  type DashboardStateOverride,
+} from "@/lib/dev/dashboardState";
 
 const STATUSES = ["none", "trialing", "active", "past_due", "canceled"] as const;
 
@@ -79,6 +84,9 @@ export function DevPanel() {
       window.localStorage.getItem("nook.dev.dunningSessionError") === "1",
   );
   const [dayOffset, setDayOffset] = useState(0);
+  const [dashboardState, setDashboardState] = useState<DashboardStateOverride>(() =>
+    getDashboardStateOverride(),
+  );
   const qc = useQueryClient();
   const router = useRouter();
   const navigate = useNavigate();
@@ -248,7 +256,30 @@ export function DevPanel() {
           ))}
         </Row>
 
+        <Row label="dashboard state">
+          {(
+            [
+              ["normal", "Normal"],
+              ["no_digest", "No digest yet"],
+              ["no_matches", "No matches"],
+              ["all_dismissed", "All dismissed"],
+            ] as const
+          ).map(([value, label]) => (
+            <Chip
+              key={value}
+              active={dashboardState === value}
+              onClick={() => {
+                setDashboardState(value);
+                setDashboardStateOverride(value);
+              }}
+            >
+              {label}
+            </Chip>
+          ))}
+        </Row>
+
         <Row label="dunning reason">
+
           <Chip
             active={reason !== "requires_confirmation"}
             onClick={() => {
