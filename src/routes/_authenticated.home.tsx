@@ -525,26 +525,83 @@ function HomeScreen() {
           {(() => {
             const displayListings = pagedVisibleListings;
             const isEmpty = displayListings.length === 0 && !alertsQ.isLoading;
-            const emptyCopy: Record<typeof emptyReason, string> = {
-              city: `We're still loading listings for ${cityConfig?.displayName ?? "your city"}.`,
-              budget: "No listings inside your saved budget range — widen the budget on this search.",
-              beds: "No listings with the bedroom or bathroom mix you saved — loosen those on this search.",
-              neighborhoods:
-                "No listings in your selected neighborhoods yet — add a few more neighborhoods to this search.",
-              filters: "No listings match the filters you applied — try clearing a couple.",
+            if (!isEmpty) return null;
+
+            const goEdit = () => {
+              if (search) navigate({ to: "/search/$searchId/budget", params: { searchId: search.id } });
             };
-            return isEmpty ? (
-              <div className="mt-6 rounded-[16px] border border-black/[0.08] bg-white p-6 text-center">
-                <p className="text-sm text-charcoal-700">
-                  {filtersActive
-                    ? "No listings match the filters you applied — try clearing a couple."
-                    : emptyCopy[emptyReason]}
-                </p>
-                <p className="mt-2 text-xs text-charcoal-500">
-                  Edit this search to widen its range and we'll start matching.
-                </p>
-              </div>
-            ) : (
+
+            if (filtersActive && dashboardState === "normal") {
+              return (
+                <EmptyState
+                  title="No matches with these filters"
+                  body="Nothing here matches the filters you applied — try clearing a couple."
+                  action={
+                    <OriginButton
+                      variant="tertiary"
+                      size="medium"
+                      onClick={() => setFilters(defaultFilters(scope))}
+                    >
+                      Clear filters
+                    </OriginButton>
+                  }
+                />
+              );
+            }
+
+            if (dashboardState === "all_dismissed") {
+              return (
+                <EmptyState
+                  title="You've cleared this digest"
+                  body="Every match from this period is in your disliked list. You can bring any of them back."
+                  action={
+                    <OriginButton
+                      variant="main"
+                      size="medium"
+                      onClick={() => navigate({ to: "/saved", search: { tab: "disliked" } as never })}
+                    >
+                      View disliked listings
+                    </OriginButton>
+                  }
+                />
+              );
+            }
+
+            if (dashboardState === "no_matches") {
+              return (
+                <EmptyState
+                  title="No new matches this period"
+                  body="Nothing slipped through your filters. Broadening your budget or neighborhoods usually helps."
+                  action={
+                    <OriginButton variant="main" size="medium" onClick={goEdit}>
+                      Edit search
+                    </OriginButton>
+                  }
+                />
+              );
+            }
+
+            return (
+              <EmptyState
+                title="Your first digest arrives within 24 hours"
+                body={`We're watching ${cityConfig?.displayName ?? "your city"} for you right now.`}
+                action={
+                  <button
+                    type="button"
+                    onClick={goEdit}
+                    className="text-sm font-medium text-charcoal-600 underline underline-offset-4 transition-colors hover:text-charcoal-900"
+                  >
+                    Review your search
+                  </button>
+                }
+              />
+            );
+          })()}
+
+          {pagedVisibleListings.length > 0 && !alertsQ.isLoading && (() => {
+            const displayListings = pagedVisibleListings;
+            return (
+
               <>
                 <div className="mt-6 flex flex-col gap-2">
                   {displayListings.map((listing) => (
