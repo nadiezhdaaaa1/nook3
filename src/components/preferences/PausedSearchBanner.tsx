@@ -55,22 +55,22 @@ export function PausedSearchBanner() {
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-sm font-semibold text-charcoal-950">
-          "{active.name}" is paused.
+          Alerts are off for "{active.name}".
         </div>
         <div className="text-xs text-charcoal-600 mt-0.5">
-          No new alerts will be sent for this search until you resume. It still
-          counts toward your plan quota.
+          No new alerts will be sent for this search until you turn them back
+          on. It still counts toward your plan quota.
         </div>
       </div>
       <button
         type="button"
         onClick={() => {
           const res = resumeSearch(active.id);
-          if (!res.ok) toast.error("Can't resume", { description: res.error });
+          if (!res.ok) toast.error("Can't turn alerts on", { description: res.error });
         }}
         className="h-10 px-4 inline-flex items-center gap-1.5 rounded-pill bg-charcoal-950 text-paper text-xs font-semibold hover:bg-charcoal-800 shrink-0"
       >
-        <Play className="h-3.5 w-3.5" /> Resume
+        <Play className="h-3.5 w-3.5" /> Turn alerts on
       </button>
     </div>
   );

@@ -466,7 +466,7 @@ function Success() {
             })}
             {!freshnessQ.isLoading && freshness.length === 0 && (
               <li className="px-6 py-4 text-[14px] text-charcoal-500">
-                Your saved searches are ready to resume.
+                Your saved searches are ready to go.
               </li>
             )}
           </ul>

@@ -47,8 +47,8 @@ const ITEMS = [
   },
   {
     icon: pauseAsset.url,
-    title: "Pause whenever",
-    body: "Need a break? Pause. No alerts while paused. One click to resume.",
+    title: "Alerts off whenever",
+    body: "Need a break? Turn alerts off. Your filters stay put. One click to turn them back on.",
   },
 ];
 

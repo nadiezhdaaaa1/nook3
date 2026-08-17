@@ -68,8 +68,8 @@ export function successConfig(variant: SuccessVariant, access: AccessState | nul
       const last4 = "4242";
       return {
         variant,
-        heading: "Your alerts are paused.",
-        sub: `We tried your card ending ${last4} a few times over the past week and couldn't take payment, so we've paused your subscription. Nothing's lost — your searches are exactly where you left them.`,
+        heading: "Your alerts are off.",
+        sub: `We tried your card ending ${last4} a few times over the past week and couldn't take payment, so we've switched your alerts off. Nothing's lost — your searches are exactly where you left them.`,
         showPlan: true,
         allowChangePlan: true,
         showSummary: false,

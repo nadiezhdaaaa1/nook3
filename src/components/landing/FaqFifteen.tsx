@@ -44,7 +44,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What if I find an apartment but I'm still on a paid plan?",
-    a: "Pause your search instead of canceling. Pause keeps your filters and history intact — useful if your lease falls through, if you decide to keep looking, or if you're helping a friend look later. Or just cancel — your data is preserved for 30 days in case you come back.",
+    a: "Turn alerts off for your search instead of canceling. That keeps your filters and history intact — useful if your lease falls through, if you decide to keep looking, or if you're helping a friend look later. Or just cancel — your data is preserved for 30 days in case you come back.",
   },
   {
     q: "Can I share my account with my partner or roommate?",

@@ -195,20 +195,20 @@ function PageHeader({
           onClick={() => {
             if (status === "paused") {
               const res = resumeSearch(searchId);
-              if (res.ok) toast.success("Search resumed");
-              else toast.error("Can't resume", { description: res.error });
+              if (res.ok) toast.success(`Alerts turned on for ${name}`);
+              else toast.error("Can't turn alerts on", { description: res.error });
             } else {
               pauseSearch(searchId);
-              toast.success("Search paused");
+              toast.success(`Alerts turned off for ${name}`);
             }
           }}
         >
           {isDisabled ? (
             <><Pause className="h-4 w-4" /> Disabled</>
           ) : status === "paused" ? (
-            <><Play className="h-4 w-4" /> Resume</>
+            <><Play className="h-4 w-4" /> Turn alerts on</>
           ) : (
-            <><Pause className="h-4 w-4" /> Pause</>
+            <><Pause className="h-4 w-4" /> Turn alerts off</>
           )}
         </OriginButton>
         <OriginButton
