@@ -532,7 +532,6 @@ export type Database = {
       }
       searches: {
         Row: {
-          alert_channel: Database["public"]["Enums"]["alert_channel"]
           amenities: Json
           archived_at: string | null
           bathrooms: string
@@ -555,7 +554,6 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          alert_channel?: Database["public"]["Enums"]["alert_channel"]
           amenities?: Json
           archived_at?: string | null
           bathrooms?: string
@@ -578,7 +576,6 @@ export type Database = {
           user_id: string
         }
         Update: {
-          alert_channel?: Database["public"]["Enums"]["alert_channel"]
           amenities?: Json
           archived_at?: string | null
           bathrooms?: string
@@ -839,7 +836,7 @@ export type Database = {
         }
       }
       commit_onboarding: {
-        Args: { _phone?: string; _search?: Json; _user_id: string }
+        Args: { _search?: Json; _user_id: string }
         Returns: Json
       }
       dev_set_account_state: {
@@ -955,7 +952,6 @@ export type Database = {
       }
     }
     Enums: {
-      alert_channel: "email" | "text" | "both"
       alert_freq: "minimal" | "balanced" | "maximum" | "weekly"
       alert_status: "new" | "saved" | "contacted" | "dismissed"
       app_plan: "intro" | "pro"
@@ -1112,7 +1108,6 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      alert_channel: ["email", "text", "both"],
       alert_freq: ["minimal", "balanced", "maximum", "weekly"],
       alert_status: ["new", "saved", "contacted", "dismissed"],
       app_plan: ["intro", "pro"],
