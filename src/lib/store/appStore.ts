@@ -12,7 +12,7 @@ import type {
   BillingCycle,
 } from "./types";
 import { SEARCH_LIMITS } from "./types";
-import { isSearchDisabled, getDisabledSearchIds, DISABLED_SEARCH_REASON } from "./lock";
+import { isSearchDisabled, getDisabledSearchIds } from "./lock";
 import { generateId, generateReferralCode, getDefaultSearchName, nowIso } from "./helpers";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 
