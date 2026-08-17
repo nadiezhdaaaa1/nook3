@@ -414,7 +414,9 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
       </motion.div>
 
       <style>{`
+        .hero-b-card-persp { perspective: 900px; }
         .hero-b-card {
+          position: relative;
           width: 300px;
           padding: 20px;
           border-radius: 24px;
@@ -424,9 +426,40 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           flex-direction: column;
           align-items: flex-start;
           will-change: transform, opacity;
+          --x: 50%;
+          --y: 50%;
+          --glow-o: 0;
         }
-        .hero-b-card:hover {
-          box-shadow: 0 24px 40px rgba(12,12,13,0.16), 0 6px 12px rgba(12,12,13,0.08);
+        .hero-b-card:focus-visible { outline: none; }
+        /* terracotta spotlight confined to the 1px border ring */
+        .hero-b-card::before {
+          content: "";
+          position: absolute;
+          inset: -1px;
+          border-radius: inherit;
+          border: 1px solid transparent;
+          pointer-events: none;
+          background-attachment: fixed;
+          background-image: radial-gradient(
+            180px circle at var(--x) var(--y),
+            hsl(20 66% 53% / 0.55),
+            hsl(20 66% 53% / 0) 70%
+          );
+          -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+          mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+          -webkit-mask-clip: padding-box, border-box;
+          mask-clip: padding-box, border-box;
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: var(--glow-o);
+          transition: opacity 200ms ease;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-b-card::before { display: none; }
+          .hero-b-card-static:hover,
+          .hero-b-card-static:focus-visible {
+            border-color: rgba(214, 108, 56, 0.45);
+          }
         }
         .hero-b-card-badge {
           display: inline-flex;
