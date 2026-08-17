@@ -431,8 +431,13 @@ export function HeroScrollNav() {
           font-weight: 500;
         }
         .hero-nav-sheet-link:hover { background: rgba(36,28,18,0.05); }
-        .hero-nav-sheet-signin {
+        .hero-nav-sheet-actions {
           margin-top: 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .hero-nav-sheet-signin {
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -442,6 +447,13 @@ export function HeroScrollNav() {
           background: ${SURFACE};
           font-size: 15px;
           font-weight: 500;
+        }
+        .hero-nav-sheet-buttons {
+          margin-top: 12px;
+          padding: 0 20px 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
 
         @media (prefers-reduced-motion: reduce) {
