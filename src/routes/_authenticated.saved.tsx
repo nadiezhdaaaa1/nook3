@@ -151,8 +151,7 @@ function SavedPage() {
         <div
           role="tablist"
           aria-label="Library sections"
-          className="flex flex-nowrap gap-3 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0"
-          style={{ scrollbarWidth: "none" }}
+          className="flex flex-wrap gap-3 pb-2"
         >
           {TABS.map((t) => {
             const Icon = t.icon;
