@@ -15,6 +15,8 @@ export const listSearches = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("searches")
       .select("*")
+      // legacy rows only: archiving no longer exists as a product concept
+      .neq("status", "archived")
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     return (data ?? []).map(dbRowToSearch);
