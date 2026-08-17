@@ -506,9 +506,9 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           background-attachment: scroll;
           background-repeat: no-repeat;
           background-image: radial-gradient(
-            calc(var(--size) * 0.75px) circle at
+            calc(var(--size) * 0.6px) circle at
               calc(var(--lx) * 1px + var(--border) * 1px) calc(var(--ly) * 1px + var(--border) * 1px),
-            rgb(var(--glow-rgb) / 0.28),
+            rgb(var(--glow-rgb) / 0.14),
             transparent 100%
           );
           -webkit-mask:
