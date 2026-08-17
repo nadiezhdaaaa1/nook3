@@ -592,13 +592,9 @@ function HomeScreen() {
                 title="Your first digest arrives within 24 hours"
                 body={`We're watching ${cityConfig?.displayName ?? "your city"} for you right now`}
                 action={
-                  <button
-                    type="button"
-                    onClick={goEdit}
-                    className="text-sm font-medium text-charcoal-600 underline underline-offset-4 transition-colors hover:text-charcoal-900"
-                  >
+                  <OriginButton variant="tertiary" size="medium" onClick={goEdit}>
                     Review your search
-                  </button>
+                  </OriginButton>
                 }
               />
             );
