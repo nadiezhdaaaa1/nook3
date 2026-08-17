@@ -9,6 +9,7 @@ import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
+import { cn } from "@/lib/utils";
 
 const reduceMotion = (reduce: boolean | null) =>
   reduce
@@ -194,7 +195,10 @@ export function Step4Preferences() {
                   >
                     <span className="inline-flex items-center gap-2">
                       <span
-                        className="h-6 w-6 inline-flex items-center justify-center rounded-full text-[11px] font-bold text-white"
+                        className={cn(
+                          "h-6 inline-flex items-center justify-center rounded-full text-[11px] font-bold text-white",
+                          line.label.length === 1 ? "w-6" : "min-w-6 px-1",
+                        )}
                         style={{ background: line.color }}
                       >
                         {line.label}
