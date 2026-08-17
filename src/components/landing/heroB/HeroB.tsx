@@ -332,6 +332,7 @@ function HeroBBackground({
 /* ---------------- listing card ---------------- */
 
 function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
+  const tilt = useCardTilt(reduced);
   const child = reduced
     ? {}
     : {
@@ -342,8 +343,11 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
       };
 
   return (
+    <div className="hero-b-card-persp">
     <motion.article
-      className="hero-b-card"
+      ref={tilt.ref as unknown as React.Ref<HTMLElement>}
+      {...tilt.handlers}
+      className={reduced ? "hero-b-card hero-b-card-static" : "hero-b-card"}
       initial={reduced ? { opacity: 1 } : "hidden"}
       whileInView={reduced ? undefined : "visible"}
       viewport={{ once: true, amount: 0.3 }}
@@ -360,10 +364,13 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
               },
             }
       }
-      whileHover={reduced ? undefined : { scale: 1.03 }}
-      transition={reduced ? { duration: 0.2 } : { type: "spring", stiffness: 300, damping: 20 }}
+      transition={reduced ? { duration: 0.2 } : { duration: 0.5, ease: EASE_REVEAL }}
+      tabIndex={0}
       style={{
         ...uiFont,
+        rotateX: reduced ? 0 : tilt.rotateX,
+        rotateY: reduced ? 0 : tilt.rotateY,
+        transformStyle: "preserve-3d",
         boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
       }}
     >
