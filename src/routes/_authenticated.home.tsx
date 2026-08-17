@@ -254,6 +254,21 @@ function HomeScreen() {
   const totalMatches = visibleListings.length;
   const totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE));
 
+  /** Which empty state the active search is in.
+   *  no digest rows at all → "no_digest"; rows exist but every one is dismissed
+   *  → "all_dismissed"; a digest ran and left nothing → "no_matches". */
+  const stateOverride = useDashboardStateOverride();
+  const dashboardState = useMemo(() => {
+    if (stateOverride !== "normal") return stateOverride;
+    const rows = (alertsQ.data ?? []).filter(
+      (a) => !search || !a.searchId || a.searchId === search.id,
+    );
+    if (rows.length === 0) return "no_digest" as const;
+    if (rows.every((a) => a.status === "dismissed")) return "all_dismissed" as const;
+    return "no_matches" as const;
+  }, [stateOverride, alertsQ.data, search?.id]);
+
+
   useEffect(() => {
     setPage(1);
   }, [filterCount]);
