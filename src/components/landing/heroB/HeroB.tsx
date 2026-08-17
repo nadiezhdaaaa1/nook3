@@ -431,7 +431,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         .hero-b-card {
           position: relative;
           width: 300px;
-          padding: 20px;
+          padding: 24px;
           border-radius: 24px;
           border: 1px solid rgba(0,0,0,0.20);
           display: flex;
