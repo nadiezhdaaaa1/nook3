@@ -377,19 +377,6 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
     >
       <div className="hero-b-card-bloom" aria-hidden />
 
-      {tilt.needsMotionPermission && (
-        <button
-          type="button"
-          className="hero-b-card-motion"
-          style={uiFont}
-          onClick={(e) => {
-            e.stopPropagation();
-            tilt.requestMotion();
-          }}
-        >
-          ✦ Enable motion
-        </button>
-      )}
 
       {tilt.debug && (
         <div className="hero-b-card-debug" style={uiFont}>
@@ -628,20 +615,6 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           font-size: 12.5px;
           line-height: 1.3;
           color: #3A3A37;
-        }
-        .hero-b-card-motion {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          z-index: 3;
-          background: #EBF0D5;
-          border: 1px solid rgba(0,0,0,0.12);
-          border-radius: 80px;
-          padding: 4px 10px;
-          font-size: 11.5px;
-          line-height: 1.3;
-          color: #3A3A37;
-          cursor: pointer;
         }
         .hero-b-card-debug {
           position: absolute;

@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMotionValue, useSpring, type MotionValue } from "framer-motion";
 
-const MAX_TILT = 2.5;
+const MAX_TILT = 3.5;
+/** degrees of physical tilt that map to full deflection */
+const SENSOR_DIVISOR = 3;
+const SENSOR_LERP = 0.14;
 const SPRING = { stiffness: 300, damping: 25 } as const;
 
 export type MotionPermission = "idle" | "granted" | "denied" | "unsupported";
@@ -27,6 +30,7 @@ export type CardTilt = {
     onPointerMove?: (e: React.PointerEvent) => void;
     onPointerEnter?: (e: React.PointerEvent) => void;
     onPointerLeave?: () => void;
+    onTouchStart?: () => void;
   };
 };
 
@@ -181,15 +185,15 @@ export function useCardTilt(disabled: boolean): CardTilt {
       if (!visible || e.beta == null || e.gamma == null) return;
       if (!baseline) baseline = { beta: e.beta, gamma: e.gamma };
       target = {
-        x: clamp((e.beta - baseline.beta) / 8),
-        y: clamp(-(e.gamma - baseline.gamma) / 8),
+        x: clamp((e.beta - baseline.beta) / SENSOR_DIVISOR),
+        y: clamp(-(e.gamma - baseline.gamma) / SENSOR_DIVISOR),
       };
     };
 
     const loop = () => {
       current = {
-        x: current.x + (target.x - current.x) * 0.08,
-        y: current.y + (target.y - current.y) * 0.08,
+        x: current.x + (target.x - current.x) * SENSOR_LERP,
+        y: current.y + (target.y - current.y) * SENSOR_LERP,
       };
       rawX.set(current.x);
       rawY.set(current.y);
@@ -271,6 +275,13 @@ export function useCardTilt(disabled: boolean): CardTilt {
     !disabled && touch && permission !== "granted" && permission !== "denied" &&
     typeof getDOE()?.requestPermission === "function";
 
+  /** tapping the card itself is the gesture that unlocks the sensor on iOS */
+  const onTouchStart = useCallback(() => {
+    if (disabled || !touch) return;
+    if (permission === "granted" || permission === "denied") return;
+    requestMotion();
+  }, [disabled, touch, permission, requestMotion]);
+
   return {
     ref,
     rotateX,
@@ -286,7 +297,10 @@ export function useCardTilt(disabled: boolean): CardTilt {
           events: reading.events,
         }
       : null,
-    handlers:
-      disabled || touch ? {} : { onPointerMove, onPointerEnter, onPointerLeave },
+    handlers: disabled
+      ? {}
+      : touch
+        ? { onTouchStart }
+        : { onPointerMove, onPointerEnter, onPointerLeave },
   };
 }
