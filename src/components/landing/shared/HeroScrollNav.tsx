@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { IconHomeSearch } from "@tabler/icons-react";
 import { Menu, X } from "lucide-react";
@@ -47,8 +47,29 @@ export function HeroScrollNav() {
   const onSignup = () => navigate({ to: "/onboarding" });
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const shellRef = useRef<HTMLDivElement | null>(null);
   const isAuthenticated = useHasSession();
   const onLogout = () => void supabase.auth.signOut();
+
+  const closeMenu = () => setOpen(false);
+
+  const openMenu = () => setOpen(true);
+
+  // Two-phase animation: morph to pill first, then grow in height.
+  useEffect(() => {
+    if (!open) {
+      setExpanded(false);
+      return;
+    }
+    if (scrolled) {
+      setExpanded(true);
+      return;
+    }
+    const t = window.setTimeout(() => setExpanded(true), 170);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -57,10 +78,17 @@ export function HeroScrollNav() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
+    const onPointerDown = (e: PointerEvent) => {
+      if (shellRef.current && !shellRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
     window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointerDown);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointerDown);
     };
   }, [open]);
 
@@ -92,8 +120,13 @@ export function HeroScrollNav() {
 
 
   return (
-    <header className="hero-nav-root" data-scrolled={scrolled ? "true" : "false"} style={uiFont}>
-      <div className="hero-nav-shell">
+    <header
+      className="hero-nav-root"
+      data-scrolled={scrolled || open ? "true" : "false"}
+      data-open={open ? "true" : "false"}
+      style={uiFont}
+    >
+      <div className="hero-nav-shell" ref={shellRef}>
         <div className="hero-nav-glass" aria-hidden="true" />
 
         <nav className="hero-nav-inner" aria-label="Main">
@@ -140,15 +173,26 @@ export function HeroScrollNav() {
                   </button>
                 </span>
 
-                <OriginButton
-                  variant="secondary"
-                  size="medium"
-                  onClick={() => navigate({ to: "/home" })}
-                  className="hero-nav-ring h-[40px] px-4 text-sm"
-                >
-                  <IconHomeSearch size={18} stroke={1.5} aria-hidden />
-                  Searches
-                </OriginButton>
+                {open ? (
+                  <button
+                    type="button"
+                    onClick={() => navigate({ to: "/home" })}
+                    className="hero-nav-cta hero-nav-ring"
+                    style={uiFont}
+                  >
+                    Find my apartment
+                  </button>
+                ) : (
+                  <OriginButton
+                    variant="secondary"
+                    size="medium"
+                    onClick={() => navigate({ to: "/home" })}
+                    className="hero-nav-ring h-[40px] px-4 text-sm"
+                  >
+                    <IconHomeSearch size={18} stroke={1.5} aria-hidden />
+                    Searches
+                  </OriginButton>
+                )}
               </>
             ) : (
               <>
@@ -163,122 +207,127 @@ export function HeroScrollNav() {
                   </Link>
                 </span>
 
-                <OriginButton
-                  variant="main"
-                  onClick={onSignup}
-                  className="hero-nav-ring h-[40px] px-4 text-sm"
-                >
-                  Find my apatment
-                </OriginButton>
+                {open ? (
+                  <button
+                    type="button"
+                    onClick={onSignup}
+                    className="hero-nav-cta hero-nav-ring"
+                    style={uiFont}
+                  >
+                    Find my apartment
+                  </button>
+                ) : (
+                  <OriginButton
+                    variant="main"
+                    onClick={onSignup}
+                    className="hero-nav-ring h-[40px] px-4 text-sm"
+                  >
+                    Find my apartment
+                  </OriginButton>
+                )}
               </>
             )}
 
             <button
               type="button"
-              onClick={() => setOpen(true)}
-              aria-label="Open menu"
+              onClick={() => (open ? closeMenu() : openMenu())}
+              aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               className="hero-nav-burger hero-nav-ring inline-flex lg:hidden"
             >
-              <Menu className="h-5 w-5" strokeWidth={2} />
+              {open ? <X className="h-5 w-5" strokeWidth={2} /> : <Menu className="h-5 w-5" strokeWidth={2} />}
             </button>
           </div>
 
         </nav>
-      </div>
 
-      {open && (
-        <div className="hero-nav-sheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-
-          <div className="hero-nav-sheet-top">
-            <Link to="/" onClick={() => setOpen(false)} className="rounded-sm hero-nav-ring" aria-label="Nook home">
-              <img src={logoAsset.url} alt="Nook" width={81} height={28} style={{ width: 81, height: 28, display: "block" }} />
-            </Link>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close menu"
-              className="hero-nav-burger hero-nav-ring inline-flex"
-            >
-              <X className="h-5 w-5" strokeWidth={2} />
-            </button>
-          </div>
-
-          <div className="hero-nav-sheet-links">
-            {NAV_LINKS.map((l) => (
-              <a
-                key={l.href}
-                href={onHome ? l.href : `/${l.href}`}
-                onClick={() => setOpen(false)}
-                className="hero-nav-sheet-link hero-nav-ring"
-                style={{ ...uiFont, color: INK }}
-              >
-                {l.label}
-              </a>
-            ))}
-            <Link
-              to="/blog"
-              search={{ category: "all" }}
-              onClick={() => setOpen(false)}
-              className="hero-nav-sheet-link hero-nav-ring"
-              style={{ ...uiFont, color: INK }}
-            >
-              Blog
-            </Link>
-
-            {isAuthenticated && (
-              <div className="hero-nav-sheet-actions">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    onLogout();
-                  }}
-                  className="hero-nav-sheet-signin hero-nav-ring"
+        {open && (
+          <div
+            className="hero-nav-menu lg:hidden"
+            data-expanded={expanded ? "true" : "false"}
+            role="dialog"
+            aria-label="Menu"
+          >
+            <div className="hero-nav-menu-inner">
+              <div className="hero-nav-menu-links">
+                {NAV_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={onHome ? l.href : `/${l.href}`}
+                    onClick={closeMenu}
+                    className="hero-nav-menu-link hero-nav-ring"
+                    style={{ ...uiFont, color: INK }}
+                  >
+                    {l.label}
+                  </a>
+                ))}
+                <Link
+                  to="/blog"
+                  search={{ category: "all" }}
+                  onClick={closeMenu}
+                  className="hero-nav-menu-link hero-nav-ring"
                   style={{ ...uiFont, color: INK }}
                 >
-                  Log out
-                </button>
-                <OriginButton
-                  variant="secondary"
-                  size="medium"
-                  onClick={() => {
-                    setOpen(false);
-                    navigate({ to: "/home" });
-                  }}
-                  className="hero-nav-ring h-12 text-[15px]"
-                >
-                  <IconHomeSearch size={20} stroke={1.5} aria-hidden />
-                  Searches
-                </OriginButton>
+                  Blog
+                </Link>
               </div>
-            )}
-          </div>
 
-          {!isAuthenticated && (
-            <div className="hero-nav-sheet-buttons">
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
-                className="hero-nav-sheet-signin hero-nav-ring"
-                style={{ ...uiFont, color: INK }}
-              >
-                Sign in
-              </Link>
-              <OriginButton
-                variant="main"
-                onClick={() => {
-                  setOpen(false);
-                  onSignup();
-                }}
-                className="hero-nav-ring h-12 text-[15px]"
-              >
-                Find my apatment
-              </OriginButton>
+              <div className="hero-nav-menu-actions">
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMenu();
+                        onLogout();
+                      }}
+                      className="hero-nav-btn-ghost hero-nav-ring"
+                      style={uiFont}
+                    >
+                      Log out
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMenu();
+                        navigate({ to: "/home" });
+                      }}
+                      className="hero-nav-btn-outline hero-nav-ring"
+                      style={uiFont}
+                    >
+                      <IconHomeSearch size={20} stroke={1.5} aria-hidden />
+                      Searches
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={closeMenu}
+                      className="hero-nav-btn-ghost hero-nav-ring"
+                      style={uiFont}
+                    >
+                      Sign in
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMenu();
+                        onSignup();
+                      }}
+                      className="hero-nav-btn-primary hero-nav-ring"
+                      style={uiFont}
+                    >
+                      Find my apartment
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
+
 
 
       <style>{`
@@ -393,71 +442,101 @@ export function HeroScrollNav() {
           opacity: 0.7;
         }
 
-        .hero-nav-sheet {
-          position: fixed;
-          inset: 0;
-          z-index: 100;
-          pointer-events: auto;
+        /* Expanded dropdown card: the pill grows downward. */
+        .hero-nav-root[data-open="true"] .hero-nav-shell { overflow: hidden; }
+        .hero-nav-root[data-open="true"] .hero-nav-glass {
+          background: #ffffff;
+          backdrop-filter: blur(12px);
+        }
+
+        .hero-nav-menu {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows 0.32s ${EASE_REVEAL};
+        }
+        .hero-nav-menu[data-expanded="true"] { grid-template-rows: 1fr; }
+        .hero-nav-menu-inner {
+          overflow: hidden;
+          min-height: 0;
           display: flex;
           flex-direction: column;
-          background: #f4f1ea;
-          animation: hero-nav-sheet-in 0.28s ${EASE_REVEAL} both;
         }
-        @keyframes hero-nav-sheet-in {
-          from { opacity: 0; transform: translateY(-8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .hero-nav-sheet-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 16px;
-          padding: 16px 20px;
-          border-bottom: 1px solid rgba(36,28,18,0.08);
-        }
-        .hero-nav-sheet-links {
+        .hero-nav-menu-links {
           display: flex;
           flex-direction: column;
           gap: 4px;
-          padding: 20px;
+          padding: 8px 16px;
         }
-        .hero-nav-sheet-link {
-          display: inline-flex;
+        .hero-nav-menu-link {
+          display: flex;
           align-items: center;
+          width: 100%;
           height: 52px;
           padding: 0 8px;
           border-radius: 10px;
           font-size: 17px;
           font-weight: 500;
+          text-align: left;
         }
-        .hero-nav-sheet-link:hover { background: rgba(36,28,18,0.05); }
-        .hero-nav-sheet-actions {
-          margin-top: 28px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        .hero-nav-sheet-signin {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          height: 48px;
-          border-radius: 12px;
-          border: 1px solid ${BORDER};
-          background: ${SURFACE};
-          font-size: 15px;
-          font-weight: 500;
-        }
-        .hero-nav-sheet-buttons {
-          margin-top: 12px;
-          padding: 0 20px 20px;
+        .hero-nav-menu-link:hover,
+        .hero-nav-menu-link:active { background: rgba(36,28,18,0.08); }
+
+        .hero-nav-menu-actions {
           display: flex;
           flex-direction: column;
           gap: 12px;
+          padding: 16px 16px 8px;
+        }
+        .hero-nav-btn-ghost,
+        .hero-nav-btn-primary,
+        .hero-nav-btn-outline {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          height: 48px;
+          border-radius: 12px;
+          font-size: 15px;
+          font-weight: 500;
+        }
+        .hero-nav-btn-ghost {
+          background: ${SURFACE};
+          border: 1px solid ${BORDER};
+          color: ${INK};
+        }
+        .hero-nav-btn-ghost:hover { background: ${SURFACE_HOVER}; border-color: ${BORDER_HOVER}; }
+        .hero-nav-btn-primary {
+          background: #d66c38;
+          border: none;
+          color: #ffffff;
+          letter-spacing: -0.3px;
+        }
+        .hero-nav-btn-outline {
+          background: transparent;
+          border: 1px solid #d66c38;
+          color: #d66c38;
+        }
+
+        .hero-nav-cta {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 40px;
+          padding: 0 16px;
+          border: none;
+          border-radius: 12px;
+          background: #d66c38;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 500;
+          letter-spacing: -0.28px;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hero-nav-sheet { animation: none; }
+          .hero-nav-menu { transition: none; }
         }
 
 
@@ -472,14 +551,15 @@ export function HeroScrollNav() {
 
         @media (max-width: 680px) {
           .hero-nav-shell { padding: 0 20px; }
-          .hero-nav-root[data-scrolled="true"] { padding-top: 12px; }
+          .hero-nav-root[data-scrolled="true"] { padding-top: 16px; }
           .hero-nav-root[data-scrolled="true"] .hero-nav-shell {
             max-width: 100%;
             padding: 12px;
-            margin: 0 8px;
-            width: calc(100% - 16px);
+            margin: 0 16px;
+            width: calc(100% - 32px);
           }
         }
+
 
         @media (prefers-reduced-motion: reduce) {
           .hero-nav-root,
