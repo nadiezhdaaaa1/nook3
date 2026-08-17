@@ -562,7 +562,7 @@ function HomeScreen() {
                   body="Every match from this period is in your disliked list. You can bring any of them back."
                   action={
                     <OriginButton
-                      variant="main"
+                      variant="tertiary"
                       size="medium"
                       onClick={() => navigate({ to: "/saved", search: { tab: "disliked" } as never })}
                     >
