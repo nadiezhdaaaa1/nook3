@@ -377,19 +377,6 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
     >
       <div className="hero-b-card-bloom" aria-hidden />
 
-      {tilt.needsMotionPermission && (
-        <button
-          type="button"
-          className="hero-b-card-motion"
-          style={uiFont}
-          onClick={(e) => {
-            e.stopPropagation();
-            tilt.requestMotion();
-          }}
-        >
-          ✦ Enable motion
-        </button>
-      )}
 
       {tilt.debug && (
         <div className="hero-b-card-debug" style={uiFont}>
