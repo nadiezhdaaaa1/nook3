@@ -500,7 +500,7 @@ function Success() {
                 </div>
               ) : null}
 
-              <div className="flex w-full gap-3">
+              <div className="flex w-full flex-col gap-3 sm:flex-row">
                 <OriginButton
                   type="button"
                   variant="tertiary"
