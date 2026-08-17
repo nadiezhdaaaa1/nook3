@@ -439,7 +439,6 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           border-radius: inherit;
           border: 1px solid transparent;
           pointer-events: none;
-          background-attachment: fixed;
           background-image: radial-gradient(
             180px circle at var(--x) var(--y),
             hsl(20 66% 53% / 0.55),
