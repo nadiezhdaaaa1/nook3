@@ -431,6 +431,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           /* GlowCard config — terracotta, tamed spread */
           --x: 0;
           --y: 0;
+          --lx: 150;
+          --ly: 170;
           --xp: 0.5;
           --yp: 0.5;
           --glow-o: 0;
@@ -443,7 +445,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           --border-spot-opacity: 0.8;
           --border-light-opacity: 0.5;
           --hue: calc(var(--base) + (var(--xp) * var(--spread)));
-          --spot: calc(var(--x) * 1px) calc(var(--y) * 1px);
+          --spot: calc(var(--lx) * 1px) calc(var(--ly) * 1px);
 
           background-color: #ffffff;
           background-image: radial-gradient(
@@ -451,9 +453,10 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
             hsl(var(--hue) 66% 53% / var(--bg-spot-opacity)),
             transparent 100%
           );
-          background-attachment: fixed;
+          background-attachment: scroll;
           background-repeat: no-repeat;
         }
+
         .hero-b-card:focus-visible { outline: none; }
         /* border glow ring */
         .hero-b-card::before,
@@ -464,7 +467,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           border-radius: inherit;
           border: calc(var(--border) * 1px) solid transparent;
           pointer-events: none;
-          background-attachment: fixed;
+          background-attachment: scroll;
+
           background-repeat: no-repeat;
           -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
@@ -500,13 +504,15 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           opacity: var(--glow-o);
           transition: opacity 200ms ease;
           filter: blur(calc(var(--border) * 2px)) brightness(1.4);
-          background-attachment: fixed;
+          background-attachment: scroll;
           background-repeat: no-repeat;
           background-image: radial-gradient(
-            calc(var(--size) * 0.75px) circle at var(--spot),
+            calc(var(--size) * 0.75px) circle at
+              calc(var(--lx) * 1px - var(--border) * 1px) calc(var(--ly) * 1px - var(--border) * 1px),
             hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
             transparent 100%
           );
+
           -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           -webkit-mask-clip: padding-box, border-box;
