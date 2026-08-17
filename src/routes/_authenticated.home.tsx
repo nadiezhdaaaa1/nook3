@@ -548,7 +548,7 @@ function HomeScreen() {
               if (search) navigate({ to: "/search/$searchId/budget", params: { searchId: search.id } });
             };
 
-            if (filtersActive && dashboardState === "normal") {
+            if (filtersActive && stateOverride === "normal" && dashboardState !== "no_digest") {
               return (
                 <EmptyState
                   title="No matches with these filters"
