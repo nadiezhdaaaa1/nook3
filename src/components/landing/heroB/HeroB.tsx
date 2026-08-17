@@ -629,7 +629,36 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           line-height: 1.3;
           color: #3A3A37;
         }
+        .hero-b-card-motion {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          z-index: 3;
+          background: #EBF0D5;
+          border: 1px solid rgba(0,0,0,0.12);
+          border-radius: 80px;
+          padding: 4px 10px;
+          font-size: 11.5px;
+          line-height: 1.3;
+          color: #3A3A37;
+          cursor: pointer;
+        }
+        .hero-b-card-debug {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          z-index: 3;
+          background: rgba(26,26,24,0.85);
+          color: #FAF6EE;
+          border-radius: 8px;
+          padding: 4px 8px;
+          font-size: 10px;
+          line-height: 1.35;
+          text-align: right;
+          pointer-events: none;
+        }
         @media (max-width: 680px) {
+
           .hero-b-card { width: 100%; max-width: 340px; }
         }
       `}</style>
