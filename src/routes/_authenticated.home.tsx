@@ -213,9 +213,18 @@ function HomeScreen() {
   );
 
 
-  const visibleListings = useMemo(
+  /** Dev-panel override wins before any listings data is considered. */
+  const stateOverride = useDashboardStateOverride();
+  const forcedEmpty = stateOverride !== "normal";
+
+  const filteredListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
     [listings, hiddenIds, filters, scope],
+  );
+
+  const visibleListings = useMemo(
+    () => (forcedEmpty ? [] : filteredListings),
+    [forcedEmpty, filteredListings],
   );
 
   const pagedVisibleListings = useMemo(() => {
@@ -229,7 +238,6 @@ function HomeScreen() {
   /** Which empty state the active search is in.
    *  no digest rows at all → "no_digest"; rows exist but every one is dismissed
    *  → "all_dismissed"; a digest ran and left nothing → "no_matches". */
-  const stateOverride = useDashboardStateOverride();
   const dashboardState = useMemo(() => {
     if (stateOverride !== "normal") return stateOverride;
     const rows = (alertsQ.data ?? []).filter(
@@ -513,7 +521,7 @@ function HomeScreen() {
 
           {(() => {
             const displayListings = pagedVisibleListings;
-            const isEmpty = displayListings.length === 0 && !alertsQ.isLoading;
+            const isEmpty = displayListings.length === 0 && (forcedEmpty || !alertsQ.isLoading);
             if (!isEmpty) return null;
 
             const goEdit = () => {
@@ -587,7 +595,7 @@ function HomeScreen() {
             );
           })()}
 
-          {pagedVisibleListings.length > 0 && !alertsQ.isLoading && (() => {
+          {!forcedEmpty && pagedVisibleListings.length > 0 && !alertsQ.isLoading && (() => {
             const displayListings = pagedVisibleListings;
             return (
 
