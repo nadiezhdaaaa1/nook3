@@ -68,6 +68,7 @@ type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   loading?: boolean;
   variant?: "default" | "main" | "green" | "secondary" | "nice" | "tertiary" | "dark" | "premium" | "max" | "cancel" | "danger";
   size?: "big" | "medium";
+  align?: "left" | "center" | "right";
 };
 
 const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
@@ -78,6 +79,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
       disabled = false,
       loading = false,
       size = "big",
+      align = "center",
       type = "button",
       variant = "default",
       onBlur,
@@ -354,7 +356,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
           }}
           transition={fillTransition}
         />
-        <span className="relative z-10 inline-flex w-full items-center justify-center gap-2 whitespace-nowrap font-['Google_Sans_Flex',sans-serif]">
+        <span className={cn("relative z-10 inline-flex w-full items-center gap-2 whitespace-nowrap font-['Google_Sans_Flex',sans-serif]", align === "left" ? "justify-start" : align === "right" ? "justify-end" : "justify-center")}>
           {children}
         </span>
       </motion.button>

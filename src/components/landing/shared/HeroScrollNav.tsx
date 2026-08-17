@@ -233,75 +233,79 @@ export function HeroScrollNav() {
             <div className="hero-nav-menu-inner">
               <div className="hero-nav-menu-links">
                 {NAV_LINKS.map((l) => (
-                  <a
+                  <OriginButton
                     key={l.href}
-                    href={onHome ? l.href : `/${l.href}`}
-                    onClick={closeMenu}
-                    className="hero-nav-menu-link hero-nav-ring"
-                    style={{ ...uiFont, color: INK }}
+                    variant="tertiary"
+                    align="left"
+                    className="h-[52px] w-full border-0 px-2"
+                    onClick={() => {
+                      closeMenu();
+                      window.location.href = onHome ? l.href : `/${l.href}`;
+                    }}
                   >
                     {l.label}
-                  </a>
+                  </OriginButton>
                 ))}
-                <Link
-                  to="/blog"
-                  search={{ category: "all" }}
-                  onClick={closeMenu}
-                  className="hero-nav-menu-link hero-nav-ring"
-                  style={{ ...uiFont, color: INK }}
+                <OriginButton
+                  variant="tertiary"
+                  align="left"
+                  className="h-[52px] w-full border-0 px-2"
+                  onClick={() => {
+                    closeMenu();
+                    navigate({ to: "/blog", search: { category: "all" } });
+                  }}
                 >
                   Blog
-                </Link>
+                </OriginButton>
               </div>
 
               <div className="hero-nav-menu-actions">
                 {isAuthenticated ? (
                   <>
-                    <button
-                      type="button"
+                    <OriginButton
+                      variant="tertiary"
+                      className="h-[48px] w-full"
                       onClick={() => {
                         closeMenu();
                         onLogout();
                       }}
-                      className="hero-nav-btn-ghost hero-nav-ring"
-                      style={uiFont}
                     >
                       Log out
-                    </button>
-                    <button
-                      type="button"
+                    </OriginButton>
+                    <OriginButton
+                      variant="secondary"
+                      className="h-[48px] w-full"
                       onClick={() => {
                         closeMenu();
                         navigate({ to: "/home" });
                       }}
-                      className="hero-nav-btn-outline hero-nav-ring"
-                      style={uiFont}
                     >
                       <IconHomeSearch size={20} stroke={1.5} aria-hidden />
                       Searches
-                    </button>
+                    </OriginButton>
                   </>
                 ) : (
                   <>
-                    <Link
-                      to="/login"
-                      onClick={closeMenu}
-                      className="hero-nav-btn-ghost hero-nav-ring"
-                      style={uiFont}
+                    <OriginButton
+                      variant="tertiary"
+                      className="h-[48px] w-full"
+                      onClick={() => {
+                        closeMenu();
+                        navigate({ to: "/login" });
+                      }}
                     >
                       Sign in
-                    </Link>
-                    <button
-                      type="button"
+                    </OriginButton>
+                    <OriginButton
+                      variant="main"
+                      className="h-[48px] w-full"
                       onClick={() => {
                         closeMenu();
                         onSignup();
                       }}
-                      className="hero-nav-btn-primary hero-nav-ring"
-                      style={uiFont}
                     >
                       Find my apartment
-                    </button>
+                    </OriginButton>
                   </>
                 )}
               </div>
@@ -451,55 +455,12 @@ export function HeroScrollNav() {
           gap: 4px;
           padding: 24px 0 8px;
         }
-        .hero-nav-menu-link {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          height: 52px;
-          padding: 0 8px;
-          border-radius: 10px;
-          font-size: 17px;
-          font-weight: 500;
-          text-align: left;
-        }
-        .hero-nav-menu-link:hover,
-        .hero-nav-menu-link:active { background: rgba(36,28,18,0.08); }
 
         .hero-nav-menu-actions {
           display: flex;
           flex-direction: column;
           gap: 12px;
           padding: 0;
-        }
-        .hero-nav-btn-ghost,
-        .hero-nav-btn-primary,
-        .hero-nav-btn-outline {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          width: 100%;
-          height: 48px;
-          border-radius: 12px;
-          font-size: 15px;
-          font-weight: 500;
-        }
-        .hero-nav-btn-ghost {
-          background: ${SURFACE};
-          border: 1px solid ${BORDER};
-          color: ${INK};
-        }
-        .hero-nav-btn-ghost:hover { background: ${SURFACE_HOVER}; border-color: ${BORDER_HOVER}; }
-        .hero-nav-btn-primary {
-          background: #d66c38;
-          border: none;
-          color: #ffffff;
-          letter-spacing: -0.3px;
-        }
-        .hero-nav-btn-outline {
-          background: transparent;
-          border: 1px solid #d66c38;
-          color: #d66c38;
         }
 
         .hero-nav-cta {
