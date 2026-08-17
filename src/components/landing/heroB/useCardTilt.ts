@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMotionValue, useSpring, type MotionValue } from "framer-motion";
 
-const MAX_TILT = 2.5;
+const MAX_TILT = 3.5;
+/** degrees of physical tilt that map to full deflection */
+const SENSOR_DIVISOR = 3;
+const SENSOR_LERP = 0.14;
 const SPRING = { stiffness: 300, damping: 25 } as const;
 
 export type MotionPermission = "idle" | "granted" | "denied" | "unsupported";
