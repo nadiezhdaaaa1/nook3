@@ -581,7 +581,7 @@ function HomeScreen() {
             return (
               <EmptyState
                 title="Your first digest arrives within 24 hours"
-                body={`We're watching ${cityConfig?.displayName ?? "your city"} for you right now.`}
+                body={`We're watching ${cityConfig?.displayName ?? "your city"} for you right now`}
                 action={
                   <button
                     type="button"
