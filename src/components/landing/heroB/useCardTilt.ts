@@ -297,7 +297,10 @@ export function useCardTilt(disabled: boolean): CardTilt {
           events: reading.events,
         }
       : null,
-    handlers:
-      disabled || touch ? {} : { onPointerMove, onPointerEnter, onPointerLeave },
+    handlers: disabled
+      ? {}
+      : touch
+        ? { onTouchStart }
+        : { onPointerMove, onPointerEnter, onPointerLeave },
   };
 }
