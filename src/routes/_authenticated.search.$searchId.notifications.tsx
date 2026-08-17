@@ -143,7 +143,7 @@ function NotificationsTab() {
               <Moon className="h-4 w-4 text-charcoal-500" /> Quiet hours
             </h3>
             <p className="text-xs text-charcoal-500 mt-1 leading-relaxed">
-              Pause alerts during{" "}
+              No alerts during{" "}
               <span className="font-medium text-charcoal-700">
                 {formatTimeLabel(quietHours.start)} – {formatTimeLabel(quietHours.end)}
               </span>{" "}

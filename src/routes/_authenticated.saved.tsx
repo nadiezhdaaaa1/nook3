@@ -400,9 +400,9 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                   {disabledIds.has(s.id)
                     ? "Disabled"
                     : s.status === "active"
-                      ? "Live"
+                      ? "Alerts on"
                       : s.status === "paused"
-                        ? "Paused"
+                        ? "Alerts off"
                         : "Archived"}{" "}
                   ·{" "}
                   {s.totalAlertsReceived} alerts

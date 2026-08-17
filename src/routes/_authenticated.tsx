@@ -76,7 +76,7 @@ export const Route = createFileRoute("/_authenticated")({
       if (!access.onboarded) {
         throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
       }
-      // A dunning-caused cancellation gets the "alerts are paused" screen
+      // A dunning-caused cancellation gets the "alerts are off" screen
       // (Success variant E), not the pricing pitch — they never chose to leave.
       throw redirect(
         access.status === "canceled" && access.pastDueSince

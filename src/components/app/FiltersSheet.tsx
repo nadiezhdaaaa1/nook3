@@ -73,7 +73,7 @@ function cityLabel(cityId: string) {
 }
 
 function statusLabel(s: Search) {
-  return s.status === "active" ? "Live" : s.status === "paused" ? "Paused" : "Archived";
+  return s.status === "active" ? "Alerts on" : s.status === "paused" ? "Alerts off" : "Archived";
 }
 
 function summary(s: Search) {

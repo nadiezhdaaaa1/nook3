@@ -31,7 +31,7 @@ function cityLabel(cityId: string) {
 
 function statusLabel(s: Search, disabled = false) {
   if (disabled) return "Disabled";
-  return s.status === "active" ? "Live" : s.status === "paused" ? "Paused" : "Archived";
+  return s.status === "active" ? "Alerts on" : s.status === "paused" ? "Alerts off" : "Archived";
 }
 
 function StatusDot({ status, disabled }: { status: Search["status"]; disabled?: boolean }) {

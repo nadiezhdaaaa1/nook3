@@ -31,7 +31,7 @@ import { UpgradeModal } from "./UpgradeModal";
 /**
  * Multi-search switcher dropdown.
  * Renders the current search name + chip, a list of all searches, quota,
- * and quick actions (new, rename, duplicate, pause/resume, archive, delete).
+ * and quick actions (new, rename, duplicate, alerts on/off, archive, delete).
  */
 export function SearchSwitcher() {
   const active = useAppStore(selectActiveSearch);
@@ -195,7 +195,7 @@ export function SearchSwitcher() {
                       return;
                     }
                     const res = resumeSearch(s.id);
-                    if (!res.ok) toast.error("Can't resume", { description: res.error });
+                    if (!res.ok) toast.error("Can't turn alerts on", { description: res.error });
                   }}
                   onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
@@ -347,7 +347,7 @@ function SearchRow({
               <Pencil className="h-3.5 w-3.5" />
             </IconBtn>
             <IconBtn
-              title={search.status === "paused" ? "Resume" : "Pause"}
+              title={search.status === "paused" ? "Turn alerts on" : "Turn alerts off"}
               onClick={onPauseToggle}
             >
               {search.status === "paused" ? (
@@ -446,14 +446,14 @@ function StatusDot({ status }: { status: Search["status"] }) {
   if (status === "active") {
     return (
       <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-pill bg-sage-100 text-[9px] font-mono uppercase tracking-[0.14em] text-sage-700">
-        <span className="h-1.5 w-1.5 rounded-full bg-sage-700" /> Active
+        <span className="h-1.5 w-1.5 rounded-full bg-sage-700" /> Alerts on
       </span>
     );
   }
   if (status === "paused") {
     return (
       <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-pill bg-peach-100 text-[9px] font-mono uppercase tracking-[0.14em] text-peach-700">
-        <span className="h-1.5 w-1.5 rounded-full bg-peach-700" /> Paused
+        <span className="h-1.5 w-1.5 rounded-full bg-peach-700" /> Alerts off
       </span>
     );
   }

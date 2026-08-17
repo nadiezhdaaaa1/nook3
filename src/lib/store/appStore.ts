@@ -261,7 +261,7 @@ export const useAppStore = create<AppStore>()(
         if (activeCount >= limit) {
           return {
             ok: false,
-            error: `Your plan allows ${limit} live ${limit === 1 ? "search" : "searches"}. Pause another one first.`,
+            error: `Your plan allows ${limit} ${limit === 1 ? "search" : "searches"} with alerts on. Turn alerts off for another one first.`,
           };
         }
         get().updateSearch(id, { status: "active" });
