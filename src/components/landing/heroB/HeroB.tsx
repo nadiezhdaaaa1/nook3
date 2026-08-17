@@ -506,6 +506,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         }
       `}</style>
     </motion.article>
+    </div>
   );
 }
 
