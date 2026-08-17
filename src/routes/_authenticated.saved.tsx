@@ -60,7 +60,7 @@ const TABS = [
     label: "Disliked listings",
     icon: ThumbsDown,
     title: "Disliked listings",
-    subtitle: "Listings you passed on, in case you change your mind.",
+    subtitle: "Listings you passed on, in case you change your mind",
   },
 ] as const;
 
