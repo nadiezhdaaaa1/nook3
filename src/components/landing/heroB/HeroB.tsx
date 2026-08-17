@@ -375,6 +375,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
       }}
     >
+      <div className="hero-b-card-bloom" aria-hidden />
+
       <motion.span
         {...child}
         className="hero-b-card-badge"
