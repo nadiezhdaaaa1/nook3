@@ -579,7 +579,7 @@ function HomeScreen() {
                   title="No new matches this period"
                   body="Nothing slipped through your filters. Broadening your budget or neighborhoods usually helps."
                   action={
-                    <OriginButton variant="main" size="medium" onClick={goEdit}>
+                    <OriginButton variant="tertiary" size="medium" onClick={goEdit}>
                       Edit search
                     </OriginButton>
                   }
