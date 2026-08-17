@@ -456,6 +456,13 @@ export function HeroScrollNav() {
           padding: 24px 0 8px;
         }
 
+        .hero-nav-menu-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          padding: 0;
+        }
+
         .hero-nav-cta {
           display: inline-flex;
           align-items: center;
