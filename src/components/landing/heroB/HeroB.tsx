@@ -375,6 +375,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
         boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
       }}
     >
+      <div className="hero-b-card-bloom" aria-hidden />
+
       <motion.span
         {...child}
         className="hero-b-card-badge"
@@ -421,45 +423,108 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           padding: 20px;
           border-radius: 24px;
           border: 1px solid rgba(0,0,0,0.20);
-          background: #ffffff;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
           will-change: transform, opacity;
-          --x: 50%;
-          --y: 50%;
+
+          /* GlowCard config — terracotta, tamed spread */
+          --x: 0;
+          --y: 0;
+          --xp: 0.5;
+          --yp: 0.5;
           --glow-o: 0;
+          --base: 18;
+          --spread: 25;
+          --size: 200;
+          --border: 3;
+          --radius: 24;
+          --bg-spot-opacity: 0.08;
+          --border-spot-opacity: 0.8;
+          --border-light-opacity: 0.5;
+          --hue: calc(var(--base) + (var(--xp) * var(--spread)));
+          --spot: calc(var(--x) * 1px) calc(var(--y) * 1px);
+
+          background-color: #ffffff;
+          background-image: radial-gradient(
+            calc(var(--size) * 1px) circle at var(--spot),
+            hsl(var(--hue) 66% 53% / var(--bg-spot-opacity)),
+            transparent 100%
+          );
+          background-attachment: fixed;
+          background-repeat: no-repeat;
         }
         .hero-b-card:focus-visible { outline: none; }
-        /* terracotta spotlight confined to the 1px border ring */
-        .hero-b-card::before {
+        /* border glow ring */
+        .hero-b-card::before,
+        .hero-b-card::after {
           content: "";
           position: absolute;
-          inset: -1px;
+          inset: calc(var(--border) * -1px);
           border-radius: inherit;
-          border: 1px solid transparent;
+          border: calc(var(--border) * 1px) solid transparent;
           pointer-events: none;
-          background-image: radial-gradient(
-            180px circle at var(--x) var(--y),
-            hsl(20 66% 53% / 0.55),
-            hsl(20 66% 53% / 0) 70%
-          );
-          -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
-          mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+          background-attachment: fixed;
+          background-repeat: no-repeat;
+          -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+          mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           -webkit-mask-clip: padding-box, border-box;
           mask-clip: padding-box, border-box;
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
+          -webkit-mask-composite: source-in;
+          mask-composite: intersect;
           opacity: var(--glow-o);
           transition: opacity 200ms ease;
         }
+        .hero-b-card::before {
+          background-image: radial-gradient(
+            calc(var(--size) * 0.75px) circle at var(--spot),
+            hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
+            transparent 100%
+          );
+          filter: brightness(2);
+        }
+        .hero-b-card::after {
+          background-image: radial-gradient(
+            calc(var(--size) * 0.5px) circle at var(--spot),
+            hsl(0 0% 100% / var(--border-light-opacity)),
+            transparent 100%
+          );
+        }
+        /* outer bloom */
+        .hero-b-card-bloom {
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          border: calc(var(--border) * 1px) solid transparent;
+          pointer-events: none;
+          opacity: var(--glow-o);
+          transition: opacity 200ms ease;
+          filter: blur(calc(var(--border) * 2px)) brightness(1.4);
+          background-attachment: fixed;
+          background-repeat: no-repeat;
+          background-image: radial-gradient(
+            calc(var(--size) * 0.75px) circle at var(--spot),
+            hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
+            transparent 100%
+          );
+          -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+          mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+          -webkit-mask-clip: padding-box, border-box;
+          mask-clip: padding-box, border-box;
+          -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+        }
         @media (prefers-reduced-motion: reduce) {
-          .hero-b-card::before { display: none; }
+          .hero-b-card::before,
+          .hero-b-card::after,
+          .hero-b-card-bloom { display: none; }
+          .hero-b-card { background-image: none; }
           .hero-b-card-static:hover,
           .hero-b-card-static:focus-visible {
             border-color: rgba(214, 108, 56, 0.45);
           }
         }
+
         .hero-b-card-badge {
           display: inline-flex;
           align-items: center;
