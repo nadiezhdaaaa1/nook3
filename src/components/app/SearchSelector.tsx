@@ -174,17 +174,18 @@ export function SearchSelector() {
                           className="min-w-0 flex-1 text-left"
                         >
                           <span className="flex items-center gap-1.5">
-                            <StatusDot status={s.status} disabled={isDisabled} />
+                            {s.id === active?.id && (
+                              <Check className="h-4 w-4 shrink-0 text-sage-700" />
+                            )}
                             <span className="truncate text-[15px] font-semibold text-charcoal-950">
                               {s.name}
                             </span>
-                            {s.id === active?.id && (
-                              <Check className="h-3.5 w-3.5 shrink-0 text-sage-700" />
-                            )}
                           </span>
                           <span className="mt-1 block truncate text-xs text-charcoal-500">
-                            {cityLabel(s.cityId)} · {statusLabel(s, isDisabled)} · {summary(s)}
+                            {cityLabel(s.cityId)}
+                            {isDisabled ? " · Disabled" : ""} · {summary(s)}
                           </span>
+
                         </button>
                         <OriginButton
                           variant="tertiary"
