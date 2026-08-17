@@ -9,8 +9,6 @@ import type {
   TriState,
 } from "@/lib/onboarding/store";
 
-export type SearchStatus = "active" | "paused" | "archived";
-
 /** Per-search snapshot. Mirrors the filter fields of OnboardingState. */
 export interface Search {
   id: string;
@@ -19,8 +17,8 @@ export interface Search {
 
   createdAt: string; // ISO
   updatedAt: string; // ISO
-  status: SearchStatus; // active | paused | archived
-  archivedAt?: string; // ISO, set when status === "archived"
+  /** Alerts toggle for this search. */
+  alertsEnabled: boolean;
 
   // Filters (mirror of OnboardingState)
   budget: [number, number] | null;

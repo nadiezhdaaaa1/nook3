@@ -147,7 +147,7 @@ function AccountPage() {
   // Usage stats
   const stats = useMemo(() => {
     const max = SEARCH_LIMITS[plan];
-    const used = searches.filter((s) => s.status !== "archived").length;
+    const used = searches.length;
     const totalAlerts = searches.reduce((sum, s) => sum + (s.totalAlertsReceived ?? 0), 0);
     const alerts7d = searches.reduce((sum, s) => sum + (s.alertsLast7Days ?? 0), 0);
     return {

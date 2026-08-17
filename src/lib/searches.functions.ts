@@ -15,6 +15,8 @@ export const listSearches = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("searches")
       .select("*")
+      // legacy rows only: archiving no longer exists as a product concept
+      .neq("status", "archived")
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     return (data ?? []).map(dbRowToSearch);
@@ -84,7 +86,7 @@ export const duplicateSearch = createServerFn({ method: "POST" })
     const copyName = `${(src as any).name} copy`.slice(0, 50);
     const { data: inserted, error } = await context.supabase
       .from("searches")
-      .insert({ ...rest, name: copyName, status: "active", archived_at: null })
+      .insert({ ...rest, name: copyName, status: "active" })
       .select("*")
       .single();
     if (error) {

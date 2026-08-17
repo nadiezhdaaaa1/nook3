@@ -8,8 +8,6 @@ import {
   Plus,
   Trash2,
   Lock,
-  Archive,
-  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -29,7 +27,7 @@ import { UpgradeModal } from "./UpgradeModal";
 /**
  * Multi-search switcher dropdown.
  * Renders the current search name + chip, a list of all searches, quota,
- * and quick actions (new, rename, duplicate, alerts on/off, archive, delete).
+ * and quick actions (new, rename, duplicate, delete).
  */
 export function SearchSwitcher() {
   const active = useAppStore(selectActiveSearch);
@@ -38,7 +36,7 @@ export function SearchSwitcher() {
   const quota = useMemo(() => {
     const plan = user?.plan ?? "intro";
     const max = SEARCH_LIMITS[plan];
-    const used = searches.filter((x) => x.status !== "archived").length;
+    const used = searches.length;
     const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
     return {
       used,
@@ -48,8 +46,6 @@ export function SearchSwitcher() {
     };
   }, [searches, user?.plan]);
   const duplicateSearch = useAppStore((s) => s.duplicateSearch);
-  const archiveSearch = useAppStore((s) => s.archiveSearch);
-  const restoreSearch = useAppStore((s) => s.restoreSearch);
   const deleteSearch = useAppStore((s) => s.deleteSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
   const deleteMut = useDeleteSearchMutation();
@@ -68,7 +64,6 @@ export function SearchSwitcher() {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-  const [showArchived, setShowArchived] = useState(false);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -86,8 +81,7 @@ export function SearchSwitcher() {
   const canCreate = quota.remaining > 0;
   const plan = user?.plan ?? "intro";
 
-  const liveSearches = searches.filter((s) => s.status !== "archived");
-  const archivedSearches = searches.filter((s) => s.status === "archived");
+  const liveSearches = searches;
 
   const handleSwitch = (id: string) => {
     if (renamingId) return;
@@ -122,11 +116,6 @@ export function SearchSwitcher() {
         // mutation surfaces its own toast
       }
     }
-  };
-
-  const handleRestore = (id: string) => {
-    const res = restoreSearch(id);
-    if (!res.ok) setUpgradeOpen(true);
   };
 
   return (
@@ -175,7 +164,6 @@ export function SearchSwitcher() {
                   isActive={s.id === active.id}
                   isRenaming={renamingId === s.id}
                   canDuplicate={canCreate}
-                  canArchive={liveSearches.length > 1}
                   onSwitch={() => handleSwitch(s.id)}
                   onStartRename={() => setRenamingId(s.id)}
                   onSubmitRename={(name) => {
@@ -184,9 +172,12 @@ export function SearchSwitcher() {
                   }}
                   onCancelRename={() => setRenamingId(null)}
                   onDuplicate={() => handleDuplicate(s.id)}
-                  onArchive={() => archiveSearch(s.id)}
                   onDelete={() => {
-                    if (confirm(`Delete "${s.name}"? This cannot be undone.`)) {
+                    if (
+                      confirm(
+                        `Delete "${s.name}"? This permanently removes its criteria, alert settings, match history, and the apartments you saved from it.`,
+                      )
+                    ) {
                       dbAwareDelete(s.id);
                       hydrateActiveSearchIntoOnboarding();
                     }
@@ -194,38 +185,6 @@ export function SearchSwitcher() {
                 />
               ))}
             </ul>
-
-            {archivedSearches.length > 0 && (
-              <div className="border-t border-charcoal-950/8">
-                <button
-                  type="button"
-                  onClick={() => setShowArchived((v) => !v)}
-                  className="w-full flex items-center justify-between px-4 h-9 text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500 hover:bg-charcoal-950/5"
-                >
-                  <span className="inline-flex items-center gap-1.5">
-                    <Archive className="h-3 w-3" />
-                    Archived ({archivedSearches.length})
-                  </span>
-                  <ChevronDown
-                    className={cn("h-3 w-3 transition-transform", showArchived && "rotate-180")}
-                  />
-                </button>
-                {showArchived && (
-                  <ul className="max-h-[180px] overflow-y-auto py-1 bg-charcoal-950/[0.02]">
-                    {archivedSearches.map((s) => (
-                      <ArchivedRow
-                        key={s.id}
-                        search={s}
-                        onRestore={() => handleRestore(s.id)}
-                        onDelete={() => {
-                          if (confirm(`Permanently delete "${s.name}"?`)) dbAwareDelete(s.id);
-                        }}
-                      />
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
 
             <div className="border-t border-charcoal-950/8 p-2">
               <button
@@ -251,26 +210,22 @@ function SearchRow({
   isActive,
   isRenaming,
   canDuplicate,
-  canArchive,
   onSwitch,
   onStartRename,
   onSubmitRename,
   onCancelRename,
   onDuplicate,
-  onArchive,
   onDelete,
 }: {
   search: Search;
   isActive: boolean;
   isRenaming: boolean;
   canDuplicate: boolean;
-  canArchive: boolean;
   onSwitch: () => void;
   onStartRename: () => void;
   onSubmitRename: (name: string) => void;
   onCancelRename: () => void;
   onDuplicate: () => void;
-  onArchive: () => void;
   onDelete: () => void;
 }) {
   const city = getCity(search.cityId);
@@ -333,52 +288,12 @@ function SearchRow({
             <IconBtn title="Duplicate" onClick={onDuplicate} disabled={!canDuplicate}>
               <Copy className="h-3.5 w-3.5" />
             </IconBtn>
-            {canArchive && (
-              <IconBtn title="Archive" onClick={onArchive}>
-                <Archive className="h-3.5 w-3.5" />
-              </IconBtn>
-            )}
-            {canArchive && (
-              <IconBtn title="Delete" onClick={onDelete}>
-                <Trash2 className="h-3.5 w-3.5" />
-              </IconBtn>
-            )}
+            <IconBtn title="Delete" onClick={onDelete}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </IconBtn>
           </div>
         </>
       )}
-    </li>
-  );
-}
-
-function ArchivedRow({
-  search,
-  onRestore,
-  onDelete,
-}: {
-  search: Search;
-  onRestore: () => void;
-  onDelete: () => void;
-}) {
-  const city = getCity(search.cityId);
-  return (
-    <li className="group relative flex items-center px-4 py-2">
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-charcoal-700 truncate">{search.name}</div>
-        <div className="text-[11px] text-charcoal-400 truncate">
-          {city?.displayName ?? search.cityId}
-          {search.archivedAt
-            ? ` · archived ${new Date(search.archivedAt).toLocaleDateString()}`
-            : ""}
-        </div>
-      </div>
-      <div className="flex items-center gap-0.5 shrink-0">
-        <IconBtn title="Restore" onClick={onRestore}>
-          <RotateCcw className="h-3.5 w-3.5" />
-        </IconBtn>
-        <IconBtn title="Delete forever" onClick={onDelete}>
-          <Trash2 className="h-3.5 w-3.5" />
-        </IconBtn>
-      </div>
     </li>
   );
 }

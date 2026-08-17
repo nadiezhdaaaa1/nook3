@@ -44,8 +44,7 @@ export function useDbSync() {
     if (!searchesQ.data || !profileQ.data) return;
     const rows = searchesQ.data as Search[];
     const profile = profileQ.data;
-    const active =
-      rows.find((s) => s.status !== "archived") ?? rows[0] ?? null;
+    const active = rows[0] ?? null;
 
     // Replace state without going through individual setters.
     useAppStore.setState({
@@ -130,7 +129,7 @@ export function useDbSync() {
       createMutation.mutate({
         name: local.name,
         cityId: local.cityId,
-        status: local.status,
+        alertsEnabled: local.alertsEnabled,
         budget: local.budget,
         moveIn: local.moveIn,
         bedrooms: local.bedrooms,
@@ -198,7 +197,7 @@ function toPatch(s: Search) {
   return {
     name: s.name,
     cityId: s.cityId,
-    status: s.status,
+    alertsEnabled: s.alertsEnabled,
     budget: s.budget,
     moveIn: s.moveIn,
     bedrooms: s.bedrooms,

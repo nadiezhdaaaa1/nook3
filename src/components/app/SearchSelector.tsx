@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
-  Archive,
   Check,
   Lock,
   ChevronDown,
   Pencil,
   Plus,
-  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -48,26 +46,24 @@ function summary(s: Search) {
 }
 
 /**
- * Header search selector: shows Live/Paused status + city + name, and opens a
- * dropdown with "New search" on top, every saved search (with brief info and a
- * pencil to edit), and a collapsed archived section.
+ * Header search selector: shows city + name, and opens a dropdown with
+ * "New search" on top and every saved search (with brief info and a pencil to
+ * edit).
  */
 export function SearchSelector() {
   const active = useAppStore(selectActiveSearch);
   const searches = useAppStore((s) => s.searches);
   const plan = useAppStore((s) => s.user?.plan ?? "intro");
-  const restoreSearch = useAppStore((s) => s.restoreSearch);
 
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-  const [showArchived, setShowArchived] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const quota = useMemo(() => {
     const max = SEARCH_LIMITS[plan];
-    const used = searches.filter((s) => s.status !== "archived").length;
+    const used = searches.length;
     return {
       used,
       maxLabel: max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max),
@@ -91,8 +87,7 @@ export function SearchSelector() {
     };
   }, [open]);
 
-  const live = searches.filter((s) => s.status !== "archived");
-  const archived = searches.filter((s) => s.status === "archived");
+  const live = searches;
   const disabledIds = useDisabledSearchIds();
   const canCreate = quota.remaining > 0;
   const planLimit = Number.isFinite(SEARCH_LIMITS[plan]) ? SEARCH_LIMITS[plan] : TOTAL_SLOTS;
@@ -231,45 +226,6 @@ export function SearchSelector() {
             </ul>
 
 
-            {archived.length > 0 && (
-              <div className="border-t border-black/[0.06]">
-                <button
-                  type="button"
-                  onClick={() => setShowArchived((v) => !v)}
-                  aria-expanded={showArchived}
-                  className="flex h-9 w-full items-center justify-between px-4 text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500 hover:bg-charcoal-950/[0.04]"
-                >
-                  <span className="inline-flex items-center gap-1.5">
-                    <Archive className="h-3 w-3" /> Archived ({archived.length})
-                  </span>
-                  <ChevronDown className={cn("h-3 w-3 transition-transform", showArchived && "rotate-180")} />
-                </button>
-                {showArchived && (
-                  <ul className="max-h-[180px] overflow-y-auto bg-charcoal-950/[0.02] py-1">
-                    {archived.map((s) => (
-                      <li key={s.id} className="flex items-center gap-2 px-4 py-2">
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm text-charcoal-700">{s.name}</span>
-                          <span className="block truncate text-[11px] text-charcoal-500">
-                            {cityLabel(s.cityId)} · {summary(s)}
-                          </span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const res = restoreSearch(s.id);
-                            if (!res.ok) setUpgradeOpen(true);
-                          }}
-                          className="inline-flex h-8 items-center gap-1.5 rounded-pill border border-black/10 px-3 text-[11px] font-semibold text-charcoal-700 hover:border-charcoal-950"
-                        >
-                          <RotateCcw className="h-3 w-3" /> Restore
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
           </div>
         )}
       </div>

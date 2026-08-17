@@ -134,7 +134,7 @@ function SavedPage() {
 
   const counts: Record<TabKey, number> = {
     saved: savedRows.length,
-    searches: searches.filter((s) => s.status !== "archived").length,
+    searches: searches.length,
     disliked: dislikedRows.length,
   };
 
@@ -320,8 +320,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
     open: false,
     search: null,
   });
-  const live = searches.filter((s) => s.status !== "archived");
-  const archived = searches.filter((s) => s.status === "archived");
+  const live = searches;
   const disabledIds = useDisabledSearchIds();
   const activeSearchId = useAppStore((st) => st.activeSearchId);
   const max = SEARCH_LIMITS[plan];
@@ -371,16 +370,14 @@ function SearchesTab({ searches }: { searches: Search[] }) {
   return (
     <div className="space-y-4">
       <ul className="grid gap-3 lg:grid-cols-3">
-        {[...live, ...archived].map((s) => (
+        {live.map((s) => (
 
           <li
             key={s.id}
-            onClick={() => {
-              if (s.status !== "archived") switchActiveSearch(s.id);
-            }}
+            onClick={() => switchActiveSearch(s.id)}
             className={cn(
               "cursor-pointer rounded-[16px] border border-black/10 bg-white p-6 transition-colors hover:border-black/25",
-              (s.status === "archived" || disabledIds.has(s.id)) && "opacity-60",
+              disabledIds.has(s.id) && "opacity-60",
               s.id === activeSearchId && "border-charcoal-950/40",
             )}
           >
@@ -394,7 +391,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                 </div>
                 <p className="mt-1 text-[12px] text-charcoal-500">
                   {getCity(s.cityId)?.shortName ?? s.cityId}
-                  {disabledIds.has(s.id) ? " · Disabled" : s.status === "archived" ? " · Archived" : ""}
+                  {disabledIds.has(s.id) ? " · Disabled" : ""}
                   {" · "}
                   {s.totalAlertsReceived} alerts
                 </p>
@@ -515,8 +512,8 @@ function DeleteSearchDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Delete "{name}"?</AlertDialogTitle>
           <AlertDialogDescription>
-            This permanently removes the search and all its history. This cannot be undone.
-            Type <span className="font-semibold text-charcoal-950">{name}</span> to confirm.
+            This permanently removes its criteria, alert settings, match history, and the
+            apartments you saved from it. This cannot be undone. Type <span className="font-semibold text-charcoal-950">{name}</span> to confirm.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <input

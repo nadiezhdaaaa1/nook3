@@ -5,7 +5,7 @@ const triStateSchema = z.enum(["nice", "required"]);
 export const searchInputSchema = z.object({
   name: z.string().trim().min(1).max(50),
   cityId: z.string().min(1).max(40),
-  status: z.enum(["active", "paused", "archived"]).optional(),
+  alertsEnabled: z.boolean().optional(),
   budget: z.tuple([z.number().int().min(0), z.number().int().min(0)]).nullable().optional(),
   moveIn: z
     .object({
@@ -40,7 +40,7 @@ export function toDbRow(input: z.infer<typeof searchInputSchema>) {
   return {
     name: input.name,
     city_id: input.cityId,
-    status: input.status ?? "active",
+    status: (input.alertsEnabled === false ? "paused" : "active") as "active" | "paused",
     budget_min: input.budget?.[0] ?? null,
     budget_max: input.budget?.[1] ?? null,
     move_in: input.moveIn ?? { mode: "flexible" },
@@ -60,9 +60,8 @@ export function toUpdatePatch(p: Partial<z.infer<typeof searchInputSchema>>) {
   const patch: Record<string, unknown> = {};
   if (p.name !== undefined) patch.name = p.name;
   if (p.cityId !== undefined) patch.city_id = p.cityId;
-  if (p.status !== undefined) {
-    patch.status = p.status;
-    patch.archived_at = p.status === "archived" ? new Date().toISOString() : null;
+  if (p.alertsEnabled !== undefined) {
+    patch.status = (p.alertsEnabled ? "active" : "paused") as "active" | "paused";
   }
   if (p.budget !== undefined) {
     patch.budget_min = p.budget?.[0] ?? null;
@@ -88,8 +87,7 @@ export function dbRowToSearch(row: any) {
     cityId: row.city_id as string,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-    status: row.status as "active" | "paused" | "archived",
-    archivedAt: row.archived_at ?? undefined,
+    alertsEnabled: row.status !== "paused",
     budget:
       row.budget_min != null && row.budget_max != null
         ? ([row.budget_min, row.budget_max] as [number, number])

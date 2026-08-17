@@ -5,7 +5,6 @@ import type { CityId } from "@/data/cities";
 import type {
   Search,
   SearchQuota,
-  SearchStatus,
   User,
   MoveOutInfo,
   Plan,
@@ -50,8 +49,6 @@ interface AppActions {
   /** Swap a locally-created search for its persisted backend row (id becomes a real uuid). */
   adoptServerSearch: (localId: string, row: Search) => void;
   deleteSearch: (searchId: string) => void;
-  archiveSearch: (searchId: string) => void;
-  restoreSearch: (searchId: string) => { ok: true } | { ok: false; error: string };
   setActiveSearch: (searchId: string) => void;
 
   // Snapshotting (used by useOnboardingStore facade — call before switching searches
@@ -82,7 +79,7 @@ const DEFAULT_USER = (): User => ({
 });
 
 const EMPTY_SEARCH_DEFAULTS = (cityId: CityId): Omit<Search, "id" | "name" | "cityId" | "createdAt" | "updatedAt"> => ({
-  status: "active",
+  alertsEnabled: true,
   budget: null,
   moveIn: { mode: "flexible" },
   bedrooms: [],
@@ -180,8 +177,8 @@ export const useAppStore = create<AppStore>()(
             trialStartedAt: opts?.trial ? nowIso() : cur.trialStartedAt,
           },
           searches: get().searches.map((s) =>
-            overflow.has(s.id) && s.status === "active"
-              ? { ...s, status: "paused" as SearchStatus, updatedAt: nowIso() }
+            overflow.has(s.id) && s.alertsEnabled
+              ? { ...s, alertsEnabled: false, updatedAt: nowIso() }
               : s,
           ),
         });
@@ -191,7 +188,7 @@ export const useAppStore = create<AppStore>()(
         const { searches, user } = get();
         const plan = user?.plan ?? "intro";
         const limit = SEARCH_LIMITS[plan];
-        const activeCount = searches.filter((s) => s.status !== "archived").length;
+        const activeCount = searches.length;
         if (activeCount >= limit) {
           return { ok: false, error: `Plan limit reached (${activeCount} of ${limit === Infinity ? "∞" : limit})` };
         }
@@ -244,47 +241,18 @@ export const useAppStore = create<AppStore>()(
 
       },
 
-      archiveSearch: (id) => {
-        const { searches, activeSearchId } = get();
-        const next = searches.map((s) =>
-          s.id === id ? { ...s, status: "archived" as SearchStatus, archivedAt: nowIso(), updatedAt: nowIso() } : s,
-        );
-        const stillActive = activeSearchId === id
-          ? (next.find((s) => s.status !== "archived")?.id ?? null)
-          : activeSearchId;
-        // If nothing left non-archived, bootstrap a fresh one
-        if (!stillActive) {
-          const fresh = buildSearch({ cityId: "nyc" }, next);
-          set({ searches: [...next, fresh], activeSearchId: fresh.id });
-          return;
-        }
-        set({ searches: next, activeSearchId: stillActive });
-      },
-
-      restoreSearch: (id) => {
-        const { searches, user } = get();
-        const src = searches.find((s) => s.id === id);
-        if (!src) return { ok: false, error: "Search not found" };
-        const plan = user?.plan ?? "intro";
-        const limit = SEARCH_LIMITS[plan];
-        const activeCount = searches.filter((s) => s.status !== "archived").length;
-        if (activeCount >= limit) return { ok: false, error: "Plan limit reached" };
-        get().updateSearch(id, { status: "active", archivedAt: undefined });
-        return { ok: true };
-      },
-
       duplicateSearch: (id) => {
         const { searches, user } = get();
         const src = searches.find((s) => s.id === id);
         if (!src) return { ok: false, error: "Search not found" };
         const plan = user?.plan ?? "intro";
         const limit = SEARCH_LIMITS[plan];
-        const activeCount = searches.filter((s) => s.status !== "archived").length;
+        const activeCount = searches.length;
         if (activeCount >= limit) {
           return { ok: false, error: "Plan limit reached" };
         }
         const copy = buildSearch(
-          { ...src, id: undefined as unknown as string, name: `${src.name} copy`, status: "active" },
+          { ...src, id: undefined as unknown as string, name: `${src.name} copy`, alertsEnabled: true },
           searches,
         );
         set({ searches: [...searches, copy], activeSearchId: copy.id });
@@ -313,7 +281,7 @@ export const useAppStore = create<AppStore>()(
         const remaining = get().searches.filter((s) => s.id !== id);
         const nextActive =
           get().activeSearchId === id
-            ? (remaining.find((s) => s.status !== "archived")?.id ?? null)
+            ? (remaining[0]?.id ?? null)
             : get().activeSearchId;
         const tombstones = [...get().deletedSearchIds.filter((x) => x !== id), id].slice(-50);
         set({
@@ -352,7 +320,29 @@ export const useAppStore = create<AppStore>()(
     }),
     {
       name: "nook.app.v1",
-      version: 1,
+      version: 2,
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as
+          | (AppState & { searches?: (Search & { status?: string; archivedAt?: string })[] })
+          | undefined;
+        if (!state) return state as never;
+        if (version < 2) {
+          const searches = (state.searches ?? [])
+            .filter((s) => (s as { status?: string }).status !== "archived")
+            .map((s) => {
+              const { status, archivedAt, ...rest } = s as Search & {
+                status?: string;
+                archivedAt?: string;
+              };
+              return { ...rest, alertsEnabled: status !== "paused" } as Search;
+            });
+          const activeSearchId = searches.some((s) => s.id === state.activeSearchId)
+            ? state.activeSearchId
+            : (searches[0]?.id ?? null);
+          return { ...state, searches, activeSearchId } as never;
+        }
+        return state as never;
+      },
       storage: createJSONStorage(() =>
         typeof window === "undefined" ? (undefined as unknown as Storage) : localStorage,
       ),
@@ -375,7 +365,7 @@ export function selectActiveSearch(s: AppStore): Search | null {
 export function selectQuota(s: AppStore): SearchQuota {
   const plan = s.user?.plan ?? "intro";
   const max = SEARCH_LIMITS[plan];
-  const used = s.searches.filter((x) => x.status !== "archived").length;
+  const used = s.searches.length;
   const maxLabel = max === Number.POSITIVE_INFINITY ? "Unlimited" : String(max);
   return {
     used,
