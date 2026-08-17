@@ -534,8 +534,8 @@ function HomeScreen() {
 
             <p className="mt-2 text-sm text-charcoal-600">
               {search
-                ? `Listings in ${cityConfig?.displayName ?? "your city"} matching this search, lowest rent first.`
-                : "Set a city, budget and neighborhoods to start receiving alerts."}
+                ? `Listings in ${cityConfig?.displayName ?? "your city"} matching this search, lowest rent first`
+                : "Set a city, budget and neighborhoods to start receiving alerts"}
             </p>
 
           </header>
