@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
 
 
-import searchIllustration from "@/assets/search-3.png.asset.json";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { EmptyState } from "@/components/app/EmptyState";
+import { useDashboardStateOverride } from "@/lib/dev/dashboardState";
+
 
 import { SampleListingsMap, type SampleListingsMapRef } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
