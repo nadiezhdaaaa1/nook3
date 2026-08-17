@@ -68,6 +68,7 @@ type OriginButtonProps = ButtonHTMLAttributesForMotion & {
   loading?: boolean;
   variant?: "default" | "main" | "green" | "secondary" | "nice" | "tertiary" | "dark" | "premium" | "max" | "cancel" | "danger";
   size?: "big" | "medium";
+  align?: "left" | "center" | "right";
 };
 
 const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
