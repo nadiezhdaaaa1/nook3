@@ -409,18 +409,17 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                 >
                   <Pencil className="h-4 w-4" />
                 </OriginButton>
-                <OriginButton
-                  variant="tertiary"
-                  size="medium"
-                  aria-label={`Delete ${s.name}`}
-                  className="h-9 w-9 shrink-0 rounded-[8px] p-0 text-danger hover:text-danger hover:bg-danger/10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteDialog(s);
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </OriginButton>
+                <DeleteSearchButton
+                  search={s}
+                  reason={
+                    live.length === 1
+                      ? "You need at least one search to get alerts."
+                      : s.id === activeSearchId
+                        ? "This is your active search. Switch to another search first."
+                        : null
+                  }
+                  onDelete={() => openDeleteDialog(s)}
+                />
               </div>
             </div>
 
