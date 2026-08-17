@@ -170,7 +170,7 @@ export function HeroB() {
                 </OriginButton>
               )}
               <span className="text-sm" style={{ ...uiFont, color: COLORS.muted, marginLeft: 12 }}>
-                {city.comingSoon ? "Coming soon" : "3-day trial. Cancel anytime."}
+                {city.comingSoon ? "Coming soon" : "3 days free, then $14.99/month"}
               </span>
             </motion.form>
 
