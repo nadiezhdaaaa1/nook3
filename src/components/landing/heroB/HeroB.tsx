@@ -332,106 +332,170 @@ function HeroBBackground({
 /* ---------------- listing card ---------------- */
 
 function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
+  const child = reduced
+    ? {}
+    : {
+        variants: {
+          hidden: { opacity: 0, y: 15 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE_REVEAL } },
+        },
+      };
+
   return (
     <motion.article
       className="hero-b-card"
-      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0 }}
-      animate={
+      initial={reduced ? { opacity: 1 } : "hidden"}
+      whileInView={reduced ? undefined : "visible"}
+      viewport={{ once: true, amount: 0.3 }}
+      exit={reduced ? { opacity: 0 } : { opacity: 0, y: 10 }}
+      variants={
         reduced
-          ? { opacity: 1 }
+          ? undefined
           : {
-              opacity: 1,
-              scale: 1,
-              y: 0,
-              boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
+              hidden: { opacity: 0, y: 20 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, ease: EASE_REVEAL, staggerChildren: 0.1 },
+              },
             }
       }
-      exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.92 }}
-      transition={
-        reduced
-          ? { duration: 0.3 }
-          : { type: "spring", stiffness: 280, damping: 18, opacity: { duration: 0.2 } }
-      }
-      style={{ ...uiFont, boxShadow: "0 0 0 rgba(12,12,13,0)", transformOrigin: "bottom center" }}
+      whileHover={reduced ? undefined : { scale: 1.03 }}
+      transition={reduced ? { duration: 0.2 } : { type: "spring", stiffness: 300, damping: 20 }}
+      style={{
+        ...uiFont,
+        boxShadow: "0 16px 8px rgba(12,12,13,0.10), 0 4px 1px rgba(12,12,13,0.05)",
+      }}
     >
-      <div className="hero-b-card-photo">
-        <img src={city.cardImg} alt={city.listingTitle} className="hero-b-card-img" />
-        <span className="hero-b-card-badge" style={{ ...uiFont, backgroundColor: BADGE_GREEN }}>
-          New match • 1h ago
-        </span>
-      </div>
+      <motion.span
+        {...child}
+        className="hero-b-card-badge"
+        style={{ ...uiFont, backgroundColor: BADGE_GREEN }}
+      >
+        <span className="hero-b-card-badge-dot" />
+        New match · 1h ago
+      </motion.span>
 
-      <div className="hero-b-card-text">
-        <h2 className="hero-b-card-title">{city.listingTitle}</h2>
-        <p className="hero-b-card-hood">{city.neighborhood}</p>
-        <p className="hero-b-card-price">
-          {city.price}
-          <span className="hero-b-card-per">/mo</span>
-        </p>
-      </div>
+      <motion.h2 {...child} className="hero-b-card-title">
+        {city.listingTitle}
+      </motion.h2>
+
+      <motion.p {...child} className="hero-b-card-hood">
+        {city.neighborhood}
+      </motion.p>
+
+      <motion.p {...child} className="hero-b-card-price">
+        {city.price}
+        <span className="hero-b-card-per">/mo</span>
+      </motion.p>
+
+      <motion.div {...child} className="hero-b-card-facts">
+        <p className="hero-b-card-specs">{city.specs}</p>
+        <p className="hero-b-card-transit">{city.transit}</p>
+      </motion.div>
+
+      <motion.div {...child} className="hero-b-card-why">
+        <p className="hero-b-card-why-label">Why it matched</p>
+        <div className="hero-b-card-chips">
+          {city.reasons.map((r) => (
+            <span key={r} className="hero-b-card-chip">
+              {r}
+            </span>
+          ))}
+        </div>
+      </motion.div>
 
       <style>{`
         .hero-b-card {
-          width: 280px;
-          padding: 16px;
+          width: 300px;
+          padding: 20px;
           border-radius: 24px;
           border: 1px solid rgba(0,0,0,0.20);
           background: #ffffff;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          align-items: flex-start;
           will-change: transform, opacity;
         }
-        .hero-b-card-photo {
-          position: relative;
-          width: 100%;
-          height: 144px;
-          border-radius: 8px;
-          overflow: hidden;
-          border: 1px solid rgba(0,0,0,0.08);
+        .hero-b-card:hover {
+          box-shadow: 0 24px 40px rgba(12,12,13,0.16), 0 6px 12px rgba(12,12,13,0.08);
         }
-        .hero-b-card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .hero-b-card-badge {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-          padding: 4px 8px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
           border-radius: 80px;
           color: #ffffff;
           font-size: 12px;
           font-weight: 400;
           line-height: 1.2;
         }
-        .hero-b-card-text { padding: 4px; display: flex; flex-direction: column; gap: 12px; }
+        .hero-b-card-badge-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 80px;
+          background: #ffffff;
+        }
         .hero-b-card-title {
-          font-family: ${FONT_UI};
-          font-variation-settings: ${UI_VAR};
-          font-size: 16px;
+          font-family: ${FONT_DISPLAY};
+          font-variation-settings: ${DISPLAY_VAR};
+          font-size: 19px;
           font-weight: 600;
-          line-height: 1.3;
-          letter-spacing: -0.42px;
-          color: #000000;
+          line-height: 1.25;
+          letter-spacing: -0.3px;
+          color: #241C12;
+          margin-top: 12px;
+          margin-bottom: 2px;
         }
         .hero-b-card-hood {
           font-family: ${FONT_UI};
-          font-size: 14px;
+          font-size: 13.5px;
           font-weight: 400;
           line-height: 1.4;
-          letter-spacing: -0.31px;
-          color: rgba(0,0,0,0.7);
+          color: #6E6459;
+          margin-bottom: 10px;
         }
         .hero-b-card-price {
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
-          font-size: 24px;
+          font-size: 28px;
           font-weight: 700;
-          line-height: 1.2;
-          letter-spacing: -0.45px;
-          color: #000000;
+          line-height: 1.15;
+          color: #D66C38;
         }
-        .hero-b-card-per { font-size: 20px; font-weight: 700; color: rgba(0,0,0,0.6); }
+        .hero-b-card-per { font-size: 16px; font-weight: 600; color: #D66C38; }
+        .hero-b-card-facts {
+          width: 100%;
+          margin-top: 14px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(0,0,0,0.1);
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .hero-b-card-specs { font-size: 13.5px; line-height: 1.4; color: #241C12; }
+        .hero-b-card-transit { font-size: 13.5px; line-height: 1.4; color: #6E6459; }
+        .hero-b-card-why { width: 100%; margin-top: 14px; }
+        .hero-b-card-why-label {
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: 1.6px;
+          text-transform: uppercase;
+          color: #6A820A;
+          margin-bottom: 8px;
+        }
+        .hero-b-card-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .hero-b-card-chip {
+          background: #EBF0D5;
+          border-radius: 80px;
+          padding: 4px 10px;
+          font-size: 12.5px;
+          line-height: 1.3;
+          color: #3A3A37;
+        }
         @media (max-width: 680px) {
-          .hero-b-card { width: 100%; max-width: 320px; }
+          .hero-b-card { width: 100%; max-width: 340px; }
         }
       `}</style>
     </motion.article>
