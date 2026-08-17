@@ -467,7 +467,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           border-radius: inherit;
           border: calc(var(--border) * 1px) solid transparent;
           pointer-events: none;
-          background-attachment: fixed;
+          background-attachment: scroll;
+
           background-repeat: no-repeat;
           -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
