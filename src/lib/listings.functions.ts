@@ -5,17 +5,19 @@ import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 import type { SampleListing } from "@/data/sampleListings";
 
-const inputSchema = z.object({
-  cityId: z.string().min(1),
-  limit: z.number().int().min(1).max(6000).optional(),
-});
-
 /**
  * Public catalog read: active listings for a city.
  * Uses the publishable key (anon) client — listings are public data.
  */
 export const listCityListings = createServerFn({ method: "GET" })
-  .inputValidator((input: unknown) => inputSchema.parse(input))
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        cityId: z.string().min(1),
+        limit: z.number().int().min(1).max(6000).optional(),
+      })
+      .parse(input),
+  )
   .handler(async ({ data }): Promise<SampleListing[]> => {
     const key = process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"]!;
     const supabase = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
