@@ -27,6 +27,7 @@ import {
   HERO_B_MAP_BASE,
   type HeroBCity,
 } from "./heroBCities";
+import { useCardTilt } from "./useCardTilt";
 
 const H1_LINES = ["Real-time apartment alerts.", "Find it before it's gone,", "without losing your mind."];
 const H1_TEXT = "Real-time apartment alerts. Find it before it's gone, without losing your mind.";
