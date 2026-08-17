@@ -232,30 +232,12 @@ function HomeScreen() {
     [scope],
   );
 
-  /** Catalog narrowed to the saved search, with the user's own alert rows merged in. */
-  const listings = useMemo(() => {
-    const pool = applyFilters(cityListings, scopeFilters, scope).filter(
-      (l) => !dismissedKeys.has(`${l.address}|${l.rent}`),
-    );
-    const seen = new Set(allAlertListings.map((l) => `${l.address}|${l.rent}`));
-    const merged = [...allAlertListings, ...pool.filter((l) => !seen.has(`${l.address}|${l.rent}`))];
-    return merged.sort((a, b) => a.rent - b.rent);
-  }, [cityListings, scopeFilters, scope, dismissedKeys, allAlertListings]);
+  /** Only the user's own digest matches ever render here — never sample listings. */
+  const listings = useMemo(
+    () => [...allAlertListings].sort((a, b) => a.rent - b.rent),
+    [allAlertListings],
+  );
 
-  /** Which saved-search criterion emptied the pool — drives the empty state copy. */
-  const emptyReason = useMemo(() => {
-    if (cityListings.length === 0) return "city" as const;
-    const budgetOnly = applyFilters(
-      cityListings,
-      { ...scopeFilters, neighborhoods: [], bedrooms: [], bathrooms: null },
-      scope,
-    );
-    if (budgetOnly.length === 0) return "budget" as const;
-    const withBeds = applyFilters(cityListings, { ...scopeFilters, neighborhoods: [] }, scope);
-    if (withBeds.length === 0) return "beds" as const;
-    if (scope.neighborhoods.length > 0) return "neighborhoods" as const;
-    return "filters" as const;
-  }, [cityListings, scopeFilters, scope]);
 
   const visibleListings = useMemo(
     () => applyFilters(listings.filter((l) => !hiddenIds.includes(l.id)), filters, scope),
