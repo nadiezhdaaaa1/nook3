@@ -431,6 +431,8 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           /* GlowCard config — terracotta, tamed spread */
           --x: 0;
           --y: 0;
+          --lx: 150;
+          --ly: 170;
           --xp: 0.5;
           --yp: 0.5;
           --glow-o: 0;
@@ -443,7 +445,7 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           --border-spot-opacity: 0.8;
           --border-light-opacity: 0.5;
           --hue: calc(var(--base) + (var(--xp) * var(--spread)));
-          --spot: calc(var(--x) * 1px) calc(var(--y) * 1px);
+          --spot: calc(var(--lx) * 1px) calc(var(--ly) * 1px);
 
           background-color: #ffffff;
           background-image: radial-gradient(
@@ -451,9 +453,10 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
             hsl(var(--hue) 66% 53% / var(--bg-spot-opacity)),
             transparent 100%
           );
-          background-attachment: fixed;
+          background-attachment: scroll;
           background-repeat: no-repeat;
         }
+
         .hero-b-card:focus-visible { outline: none; }
         /* border glow ring */
         .hero-b-card::before,
