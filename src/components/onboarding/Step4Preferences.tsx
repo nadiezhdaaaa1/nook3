@@ -9,6 +9,7 @@ import { TriStateToggle } from "@/components/onboarding/TriStateToggle";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { AMENITY_GROUPS, AMENITY_PRESETS } from "@/data/amenities";
+import { cn } from "@/lib/utils";
 
 const reduceMotion = (reduce: boolean | null) =>
   reduce
