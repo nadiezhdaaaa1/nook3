@@ -79,6 +79,7 @@ const OriginButton = React.forwardRef<HTMLButtonElement, OriginButtonProps>(
       disabled = false,
       loading = false,
       size = "big",
+      align = "center",
       type = "button",
       variant = "default",
       onBlur,
