@@ -118,8 +118,8 @@ export function SearchSelector() {
         >
           {active ? (
             <>
-              <StatusDot status={active.status} disabled={disabledIds.has(active.id)} />
               <span className="min-w-0 truncate text-sm font-semibold text-charcoal-950">
+
                 {active.name}
               </span>
               <span className="shrink-0 text-sm text-charcoal-500">
