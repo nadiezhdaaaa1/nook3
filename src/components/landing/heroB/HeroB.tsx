@@ -504,13 +504,15 @@ function ListingCard({ city, reduced }: { city: HeroBCity; reduced: boolean }) {
           opacity: var(--glow-o);
           transition: opacity 200ms ease;
           filter: blur(calc(var(--border) * 2px)) brightness(1.4);
-          background-attachment: fixed;
+          background-attachment: scroll;
           background-repeat: no-repeat;
           background-image: radial-gradient(
-            calc(var(--size) * 0.75px) circle at var(--spot),
+            calc(var(--size) * 0.75px) circle at
+              calc(var(--lx) * 1px - var(--border) * 1px) calc(var(--ly) * 1px - var(--border) * 1px),
             hsl(var(--hue) 100% 50% / var(--border-spot-opacity)),
             transparent 100%
           );
+
           -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           mask-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
           -webkit-mask-clip: padding-box, border-box;
