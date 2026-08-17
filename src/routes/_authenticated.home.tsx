@@ -126,11 +126,7 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 function HomeScreen() {
   const search = useActiveSearch();
   const noSearches = useAppStore((s) => s.searches.length === 0);
-  const userPlan = useAppStore((s) => s.user?.plan);
-  const userCycle = useAppStore((s) => s.user?.billingCycle);
-  const planLabel = userPlan === "pro" ? "Pro" : "Intro";
-  const cycleLabel = userCycle === "annual" ? "annually" : "monthly";
-  const hydrated = useAppStore((s) => s.hydrated);
+
   const navigate = useNavigate();
   const cityId = (search?.cityId ?? "nyc") as CityId;
   const cityConfig = getCity(cityId);
