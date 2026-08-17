@@ -158,7 +158,7 @@ export function SearchSelector() {
         {open && (
           <div
             role="listbox"
-            className="absolute left-0 z-50 mt-2 w-[380px] overflow-hidden rounded-[12px] border border-black/20 bg-white shadow-[0_16px_32px_rgba(36,28,18,0.12)] backdrop-blur-md"
+            className="absolute left-0 z-50 mt-2 w-[min(380px,calc(100vw-32px))] overflow-hidden rounded-[12px] border border-black/20 bg-white shadow-[0_16px_32px_rgba(36,28,18,0.12)] backdrop-blur-md"
           >
             <div className="flex items-center justify-between px-4 pt-3 pb-1">
               <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-charcoal-500">
