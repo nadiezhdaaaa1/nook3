@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAppStore, switchActiveSearch, useIsSearchDisabled } from "@/lib/store";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
-import { PausedSearchBanner } from "@/components/preferences/PausedSearchBanner";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -89,7 +88,6 @@ function SearchEditLayout() {
 
         <main>
           <MobileNav searchId={search.id} pathname={pathname} sectionLabel={sectionLabel} />
-          <PausedSearchBanner />
           <Outlet />
         </main>
       </div>
@@ -110,8 +108,6 @@ function PageHeader({
   cityId: CityId;
   sectionLabel: string;
 }) {
-  const pauseSearch = useAppStore((s) => s.pauseSearch);
-  const resumeSearch = useAppStore((s) => s.resumeSearch);
   const renameSearch = useAppStore((s) => s.renameSearch);
   const isDisabled = useIsSearchDisabled(searchId);
 
@@ -187,30 +183,6 @@ function PageHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          disabled={isDisabled}
-          title={isDisabled ? "Over your plan limit — upgrade to run this search again." : undefined}
-          onClick={() => {
-            if (status === "paused") {
-              const res = resumeSearch(searchId);
-              if (res.ok) toast.success(`Alerts turned on for ${name}`);
-              else toast.error("Can't turn alerts on", { description: res.error });
-            } else {
-              pauseSearch(searchId);
-              toast.success(`Alerts turned off for ${name}`);
-            }
-          }}
-        >
-          {isDisabled ? (
-            <><Pause className="h-4 w-4" /> Disabled</>
-          ) : status === "paused" ? (
-            <><Play className="h-4 w-4" /> Turn alerts on</>
-          ) : (
-            <><Pause className="h-4 w-4" /> Turn alerts off</>
-          )}
-        </OriginButton>
         <OriginButton
           variant="tertiary"
           size="medium"
