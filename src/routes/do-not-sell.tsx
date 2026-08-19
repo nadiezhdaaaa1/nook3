@@ -58,15 +58,15 @@ const STATES = [
 ];
 
 const RIGHTS = [
-  { id: "opt_out", label: "Opt out of sale/sharing of my personal information" },
+  { id: "opt_out", label: "Opt out of sale or sharing of my personal information" },
   { id: "know", label: "Right to know what information you have about me" },
   { id: "delete", label: "Right to delete my personal information" },
   { id: "correct", label: "Right to correct my personal information" },
-  { id: "portability", label: "Right to data portability (export my data)" },
+  { id: "portability", label: "Right to data portability (send me a copy of my data)" },
 ] as const;
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Required").max(100),
+  name: z.string().trim().max(100).optional(),
   email: z.string().trim().email("Invalid email").max(255),
   requester: z.enum(["self", "agent"]),
   state: z.string().min(1, "Required").max(50),
@@ -110,9 +110,9 @@ function DoNotSellPage() {
     setErrors({});
 
     const body = [
-      `Name: ${parsed.data.name}`,
+      `Name: ${parsed.data.name || "(not provided)"}`,
       `Email: ${parsed.data.email}`,
-      `Requester: ${parsed.data.requester === "self" ? "For myself" : "Authorized agent"}`,
+      `Requester: ${parsed.data.requester === "self" ? "For myself" : "Authorised agent"}`,
       `State: ${parsed.data.state}`,
       `Rights requested:`,
       ...parsed.data.rights.map(
@@ -131,36 +131,36 @@ function DoNotSellPage() {
   }
 
   return (
-    <LegalPageLayout title="Your Privacy Choices" lastUpdated="July 2, 2026">
-      <h2>Your Privacy Choices</h2>
+    <LegalPageLayout title="Your Privacy Choices" lastUpdated="August 19, 2026">
       <p>
-        You have choices about how Nook uses your personal information. This page explains
-        those choices and lets you exercise them.
+        You have choices about how Nook uses your personal information. This page explains those
+        choices and lets you exercise them.
       </p>
 
       <h2>Your Rights</h2>
       <p>
-        If you are a resident of California or another US state with comprehensive privacy law
-        (Virginia, Colorado, Connecticut, Utah, Texas, Oregon, Montana, Tennessee, Iowa,
-        Indiana, Delaware, Maryland, Minnesota, New Hampshire, New Jersey), you may have these
-        rights:
+        If you are a resident of California or another US state with a comprehensive privacy law
+        — Virginia, Colorado, Connecticut, Utah, Texas, Oregon, Montana, Tennessee, Iowa,
+        Indiana, Delaware, Maryland, Minnesota, New Hampshire, or New Jersey — you may have
+        these rights:
       </p>
       <ul>
-        <li><strong>Opt out</strong> of sale or sharing of personal information for cross-context behavioral advertising</li>
-        <li><strong>Access</strong> information we have about you</li>
-        <li><strong>Delete</strong> your personal information</li>
-        <li><strong>Correct</strong> inaccurate information about you</li>
-        <li><strong>Port</strong> your information in a machine-readable format</li>
+        <li>Opt out of sale or sharing of personal information for cross-context behavioural advertising</li>
+        <li>Access information we have about you</li>
+        <li>Delete your personal information</li>
+        <li>Correct inaccurate information about you</li>
+        <li>Port your information in a machine-readable format</li>
       </ul>
       <p>
-        You can exercise rights without penalty. We will not deny you service, charge different
-        prices, or provide different quality of service because you exercise privacy rights.
+        You can exercise these rights without penalty. We will not deny you service, charge
+        different prices, or provide a different quality of service because you exercise privacy
+        rights.
       </p>
 
-      <h2>We Honor Global Privacy Control</h2>
+      <h2>We Honour Global Privacy Control</h2>
       <p>
-        If your browser sends a Global Privacy Control (GPC) signal, we automatically treat
-        that as an opt-out of sale/sharing. You do not need to fill out a form.
+        If your browser sends a Global Privacy Control (GPC) signal, we automatically treat that
+        as an opt-out of sale or sharing. You do not need to fill out a form.
       </p>
       <p>
         <a href="https://globalprivacycontrol.org/" target="_blank" rel="noopener noreferrer">
@@ -171,7 +171,9 @@ function DoNotSellPage() {
       <h2>Submit a Request</h2>
       <p>
         Use the form below to submit a privacy request. We will respond within the timeframe
-        required by your state's law (generally 45 days, extendable to 90 with notice).
+        required by your state’s law, generally within 45 days, with one additional 45-day
+        extension where permitted by applicable law and with notice to you. Requests to opt out
+        of sale or sharing are processed within the shorter period required by applicable law.
       </p>
 
       <form
@@ -180,10 +182,11 @@ function DoNotSellPage() {
         noValidate
       >
         <div className="space-y-2">
-          <Label htmlFor="dnss-name">
-            Your name <span aria-hidden className="text-brand-terracotta">*</span>
-          </Label>
-          <Input id="dnss-name" name="name" maxLength={100} required placeholder="Alex Johnson" />
+          <Label htmlFor="dnss-name">Your name (optional)</Label>
+          <Input id="dnss-name" name="name" maxLength={100} placeholder="Alex Johnson" />
+          <p className="text-xs text-charcoal-500">
+            We do not hold a name on your account, so this is only used to address our reply.
+          </p>
           {errors.name && <p className="text-xs text-brand-terracotta">{errors.name}</p>}
         </div>
 
@@ -193,7 +196,8 @@ function DoNotSellPage() {
           </Label>
           <Input id="dnss-email" name="email" type="email" maxLength={255} required placeholder="you@email.com" />
           <p className="text-xs text-charcoal-500">
-            We use this to verify your identity and respond.
+            We use this to verify your identity and to respond. It must be the address on your
+            Nook account.
           </p>
           {errors.email && <p className="text-xs text-brand-terracotta">{errors.email}</p>}
         </div>
@@ -214,10 +218,7 @@ function DoNotSellPage() {
             <div className="flex items-start gap-2">
               <RadioGroupItem id="req-agent" value="agent" className="mt-1" />
               <Label htmlFor="req-agent" className="font-normal leading-snug">
-                As an authorized agent for someone else
-                <span className="block text-xs text-charcoal-500 mt-0.5">
-                  (If selected, additional verification is required.)
-                </span>
+                As an authorised agent for someone else (additional verification is required)
               </Label>
             </div>
           </RadioGroup>
@@ -287,57 +288,115 @@ function DoNotSellPage() {
       </form>
 
       <h2>What Happens Next</h2>
-      <ol>
-        <li><strong>Within 10 days:</strong> We acknowledge your request by email</li>
-        <li><strong>Within 45 days:</strong> We process your request and respond</li>
-        <li><strong>If we need more time:</strong> We may extend by 45 additional days with notice</li>
-      </ol>
+      <ul>
+        <li><strong>Within 10 business days:</strong> we acknowledge your request by email</li>
+        <li>
+          <strong>Within 45 days:</strong> we generally respond to requests to know, access,
+          delete, correct, or obtain a copy of your data, subject to any extension permitted by
+          applicable law
+        </li>
+        <li>
+          <strong>If we need more time:</strong> where permitted by applicable law, we may extend
+          that period once by an additional 45 days with notice
+        </li>
+        <li>
+          <strong>Opt-out requests:</strong> requests to opt out of sale or sharing are processed
+          within the shorter timeframe required by applicable law.
+        </li>
+      </ul>
       <p>For complex requests, identity verification may take longer.</p>
+      <p>
+        Requests for a copy of your data are prepared by our team and sent to the address on your
+        account. There is no self-service download in the product.
+      </p>
 
       <h2>Appeals</h2>
       <p>
         If we deny your request and you believe the denial was incorrect, you can appeal by
-        emailing <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a> with subject
-        "Privacy Appeal."
+        emailing <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a> with the subject
+        “Privacy Appeal.”
       </p>
-      <p>We will review your appeal and respond within 60 days. If your appeal is denied, we will provide:</p>
+      <p>
+        We will review your appeal and respond within the timeframe required by the privacy law
+        applicable to your request. If your appeal is denied, we will provide:
+      </p>
       <ul>
-        <li>The reason for denial</li>
+        <li>The reason for the denial</li>
         <li>Contact information for your state attorney general</li>
       </ul>
 
-      <h2>Authorized Agents</h2>
-      <p>If you are an authorized agent submitting on someone else's behalf, please be prepared to provide:</p>
+      <h2>Authorised Agents</h2>
+      <p>
+        If you are an authorised agent submitting on someone else’s behalf, please be prepared to
+        provide:
+      </p>
       <ul>
-        <li>Written authorization from the person (e.g., power of attorney)</li>
+        <li>Written authorisation from the person, such as a power of attorney</li>
         <li>Your contact information</li>
         <li>Verification that you are who you claim to be</li>
       </ul>
       <p>We may also confirm directly with the person on whose behalf you are acting.</p>
 
       <h2>Other Ways to Manage Your Information</h2>
-      <p>Some privacy choices can be exercised directly in your account:</p>
-      <ul>
-        <li><strong>Update profile:</strong> Account → Profile</li>
-        <li><strong>Change email preferences:</strong> Account → Communications</li>
-        <li><strong>Download data:</strong> Account → Data & Privacy → Download my data</li>
-        <li><strong>Delete account:</strong> Account → Data & Privacy → Delete account</li>
-        <li><strong>Manage cookies:</strong> Footer → Cookie Preferences</li>
-      </ul>
+      <p>Some choices can be exercised directly in your account:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>What you want to do</th>
+            <th>Where</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Change what you are looking for</td>
+            <td>Open a search, then Budget, Apartment details, or Location</td>
+          </tr>
+          <tr>
+            <td>Change how often alerts arrive, or set quiet hours</td>
+            <td>Open a search, then Notifications. These are set for each search separately</td>
+          </tr>
+          <tr>
+            <td>Stop alerts from one search without cancelling</td>
+            <td>Open a search, then Notifications, and turn alerts off</td>
+          </tr>
+          <tr>
+            <td>Change your timezone or password</td>
+            <td>Account</td>
+          </tr>
+          <tr>
+            <td>Manage product news and newsletter</td>
+            <td>Account</td>
+          </tr>
+          <tr>
+            <td>Cancel your subscription</td>
+            <td>Account &gt; Subscription</td>
+          </tr>
+          <tr>
+            <td>Delete your account</td>
+            <td>Account, in the section at the bottom of the page</td>
+          </tr>
+          <tr>
+            <td>Manage cookies</td>
+            <td>“Cookie Preferences” in the footer</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Unsubscribing from alerts is not the same as cancelling. Turning alerts off stops the
+        emails; your subscription continues and you continue to be billed. To stop being billed,
+        cancel your subscription.
+      </p>
+      <p>
+        You can also stop alerts from any alert email without signing in, using the link at the
+        bottom of that email.
+      </p>
 
       <h2>Questions</h2>
       <p>
         <strong>Email:</strong> <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>
         <br />
-        <strong>Mail:</strong>
-        <br />
-        Privacy Officer
-        <br />
-        Zentaro Systems Ltd
-        <br />
-        167-169 Great Portland Street, 5th Floor, London, W1W 5PF
-        <br />
-        United Kingdom
+        <strong>Mail:</strong> Privacy Officer, NORELIX LIMITED, The Black Church, St. Mary’s
+        Place, Dublin 7, D07 P4AX, Ireland
       </p>
       <p>
         If you believe we have not properly handled your request, you may contact your state
@@ -350,8 +409,8 @@ function DoNotSellPage() {
         <Link to="/privacy">Privacy Policy</Link>.
       </p>
       <p>
-        For information on our subprocessors, see our{" "}
-        <Link to="/subprocessors">Subprocessor List</Link>.
+        For information on the vendors who process data on our behalf, see Section 4.1 of our{" "}
+        <Link to="/privacy">Privacy Policy</Link>.
       </p>
     </LegalPageLayout>
   );

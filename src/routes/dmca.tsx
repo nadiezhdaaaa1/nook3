@@ -17,127 +17,134 @@ export const Route = createFileRoute("/dmca")({
 
 function DmcaPage() {
   return (
-    <LegalPageLayout title="DMCA Copyright Policy" lastUpdated="July 2, 2026">
+    <LegalPageLayout title="DMCA Copyright Policy" lastUpdated="August 19, 2026">
       <h2>1. Our Policy</h2>
       <p>
-        Nook, operated by Zentaro Systems Ltd, respects intellectual property rights and
-        expects users to do the same. We respond to claims of copyright infringement in
-        accordance with the Digital Millennium Copyright Act (DMCA), 17 U.S.C. § 512.
+        Nook, operated by NORELIX LIMITED, respects intellectual property rights and expects
+        users to do the same. We respond to claims of copyright infringement in accordance with
+        the Digital Millennium Copyright Act (DMCA), 17 U.S.C. § 512.
       </p>
       <p>
-        This policy describes how to report alleged infringement, how we respond, how to file
-        a counter-notice, and our policy for repeat infringers.
+        This policy describes how to report alleged infringement, how we respond, how to file a
+        counter-notice, and our policy for repeat infringers.
+      </p>
+      <h3>What content this policy applies to</h3>
+      <p>
+        The Service displays short extracts of listing descriptions obtained from licensed
+        third-party sources, together with factual property details such as address, price, and
+        size. Each listing links to its source.
+      </p>
+      <p>
+        We do not display photographs, video, floor plans, or virtual tours from listing
+        sources, and the Service does not currently accept content uploaded by users.
+      </p>
+      <p>
+        This policy applies to any content displayed through the Service, including extracts
+        described above and any user-submitted content we may accept in future.
       </p>
 
       <h2>2. Designated Agent</h2>
       <p>
-        If you believe content on the Service infringes your copyright, please send a notice
-        to:
+        If you believe content on the Service infringes your copyright, please send a notice to:
       </p>
       <p>
-        Email: <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
+        <strong>Email:</strong> <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
       </p>
-      <p>
-        Your notice must contain the information required by 17 U.S.C. § 512(c)(3).
-      </p>
+      <p>Your notice must contain the information required by 17 U.S.C. § 512(c)(3).</p>
 
       <h2>3. Filing a Notice of Infringement</h2>
       <p>
-        To be effective, your notice must include all of the following (per 17 U.S.C. §
-        512(c)(3)):
+        To be effective, your notice must include all of the following, per 17 U.S.C. §
+        512(c)(3):
       </p>
-      <ol>
+      <ul>
         <li>
-          <strong>Identification of the copyrighted work</strong> you claim has been infringed
-          (or, if multiple works, a representative list)
+          Identification of the copyrighted work you claim has been infringed, or, if multiple
+          works, a representative list
         </li>
         <li>
-          <strong>Identification of the material</strong> you claim is infringing, with enough
-          detail for us to locate it (URL or screenshot)
+          Identification of the material you claim is infringing, with enough detail for us to
+          locate it (URL or screenshot)
+        </li>
+        <li>Your contact information: name, address, phone number, and email</li>
+        <li>
+          A statement, in good faith, that the use of the material is not authorized by the
+          copyright owner, its agent, or the law
         </li>
         <li>
-          <strong>Your contact information</strong> — name, address, phone number, and email
+          A statement, under penalty of perjury, that the information in your notice is accurate
+          and that you are authorized to act on behalf of the copyright owner
         </li>
-        <li>
-          <strong>A statement, in good faith,</strong> that the use of the material is not
-          authorized by the copyright owner, its agent, or the law
-        </li>
-        <li>
-          <strong>A statement, under penalty of perjury,</strong> that the information in your
-          notice is accurate and that you are authorized to act on behalf of the copyright
-          owner
-        </li>
-        <li><strong>Your physical or electronic signature</strong></li>
-      </ol>
-      <p>Send the notice to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.</p>
+        <li>Your physical or electronic signature</li>
+      </ul>
       <p>
-        ⚠️ <strong>Important:</strong> Under 17 U.S.C. § 512(f), you may be liable for damages
-        — including costs and attorneys' fees — if you knowingly make material
-        misrepresentations in a DMCA notice.
+        Send the notice to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.
+      </p>
+      <p>
+        <strong>Important:</strong> under 17 U.S.C. § 512(f), you may be liable for damages,
+        including costs and attorneys’ fees, if you knowingly make material misrepresentations
+        in a DMCA notice.
       </p>
 
       <h2>4. How We Respond</h2>
       <p>Upon receiving a valid notice, we will:</p>
-      <ol>
-        <li>Acknowledge receipt within 5 business days</li>
+      <ul>
         <li>Investigate the claim</li>
         <li>Remove or disable access to the allegedly infringing material if appropriate</li>
-        <li>Notify the user who submitted the material (if known)</li>
-        <li>Provide the user with a copy of the notice and information on filing a counter-notice</li>
-      </ol>
+        <li>Notify the user who submitted the material, if known</li>
+        <li>Provide that user with a copy of the notice and information on filing a counter-notice</li>
+      </ul>
       <p>
-        We may also terminate the accounts of users who repeatedly upload infringing material.
+        Where the material in question is an extract we obtained from a licensed source, we will
+        also notify that source.
       </p>
+      <p>We may terminate the accounts of users who repeatedly submit infringing material.</p>
 
       <h2>5. Filing a Counter-Notice</h2>
       <p>
         If you believe material was removed in error, you may file a counter-notice. To be
-        effective, it must include all of the following (per 17 U.S.C. § 512(g)(3)):
+        effective, it must include all of the following, per 17 U.S.C. § 512(g)(3):
       </p>
-      <ol>
+      <ul>
+        <li>Identification of the material that was removed and the location where it appeared</li>
         <li>
-          <strong>Identification of the material</strong> that was removed and the location
-          where it appeared
+          A statement, under penalty of perjury, that you have a good faith belief the material
+          was removed by mistake or misidentification
+        </li>
+        <li>Your contact information: name, address, phone number, and email</li>
+        <li>
+          A statement that you consent to the jurisdiction of the federal court in the district
+          where you live, or, if outside the US, any judicial district where Nook may be found
         </li>
         <li>
-          <strong>A statement, under penalty of perjury,</strong> that you have a good faith
-          belief the material was removed by mistake or misidentification
+          A statement that you will accept service of process from the person who submitted the
+          original notice or their agent
         </li>
-        <li>
-          <strong>Your contact information</strong> — name, address, phone number, and email
-        </li>
-        <li>
-          <strong>A statement that you consent</strong> to the jurisdiction of the federal
-          court in the district where you live (or, if outside the US, any judicial district
-          where Nook may be found)
-        </li>
-        <li>
-          <strong>A statement that you will accept service of process</strong> from the person
-          who submitted the original notice or their agent
-        </li>
-        <li><strong>Your physical or electronic signature</strong></li>
-      </ol>
-      <p>Send counter-notices to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.</p>
+        <li>Your physical or electronic signature</li>
+      </ul>
       <p>
-        ⚠️ <strong>Important:</strong> Under 17 U.S.C. § 512(f), you may be liable for damages
-        if you knowingly make material misrepresentations in a counter-notice.
+        Send counter-notices to <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>.
+      </p>
+      <p>
+        <strong>Important:</strong> under 17 U.S.C. § 512(f), you may be liable for damages if
+        you knowingly make material misrepresentations in a counter-notice.
       </p>
 
       <h2>6. How We Handle Counter-Notices</h2>
       <p>Upon receiving a valid counter-notice, we will:</p>
-      <ol>
+      <ul>
         <li>Promptly forward it to the original notice-sender</li>
-        <li>Inform them that we may restore the material in 10-14 business days</li>
-      </ol>
+        <li>Inform them that we may restore the material in 10 to 14 business days</li>
+      </ul>
       <p>
-        If the original sender does not file a court action seeking a restraining order
-        within that period, we may restore the material.
+        If the original sender does not file a court action seeking a restraining order within
+        that period, we may restore the material.
       </p>
 
       <h2>7. Repeat Infringer Policy</h2>
       <p>
-        We will terminate accounts of users who, in our discretion, are repeat infringers. We
-        may also take action against users who appear to repeatedly or blatantly infringe,
+        We will terminate the accounts of users who, in our discretion, are repeat infringers.
+        We may also take action against users who appear to repeatedly or blatantly infringe,
         even before formal notice.
       </p>
       <p>Termination may include:</p>
@@ -149,9 +156,9 @@ function DmcaPage() {
 
       <h2>8. Misuse of the DMCA Process</h2>
       <p>
-        Knowingly submitting false DMCA notices or counter-notices is illegal and can result
-        in civil and criminal liability. If we determine you are misusing the DMCA process,
-        we may:
+        Knowingly making material misrepresentations in a DMCA notice or counter-notice may
+        result in liability under applicable law. If we determine you are misusing the DMCA
+        process, we may:
       </p>
       <ul>
         <li>Reject future notices from you</li>
@@ -169,14 +176,13 @@ function DmcaPage() {
 
       <h2>10. Changes to This Policy</h2>
       <p>
-        We may update this DMCA Policy from time to time. We will post updates on this page
-        and update the "Last Updated" date.
+        We may update this DMCA Policy from time to time. We will post updates on this page and
+        update the “Last Updated” date.
       </p>
 
       <h2>11. Contact</h2>
       <p>
-        <strong>DMCA notices:</strong>{" "}
-        <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
+        <strong>DMCA notices:</strong> <a href="mailto:dmca@thenook.rent">dmca@thenook.rent</a>
         <br />
         <strong>Other IP matters:</strong>{" "}
         <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
