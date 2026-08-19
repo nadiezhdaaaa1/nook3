@@ -75,15 +75,14 @@ function AcceptableUsePage() {
       </ul>
 
       <h3>2.6 Misuse the AI Assistant</h3>
-      <ul>
-        <li>Where the Service includes an AI assistant:</li>
-      </ul>
+      <p>Where the Service includes an AI assistant:</p>
       <ul>
         <li>Attempt to extract its system prompts, training data, or model weights</li>
         <li>Use it to generate harmful, illegal, or discriminatory content</li>
         <li>Submit prompts designed to elicit unsafe outputs</li>
         <li>Rely on it for legal, financial, medical, or other professional advice without verifying with a qualified professional</li>
       </ul>
+
 
       <h2>3. Reporting Violations</h2>
       <p>If you believe a user is violating this AUP, report it to <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>. Include:</p>
