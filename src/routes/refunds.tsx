@@ -96,11 +96,15 @@ function RefundsPage() {
 
       <h2>12. Contact</h2>
       <p>
-        <strong>Refund requests:</strong> <a href="mailto:support@thenook.rent">support@thenook.rent</a>{" "}
-        <strong>Legal notices:</strong> <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>{" "}
-        <strong>Mail:</strong> NORELIX LIMITED, The Black Church, St. Mary’s Place, Dublin 7, D07 P4AX, Ireland
+        <strong>Refund requests:</strong>{" "}
+        <a href="mailto:support@thenook.rent">support@thenook.rent</a>
+        <br />
+        <strong>Legal notices:</strong>{" "}
+        <a href="mailto:legal@thenook.rent">legal@thenook.rent</a>
+        <br />
+        <strong>Mail:</strong> NORELIX LIMITED, The Black Church, St. Mary’s Place,
+        Dublin 7, D07 P4AX, Ireland
       </p>
-      <p>Acceptance: By creating an account or using the Service, you acknowledge that you have read, understood, and agree to these Terms.</p>
     </LegalPageLayout>
   );
 }
