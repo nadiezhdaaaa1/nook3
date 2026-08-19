@@ -19,7 +19,7 @@ export const Route = createFileRoute("/cookies")({
 
 function CookiesPage() {
   return (
-    <LegalPageLayout title="Cookie Policy" lastUpdated="July 2, 2026">
+    <LegalPageLayout title="Cookie Policy" lastUpdated="August 19, 2026">
       <div style={{ margin: "0 0 1.6em" }}>
         <OriginButton variant="tertiary" onClick={openCookiePreferences}>
           Manage Cookie Preferences
@@ -28,97 +28,110 @@ function CookiesPage() {
 
       <h2>1. Introduction</h2>
       <p>
-        This Cookie Policy explains how Nook ("we," "us," "our"), operated by Zentaro Systems
-        Ltd, uses cookies and similar technologies on thenook.rent and related services (the
-        "Service").
+        This Cookie Policy explains how Nook (“we,” “us,” “our”), operated by NORELIX LIMITED, uses cookies and similar technologies on thenook.rent and related services (the “Service”).
       </p>
       <p>
-        For information about how we handle personal information generally, see our{" "}
-        <Link to="/privacy">Privacy Policy</Link>.
+        For information about how we handle personal information generally, see our <Link to="/privacy">Privacy Policy</Link>.
       </p>
 
       <h2>2. What Are Cookies?</h2>
-      <p>
-        Cookies are small text files placed on your device when you visit a website. They are
-        widely used to make websites work, improve user experience, and provide information to
-        the site owner.
-      </p>
+      <p>Cookies are small text files placed on your device when you visit a website. They are widely used to make websites work, to improve user experience, and to provide information to the site owner.</p>
       <p>We also use similar technologies, including:</p>
       <ul>
-        <li><strong>Local storage</strong> — Data stored by your browser</li>
-        <li><strong>Session storage</strong> — Temporary data cleared when you close the tab</li>
-        <li><strong>Web beacons / pixels</strong> — Small images that track interactions</li>
-        <li><strong>SDKs</strong> — Software libraries that may collect data</li>
+        <li>Local storage — data stored by your browser</li>
+        <li>Session storage — temporary data cleared when you close the tab</li>
+        <li>Web beacons and pixels — small images that record interactions</li>
       </ul>
-      <p>
-        Throughout this policy, "cookies" refers to all of these technologies unless otherwise
-        specified.
-      </p>
+      <p>Throughout this policy, “cookies” refers to all of these technologies unless otherwise specified.</p>
 
       <h2>3. Categories of Cookies We Use</h2>
 
       <h3>3.1 Strictly Necessary Cookies</h3>
       <p>These are essential for the Service to function. They cannot be disabled.</p>
-      <ul>
-        <li><strong><code>session_id</code></strong> (Nook) — Keep you signed in. Duration: Session</li>
-        <li><strong><code>csrf_token</code></strong> (Nook) — Security: prevent cross-site request forgery. Duration: Session</li>
-        <li><strong><code>cookie_consent</code></strong> (Nook) — Remember your cookie preferences. Duration: 12 months</li>
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Cookie</th>
+            <th>Purpose</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>session_id (Nook)</td>
+            <td>Keep you signed in</td>
+            <td>Session</td>
+          </tr>
+          <tr>
+            <td>csrf_token (Nook)</td>
+            <td>Security: prevent cross-site request forgery</td>
+            <td>Session</td>
+          </tr>
+          <tr>
+            <td>cookie_consent (Nook)</td>
+            <td>Remember your cookie preferences</td>
+            <td>12 months</td>
+          </tr>
+        </tbody>
+      </table>
 
       <h3>3.2 Functional Cookies</h3>
-      <p>These remember your preferences to enhance your experience.</p>
-      <ul>
-        <li><strong><code>selected_city</code></strong> (Nook) — Remember your selected city. Duration: 12 months</li>
-        <li><strong><code>timezone</code></strong> (Nook) — Display times in your timezone. Duration: 12 months</li>
-        <li><strong><code>ui_theme</code></strong> (Nook) — Remember light/dark theme preference. Duration: 12 months</li>
-      </ul>
+      <p>These remember your preferences so that you do not have to set them again.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Cookie</th>
+            <th>Purpose</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>selected_city (Nook)</td>
+            <td>Remember the city you selected</td>
+            <td>12 months</td>
+          </tr>
+          <tr>
+            <td>timezone (Nook)</td>
+            <td>Show dates and times in your timezone</td>
+            <td>12 months</td>
+          </tr>
+        </tbody>
+      </table>
 
       <h3>3.3 Performance and Analytics Cookies</h3>
-      <p>These help us understand how visitors use the Service so we can improve it.</p>
-      <ul>
-        <li><strong><code>_ga</code>, <code>_ga_*</code></strong> (Google Analytics) — Track unique visitors and sessions. Duration: 2 years</li>
-        <li><strong><code>mp_*</code></strong> (Mixpanel) — Product analytics and feature usage. Duration: 1 year</li>
-        <li><strong><code>__sentry_*</code></strong> (Sentry) — Error monitoring. Duration: Session</li>
-      </ul>
+      <p>These help us understand how visitors use the Service so that we can improve it. They are set only if you turn this category on.</p>
+      <p>We use one product analytics provider and one error monitoring provider. Cookie names begin with a provider-specific prefix and typically expire between one session and two years, depending on the provider.</p>
+      <p>The specific providers we use are available on request from <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>.</p>
 
       <h3>3.4 Targeting and Advertising Cookies</h3>
-      <p>These may be used to deliver advertising relevant to you on other sites.</p>
-      <ul>
-        <li><strong><code>_fbp</code></strong> (Meta / Facebook) — Conversion tracking and ad delivery. Duration: 90 days</li>
-        <li><strong><code>_gcl_au</code></strong> (Google Ads) — Conversion tracking. Duration: 90 days</li>
-      </ul>
-      <p>
-        We use targeting cookies <strong>only if you opt in</strong> (or where required by
-        law, only if you do not opt out).
-      </p>
+      <p>These may be used to measure the effectiveness of our advertising and to show you advertising on other sites.</p>
+      <p>These cookies are off unless you turn them on. We do not set them by default. If your browser sends a Global Privacy Control (GPC) signal, we treat it as a request to opt out of the sale or sharing of personal information and do not use targeting or advertising cookies for cross-context behavioural advertising.</p>
+      <p>The specific providers we use are available on request.</p>
 
       <h2>4. How We Use Cookies</h2>
       <p>We use cookies to:</p>
       <ul>
         <li>Keep you signed in and maintain your session</li>
-        <li>Remember your preferences and settings</li>
-        <li>Understand how the Service is used and where to improve</li>
+        <li>Remember your city, timezone, and other preferences</li>
+        <li>Understand how the Service is used and where to improve it, where you have consented</li>
         <li>Detect fraud and security incidents</li>
-        <li>Measure the effectiveness of our marketing (where you have consented)</li>
+        <li>Measure the effectiveness of our marketing, where you have consented</li>
       </ul>
 
       <h2>5. Your Choices</h2>
       <h3>5.1 Cookie Banner</h3>
-      <p>
-        When you first visit the Service, you will see a banner asking your preferences. You
-        can choose:
-      </p>
+      <p>When you first visit the Service you will see a banner asking your preferences. You can choose:</p>
       <ul>
-        <li><strong>Accept all</strong> — Enable all cookie categories</li>
-        <li><strong>Reject all</strong> — Decline all non-essential cookies</li>
-        <li><strong>Manage preferences</strong> — Customize by category</li>
+        <li>Accept all — enable all cookie categories</li>
+        <li>Reject all — decline all non-essential cookies</li>
+        <li>Manage preferences — choose category by category</li>
       </ul>
-      <p>Strictly necessary cookies are always enabled.</p>
+      <p>Strictly necessary cookies are always enabled. Every other category starts switched off. Nothing beyond the strictly necessary category is set until you choose to enable it.</p>
+      <p>Rejecting all is a single action and is offered with the same prominence as accepting all. Your choice is stored so that you are not asked again.</p>
 
       <h3>5.2 Changing Your Preferences</h3>
-      <p>
-        You can change preferences anytime by clicking "Cookie Preferences" in the footer.
-      </p>
+      <p>You can change your preferences at any time by clicking “Cookie Preferences” in our footer. Withdrawing consent is as easy as giving it.</p>
 
       <h3>5.3 Browser Controls</h3>
       <p>Most browsers let you:</p>
@@ -126,89 +139,71 @@ function CookiesPage() {
         <li>View existing cookies</li>
         <li>Block all cookies</li>
         <li>Block third-party cookies</li>
-        <li>Clear cookies on close</li>
+        <li>Clear cookies when you close the browser</li>
       </ul>
-      <p>Refer to your browser's help section for instructions.</p>
+      <p>Refer to your browser’s help section for instructions.</p>
 
-      <h3>5.4 Do Not Track / Global Privacy Control</h3>
-      <ul>
-        <li>
-          We honor <strong>Global Privacy Control (GPC)</strong> signals as a valid opt-out of
-          sale/sharing
-        </li>
-        <li>
-          We do not currently respond to legacy "Do Not Track" browser headers (industry
-          standards have not been agreed)
-        </li>
-      </ul>
+      <h3>5.4 Global Privacy Control and Do Not Track</h3>
+      <p>We honour Global Privacy Control (GPC) signals as a valid request to opt out of the sale or sharing of personal information, as required by applicable law. If your browser sends a recognised GPC signal, we apply that preference automatically.</p>
+      <p>We do not currently respond to the legacy “Do Not Track” browser header, as no industry standard for it was agreed.</p>
 
       <h3>5.5 Opt-Out Tools</h3>
-      <p>For analytics and advertising cookies, you can also opt out via:</p>
-      <ul>
-        <li>
-          <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">
-            Google Analytics Opt-Out
-          </a>
-        </li>
-        <li>
-          <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer">
-            Network Advertising Initiative
-          </a>
-        </li>
-        <li>
-          <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer">
-            Digital Advertising Alliance
-          </a>
-        </li>
-      </ul>
+      <p>For analytics and advertising cookies, you can also opt out via the tools published by the relevant industry bodies, including the <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer">Network Advertising Initiative</a> and the <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer">Digital Advertising Alliance</a>, and via any opt-out mechanism offered by the provider concerned.</p>
 
       <h2>6. Impact of Disabling Cookies</h2>
-      <p>If you disable cookies:</p>
-      <ul>
-        <li><strong>Strictly necessary disabled:</strong> Service will not function (cannot sign in)</li>
-        <li><strong>Functional disabled:</strong> Your preferences will reset on each visit</li>
-        <li><strong>Performance disabled:</strong> We won't know how to improve common pain points</li>
-        <li><strong>Targeting disabled:</strong> Ads on other sites may be less relevant (but no fewer in number)</li>
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Category disabled</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Strictly necessary</td>
+            <td>The Service will not function; you cannot sign in</td>
+          </tr>
+          <tr>
+            <td>Functional</td>
+            <td>Your city and timezone will need to be set again on each visit</td>
+          </tr>
+          <tr>
+            <td>Performance</td>
+            <td>We will not see where users have difficulty, which slows down improvements</td>
+          </tr>
+          <tr>
+            <td>Targeting</td>
+            <td>Advertising you see on other sites may be less relevant, but you will not see less of it</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Disabling any category does not affect the rental alerts you have subscribed to. Those are sent by email and do not depend on cookies.</p>
 
       <h2>7. Third-Party Cookies</h2>
-      <p>
-        Some cookies are set by third parties (e.g., Google Analytics, Stripe). These third
-        parties have their own privacy policies. Disabling third-party cookies in your browser
-        may affect their functionality.
-      </p>
-      <p>Current third-party providers:</p>
+      <p>Some cookies are set by third parties. Those parties have their own privacy policies, and disabling third-party cookies in your browser may affect their functionality.</p>
+      <p>We use third-party providers in the following categories:</p>
       <ul>
-        <li>Google LLC (Analytics, Ads)</li>
-        <li>Meta Platforms, Inc. (Pixel)</li>
-        <li>Stripe, Inc. (Payment processing)</li>
-        <li>Twilio, Inc. (Email infrastructure)</li>
-        <li>Mixpanel, Inc. (Analytics)</li>
-        <li>Sentry, Inc. (Error monitoring)</li>
+        <li>Payment processing — currently Stripe, Inc.</li>
+        <li>Product and site analytics</li>
+        <li>Error monitoring</li>
+        <li>Email delivery</li>
+        <li>Advertising measurement, only where you have enabled targeting cookies</li>
       </ul>
-      <p>
-        See our <Link to="/subprocessors">Subprocessor List</Link> for additional details.
-      </p>
+      <p>A current list of the specific providers we use is available on request from <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>.</p>
 
       <h2>8. Children</h2>
-      <p>
-        We do not knowingly use cookies to collect personal information from children under 13.
-      </p>
+      <p>The Service is intended only for users who are at least 18 years old. We do not knowingly use cookies to collect personal information from anyone under 18.</p>
 
       <h2>9. Changes to This Policy</h2>
-      <p>
-        We may update this Cookie Policy from time to time. We will post the updated version
-        on this page and update the "Last Updated" date. We will re-prompt you for cookie
-        consent if categories or purposes materially change.
-      </p>
+      <p>We may update this Cookie Policy from time to time. We will post the updated version on this page and update the “Last Updated” date.</p>
+      <p>If we add a category or change the purpose of an existing one, we will ask for your consent again rather than relying on a choice you made about a different set of cookies.</p>
 
       <h2>10. Contact</h2>
       <p>Questions about this Cookie Policy?</p>
       <p>
         <strong>Email:</strong> <a href="mailto:privacy@thenook.rent">privacy@thenook.rent</a>
         <br />
-        <strong>Mail:</strong> Privacy Officer, Zentaro Systems Ltd, 167-169 Great Portland Street, 5th Floor, London, W1W 5PF,
-        United Kingdom
+        <strong>Mail:</strong> Privacy Officer, NORELIX LIMITED, The Black Church, St. Mary’s Place, Dublin 7, D07 P4AX, Ireland
       </p>
     </LegalPageLayout>
   );
