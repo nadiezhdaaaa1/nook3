@@ -169,6 +169,21 @@ export function LegalPageLayout({
         .legal-prose li { margin-bottom: 0.4em; }
         .legal-prose a { text-decoration: underline; text-underline-offset: 2px; }
         .legal-prose strong { font-weight: 600; }
+        .legal-prose table {
+          width: 100%; border-collapse: collapse; margin: 0 0 1.4em;
+          font-size: 15px; display: table;
+        }
+        .legal-prose thead th {
+          text-align: left; font-weight: 600; padding: 10px 12px;
+          border-bottom: 2px solid rgba(36, 28, 18, 0.28);
+        }
+        .legal-prose tbody td {
+          text-align: left; padding: 10px 12px; vertical-align: top;
+          border-bottom: 1px solid rgba(36, 28, 18, 0.12);
+        }
+        .legal-prose tbody tr:last-child td { border-bottom: none; }
+        .legal-prose table { display: block; overflow-x: auto; }
+
 
         @media (max-width: 1100px) {
           .legal-layout { padding: 48px 0 80px; }
