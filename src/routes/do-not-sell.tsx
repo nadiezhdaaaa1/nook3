@@ -58,15 +58,15 @@ const STATES = [
 ];
 
 const RIGHTS = [
-  { id: "opt_out", label: "Opt out of sale/sharing of my personal information" },
+  { id: "opt_out", label: "Opt out of sale or sharing of my personal information" },
   { id: "know", label: "Right to know what information you have about me" },
   { id: "delete", label: "Right to delete my personal information" },
   { id: "correct", label: "Right to correct my personal information" },
-  { id: "portability", label: "Right to data portability (export my data)" },
+  { id: "portability", label: "Right to data portability (send me a copy of my data)" },
 ] as const;
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Required").max(100),
+  name: z.string().trim().max(100).optional(),
   email: z.string().trim().email("Invalid email").max(255),
   requester: z.enum(["self", "agent"]),
   state: z.string().min(1, "Required").max(50),
@@ -110,9 +110,9 @@ function DoNotSellPage() {
     setErrors({});
 
     const body = [
-      `Name: ${parsed.data.name}`,
+      `Name: ${parsed.data.name || "(not provided)"}`,
       `Email: ${parsed.data.email}`,
-      `Requester: ${parsed.data.requester === "self" ? "For myself" : "Authorized agent"}`,
+      `Requester: ${parsed.data.requester === "self" ? "For myself" : "Authorised agent"}`,
       `State: ${parsed.data.state}`,
       `Rights requested:`,
       ...parsed.data.rights.map(
