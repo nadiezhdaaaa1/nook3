@@ -171,7 +171,7 @@ export function LegalPageLayout({
         .legal-prose strong { font-weight: 600; }
         .legal-prose table {
           width: 100%; border-collapse: collapse; margin: 0 0 1.4em;
-          font-size: 15px; display: table;
+          font-size: 15px; display: block; overflow-x: auto;
         }
         .legal-prose thead th {
           text-align: left; font-weight: 600; padding: 10px 12px;
@@ -182,7 +182,6 @@ export function LegalPageLayout({
           border-bottom: 1px solid rgba(36, 28, 18, 0.12);
         }
         .legal-prose tbody tr:last-child td { border-bottom: none; }
-        .legal-prose table { display: block; overflow-x: auto; }
 
 
         @media (max-width: 1100px) {
