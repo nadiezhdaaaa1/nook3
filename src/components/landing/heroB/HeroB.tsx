@@ -748,7 +748,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
         className="hero-b-h1"
         style={{ ...displayFont, color: COLORS.ink }}
       >
-        Find your next apartment faster.
+        Find your next apartment faster
       </motion.h1>
 
       <motion.p
@@ -758,7 +758,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
         className="hero-b-deck"
         style={{ ...displayFont, color: COLORS.ink }}
       >
-        Real-time apartment alerts that put you first.
+        Real-time apartment alerts that put you first
       </motion.p>
 
       <style>{`
