@@ -188,7 +188,7 @@ export function TiredOfSection() {
           </div>
           <h2 className="prob-h2">You probably know this apartment-hunting burnout feeling</h2>
           <p className="prob-sub">
-            Apartment hunting is broken. We rebuilt the part you actually use.
+            Apartment hunting is broken. We rebuilt the part you actually use
           </p>
         </div>
 
