@@ -778,7 +778,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           margin-top: 16px;
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
-          font-weight: 500;
+          font-weight: 600;
           font-size: 30px;
           line-height: 1.3;
           letter-spacing: -0.5px;
