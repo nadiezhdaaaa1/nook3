@@ -61,7 +61,7 @@ export function BlogTeaser() {
             <div className="blogt-left">
               <h2 className="blogt-h2">Notes from the rental market.</h2>
               <p className="blogt-sub">
-                Guides, neighborhood deep-dives, and what we've learned from helping renters move.
+                Guides, neighborhood deep-dives, and what we've learned from helping renters move
               </p>
             </div>
             <Link to="/blog" className="blogt-all">
