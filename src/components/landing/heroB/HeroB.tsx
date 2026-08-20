@@ -131,7 +131,7 @@ export function HeroB() {
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.5 }}
-              className="mt-6 max-w-[576px] text-[18px] leading-[1.6]"
+              className="mt-5 max-w-[576px] text-[18px] leading-[1.6] max-sm:mt-4"
               style={{ ...uiFont, color: COLORS.body }}
             >
               Nook watches the rental market 24/7 and pings you the moment a match appears.
