@@ -278,7 +278,7 @@ export function ReviewsMasonry() {
 
           <div className="rv-head-row">
             <h2 className="rv-h2" style={{ ...display, fontWeight: 600, color: INK }}>
-              What renters are actually saying.
+              What renters are actually saying
             </h2>
             <p style={{ ...ui, fontSize: 16, lineHeight: 1.6, color: BODY, margin: 0 }}>
               Sourced from beta users · 6 of 200+
