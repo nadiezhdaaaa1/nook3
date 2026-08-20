@@ -131,7 +131,7 @@ export function HeroB() {
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.5 }}
-              className="mt-6 max-w-[576px] text-[18px] leading-[1.6]"
+              className="mt-5 max-w-[576px] text-[18px] leading-[1.6] max-sm:mt-4"
               style={{ ...uiFont, color: COLORS.body }}
             >
               Nook watches the rental market 24/7 and pings you the moment a match appears.
@@ -740,26 +740,50 @@ function CityDotRail({
 
 function H1RevealB({ reduced }: { reduced: boolean }) {
   return (
-    <div className="relative">
+    <div className="relative mt-10">
       <motion.h1
         initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduced ? 0.3 : 0.6, ease: EASE_REVEAL }}
-        className="hero-b-h1 mt-10"
+        className="hero-b-h1"
         style={{ ...displayFont, color: COLORS.ink }}
       >
-        Find your next apartment faster. Real-time apartment alerts that put you first.
+        Find your next apartment faster.
       </motion.h1>
+
+      <motion.p
+        initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.35 }}
+        className="hero-b-deck"
+        style={{ ...displayFont, color: COLORS.body }}
+      >
+        Real-time apartment alerts that put you first.
+      </motion.p>
 
       <style>{`
         .hero-b-h1 {
           width: 100%;
-          max-width: 100%;
+          max-width: 640px;
           font-weight: 600;
           font-size: 54px;
           line-height: 1.06;
           letter-spacing: -1.4px;
           font-optical-sizing: auto;
+          text-wrap: balance;
+        }
+        .hero-b-deck {
+          width: 100%;
+          max-width: 520px;
+          margin-top: 16px;
+          font-family: ${FONT_DISPLAY};
+          font-variation-settings: ${DISPLAY_VAR};
+          font-weight: 400;
+          font-size: 24px;
+          line-height: 1.35;
+          letter-spacing: -0.3px;
+          font-optical-sizing: auto;
+          text-wrap: balance;
         }
         @media (max-width: 1100px) {
           .hero-b-h1 {
@@ -769,11 +793,23 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
             line-height: 1.02;
             letter-spacing: -1px;
           }
+          .hero-b-deck {
+            max-width: 100%;
+            font-size: clamp(19px, 2.2vw, 21px);
+            line-height: 1.35;
+          }
+        }
+        @media (max-width: 680px) {
+          .hero-b-deck {
+            margin-top: 12px;
+            font-size: 19px;
+          }
         }
       `}</style>
     </div>
   );
 }
+
 
 /* ---------------- city pill + dropdown ---------------- */
 
