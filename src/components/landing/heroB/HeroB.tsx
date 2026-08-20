@@ -774,16 +774,17 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
         }
         .hero-b-deck {
           width: 100%;
-          max-width: 520px;
+          max-width: 600px;
           margin-top: 16px;
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
           font-weight: 400;
-          font-size: 24px;
-          line-height: 1.35;
-          letter-spacing: -0.3px;
+          font-size: 28px;
+          line-height: 1.3;
+          letter-spacing: -0.5px;
           font-optical-sizing: auto;
           text-wrap: balance;
+          color: ${COLORS.ink};
         }
         @media (max-width: 1100px) {
           .hero-b-h1 {
@@ -795,14 +796,14 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           }
           .hero-b-deck {
             max-width: 100%;
-            font-size: clamp(19px, 2.2vw, 21px);
-            line-height: 1.35;
+            font-size: clamp(21px, 2.6vw, 24px);
+            line-height: 1.3;
           }
         }
         @media (max-width: 680px) {
           .hero-b-deck {
             margin-top: 12px;
-            font-size: 19px;
+            font-size: 21px;
           }
         }
       `}</style>
