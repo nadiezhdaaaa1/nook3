@@ -737,9 +737,15 @@ function CityDotRail({
 
 /* ---------------- H1 ---------------- */
 
-function H1RevealB(_props: { reduced: boolean }) {
+function H1RevealB({ reduced }: { reduced: boolean }) {
   return (
-    <h1 className="hero-b-h1 mt-10" style={{ ...displayFont, color: COLORS.ink }}>
+    <motion.h1
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: reduced ? 0.3 : 0.6, ease: EASE_REVEAL }}
+      className="hero-b-h1 mt-10"
+      style={{ ...displayFont, color: COLORS.ink }}
+    >
       Find your next apartment faster. Real-time apartment alerts that put you first.
 
       <style>{`
@@ -747,8 +753,8 @@ function H1RevealB(_props: { reduced: boolean }) {
           width: auto;
           max-width: 100%;
           font-weight: 600;
-          font-size: 58px;
-          line-height: 59.2px;
+          font-size: 56px;
+          line-height: 57.2px;
           letter-spacing: -1.54px;
           font-optical-sizing: auto;
         }
@@ -756,13 +762,13 @@ function H1RevealB(_props: { reduced: boolean }) {
           .hero-b-h1 {
             width: auto;
             max-width: 100%;
-            font-size: clamp(40px, 7vw, 52px);
+            font-size: clamp(38px, 7vw, 50px);
             line-height: 1.02;
             letter-spacing: -1px;
           }
         }
       `}</style>
-    </h1>
+    </motion.h1>
   );
 }
 
