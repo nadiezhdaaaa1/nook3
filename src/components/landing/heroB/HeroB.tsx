@@ -194,7 +194,7 @@ export function HeroB() {
           grid-template-rows: 560px;
           gap: 40px;
           align-items: center;
-          margin-top: 64px;
+          margin-top: 24px;
           padding-bottom: 112px;
         }
         .hero-b-copy { min-width: 0; max-width: 720px; }
