@@ -83,7 +83,7 @@ export function WhatYouGetGrid() {
           </div>
 
           <h2 className="wyg-h2" style={{ ...display, fontWeight: 600, color: INK, marginTop: 20 }}>
-            More than apartment alerts. A full rental search assistant.
+            Everything you need for a faster apartment search
           </h2>
 
           <p style={{ ...ui, fontSize: 18, lineHeight: 1.6, color: BODY, marginTop: 16 }}>
