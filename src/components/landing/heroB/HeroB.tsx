@@ -756,7 +756,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduced ? 0.3 : 0.45, ease: EASE_REVEAL, delay: reduced ? 0 : 0.35 }}
         className="hero-b-deck"
-        style={{ ...displayFont, color: COLORS.body }}
+        style={{ ...displayFont, color: COLORS.ink }}
       >
         Real-time apartment alerts that put you first.
       </motion.p>
