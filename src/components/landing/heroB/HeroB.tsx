@@ -190,7 +190,8 @@ export function HeroB() {
       <style>{`
         .hero-b-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 340px;
+          grid-template-columns: 1fr 0.5fr;
+          grid-template-rows: 560px;
           gap: 40px;
           align-items: center;
           margin-top: 64px;
@@ -209,7 +210,7 @@ export function HeroB() {
         .hero-b-cta-row { display: flex; align-items: center; gap: 12px; }
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
-          .hero-b-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+          .hero-b-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 40px; }
           .hero-b-copy { max-width: 100%; }
           .hero-b-card-col { justify-content: center; }
         }
@@ -753,8 +754,8 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           width: auto;
           max-width: 100%;
           font-weight: 600;
-          font-size: 56px;
-          line-height: 57.2px;
+          font-size: 58px;
+          line-height: 120%;
           letter-spacing: -1.54px;
           font-optical-sizing: auto;
         }
