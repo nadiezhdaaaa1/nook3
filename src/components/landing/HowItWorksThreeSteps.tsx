@@ -78,7 +78,7 @@ export function HowItWorksThreeSteps() {
             className="hiw-h2"
             style={{ ...display, fontWeight: 600, color: INK, marginTop: 20 }}
           >
-            From scrolling to signing: how to find an apartment fast
+            How to find an apartment fast — without endless scrolling
           </h2>
           <p style={{ ...ui, fontSize: 18, lineHeight: 1.6, color: BODY, marginTop: 16 }}>
             Three things happen the moment you sign up.
