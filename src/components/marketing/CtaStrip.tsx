@@ -45,7 +45,7 @@ export function CtaStrip() {
       <div className="ctab-inner">
         <div className="ctab-left">
           <h2 className="ctab-h2">Your next apartment is already listed</h2>
-          <p className="ctab-sub">Get the alert before everyone else does.</p>
+          <p className="ctab-sub">Get the alert before everyone else does</p>
         </div>
         <OriginButton
           variant="main"
