@@ -197,7 +197,7 @@ export function HeroB() {
           margin-top: 64px;
           padding-bottom: 112px;
         }
-        .hero-b-copy { min-width: 0; max-width: 640px; }
+        .hero-b-copy { min-width: 0; max-width: 720px; }
         .hero-b-card-col {
           justify-self: center;
           max-width: 100%;
