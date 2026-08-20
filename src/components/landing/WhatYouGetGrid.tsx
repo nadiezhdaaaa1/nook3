@@ -87,7 +87,7 @@ export function WhatYouGetGrid() {
           </h2>
 
           <p style={{ ...ui, fontSize: 18, lineHeight: 1.6, color: BODY, marginTop: 16 }}>
-            Here's what Nook does that a free site refresh doesn't.
+            Here's what Nook does that a free site refresh doesn't
           </p>
         </header>
 
