@@ -774,7 +774,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
         }
         .hero-b-deck {
           width: 100%;
-          max-width: 600px;
+          max-width: 640px;
           margin-top: 16px;
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
