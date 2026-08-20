@@ -754,8 +754,8 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           width: auto;
           max-width: 100%;
           font-weight: 600;
-          font-size: 56px;
-          line-height: 57.2px;
+          font-size: 58px;
+          line-height: 120%;
           letter-spacing: -1.54px;
           font-optical-sizing: auto;
         }
