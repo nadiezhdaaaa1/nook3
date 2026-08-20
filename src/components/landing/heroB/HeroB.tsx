@@ -775,19 +775,19 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
 
       <style>{`
         .hero-b-h1 {
-          width: max-content;
+          width: auto;
+          max-width: 100%;
           font-weight: 600;
           font-size: 58px;
           line-height: 59.2px;
           letter-spacing: -1.54px;
           font-optical-sizing: auto;
         }
-        .hero-b-h1-line { display: block; width: max-content; overflow: hidden; padding: 0.15em 0; margin: -0.15em 0; white-space: nowrap; }
+        .hero-b-h1-line { display: block; width: auto; overflow: hidden; padding: 0.15em 0; margin: -0.15em 0; white-space: normal; }
         .hero-b-h1-mask { display: block; }
         .hero-b-h1-word { display: inline-block; white-space: pre; }
         .hero-b-h1-char { display: inline-block; will-change: transform; }
         @media (max-width: 1100px) {
-          .hero-b-h1-line { white-space: normal; width: auto; }
           .hero-b-h1 {
             width: auto;
             max-width: 100%;
