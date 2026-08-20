@@ -192,7 +192,7 @@ export function HeroB() {
           display: grid;
           grid-template-columns: 1fr 0.5fr;
           grid-template-rows: 560px;
-          gap: 24px;
+          gap: 40px;
           align-items: center;
           margin-top: 64px;
           padding-bottom: 112px;
@@ -210,7 +210,7 @@ export function HeroB() {
         .hero-b-cta-row { display: flex; align-items: center; gap: 12px; }
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
-          .hero-b-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 24px; }
+          .hero-b-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 40px; }
           .hero-b-copy { max-width: 100%; }
           .hero-b-card-col { justify-content: center; }
         }
