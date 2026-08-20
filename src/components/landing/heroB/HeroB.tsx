@@ -190,12 +190,13 @@ export function HeroB() {
       <style>{`
         .hero-b-grid {
           display: grid;
-          grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+          grid-template-columns: minmax(0, 1fr) 340px;
           gap: 40px;
           align-items: center;
           margin-top: 64px;
           padding-bottom: 112px;
         }
+        .hero-b-copy { min-width: 0; max-width: 640px; }
         .hero-b-card-col {
           justify-self: center;
           max-width: 100%;
@@ -209,6 +210,7 @@ export function HeroB() {
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-b-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+          .hero-b-copy { max-width: 100%; }
           .hero-b-card-col { justify-content: center; }
         }
         @media (max-width: 680px) {
