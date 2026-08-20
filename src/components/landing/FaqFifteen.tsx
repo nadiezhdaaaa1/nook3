@@ -126,7 +126,7 @@ export function FaqFifteen() {
           </div>
           <h2 className="faq15-h2">Questions before you start</h2>
           <p className="faq15-sub">
-            Honest answers. If you have a question that isn't here, email us — we read everything.
+            Honest answers. If you have a question that isn't here, email us — we read everything
           </p>
         </div>
 
