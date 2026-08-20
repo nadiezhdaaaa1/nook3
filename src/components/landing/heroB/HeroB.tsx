@@ -29,8 +29,8 @@ import {
 } from "./heroBCities";
 import { useCardTilt } from "./useCardTilt";
 
-const H1_LINES = ["Real-time apartment alerts.", "Find it before it's gone,", "without losing your mind."];
-const H1_TEXT = "Real-time apartment alerts. Find it before it's gone, without losing your mind.";
+const H1_LINES = ["Find your next apartment faster.", "Real-time apartment alerts that put you first."];
+const H1_TEXT = "Find your next apartment faster. Real-time apartment alerts that put you first.";
 
 const uiFont = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
 const displayFont = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
