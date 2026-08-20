@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, MapPin } from "lucide-react";
@@ -29,8 +29,6 @@ import {
 } from "./heroBCities";
 import { useCardTilt } from "./useCardTilt";
 
-const H1_LINES = ["Find your next apartment faster.", "Real-time apartment alerts that put you first."];
-const H1_TEXT = "Find your next apartment faster. Real-time apartment alerts that put you first.";
 
 const uiFont = { fontFamily: FONT_UI, fontVariationSettings: UI_VAR } as const;
 const displayFont = { fontFamily: FONT_DISPLAY, fontVariationSettings: DISPLAY_VAR } as const;
@@ -737,41 +735,10 @@ function CityDotRail({
 
 /* ---------------- H1 ---------------- */
 
-function H1RevealB({ reduced }: { reduced: boolean }) {
-  const lines = useMemo(() => H1_LINES.map((l) => l.split(" ")), []);
-  let charIndex = 0;
-
+function H1RevealB(_props: { reduced: boolean }) {
   return (
-    <h1 aria-label={H1_TEXT} className="hero-b-h1 mt-10" style={{ ...displayFont, color: COLORS.ink }}>
-      {lines.map((words, li) => (
-        <span key={li} className="hero-b-h1-line" aria-hidden="true">
-          <span className="hero-b-h1-mask">
-            {words.map((word, wi) => (
-              <span key={wi} className="hero-b-h1-word">
-                {word.split("").map((ch, ci) => {
-                  const i = charIndex++;
-                  return (
-                    <motion.span
-                      key={ci}
-                      className="hero-b-h1-char"
-                      initial={reduced ? { opacity: 0 } : { y: "110%" }}
-                      animate={reduced ? { opacity: 1 } : { y: "0%" }}
-                      transition={{
-                        duration: reduced ? 0.3 : 0.7,
-                        ease: EASE_REVEAL,
-                        delay: reduced ? 0 : 0.1 + li * 0.12 + i * 0.015,
-                      }}
-                    >
-                      {ch}
-                    </motion.span>
-                  );
-                })}
-                {wi < words.length - 1 ? "\u00A0" : ""}
-              </span>
-            ))}
-          </span>
-        </span>
-      ))}
+    <h1 className="hero-b-h1 mt-10" style={{ ...displayFont, color: COLORS.ink }}>
+      Find your next apartment faster. Real-time apartment alerts that put you first.
 
       <style>{`
         .hero-b-h1 {
@@ -783,10 +750,6 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           letter-spacing: -1.54px;
           font-optical-sizing: auto;
         }
-        .hero-b-h1-line { display: block; width: auto; overflow: hidden; padding: 0.15em 0; margin: -0.15em 0; white-space: normal; }
-        .hero-b-h1-mask { display: block; }
-        .hero-b-h1-word { display: inline-block; white-space: pre; }
-        .hero-b-h1-char { display: inline-block; will-change: transform; }
         @media (max-width: 1100px) {
           .hero-b-h1 {
             width: auto;
