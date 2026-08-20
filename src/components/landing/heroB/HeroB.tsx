@@ -210,6 +210,7 @@ export function HeroB() {
         #hero-b { min-height: 800px; }
         @media (max-width: 1100px) {
           .hero-b-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+          .hero-b-copy { max-width: 100%; }
           .hero-b-card-col { justify-content: center; }
         }
         @media (max-width: 680px) {
