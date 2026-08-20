@@ -747,11 +747,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
       className="hero-b-h1 mt-10"
       style={{ ...displayFont, color: COLORS.ink }}
     >
-      Find your next apartment faster.
-      <br />
-      Real-time apartment alerts
-      <br />
-      that put you first.
+      Find your next apartment faster. Real-time apartment alerts that put you first.
 
       <style>{`
         .hero-b-h1 {
