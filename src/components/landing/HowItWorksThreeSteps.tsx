@@ -81,7 +81,7 @@ export function HowItWorksThreeSteps() {
             How to find an apartment fast — without endless scrolling
           </h2>
           <p style={{ ...ui, fontSize: 18, lineHeight: 1.6, color: BODY, marginTop: 16 }}>
-            Three things happen the moment you sign up.
+            Three things happen the moment you sign up
           </p>
         </header>
 
