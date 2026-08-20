@@ -779,7 +779,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           font-family: ${FONT_DISPLAY};
           font-variation-settings: ${DISPLAY_VAR};
           font-weight: 400;
-          font-size: 28px;
+          font-size: 30px;
           line-height: 1.3;
           letter-spacing: -0.5px;
           font-optical-sizing: auto;
@@ -796,14 +796,14 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           }
           .hero-b-deck {
             max-width: 100%;
-            font-size: clamp(21px, 2.6vw, 24px);
+            font-size: clamp(22px, 2.8vw, 26px);
             line-height: 1.3;
           }
         }
         @media (max-width: 680px) {
           .hero-b-deck {
             margin-top: 12px;
-            font-size: 21px;
+            font-size: 23px;
           }
         }
       `}</style>
