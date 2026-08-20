@@ -740,14 +740,16 @@ function CityDotRail({
 
 function H1RevealB({ reduced }: { reduced: boolean }) {
   return (
-    <motion.h1
-      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduced ? 0.3 : 0.6, ease: EASE_REVEAL }}
-      className="hero-b-h1 mt-10"
-      style={{ ...displayFont, color: COLORS.ink }}
-    >
-      Find your next apartment faster. Real-time apartment alerts that put you first.
+    <div className="relative">
+      <motion.h1
+        initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduced ? 0.3 : 0.6, ease: EASE_REVEAL }}
+        className="hero-b-h1 mt-10"
+        style={{ ...displayFont, color: COLORS.ink }}
+      >
+        Find your next apartment faster. Real-time apartment alerts that put you first.
+      </motion.h1>
 
       <style>{`
         .hero-b-h1 {
@@ -769,7 +771,7 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
           }
         }
       `}</style>
-    </motion.h1>
+    </div>
   );
 }
 
