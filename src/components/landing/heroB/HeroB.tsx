@@ -197,7 +197,7 @@ export function HeroB() {
           margin-top: 64px;
           padding-bottom: 112px;
         }
-        .hero-b-copy { min-width: 0; max-width: 640px; }
+        .hero-b-copy { min-width: 0; max-width: 720px; }
         .hero-b-card-col {
           justify-self: center;
           max-width: 100%;
@@ -747,21 +747,25 @@ function H1RevealB({ reduced }: { reduced: boolean }) {
       className="hero-b-h1 mt-10"
       style={{ ...displayFont, color: COLORS.ink }}
     >
-      Find your next apartment faster. Real-time apartment alerts that put you first.
+      Find your next apartment faster.
+      <br />
+      Real-time apartment alerts
+      <br />
+      that put you first.
 
       <style>{`
         .hero-b-h1 {
-          width: auto;
+          width: 100%;
           max-width: 100%;
           font-weight: 600;
-          font-size: 58px;
-          line-height: 120%;
-          letter-spacing: -1.54px;
+          font-size: 54px;
+          line-height: 1.06;
+          letter-spacing: -1.4px;
           font-optical-sizing: auto;
         }
         @media (max-width: 1100px) {
           .hero-b-h1 {
-            width: auto;
+            width: 100%;
             max-width: 100%;
             font-size: clamp(38px, 7vw, 50px);
             line-height: 1.02;
