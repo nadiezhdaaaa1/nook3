@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import {
   Zap, CalendarDays, CalendarRange, Sparkles,
-  ArrowRight, Lock, Moon,
+  Moon,
 } from "lucide-react";
 
-import { useOnboardingStore, type Frequency, type Plan } from "@/lib/onboarding/store";
+import { useOnboardingStore, type Frequency } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
 import { usePreferencesStore } from "@/lib/preferences/store";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
@@ -17,21 +17,14 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/notificat
   component: NotificationsTab,
 });
 
-const PLAN_PILL: Record<Plan, { text: string; cta: string | null }> = {
-  intro: { text: "Intro — 1 search, instant alerts", cta: "Upgrade" },
-  pro: { text: "Pro — 3 searches, instant alerts", cta: "Manage plan" },
-};
-
-const PLAN_RANK: Record<Plan, number> = { intro: 0, pro: 1 };
-
 const FREQS: {
   id: Frequency; label: string; desc: string; bestFor: string;
-  icon: typeof Zap; minPlan: Plan; recommended?: boolean; freeFallback?: string;
+  icon: typeof Zap;
 }[] = [
-  { id: "maximum", label: "Maximum", desc: "Every match, the moment it's listed.", bestFor: "Best for fast markets, urgent moves", icon: Zap, minPlan: "intro", recommended: true },
-  { id: "balanced", label: "Balanced", desc: "Top matches, 2–3 times a day.", bestFor: "Best for most renters", icon: CalendarDays, minPlan: "intro" },
-  { id: "minimal", label: "Minimal", desc: "Once daily — only strong matches.", bestFor: "Best for browse mode, exploring", icon: CalendarRange, minPlan: "intro" },
-  { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", bestFor: "Best for casual interest", icon: Sparkles, minPlan: "intro" },
+  { id: "maximum", label: "Instant", desc: "Every match, the moment it's listed.", bestFor: "Depending on your criteria, this can mean many alerts a day — narrow your search to receive fewer.", icon: Zap },
+  { id: "balanced", label: "Balanced", desc: "Top matches, grouped 2–3 times a day.", bestFor: "Best for an active search without the noise.", icon: CalendarDays },
+  { id: "minimal", label: "Daily", desc: "One roundup a day with your strongest matches.", bestFor: "Best for keeping watch without urgency.", icon: CalendarRange },
+  { id: "weekly", label: "Weekly", desc: "One curated digest every week.", bestFor: "Best for planning a future move.", icon: Sparkles },
 ];
 
 function detectTimezone(): string {
@@ -54,36 +47,16 @@ function formatTimeLabel(hhmm: string): string {
 
 function NotificationsTab() {
   const { frequency, set } = useOnboardingStore();
-  const plan = useAppStore((s) => s.user?.plan ?? "intro");
   const activeSearchId = useAppStore((s) => s.activeSearchId);
   const activeSearch = useAppStore((s) => s.searches.find((x) => x.id === s.activeSearchId));
   const { quietHours, setQuiet } = usePreferencesStore();
 
-  const pill = PLAN_PILL[plan] ?? PLAN_PILL.intro;
-  const userRank = PLAN_RANK[plan];
   const searchName = activeSearch?.name ?? "this search";
 
   const tz = useMemo(() => detectTimezone(), []);
 
   return (
     <div className="space-y-10 pb-32">
-      {/* Plan-context pill */}
-      <div className="flex items-center justify-between gap-4 px-5 h-14 rounded-card bg-paper-warm border border-charcoal-950/8">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <Sparkles className="h-4 w-4 text-sage-700 shrink-0" />
-          <span className="text-sm text-charcoal-700 truncate">{pill.text}</span>
-        </div>
-        {pill.cta && (
-          <Link
-            to="/account"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-sage-800 hover:text-sage-900 whitespace-nowrap"
-          >
-            {pill.cta} <ArrowRight className="h-3 w-3" />
-          </Link>
-        )}
-      </div>
-
-
       {/* Frequency */}
       <section className="space-y-4">
         <div>
@@ -91,8 +64,7 @@ function NotificationsTab() {
         </div>
         <div className="ob-chips grid sm:grid-cols-2 gap-3">
           {FREQS.map((f) => {
-            const locked = PLAN_RANK[f.minPlan] > userRank;
-            const selected = frequency === f.id && !locked;
+            const selected = frequency === f.id;
             const Icon = f.icon;
             return (
               <OriginButton
@@ -100,10 +72,8 @@ function NotificationsTab() {
                 type="button"
                 variant={selected ? "dark" : "tertiary"}
                 size="big"
-                disabled={locked}
                 aria-pressed={selected}
-                onClick={() => !locked && set("frequency", f.id)}
-                title={locked ? "Upgrade to unlock →" : undefined}
+                onClick={() => set("frequency", f.id)}
                 className="w-full h-auto min-h-[110px] px-6 py-4 text-[16px] justify-start items-start text-left"
               >
                 <span className="flex w-full items-start gap-3">
@@ -111,20 +81,10 @@ function NotificationsTab() {
                   <span className="flex-1 min-w-0">
                     <span className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold">{f.label}</span>
-                      {f.recommended && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] bg-sage-700 text-paper text-[10px] font-semibold uppercase tracking-[0.08em]">
-                          Recommended
-                        </span>
-                      )}
-                      {locked && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider opacity-70">
-                          <Lock className="h-3 w-3" /> Pro
-                        </span>
-                      )}
                     </span>
                     <span className="block text-[13px] opacity-80 mt-1 font-normal whitespace-normal">{f.desc}</span>
                     <span className="block text-[12px] italic opacity-70 mt-2 font-normal whitespace-normal leading-snug">
-                      {locked && plan === "intro" && f.freeFallback ? f.freeFallback : f.bestFor}
+                      {f.bestFor}
                     </span>
                   </span>
                 </span>
@@ -239,4 +199,3 @@ function ToggleSwitch({ checked, onChange }: { checked: boolean; onChange: (v: b
     </button>
   );
 }
-
