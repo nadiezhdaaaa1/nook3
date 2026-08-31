@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import {
-  Zap, CalendarDays, CalendarRange, Sparkles,
-  Moon,
-} from "lucide-react";
+import { Moon } from "lucide-react";
 
 import { useOnboardingStore, type Frequency } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
@@ -12,6 +9,10 @@ import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import freqInstant from "@/assets/freq-instant.png.asset.json";
+import freqBalanced from "@/assets/freq-balanced.png.asset.json";
+import freqDaily from "@/assets/freq-daily.png.asset.json";
+import freqWeekly from "@/assets/freq-weekly.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/search/$searchId/notifications")({
   component: NotificationsTab,
@@ -19,13 +20,14 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/notificat
 
 const FREQS: {
   id: Frequency; label: string; desc: string; bestFor: string;
-  icon: typeof Zap;
+  icon: string; iconAlt: string;
 }[] = [
-  { id: "maximum", label: "Instant", desc: "Every match, the moment it's listed.", bestFor: "Depending on your criteria, this can mean many alerts a day — narrow your search to receive fewer.", icon: Zap },
-  { id: "balanced", label: "Balanced", desc: "Top matches, grouped 2–3 times a day.", bestFor: "Best for an active search without the noise.", icon: CalendarDays },
-  { id: "minimal", label: "Daily", desc: "One roundup a day with your strongest matches.", bestFor: "Best for keeping watch without urgency.", icon: CalendarRange },
-  { id: "weekly", label: "Weekly", desc: "One curated digest every week.", bestFor: "Best for planning a future move.", icon: Sparkles },
+  { id: "maximum", label: "Instant", desc: "Every match, the moment it's listed.", bestFor: "Depending on your criteria, this can mean many alerts a day — narrow your search to receive fewer.", icon: freqInstant.url, iconAlt: "" },
+  { id: "balanced", label: "Balanced", desc: "Top matches, grouped 2–3 times a day.", bestFor: "Best for an active search without the noise.", icon: freqBalanced.url, iconAlt: "" },
+  { id: "minimal", label: "Daily", desc: "One roundup a day with your strongest matches.", bestFor: "Best for keeping watch without urgency.", icon: freqDaily.url, iconAlt: "" },
+  { id: "weekly", label: "Weekly", desc: "One curated digest every week.", bestFor: "Best for planning a future move.", icon: freqWeekly.url, iconAlt: "" },
 ];
+
 
 function detectTimezone(): string {
   try {
