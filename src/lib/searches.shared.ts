@@ -52,7 +52,7 @@ export function toDbRow(input: z.infer<typeof searchInputSchema>) {
     amenities: input.amenities ?? {},
     transit: input.transit ?? { hasPreference: false, lines: {} },
     commute: input.commute ?? { maxMinutes: null },
-    frequency: input.frequency ?? "balanced",
+    frequency: input.frequency ?? "maximum",
   };
 }
 
@@ -101,7 +101,7 @@ export function dbRowToSearch(row: any) {
     amenities: row.amenities ?? {},
     transit: row.transit ?? { hasPreference: false, lines: {} },
     commute: row.commute ?? { maxMinutes: null },
-    frequency: row.frequency ?? "balanced",
+    frequency: row.frequency ?? "maximum",
     totalAlertsReceived: 0,
     alertsLast7Days: 0,
     alertsToday: 0,
