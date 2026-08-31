@@ -67,7 +67,6 @@ function NotificationsTab() {
         <div className="ob-chips grid sm:grid-cols-2 gap-3">
           {FREQS.map((f) => {
             const selected = frequency === f.id;
-            const Icon = f.icon;
             return (
               <OriginButton
                 key={f.id}
@@ -76,10 +75,16 @@ function NotificationsTab() {
                 size="big"
                 aria-pressed={selected}
                 onClick={() => set("frequency", f.id)}
-                className="w-full h-auto min-h-[110px] px-6 py-4 text-[16px] justify-start items-start text-left"
+                className="w-full h-auto min-h-[110px] pl-4 pr-6 py-4 text-[16px] justify-start items-start text-left"
               >
                 <span className="flex w-full items-start gap-3">
-                  <Icon aria-hidden="true" className="h-5 w-5 mt-0.5 shrink-0" />
+                  <img
+                    src={f.icon}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-8 w-8 shrink-0 object-cover"
+                  />
+
                   <span className="flex-1 min-w-0">
                     <span className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold">{f.label}</span>
