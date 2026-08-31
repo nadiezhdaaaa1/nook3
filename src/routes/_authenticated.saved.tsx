@@ -439,7 +439,7 @@ function SearchesTab({ searches }: { searches: Search[] }) {
                   className="h-9 w-9 shrink-0 rounded-[8px] p-0"
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
+                    navigate({ to: "/search/$searchId", params: { searchId: s.id } });
                   }}
                 >
                   <Pencil className="h-4 w-4" />

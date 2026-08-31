@@ -191,7 +191,7 @@ export function SearchSelector() {
                           className="h-9 w-9 rounded-[8px] p-0"
                           onClick={() => {
                             setOpen(false);
-                            navigate({ to: "/search/$searchId/budget", params: { searchId: s.id } });
+                            navigate({ to: "/search/$searchId", params: { searchId: s.id } });
                           }}
                         >
                           <Pencil className="h-3.5 w-3.5" />
