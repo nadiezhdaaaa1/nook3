@@ -18,8 +18,8 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/notificat
 });
 
 const PLAN_PILL: Record<Plan, { text: string; cta: string | null }> = {
-  intro: { text: "Intro — 1 search, standard alerts", cta: "Upgrade" },
-  pro: { text: "Pro — 3 searches, real-time alerts", cta: "Manage plan" },
+  intro: { text: "Intro — 1 search, instant alerts", cta: "Upgrade" },
+  pro: { text: "Pro — 3 searches, instant alerts", cta: "Manage plan" },
 };
 
 const PLAN_RANK: Record<Plan, number> = { intro: 0, pro: 1 };
@@ -28,8 +28,8 @@ const FREQS: {
   id: Frequency; label: string; desc: string; bestFor: string;
   icon: typeof Zap; minPlan: Plan; recommended?: boolean; freeFallback?: string;
 }[] = [
-  { id: "maximum", label: "Maximum", desc: "Every match, the moment it's listed.", bestFor: "Best for fast markets, urgent moves", icon: Zap, minPlan: "pro", freeFallback: "You're on Intro — alerts arrive ~3h later" },
-  { id: "balanced", label: "Balanced", desc: "Top matches, 2–3 times a day.", bestFor: "Best for most renters", icon: CalendarDays, minPlan: "intro", recommended: true },
+  { id: "maximum", label: "Maximum", desc: "Every match, the moment it's listed.", bestFor: "Best for fast markets, urgent moves", icon: Zap, minPlan: "intro", recommended: true },
+  { id: "balanced", label: "Balanced", desc: "Top matches, 2–3 times a day.", bestFor: "Best for most renters", icon: CalendarDays, minPlan: "intro" },
   { id: "minimal", label: "Minimal", desc: "Once daily — only strong matches.", bestFor: "Best for browse mode, exploring", icon: CalendarRange, minPlan: "intro" },
   { id: "weekly", label: "Weekly digest", desc: "One curated email each week.", bestFor: "Best for casual interest", icon: Sparkles, minPlan: "intro" },
 ];

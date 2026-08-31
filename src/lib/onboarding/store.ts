@@ -110,7 +110,7 @@ const initial: OnboardingState = {
   commute: { maxMinutes: null },
 
   email: "",
-  frequency: "balanced",
+  frequency: "maximum",
   selectedPlan: null,
   billingCycle: "monthly",
   trialActive: false,
