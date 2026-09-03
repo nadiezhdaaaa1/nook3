@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getAccessState, type AccessState } from "@/lib/profile.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 export const accessQueryKey = ["access-state"] as const;
 
