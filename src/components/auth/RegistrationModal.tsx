@@ -68,6 +68,7 @@ export function RegistrationModal({
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const [referralCode, setReferralCode] = useState<string | null>(null);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export function RegistrationModal({
     setReferralCode(getReferralAttribution());
     setMode("signup");
     setSent(false);
+    setResetSent(false);
     setErrors({});
     setSubmitting(false);
   }, [open]);
@@ -165,6 +167,16 @@ export function RegistrationModal({
       return;
     }
     succeed();
+  }
+
+  async function handleForgotPassword() {
+    const out = await sendPasswordResetEmail(email);
+    if (out.error) {
+      setErrors({ email: out.error });
+      return;
+    }
+    setResetSent(true);
+    toast.success("Check your email", { description: "We sent a password reset link." });
   }
 
   const isSignup = mode === "signup";
@@ -261,9 +273,18 @@ export function RegistrationModal({
                 ) : null}
                 {!isSignup && (
                   <p className="mt-2 text-[13px]">
-                    <Link to="/forgot-password" className="text-charcoal-950 underline">
-                      Forgot your password?
-                    </Link>
+                    {resetSent ? (
+                      <span className="text-charcoal-600">Reset link sent — check your email.</span>
+                    ) : (
+                      <button
+                        type="button"
+                        className="cursor-pointer text-charcoal-950 underline"
+                        onClick={() => void handleForgotPassword()}
+                        disabled={submitting}
+                      >
+                        Forgot your password?
+                      </button>
+                    )}
                   </p>
                 )}
               </div>
@@ -332,6 +353,7 @@ export function RegistrationModal({
                 className="cursor-pointer text-charcoal-950 underline"
                 onClick={() => {
                   setErrors({});
+                  setResetSent(false);
                   setMode(isSignup ? "signin" : "signup");
                 }}
               >
