@@ -2,8 +2,11 @@ import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-ro
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
-import { emailSchema, passwordSchema } from "@/lib/validation/schemas";
+import {
+  signInWithEmailPassword,
+  startGoogleOAuth,
+  validateCredentials,
+} from "@/lib/auth/authActions";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
 import logoSvg from "@/assets/Nook_Green.svg.asset.json";
@@ -55,23 +58,17 @@ function LoginPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const emailRes = emailSchema.safeParse(email);
-    const pwRes = passwordSchema.safeParse(password);
-    const nextErrors: typeof errors = {};
-    if (!emailRes.success) nextErrors.email = emailRes.error.issues[0]?.message;
-    if (!pwRes.success) nextErrors.password = pwRes.error.issues[0]?.message;
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length) return;
+    const { errors: credErrors, email: cleanEmail, password: cleanPassword } =
+      validateCredentials(email, password);
+    setErrors(credErrors);
+    if (Object.keys(credErrors).length) return;
 
     setSubmitting(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: emailRes.data!,
-      password: pwRes.data!,
-    });
+    const { error } = await signInWithEmailPassword(cleanEmail!, cleanPassword!);
     setSubmitting(false);
     if (error) {
-      setErrors({ form: error.message });
-      toast.error("Sign in failed", { description: error.message });
+      setErrors({ form: error });
+      toast.error("Sign in failed", { description: error });
       return;
     }
     toast.success("Welcome back");
@@ -80,20 +77,17 @@ function LoginPage() {
 
   async function onGoogle() {
     setSubmitting(true);
-    try {
-      sessionStorage.setItem("nook:postAuthPath", redirectTo ?? "/home");
-    } catch {
-      /* ignore */
-    }
-    const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/auth/callback",
+    const out = await startGoogleOAuth({
+      marketing: false,
+      source: "signin_google",
+      postAuthPath: redirectTo ?? "/home",
     });
+    if (out.kind === "redirected") return;
     setSubmitting(false);
-    if (res?.error) {
-      toast.error("Google sign in failed", { description: res.error.message });
+    if (out.kind === "error") {
+      toast.error("Google sign in failed", { description: out.message });
       return;
     }
-    if (res?.redirected) return;
     navigate({ to: redirectTo ?? "/home", replace: true });
   }
 

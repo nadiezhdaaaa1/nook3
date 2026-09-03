@@ -157,9 +157,11 @@ export function PricingThreeTiers({
   const cycle = controlledCycle ?? internalCycle;
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
+  const changeCycle = (next: Cycle) => {
+    if (onCycleChange) onCycleChange(next);
+    else setInternalCycle(next);
+  };
 
-  void onCycleChange;
-  void setInternalCycle;
 
   return (
     <section
@@ -208,6 +210,21 @@ export function PricingThreeTiers({
           >
             Start with 3 free days, then keep going for $14.99/month
           </p>
+          <div className="pr-toggle" role="radiogroup" aria-label="Billing cycle" style={{ display: "inline-flex", marginTop: 24, borderRadius: 999, padding: 4, background: "#eee8d9" }}>
+            {(["monthly", "annual"] as Cycle[]).map((value) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={cycle === value}
+                className="pr-toggle-btn"
+                onClick={() => changeCycle(value)}
+                style={{ border: 0, borderRadius: 999, padding: "9px 16px", background: cycle === value ? INK : "transparent", color: cycle === value ? CREAM : BODY, cursor: "pointer", ...ui, fontSize: 13, fontWeight: 600 }}
+              >
+                {value === "monthly" ? "Monthly" : "Annual"}
+              </button>
+            ))}
+          </div>
         </header>
 
         {/* Cards */}

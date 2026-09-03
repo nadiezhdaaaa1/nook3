@@ -12,6 +12,12 @@ export const ANALYTICS_EVENTS = {
   previewCtaSeePlans: "onboarding_preview_cta_see_plans",
   /** Preview screen CTA for an active/trialing subscriber. */
   previewCtaStartSearch: "onboarding_preview_cta_start_search",
+  /** Registration modal shown (params: source, plan, cycle). */
+  registrationModalOpened: "registration_modal_opened",
+  /** Session established from inside the registration modal. */
+  registrationModalAuthed: "registration_modal_authed",
+  /** Visitor sent to checkout after a plan decision. */
+  planCheckoutRedirect: "plan_checkout_redirect",
 } as const;
 
 export function trackEvent(name: string, params?: Record<string, unknown>): void {

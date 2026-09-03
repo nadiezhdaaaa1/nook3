@@ -33,7 +33,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RCodeRouteImport } from './routes/r.$code'
 import { Route as PostsSlugRouteImport } from './routes/posts.$slug'
-import { Route as OnboardingSuccessRouteImport } from './routes/onboarding.success'
 import { Route as OnboardingPricingRouteImport } from './routes/onboarding.pricing'
 import { Route as OnboardingPreviewRouteImport } from './routes/onboarding.preview'
 import { Route as OnboardingLoadingRouteImport } from './routes/onboarding.loading'
@@ -180,11 +179,6 @@ const PostsSlugRoute = PostsSlugRouteImport.update({
   id: '/posts/$slug',
   path: '/posts/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingSuccessRoute = OnboardingSuccessRouteImport.update({
-  id: '/success',
-  path: '/success',
-  getParentRoute: () => OnboardingRoute,
 } as any)
 const OnboardingPricingRoute = OnboardingPricingRouteImport.update({
   id: '/pricing',
@@ -367,7 +361,6 @@ export interface FileRoutesByFullPath {
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
-  '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
   '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
@@ -420,7 +413,6 @@ export interface FileRoutesByTo {
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
-  '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
   '/r/$code': typeof RCodeRoute
   '/blog': typeof BlogIndexRoute
@@ -474,7 +466,6 @@ export interface FileRoutesById {
   '/onboarding/loading': typeof OnboardingLoadingRoute
   '/onboarding/preview': typeof OnboardingPreviewRoute
   '/onboarding/pricing': typeof OnboardingPricingRoute
-  '/onboarding/success': typeof OnboardingSuccessRoute
   '/posts/$slug': typeof PostsSlugRoute
   '/r/$code': typeof RCodeRoute
   '/blog/': typeof BlogIndexRoute
@@ -529,7 +520,6 @@ export interface FileRouteTypes {
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
-    | '/onboarding/success'
     | '/posts/$slug'
     | '/r/$code'
     | '/blog/'
@@ -582,7 +572,6 @@ export interface FileRouteTypes {
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
-    | '/onboarding/success'
     | '/posts/$slug'
     | '/r/$code'
     | '/blog'
@@ -635,7 +624,6 @@ export interface FileRouteTypes {
     | '/onboarding/loading'
     | '/onboarding/preview'
     | '/onboarding/pricing'
-    | '/onboarding/success'
     | '/posts/$slug'
     | '/r/$code'
     | '/blog/'
@@ -857,13 +845,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/posts/$slug'
       preLoaderRoute: typeof PostsSlugRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/onboarding/success': {
-      id: '/onboarding/success'
-      path: '/success'
-      fullPath: '/onboarding/success'
-      preLoaderRoute: typeof OnboardingSuccessRouteImport
-      parentRoute: typeof OnboardingRoute
     }
     '/onboarding/pricing': {
       id: '/onboarding/pricing'
@@ -1127,7 +1108,6 @@ interface OnboardingRouteChildren {
   OnboardingLoadingRoute: typeof OnboardingLoadingRoute
   OnboardingPreviewRoute: typeof OnboardingPreviewRoute
   OnboardingPricingRoute: typeof OnboardingPricingRoute
-  OnboardingSuccessRoute: typeof OnboardingSuccessRoute
   OnboardingStepStepRoute: typeof OnboardingStepStepRoute
 }
 
@@ -1135,7 +1115,6 @@ const OnboardingRouteChildren: OnboardingRouteChildren = {
   OnboardingLoadingRoute: OnboardingLoadingRoute,
   OnboardingPreviewRoute: OnboardingPreviewRoute,
   OnboardingPricingRoute: OnboardingPricingRoute,
-  OnboardingSuccessRoute: OnboardingSuccessRoute,
   OnboardingStepStepRoute: OnboardingStepStepRoute,
 }
 
