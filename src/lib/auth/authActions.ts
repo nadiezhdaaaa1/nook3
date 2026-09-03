@@ -125,7 +125,6 @@ export async function startGoogleOAuth(opts: {
   if (opts.isSignUp !== false)
     stashPendingConsents(buildConsents({ marketing: opts.marketing, source: opts.source }));
   try {
-
     sessionStorage.setItem("nook:postAuthPath", opts.postAuthPath);
     if (opts.expectedEmail) sessionStorage.setItem("nook:expectedEmail", opts.expectedEmail);
     else sessionStorage.removeItem("nook:expectedEmail");

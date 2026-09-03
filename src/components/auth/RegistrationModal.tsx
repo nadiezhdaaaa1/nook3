@@ -104,7 +104,6 @@ export function RegistrationModal({
     onAuthed();
   };
 
-
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const {
@@ -193,7 +192,6 @@ export function RegistrationModal({
     // In-session (popup) success: the opener commits, so the marker must go.
     succeed();
   }
-
 
   async function handleForgotPassword() {
     const out = await sendPasswordResetEmail(email);

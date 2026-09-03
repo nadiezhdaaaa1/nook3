@@ -251,7 +251,6 @@ function AccountPage() {
         hasEverSubscribed={accessQ.data?.hasEverSubscribed ?? false}
         accessPlan={accessQ.data?.plan ?? null}
         accessCycle={accessQ.data?.billingCycle ?? null}
-
       />
 
       {/* Communications */}
@@ -2247,7 +2246,6 @@ function SubscriptionSection({
                 ? "Pay and start watching"
                 : "Turn my alerts back on"}
           </OriginButton>
-
         </section>
       )}
       <RenewSubscriptionDialog
