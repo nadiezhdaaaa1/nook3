@@ -88,11 +88,9 @@ function SignupPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const emailRes = emailSchema.safeParse(email);
-    const pwRes = passwordSchema.safeParse(password);
-    const nextErrors: typeof errors = {};
-    if (!emailRes.success) nextErrors.email = emailRes.error.issues[0]?.message;
-    if (!pwRes.success) nextErrors.password = pwRes.error.issues[0]?.message;
+    const { errors: credErrors, email: cleanEmail, password: cleanPassword } =
+      validateCredentials(email, password);
+    const nextErrors: typeof errors = { ...credErrors };
     if (!acceptTerms) nextErrors.terms = "Please accept the Terms and Privacy Policy to continue.";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
@@ -100,47 +98,40 @@ function SignupPage() {
     setSubmitting(true);
 
     if (lockEmail && lockedSession) {
-      const { error: pwError } = await supabase.auth.updateUser({ password: pwRes.data! });
+      const { error } = await setPasswordForCurrentUser(cleanPassword!, {
+        marketing,
+        source: "signup_email",
+      });
       setSubmitting(false);
-      if (pwError) {
-        setErrors({ form: pwError.message });
-        toast.error("Couldn't set your password", { description: pwError.message });
+      if (error) {
+        setErrors({ form: error });
+        toast.error("Couldn't set your password", { description: error });
         return;
       }
-      await persistConsentsForCurrentUser(buildConsents({ marketing, source: "signup_email" }));
       toast.success("Password set");
       navigate({ to: redirectTo ?? "/home", replace: true });
       return;
     }
 
-    const ipHash = getReferralIpHash();
-    const metadata = referralCode
-      ? { referral_code: referralCode, ...(ipHash ? { referral_ip_hash: ipHash } : {}) }
-      : undefined;
-    const { data, error } = await supabase.auth.signUp({
-      email: emailRes.data!,
-      password: pwRes.data!,
-      options: {
-        emailRedirectTo: `${window.location.origin}/home`,
-        data: metadata,
-      },
+    const out = await signUpWithEmailPassword({
+      email: cleanEmail!,
+      password: cleanPassword!,
+      marketing,
+      source: "signup_email",
     });
     setSubmitting(false);
-    if (error) {
-      setErrors({ form: error.message });
-      toast.error("Sign up failed", { description: error.message });
+    if (out.kind === "error") {
+      setErrors({ form: out.message });
+      toast.error("Sign up failed", { description: out.message });
       return;
     }
-    const consents = buildConsents({ marketing, source: "signup_email" });
-    if (data.session) {
-      await persistConsentsForCurrentUser(consents);
-      toast.success("Account created");
-      navigate({ to: redirectTo ?? "/home", replace: true });
-    } else {
-      stashPendingConsents(consents);
+    if (out.kind === "confirmation-sent") {
       setSent(true);
       toast.success("Check your email", { description: "We sent a confirmation link." });
+      return;
     }
+    toast.success("Account created");
+    navigate({ to: redirectTo ?? "/home", replace: true });
   }
 
   async function onGoogle() {
@@ -148,23 +139,19 @@ function SignupPage() {
       setErrors({ terms: "Please accept the Terms and Privacy Policy to continue." });
       return;
     }
-    stashPendingConsents(buildConsents({ marketing, source: "signup_google" }));
     setSubmitting(true);
-    try {
-      sessionStorage.setItem("nook:postAuthPath", redirectTo ?? "/home");
-      if (!lockEmail) sessionStorage.removeItem("nook:expectedEmail");
-    } catch {
-      /* ignore */
-    }
-    const res = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/auth/callback",
+    const out = await startGoogleOAuth({
+      marketing,
+      source: "signup_google",
+      postAuthPath: redirectTo ?? "/home",
+      expectedEmail: lockEmail ? email || null : null,
     });
+    if (out.kind === "redirected") return;
     setSubmitting(false);
-    if (res?.error) {
-      toast.error("Google sign in failed", { description: res.error.message });
+    if (out.kind === "error") {
+      toast.error("Google sign in failed", { description: out.message });
       return;
     }
-    if (res?.redirected) return;
     navigate({ to: redirectTo ?? "/home", replace: true });
   }
 
