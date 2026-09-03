@@ -139,7 +139,7 @@ export function DevPanel() {
       }
     }
 
-    useOnboardingStore.getState().setHandoffCompleted(false);
+    useOnboardingStore.getState().setHandoffCompletedFor(null);
     useOnboardingStore.getState().reset();
     try {
       await supabase.auth.signOut();
