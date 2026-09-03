@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Check, Lock, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -37,9 +36,9 @@ export interface Tier {
   billingCycle: Cycle;
   name: string;
   tagline: string;
-  price: Record<Cycle, string>;
+  price: string;
   priceSuffix: string;
-  finePrint?: Record<Cycle, string>;
+  finePrint?: string;
   cta: string;
   ctaTo: string;
   variant: "light" | "warm" | "cool";
@@ -56,12 +55,9 @@ const TIERS: Tier[] = [
     billingCycle: "monthly",
     name: "3 days free",
     tagline: "See how it works, on your real search.",
-    price: { monthly: "$0", annual: "$0" },
+    price: "$0",
     priceSuffix: "for 3 days → then $14.99/month",
-    finePrint: {
-      monthly: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
-      annual: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
-    },
+    finePrint: `Card required. After 3 days $14.99/month until cancelled. ${CANCEL_TAIL}`,
     cta: "Start 3 days free",
     ctaTo: "/onboarding",
     variant: "light",
@@ -78,12 +74,9 @@ const TIERS: Tier[] = [
     billingCycle: "monthly",
     name: "Pro",
     tagline: "When you're actively looking.",
-    price: { monthly: "$14.99", annual: "$14.99" },
+    price: "$14.99",
     priceSuffix: "/month",
-    finePrint: {
-      monthly: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
-      annual: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
-    },
+    finePrint: `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`,
     cta: "Get Pro now",
     ctaTo: "/signup",
     variant: "warm",
@@ -100,12 +93,9 @@ const TIERS: Tier[] = [
     billingCycle: "annual",
     name: "Pro annual",
     tagline: "Same plan, paid once a year.",
-    price: { monthly: "$7.99", annual: "$7.99" },
+    price: "$7.99",
     priceSuffix: "/month · billed $95.88/year",
-    finePrint: {
-      monthly: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
-      annual: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
-    },
+    finePrint: `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`,
     cta: "Get Pro annual",
     ctaTo: "/signup",
     variant: "cool",
@@ -137,30 +127,18 @@ export const DARK_SHADOW =
 
 
 interface PricingThreeTiersProps {
-  cycle?: Cycle;
-  defaultCycle?: Cycle;
-  onCycleChange?: (c: Cycle) => void;
   onTierSelect?: (tier: Tier) => void;
   tierCta?: Partial<Record<string, string>>;
   compactTop?: boolean;
 }
 
 export function PricingThreeTiers({
-  cycle: controlledCycle,
-  defaultCycle,
-  onCycleChange,
   onTierSelect,
   tierCta,
   compactTop,
 }: PricingThreeTiersProps) {
-  const [internalCycle, setInternalCycle] = useState<Cycle>(defaultCycle ?? "monthly");
-  const cycle = controlledCycle ?? internalCycle;
   const reduce = useReducedMotion();
   const dur = reduce ? 0 : 0.25;
-  const changeCycle = (next: Cycle) => {
-    if (onCycleChange) onCycleChange(next);
-    else setInternalCycle(next);
-  };
 
 
   return (
@@ -176,10 +154,6 @@ export function PricingThreeTiers({
         .pr-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
         .pr-card { position: relative; padding: 32px; border-radius: 24px; display: flex; flex-direction: column; gap: 16px; }
         .pr-cta:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
-        .pr-card-dark .pr-cta:focus-visible,
-        .pr-toggle-btn:focus-visible { outline: 2px solid #241c12; outline-offset: 2px; }
-        .pr-toggle-btn { transition: background-color 0.2s ease, color 0.2s ease; }
-        .pr-toggle-btn[aria-checked="false"]:hover { background-color: rgba(255,255,255,0.5) !important; color: #241c12 !important; }
         .pr-card-dark .pr-cta:focus-visible { outline-color: ${CREAM}; }
         @media (max-width: 1100px) {
           .pr-grid { grid-template-columns: minmax(0, 1fr); justify-items: center; }
@@ -188,8 +162,6 @@ export function PricingThreeTiers({
         @media (max-width: 680px) {
           .pr-section { padding: 72px 20px; }
           .pr-h2 { font-size: clamp(32px, 6vw, 40px); line-height: 1.14; letter-spacing: -0.8px; }
-          .pr-toggle { width: 100%; max-width: 320px; }
-          .pr-toggle-btn { flex: 1; justify-content: center; }
         }
       `}</style>
 
@@ -210,27 +182,12 @@ export function PricingThreeTiers({
           >
             Start with 3 free days, then keep going for $14.99/month
           </p>
-          <div className="pr-toggle" role="radiogroup" aria-label="Billing cycle" style={{ display: "inline-flex", marginTop: 24, borderRadius: 999, padding: 4, background: "#eee8d9" }}>
-            {(["monthly", "annual"] as Cycle[]).map((value) => (
-              <button
-                key={value}
-                type="button"
-                role="radio"
-                aria-checked={cycle === value}
-                className="pr-toggle-btn"
-                onClick={() => changeCycle(value)}
-                style={{ border: 0, borderRadius: 999, padding: "9px 16px", background: cycle === value ? INK : "transparent", color: cycle === value ? CREAM : BODY, cursor: "pointer", ...ui, fontSize: 13, fontWeight: 600 }}
-              >
-                {value === "monthly" ? "Monthly" : "Annual"}
-              </button>
-            ))}
-          </div>
         </header>
 
         {/* Cards */}
         <div className="pr-grid">
           {TIERS.map((t) => (
-            <PlanCard key={t.id} tier={t} cycle={cycle} dur={dur} onSelect={onTierSelect} ctaText={tierCta?.[t.id]} />
+            <PlanCard key={t.id} tier={t} dur={dur} onSelect={onTierSelect} ctaText={tierCta?.[t.id]} />
           ))}
         </div>
 
@@ -253,7 +210,7 @@ export function PricingThreeTiers({
   );
 }
 
-function badgeFor(tierId: string, _cycle: Cycle) {
+function badgeFor(tierId: string) {
   if (tierId === "pro_annual") return { text: "Save 47%", bg: LEAF, position: "right" as const };
   return null;
 }
@@ -261,20 +218,18 @@ function badgeFor(tierId: string, _cycle: Cycle) {
 
 function PlanCard({
   tier,
-  cycle,
   dur,
   onSelect,
   ctaText,
 }: {
   tier: Tier;
-  cycle: Cycle;
   dur: number;
   onSelect?: (tier: Tier) => void;
   ctaText?: string;
 }) {
   const dark = tier.variant !== "light";
   const navigate = useNavigate();
-  const badge = badgeFor(tier.id, cycle);
+  const badge = badgeFor(tier.id);
   const text = dark ? CREAM : "#241c12";
   const checkColor = dark ? "#c2dd93" : LEAF;
 
@@ -369,14 +324,14 @@ function PlanCard({
       <div style={{ display: "flex", alignItems: "flex-start", gap: 8, paddingBottom: 8 }}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
-            key={tier.price[cycle]}
+            key={tier.price}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: dur, ease: "easeOut" }}
             style={{ ...display, fontWeight: 600, fontSize: 46, lineHeight: "46px" }}
           >
-            {tier.price[cycle]}
+            {tier.price}
           </motion.span>
         </AnimatePresence>
         <span style={{ ...ui, fontSize: 14, fontWeight: 500, opacity: 0.7 }}>
@@ -402,14 +357,14 @@ function PlanCard({
       {tier.finePrint && (
         <AnimatePresence mode="wait" initial={false}>
           <motion.p
-            key={tier.finePrint[cycle]}
+            key={tier.finePrint}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: dur, ease: "easeOut" }}
             style={{ ...ui, fontSize: 12, lineHeight: "20px", opacity: 0.72, margin: 0 }}
           >
-            {tier.finePrint[cycle]}
+            {tier.finePrint}
           </motion.p>
         </AnimatePresence>
       )}
