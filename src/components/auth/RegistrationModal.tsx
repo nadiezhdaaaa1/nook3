@@ -71,8 +71,24 @@ export function RegistrationModal({
   const [resetSent, setResetSent] = useState(false);
   const [referralCode, setReferralCode] = useState<string | null>(null);
 
+  /**
+   * The commit marker is only meaningful while a full-page OAuth/email redirect
+   * is in flight. Any other outcome must clear it, or a later unrelated pass
+   * through /auth/callback in this tab would commit onboarding again.
+   */
+  const clearCommitMarker = () => {
+    try {
+      sessionStorage.removeItem("nook:postAuthCommitOnboarding");
+    } catch {
+      /* ignore */
+    }
+  };
+
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      clearCommitMarker();
+      return;
+    }
     setReferralCode(getReferralAttribution());
     setMode("signup");
     setSent(false);
@@ -82,6 +98,7 @@ export function RegistrationModal({
   }, [open]);
 
   const succeed = () => {
+    clearCommitMarker();
     trackEvent(ANALYTICS_EVENTS.registrationModalAuthed, { source, plan, cycle, mode });
     onOpenChange(false);
     onAuthed();
@@ -117,6 +134,7 @@ export function RegistrationModal({
 
     try {
       sessionStorage.setItem("nook:postAuthPath", postAuthPath);
+      // Only the emailed confirmation link comes back through /auth/callback.
       if (source === "onboarding_pricing")
         sessionStorage.setItem("nook:postAuthCommitOnboarding", "1");
     } catch {
@@ -131,6 +149,7 @@ export function RegistrationModal({
     });
     setSubmitting(false);
     if (out.kind === "error") {
+      clearCommitMarker();
       setErrors({ form: out.message });
       toast.error("Sign up failed", { description: out.message });
       return;
@@ -149,7 +168,7 @@ export function RegistrationModal({
       setErrors({ terms: "Please accept the Terms and Privacy Policy to continue." });
       return;
     }
-    if (source === "onboarding_pricing") {
+    if (source === "onboarding_pricing" && mode === "signup") {
       try {
         sessionStorage.setItem("nook:postAuthCommitOnboarding", "1");
       } catch {
@@ -161,13 +180,16 @@ export function RegistrationModal({
       marketing,
       source: mode === "signup" ? "signup_google_modal" : "signin_google_modal",
       postAuthPath,
+      isSignUp: mode === "signup",
     });
     if (out.kind === "redirected") return; // the callback route resumes the flow
     setSubmitting(false);
     if (out.kind === "error") {
+      clearCommitMarker();
       toast.error("Google sign in failed", { description: out.message });
       return;
     }
+    // In-session (popup) success: the opener commits, so the marker must go.
     succeed();
   }
 

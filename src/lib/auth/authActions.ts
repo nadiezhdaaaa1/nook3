@@ -119,8 +119,11 @@ export async function startGoogleOAuth(opts: {
   source: string;
   postAuthPath: string;
   expectedEmail?: string | null;
+  /** Sign-in flows must not stash consents — only account creation records them. */
+  isSignUp?: boolean;
 }): Promise<GoogleOutcome> {
-  stashPendingConsents(buildConsents({ marketing: opts.marketing, source: opts.source }));
+  if (opts.isSignUp !== false)
+    stashPendingConsents(buildConsents({ marketing: opts.marketing, source: opts.source }));
   try {
     sessionStorage.setItem("nook:postAuthPath", opts.postAuthPath);
     if (opts.expectedEmail) sessionStorage.setItem("nook:expectedEmail", opts.expectedEmail);

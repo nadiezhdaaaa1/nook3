@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import logoSvg from "@/assets/Nook_Green.svg.asset.json";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 
-
 type Search = { redirect?: string };
 
 export const Route = createFileRoute("/login")({
@@ -40,13 +39,12 @@ export const Route = createFileRoute("/login")({
         content:
           "Sign in to your Nook account to manage your real-time apartment alerts, update your search preferences, and view your latest matches.",
       },
-      { property: "og:url", content: "https://thenook.rent/login" }
+      { property: "og:url", content: "https://thenook.rent/login" },
     ],
     links: [{ rel: "canonical", href: "https://thenook.rent/login" }],
   }),
   component: LoginPage,
 });
-
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -58,8 +56,11 @@ function LoginPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const { errors: credErrors, email: cleanEmail, password: cleanPassword } =
-      validateCredentials(email, password);
+    const {
+      errors: credErrors,
+      email: cleanEmail,
+      password: cleanPassword,
+    } = validateCredentials(email, password);
     setErrors(credErrors);
     if (Object.keys(credErrors).length) return;
 
@@ -81,7 +82,9 @@ function LoginPage() {
       marketing: false,
       source: "signin_google",
       postAuthPath: redirectTo ?? "/home",
+      isSignUp: false,
     });
+
     if (out.kind === "redirected") return;
     setSubmitting(false);
     if (out.kind === "error") {
@@ -90,7 +93,6 @@ function LoginPage() {
     }
     navigate({ to: redirectTo ?? "/home", replace: true });
   }
-
 
   return (
     <div className="sgn-page">
@@ -104,12 +106,17 @@ function LoginPage() {
           <p className="sgn-sub">Sign in to manage your alerts.</p>
         </div>
 
-        <OriginButton type="button" variant="tertiary" size="big" onClick={onGoogle} disabled={submitting} className="w-full">
+        <OriginButton
+          type="button"
+          variant="tertiary"
+          size="big"
+          onClick={onGoogle}
+          disabled={submitting}
+          className="w-full"
+        >
           <img src={googleIcon.url} alt="" width={24} height={24} aria-hidden="true" />
           <span>Continue with Google</span>
         </OriginButton>
-
-
 
         <div className="sgn-divider">
           <span className="sgn-rule" />
@@ -155,7 +162,13 @@ function LoginPage() {
 
           {errors.form && <p className="sgn-err">{errors.form}</p>}
 
-          <OriginButton type="submit" variant="main" size="big" disabled={submitting} className="w-full">
+          <OriginButton
+            type="submit"
+            variant="main"
+            size="big"
+            disabled={submitting}
+            className="w-full"
+          >
             {submitting ? "Signing in…" : "Sign in"}
           </OriginButton>
 
