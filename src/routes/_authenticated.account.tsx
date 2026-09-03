@@ -2135,6 +2135,9 @@ function SubscriptionSection({
   activeCycle,
   accessStatus,
   pastDueSince,
+  hasEverSubscribed,
+  accessPlan,
+  accessCycle,
 }: {
   plan: Plan;
   trialActive: boolean;
@@ -2143,7 +2146,12 @@ function SubscriptionSection({
   activeCycle: BillingCycle;
   accessStatus: "none" | "trialing" | "active" | "past_due" | "canceled";
   pastDueSince: string | null;
+  hasEverSubscribed: boolean;
+  accessPlan: Plan | null;
+  accessCycle: BillingCycle | null;
 }) {
+  const navigate = useNavigate();
+
   const [cancelOpen, setCancelOpen] = useState(false);
   const [renewOpen, setRenewOpen] = useState(false);
 
