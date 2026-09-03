@@ -3,9 +3,24 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Check, Sparkles, Zap, Bell, Search as SearchIcon, Clock, Download, Trash2,
-  Mail, Eye, EyeOff, ChevronRight, LogOut, Lock,
-  ArrowLeft, CreditCard, Receipt, Plus,
+  Check,
+  Sparkles,
+  Zap,
+  Bell,
+  Search as SearchIcon,
+  Clock,
+  Download,
+  Trash2,
+  Mail,
+  Eye,
+  EyeOff,
+  ChevronRight,
+  LogOut,
+  Lock,
+  ArrowLeft,
+  CreditCard,
+  Receipt,
+  Plus,
 } from "lucide-react";
 
 import cardAsset from "@/assets/Card.png.asset.json";
@@ -18,7 +33,6 @@ import savedSearchesArt from "@/assets/Saved-searches.png.asset.json";
 import alertsArt from "@/assets/Alerts-received.png.asset.json";
 import lastDaysArt from "@/assets/Last-days.png.asset.json";
 
-
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,16 +43,33 @@ import { SEARCH_LIMITS } from "@/lib/store/types";
 import { usePreferencesStore } from "@/lib/preferences/store";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
-import { useUpdateProfileMutation, useScheduleAccountDeletionMutation, useCancelAccountDeletionMutation, useSetSubscriptionCanceledMutation, profileQueryOptions } from "@/lib/queries/profile";
+import {
+  useUpdateProfileMutation,
+  useScheduleAccountDeletionMutation,
+  useCancelAccountDeletionMutation,
+  useSetSubscriptionCanceledMutation,
+  profileQueryOptions,
+} from "@/lib/queries/profile";
 import { accessQueryOptions } from "@/lib/queries/access";
 import { useQuery } from "@tanstack/react-query";
 import { OriginButton } from "@/components/ui/origin-button";
@@ -119,10 +150,15 @@ const PLANS: PlanDef[] = [
 ];
 
 const TIMEZONES = [
-  "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
-  "America/Phoenix", "America/Anchorage", "Pacific/Honolulu", "UTC",
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "America/Phoenix",
+  "America/Anchorage",
+  "Pacific/Honolulu",
+  "UTC",
 ];
-
 
 function AccountPage() {
   const onboarding = useOnboardingStore();
@@ -191,9 +227,7 @@ function AccountPage() {
             nudgeY={5}
             className="sm:col-span-2 lg:col-span-1"
           />
-
         </div>
-
       </section>
 
       {/* Profile */}
@@ -205,8 +239,6 @@ function AccountPage() {
         </div>
       </section>
 
-
-
       {/* Subscription */}
       <SubscriptionSection
         plan={plan}
@@ -217,7 +249,6 @@ function AccountPage() {
         accessStatus={accessQ.data?.status ?? "none"}
         pastDueSince={accessQ.data?.pastDueSince ?? null}
       />
-
 
       {/* Communications */}
       <section>
@@ -276,10 +307,9 @@ function AccountPage() {
               variant="tertiary"
               size="medium"
               onClick={() => {
-                const blob = new Blob(
-                  [JSON.stringify({ user, searches }, null, 2)],
-                  { type: "application/json" },
-                );
+                const blob = new Blob([JSON.stringify({ user, searches }, null, 2)], {
+                  type: "application/json",
+                });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
@@ -295,7 +325,12 @@ function AccountPage() {
 
           <div className="px-5 py-4 flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <div className={cn("text-sm font-semibold", user?.deletionScheduledAt ? "text-danger" : "text-danger")}>
+              <div
+                className={cn(
+                  "text-sm font-semibold",
+                  user?.deletionScheduledAt ? "text-danger" : "text-danger",
+                )}
+              >
                 {user?.deletionScheduledAt ? "Account scheduled for deletion" : "Delete account"}
               </div>
               <div className="text-xs text-charcoal-600 mt-0.5">
@@ -303,13 +338,19 @@ function AccountPage() {
                   <>
                     Your account will be permanently deleted on{" "}
                     <span className="font-semibold text-charcoal-800">
-                      {new Date(user.deletionScheduledAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                      {new Date(user.deletionScheduledAt).toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </span>
-                    . Nothing is removed until that date — you can keep your account any time before then.
+                    . Nothing is removed until that date — you can keep your account any time before
+                    then.
                   </>
                 ) : (
                   <>
-                    Removes your <span className="font-semibold text-charcoal-800">entire account</span>,
+                    Removes your{" "}
+                    <span className="font-semibold text-charcoal-800">entire account</span>,
                     including all searches, alerts, and profile data.
                   </>
                 )}
@@ -329,7 +370,10 @@ function AccountPage() {
       </section>
 
       <StickySaveBar
-        state={{ timezone, prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates } }}
+        state={{
+          timezone,
+          prefs: { marketingEmails: prefs.marketingEmails, productUpdates: prefs.productUpdates },
+        }}
         onDiscard={(snap) => {
           setTimezone(snap.timezone);
           prefs.setPref("marketingEmails", snap.prefs.marketingEmails);
@@ -343,7 +387,8 @@ function AccountPage() {
 }
 
 function SyncProfile({
-  timezone, update,
+  timezone,
+  update,
 }: {
   timezone: string;
   update: (p: Partial<NonNullable<ReturnType<typeof useAppStore.getState>["user"]>>) => void;
@@ -355,7 +400,13 @@ function SyncProfile({
 }
 
 function StatCard({
-  icon: Icon, label, value, illustration, nudgeY, loading, className,
+  icon: Icon,
+  label,
+  value,
+  illustration,
+  nudgeY,
+  loading,
+  className,
 }: {
   icon: typeof Sparkles;
   label: string;
@@ -414,15 +465,25 @@ function StatCard({
   );
 }
 
-
 function Field({
-  id, label, icon: Icon, error, children,
+  id,
+  label,
+  icon: Icon,
+  error,
+  children,
 }: {
-  id: string; label: string; icon: typeof Mail; error?: string; children: React.ReactNode;
+  id: string;
+  label: string;
+  icon: typeof Mail;
+  error?: string;
+  children: React.ReactNode;
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-700">
+      <label
+        htmlFor={id}
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-700"
+      >
         {Icon && <Icon className="h-3.5 w-3.5" />} {label}
       </label>
       {children}
@@ -432,10 +493,19 @@ function Field({
 }
 
 function ToggleRow({
-  label, desc, checked, onChange, disabled, alwaysOnNote,
+  label,
+  desc,
+  checked,
+  onChange,
+  disabled,
+  alwaysOnNote,
 }: {
-  label: string; desc: string; checked: boolean; onChange: (v: boolean) => void;
-  disabled?: boolean; alwaysOnNote?: string;
+  label: string;
+  desc: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+  alwaysOnNote?: string;
 }) {
   return (
     <div className="px-5 py-4 flex items-start justify-between gap-4">
@@ -462,14 +532,12 @@ function ToggleRow({
           disabled && "opacity-60 cursor-not-allowed",
         )}
         style={{ width: 44, height: 24, background: checked ? "#6A820A" : undefined }}
-
       >
         <span
           className="absolute top-1/2 -translate-y-1/2 rounded-full bg-white shadow-sm transition-[left] duration-200"
           style={{ width: 20, height: 20, left: checked ? 22 : 2 }}
         />
       </button>
-
     </div>
   );
 }
@@ -501,7 +569,9 @@ function LogoutRow() {
         <img src={doorAsset.url} alt="" className="h-10 w-10 object-contain shrink-0" />
         <div>
           <div className="text-sm font-semibold text-charcoal-950">Log out</div>
-          <div className="text-xs text-charcoal-600 mt-0.5">Sign out of your account on this device.</div>
+          <div className="text-xs text-charcoal-600 mt-0.5">
+            Sign out of your account on this device.
+          </div>
         </div>
       </div>
       <OriginButton
@@ -517,32 +587,40 @@ function LogoutRow() {
   );
 }
 
-
-
-
-
-function passwordStrength(p: string): { score: 0|1|2|3|4; label: string } {
+function passwordStrength(p: string): { score: 0 | 1 | 2 | 3 | 4; label: string } {
   let s = 0;
   if (p.length >= 10) s++;
   if (/[A-Z]/.test(p) && /[a-z]/.test(p)) s++;
   if (/\d/.test(p)) s++;
   if (/[^A-Za-z0-9]/.test(p)) s++;
   const label = ["Too short", "Weak", "Okay", "Strong", "Excellent"][s];
-  return { score: s as 0|1|2|3|4, label };
+  return { score: s as 0 | 1 | 2 | 3 | 4, label };
 }
-
-
 
 /* =========================================================================
    Delete-account flow (5 steps + 30-day grace)
    ========================================================================= */
 
 function PasswordField({
-  id, label, value, onChange, show, onToggle, error, autoFocus, autoComplete,
+  id,
+  label,
+  value,
+  onChange,
+  show,
+  onToggle,
+  error,
+  autoFocus,
+  autoComplete,
 }: {
-  id: string; label: string; value: string; onChange: (v: string) => void;
-  show: boolean; onToggle: () => void; error?: string;
-  autoFocus?: boolean; autoComplete?: string;
+  id: string;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  show: boolean;
+  onToggle: () => void;
+  error?: string;
+  autoFocus?: boolean;
+  autoComplete?: string;
 }) {
   return (
     <div className="space-y-2">
@@ -558,10 +636,7 @@ function PasswordField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           size="big"
-          className={cn(
-            "pr-11",
-            error && "border-danger/60 focus-visible:border-danger",
-          )}
+          className={cn("pr-11", error && "border-danger/60 focus-visible:border-danger")}
         />
         <button
           type="button"
@@ -612,11 +687,7 @@ function DeleteAccountButton() {
           <Trash2 className="h-3.5 w-3.5" /> Delete account
         </OriginButton>
       )}
-      <DeleteAccountDialog
-        key={openCount}
-        open={open && !scheduledAt}
-        onOpenChange={setOpen}
-      />
+      <DeleteAccountDialog key={openCount} open={open && !scheduledAt} onOpenChange={setOpen} />
     </>
   );
 }
@@ -634,8 +705,12 @@ const DELETE_REASONS: { id: DeleteReason; label: string }[] = [
 ];
 
 function DeleteAccountDialog({
-  open, onOpenChange,
-}: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
   const [step, setStep] = useState<DeleteStep>("reason");
   const [reason, setReason] = useState<DeleteReason | null>(null);
   const [reasonNote, setReasonNote] = useState("");
@@ -670,7 +745,13 @@ function DeleteAccountDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) closeAll(); else onOpenChange(v); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) closeAll();
+        else onOpenChange(v);
+      }}
+    >
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <div className="flex items-center gap-3">
@@ -725,18 +806,10 @@ function DeleteAccountDialog({
                 Step 1 of 2
               </span>
               <div className="flex items-center gap-2">
-                <OriginButton
-                  variant="tertiary"
-                  size="medium"
-                  onClick={() => setStep("feedback")}
-                >
+                <OriginButton variant="tertiary" size="medium" onClick={() => setStep("feedback")}>
                   Skip
                 </OriginButton>
-                <OriginButton
-                  variant="danger"
-                  size="medium"
-                  onClick={() => setStep("feedback")}
-                >
+                <OriginButton variant="danger" size="medium" onClick={() => setStep("feedback")}>
                   Continue
                 </OriginButton>
               </div>
@@ -781,7 +854,9 @@ function DeleteAccountDialog({
                 className="ob-check ob-check--muted"
               />
               <div>
-                <div style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2b2521" }}>
+                <div
+                  style={{ fontWeight: 500, fontSize: 16, lineHeight: "24px", color: "#2b2521" }}
+                >
                   Also cancel my subscription
                 </div>
                 <div style={{ fontSize: 14, lineHeight: "24px", color: "#4a4a46" }}>
@@ -792,7 +867,9 @@ function DeleteAccountDialog({
 
             <div className="rounded-[12px] border border-danger/30 bg-danger p-4">
               <p className="text-sm text-white leading-relaxed">
-                Your account will be deactivated now and permanently deleted after a 30-day grace period. During that window you can restore it by signing back in. After that, your data is gone for good.
+                Your account will be deactivated now and permanently deleted after a 30-day grace
+                period. During that window you can restore it by signing back in. After that, your
+                data is gone for good.
               </p>
             </div>
 
@@ -801,11 +878,7 @@ function DeleteAccountDialog({
                 Step 2 of 2
               </span>
               <div className="flex items-center gap-2">
-                <OriginButton
-                  variant="tertiary"
-                  size="medium"
-                  onClick={closeAll}
-                >
+                <OriginButton variant="tertiary" size="medium" onClick={closeAll}>
                   Cancel
                 </OriginButton>
                 <OriginButton
@@ -832,7 +905,10 @@ function DeleteAccountDialog({
 type CancelReason = "expensive" | "found" | "matches" | "break" | "other";
 
 function CancelSubscriptionDialog({
-  open, onOpenChange, periodEnd, onConfirm,
+  open,
+  onOpenChange,
+  periodEnd,
+  onConfirm,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -844,7 +920,10 @@ function CancelSubscriptionDialog({
 
   const close = () => {
     onOpenChange(false);
-    setTimeout(() => { setReason(null); setOtherReason(""); }, 200);
+    setTimeout(() => {
+      setReason(null);
+      setOtherReason("");
+    }, 200);
   };
 
   const reasons: { id: CancelReason; label: string }[] = [
@@ -856,12 +935,19 @@ function CancelSubscriptionDialog({
   ];
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) close();
+        else onOpenChange(v);
+      }}
+    >
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <DialogTitle>We’re sorry to see you go</DialogTitle>
           <DialogDescription>
-            Before you cancel, tell us what changed. Your feedback helps us make Nook better for the next apartment hunt.
+            Before you cancel, tell us what changed. Your feedback helps us make Nook better for the
+            next apartment hunt.
           </DialogDescription>
         </DialogHeader>
 
@@ -891,15 +977,12 @@ function CancelSubscriptionDialog({
             />
           )}
           <p className="pt-2 text-xs text-charcoal-600 leading-relaxed">
-            You’ll keep Pro until <span className="font-semibold text-charcoal-950">{periodEnd}</span>.
-            Auto-renewal stops and nothing is deleted — you can renew anytime.
+            You’ll keep Pro until{" "}
+            <span className="font-semibold text-charcoal-950">{periodEnd}</span>. Auto-renewal stops
+            and nothing is deleted — you can renew anytime.
           </p>
           <DialogFooter className="justify-end gap-2 pt-4">
-            <OriginButton
-              variant="main"
-              size="medium"
-              onClick={close}
-            >
+            <OriginButton variant="main" size="medium" onClick={close}>
               Keep subscription
             </OriginButton>
             <OriginButton
@@ -922,7 +1005,10 @@ function CancelSubscriptionDialog({
 }
 
 function RenewSubscriptionDialog({
-  open, onOpenChange, periodEnd, onConfirm,
+  open,
+  onOpenChange,
+  periodEnd,
+  onConfirm,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -932,27 +1018,31 @@ function RenewSubscriptionDialog({
   const close = () => onOpenChange(false);
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) close(); else onOpenChange(v); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) close();
+        else onOpenChange(v);
+      }}
+    >
       <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <DialogTitle>Glad to see you back</DialogTitle>
           <DialogDescription>
-            You’re about to keep your Pro subscription active. Your access will continue and auto-renew on{" "}
-            <span className="font-semibold text-charcoal-950">{periodEnd}</span>. You can cancel anytime in Account → Subscription.
+            You’re about to keep your Pro subscription active. Your access will continue and
+            auto-renew on <span className="font-semibold text-charcoal-950">{periodEnd}</span>. You
+            can cancel anytime in Account → Subscription.
           </DialogDescription>
         </DialogHeader>
         <div className="flex items-start gap-3 rounded-[12px] bg-paper-warm border border-border p-4 text-sm text-charcoal-700">
           <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" />
           <span>
-            All your saved searches, filters, and Wren chats stay exactly as you left them — nothing is lost.
+            All your saved searches, filters, and Wren chats stay exactly as you left them — nothing
+            is lost.
           </span>
         </div>
         <DialogFooter className="justify-end gap-[12px] pt-2">
-          <OriginButton
-            variant="tertiary"
-            size="medium"
-            onClick={close}
-          >
+          <OriginButton variant="tertiary" size="medium" onClick={close}>
             Cancel
           </OriginButton>
           <OriginButton
@@ -971,9 +1061,15 @@ function RenewSubscriptionDialog({
   );
 }
 
-
 function PlanCard({
-  plan, currentPlan, activeCycle, trialEndsAt, periodEnd, onCancelRequest, canceled, onRenew,
+  plan,
+  currentPlan,
+  activeCycle,
+  trialEndsAt,
+  periodEnd,
+  onCancelRequest,
+  canceled,
+  onRenew,
 }: {
   plan: PlanDef;
   currentPlan: Plan;
@@ -984,7 +1080,6 @@ function PlanCard({
   canceled?: boolean;
   onRenew?: () => void;
 }) {
-
   const isCurrent = plan.id === currentPlan && (plan.id === "intro" || plan.cycle === activeCycle);
   const priceLabel = plan.id === "intro" ? "$0" : `$${plan.monthly}`;
   const suffix = plan.id === "intro" ? "for 3 days" : "/month";
@@ -994,8 +1089,7 @@ function PlanCard({
   const dur = reduce ? 0 : 0.25;
 
   // Rank: Intro (0) < Pro monthly (1) < Pro annual (2)
-  const rankOf = (p: Plan, c: BillingCycle) =>
-    p === "intro" ? 0 : 1 + (c === "annual" ? 1 : 0);
+  const rankOf = (p: Plan, c: BillingCycle) => (p === "intro" ? 0 : 1 + (c === "annual" ? 1 : 0));
   const targetRank = rankOf(plan.id, plan.cycle);
   const currentRank = rankOf(currentPlan, activeCycle);
   const isUpgrade = targetRank > currentRank;
@@ -1056,12 +1150,10 @@ function PlanCard({
         ? "Renew subscription"
         : `Cancel on ${periodEnd}`
     : isUpgrade
-
       ? plan.cycle === "annual"
         ? "Switch to annual"
         : "Unlock all matches now"
       : "Switch to monthly";
-
 
   const dark = plan.id !== "intro";
   const text = dark ? "#f8f3e1" : "#241c12";
@@ -1083,7 +1175,17 @@ function PlanCard({
         color: text,
       };
 
-  const ctaVariant = isCanceledCurrent ? (plan.cycle === "annual" ? "max" : "premium") : isCurrent && plan.id !== "intro" ? "cancel" : plan.id === "intro" ? "tertiary" : plan.cycle === "annual" ? "max" : "premium";
+  const ctaVariant = isCanceledCurrent
+    ? plan.cycle === "annual"
+      ? "max"
+      : "premium"
+    : isCurrent && plan.id !== "intro"
+      ? "cancel"
+      : plan.id === "intro"
+        ? "tertiary"
+        : plan.cycle === "annual"
+          ? "max"
+          : "premium";
 
   return (
     <div
@@ -1102,7 +1204,11 @@ function PlanCard({
           <motion.span
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={dur === 0 ? { duration: 0 } : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }}
+            transition={
+              dur === 0
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }
+            }
             className="inline-block rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[1.32px] text-white"
             style={{ background: badge.bg, fontFamily: "'Google Sans Flex', sans-serif" }}
           >
@@ -1132,10 +1238,7 @@ function PlanCard({
         </div>
       </div>
 
-      <div
-        className="text-sm opacity-80"
-        style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
-      >
+      <div className="text-sm opacity-80" style={{ fontFamily: "'Google Sans Flex', sans-serif" }}>
         {plan.tagline}
       </div>
 
@@ -1160,7 +1263,10 @@ function PlanCard({
 
       <div
         className="text-[13px] font-semibold"
-        style={{ fontFamily: "'Google Sans Flex', sans-serif", color: dark ? "#D6DEB8" : "#cb4a0a" }}
+        style={{
+          fontFamily: "'Google Sans Flex', sans-serif",
+          color: dark ? "#D6DEB8" : "#cb4a0a",
+        }}
       >
         {billLine}
       </div>
@@ -1199,16 +1305,22 @@ function PlanCard({
                   <div className="space-y-4 text-left">
                     <p>
                       You’re upgrading to{" "}
-                      <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                      ({priceLabel}{suffix}).
+                      <span className="font-semibold text-charcoal-950">{plan.label}</span> (
+                      {priceLabel}
+                      {suffix}).
                     </p>
                     <ul className="flex flex-col gap-2">
                       {plan.features
                         .filter((f) => f.icon === "check")
                         .map((f) => (
-                          <li key={f.text} className="flex items-start gap-2 text-sm text-charcoal-700">
+                          <li
+                            key={f.text}
+                            className="flex items-start gap-2 text-sm text-charcoal-700"
+                          >
                             <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" />
-                            <span className={f.bold ? "font-semibold text-charcoal-950" : ""}>{f.text}</span>
+                            <span className={f.bold ? "font-semibold text-charcoal-950" : ""}>
+                              {f.text}
+                            </span>
                           </li>
                         ))}
                     </ul>
@@ -1221,8 +1333,9 @@ function PlanCard({
                 ) : (
                   <>
                     Your plan will change to{" "}
-                    <span className="font-semibold text-charcoal-950">{plan.label}</span>{" "}
-                    ({priceLabel}{suffix}) at the end of your current billing period.
+                    <span className="font-semibold text-charcoal-950">{plan.label}</span> (
+                    {priceLabel}
+                    {suffix}) at the end of your current billing period.
                   </>
                 )}
               </AlertDialogDescription>
@@ -1256,7 +1369,6 @@ function PlanCard({
         </AlertDialog>
       )}
 
-
       <div
         className="text-xs leading-5"
         style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 0.72 }}
@@ -1272,11 +1384,25 @@ function PlanCard({
             style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 1 }}
           >
             {f.icon === "check" ? (
-              <Check size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: checkColor }} />
+              <Check
+                size={16}
+                strokeWidth={2}
+                style={{ flexShrink: 0, marginTop: 3, color: checkColor }}
+              />
             ) : (
-              <Lock size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: 3, color: lockColor }} />
+              <Lock
+                size={16}
+                strokeWidth={2}
+                style={{ flexShrink: 0, marginTop: 3, color: lockColor }}
+              />
             )}
-            <span style={f.bold ? { fontWeight: 600, color: f.icon === "lock" ? lockColor : text } : undefined}>
+            <span
+              style={
+                f.bold
+                  ? { fontWeight: 600, color: f.icon === "lock" ? lockColor : text }
+                  : undefined
+              }
+            >
               {f.text}
             </span>
           </li>
@@ -1286,7 +1412,13 @@ function PlanCard({
   );
 }
 
-function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange: (tz: string) => void }) {
+function ProfileTimezoneRow({
+  timezone,
+  onChange,
+}: {
+  timezone: string;
+  onChange: (tz: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const display = timezone.replace(/_/g, " ");
 
@@ -1307,25 +1439,26 @@ function ProfileTimezoneRow({ timezone, onChange }: { timezone: string; onChange
             <div className="text-xs text-charcoal-600 mt-0.5">{display}</div>
           </div>
         </div>
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          onClick={() => setOpen(true)}
-        >
+        <OriginButton variant="tertiary" size="medium" onClick={() => setOpen(true)}>
           Change
         </OriginButton>
       </div>
 
       <TimezoneDialog open={open} onOpenChange={setOpen} value={timezone} onChange={onChange} />
-
     </>
   );
 }
 
 function TimezoneDialog({
-  open, onOpenChange, value, onChange,
+  open,
+  onOpenChange,
+  value,
+  onChange,
 }: {
-  open: boolean; onOpenChange: (v: boolean) => void; value: string; onChange: (tz: string) => void;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  value: string;
+  onChange: (tz: string) => void;
 }) {
   const [draft, setDraft] = useState(value);
 
@@ -1337,7 +1470,9 @@ function TimezoneDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">Change timezone</DialogTitle>
+          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">
+            Change timezone
+          </DialogTitle>
           <DialogDescription className="text-sm text-charcoal-600">
             Choose your preferred timezone for alerts and reports.
           </DialogDescription>
@@ -1351,7 +1486,9 @@ function TimezoneDialog({
               className="flex w-full rounded-[12px] border border-black/20 bg-white px-4 text-[14px] font-['Google_Sans_Flex',sans-serif] font-medium text-[#241c12] transition-colors hover:border-black/[0.32] focus:border-[#DF4400] focus:outline-none focus-visible:border-[#DF4400] focus-visible:outline-none focus-visible:ring-0 h-[56px] appearance-none"
             >
               {TIMEZONES.map((tz) => (
-                <option key={tz} value={tz}>{tz.replace(/_/g, " ")}</option>
+                <option key={tz} value={tz}>
+                  {tz.replace(/_/g, " ")}
+                </option>
               ))}
             </select>
             <ChevronRight className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-charcoal-500" />
@@ -1417,7 +1554,6 @@ function useSignInMethods(): SignInMethodsState {
     };
   }, [tick]);
 
-
   const list = identities ?? [];
   const googleIdentity = list.find((i) => i.provider === "google") ?? null;
   const emailIdentity = list.find((i) => i.provider === "email") ?? null;
@@ -1472,11 +1608,8 @@ function SignInMethodRows() {
     }
   }
 
-
   if (methods.loading) {
-    return (
-      <div className="px-5 py-4 text-xs text-charcoal-600">Loading sign-in methods…</div>
-    );
+    return <div className="px-5 py-4 text-xs text-charcoal-600">Loading sign-in methods…</div>;
   }
 
   if (methods.error) {
@@ -1553,7 +1686,6 @@ function SignInMethodRows() {
         )}
       </div>
 
-
       <EnableEmailPasswordDialog
         open={enableOpen}
         onOpenChange={setEnableOpen}
@@ -1577,7 +1709,10 @@ function SignInMethodRows() {
 }
 
 function EnableEmailPasswordDialog({
-  open, onOpenChange, email, onDone,
+  open,
+  onOpenChange,
+  email,
+  onDone,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -1656,7 +1791,10 @@ function EnableEmailPasswordDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div>
-            <label className="block text-sm font-medium text-charcoal-800 mb-2" htmlFor="enable-email">
+            <label
+              className="block text-sm font-medium text-charcoal-800 mb-2"
+              htmlFor="enable-email"
+            >
               Email
             </label>
             <Input id="enable-email" value={email} readOnly disabled size="big" />
@@ -1680,7 +1818,11 @@ function EnableEmailPasswordDialog({
               <div className="flex-1 h-1.5 rounded-full bg-charcoal-200 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
-                  style={{ width: `${(strength.score / 4) * 100}%`, background: strength.score < 2 ? "#E16D5E" : strength.score < 3 ? "#D66C38" : "#6A820A" }}
+                  style={{
+                    width: `${(strength.score / 4) * 100}%`,
+                    background:
+                      strength.score < 2 ? "#E16D5E" : strength.score < 3 ? "#D66C38" : "#6A820A",
+                  }}
                 />
               </div>
               <span className="text-charcoal-600">{strength.label}</span>
@@ -1717,7 +1859,12 @@ function EnableEmailPasswordDialog({
 }
 
 function DisconnectGoogleDialog({
-  open, onOpenChange, hasEmailPassword, identity, onEnable, onDone,
+  open,
+  onOpenChange,
+  hasEmailPassword,
+  identity,
+  onEnable,
+  onDone,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -1785,7 +1932,6 @@ function DisconnectGoogleDialog({
   );
 }
 
-
 /* --------------------------- Security: password change -------------------------- */
 function ProfilePasswordRow() {
   const [open, setOpen] = useState(false);
@@ -1817,27 +1963,29 @@ function ProfilePasswordRow() {
           <div className="min-w-0">
             <div className="text-sm font-semibold text-charcoal-950">Password</div>
             <div className="text-xs text-charcoal-600 mt-0.5">
-              {lastChangedDate ? `Last changed at ${lastChangedDate}` : "Change your account password"}
+              {lastChangedDate
+                ? `Last changed at ${lastChangedDate}`
+                : "Change your account password"}
             </div>
           </div>
         </div>
-        <OriginButton
-          variant="tertiary"
-          size="medium"
-          onClick={() => setOpen(true)}
-        >
+        <OriginButton variant="tertiary" size="medium" onClick={() => setOpen(true)}>
           Change password
         </OriginButton>
       </div>
 
       <ChangePasswordDialog open={open} onOpenChange={setOpen} />
-
     </>
   );
 }
 
-
-function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+function ChangePasswordDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -1907,7 +2055,9 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">Change password</DialogTitle>
+          <DialogTitle className="font-display text-xl font-semibold text-charcoal-950">
+            Change password
+          </DialogTitle>
           <DialogDescription className="text-sm text-charcoal-600">
             Enter your current password and a new one below.
           </DialogDescription>
@@ -1938,7 +2088,11 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
               <div className="flex-1 h-1.5 rounded-full bg-charcoal-200 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
-                  style={{ width: `${(strength.score / 4) * 100}%`, background: strength.score < 2 ? "#E16D5E" : strength.score < 3 ? "#D66C38" : "#6A820A" }}
+                  style={{
+                    width: `${(strength.score / 4) * 100}%`,
+                    background:
+                      strength.score < 2 ? "#E16D5E" : strength.score < 3 ? "#D66C38" : "#6A820A",
+                  }}
                 />
               </div>
               <span className="text-charcoal-600">{strength.label}</span>
@@ -1954,9 +2108,7 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
             error={confirm.length > 0 && confirm !== next ? "Passwords do not match" : undefined}
             autoComplete="new-password"
           />
-          {error && (
-            <p className="text-sm text-danger">{error}</p>
-          )}
+          {error && <p className="text-sm text-danger">{error}</p>}
           <DialogFooter className="pt-2">
             <OriginButton
               type="submit"
@@ -1976,7 +2128,13 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
 }
 
 function SubscriptionSection({
-  plan, trialActive, trialEndsAt, currentPlan, activeCycle, accessStatus, pastDueSince,
+  plan,
+  trialActive,
+  trialEndsAt,
+  currentPlan,
+  activeCycle,
+  accessStatus,
+  pastDueSince,
 }: {
   plan: Plan;
   trialActive: boolean;
@@ -2042,9 +2200,14 @@ function SubscriptionSection({
   return (
     <>
       {needsRestart && (
-        <section id="subscription" className="mb-8 rounded-card border border-[#d66c38]/35 bg-[#fff0e8] p-5">
+        <section
+          id="subscription"
+          className="mb-8 rounded-card border border-[#d66c38]/35 bg-[#fff0e8] p-5"
+        >
           <h2 className="font-display text-xl font-semibold text-charcoal-950">
-            {dunningCanceled ? "Your alerts are off — we couldn't charge your card." : "Turn your alerts back on."}
+            {dunningCanceled
+              ? "Your alerts are off — we couldn't charge your card."
+              : "Turn your alerts back on."}
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-charcoal-700">
             {dunningCanceled
@@ -2110,13 +2273,11 @@ function SubscriptionSection({
         </div>
       </section>
 
-
       <PaymentMethodSection plan={plan} />
 
       <PaymentHistorySection plan={plan} cycle={activeCycle} currentPlan={currentPlan} />
     </>
   );
-
 }
 
 /* ------------------------- Payment method (Stripe) ------------------------- */
@@ -2125,34 +2286,20 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
   const hasCard = plan !== "intro";
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">
-        Payment method
-      </h2>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Payment method</h2>
       <div className="rounded-card bg-paper-warm border border-border">
         <div className="px-5 py-4 flex items-center justify-between gap-4">
           {hasCard ? (
             <div className="flex items-center gap-3 min-w-0">
-              <img
-                src={cardAsset.url}
-                alt="Payment card"
-                className="h-10 w-auto object-contain"
-              />
+              <img src={cardAsset.url} alt="Payment card" className="h-10 w-auto object-contain" />
               <div className="min-w-0">
-                <div className="text-sm font-semibold text-charcoal-950">
-                  Visa •••• 4242
-                </div>
-                <div className="text-xs text-charcoal-600 mt-0.5">
-                  Expires 04 / 2029 · Default
-                </div>
+                <div className="text-sm font-semibold text-charcoal-950">Visa •••• 4242</div>
+                <div className="text-xs text-charcoal-600 mt-0.5">Expires 04 / 2029 · Default</div>
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-3 min-w-0">
-              <img
-                src={cardAsset.url}
-                alt="Payment card"
-                className="h-10 w-auto object-contain"
-              />
+              <img src={cardAsset.url} alt="Payment card" className="h-10 w-auto object-contain" />
 
               <div className="min-w-0">
                 <div className="text-sm font-semibold text-charcoal-950">No card on file</div>
@@ -2183,7 +2330,9 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
 /* --------------------------- Payment history ------------------------------ */
 
 function PaymentHistorySection({
-  plan, cycle, currentPlan,
+  plan,
+  cycle,
+  currentPlan,
 }: {
   plan: Plan;
   cycle: BillingCycle;
@@ -2191,10 +2340,7 @@ function PaymentHistorySection({
 }) {
   const invoices = useMemo(() => {
     if (plan === "intro") return [];
-    const amount =
-      cycle === "annual"
-        ? currentPlan.annual
-        : currentPlan.monthly;
+    const amount = cycle === "annual" ? currentPlan.annual : currentPlan.monthly;
     const count = cycle === "annual" ? 2 : 4;
     const stepMonths = cycle === "annual" ? 12 : 1;
     return Array.from({ length: count }, (_, i) => {
@@ -2211,9 +2357,7 @@ function PaymentHistorySection({
 
   return (
     <section>
-      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
-        Payment history
-      </h2>
+      <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">Payment history</h2>
       <p className="text-xs text-charcoal-600 mb-4">
         Receipts for every charge. Invoices are also emailed to you.
       </p>
@@ -2237,9 +2381,7 @@ function PaymentHistorySection({
                 </div>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-sm font-semibold text-charcoal-950">
-                  ${inv.amount}
-                </span>
+                <span className="text-sm font-semibold text-charcoal-950">${inv.amount}</span>
                 <OriginButton
                   variant="tertiary"
                   size="medium"
@@ -2260,5 +2402,3 @@ function PaymentHistorySection({
     </section>
   );
 }
-
-

@@ -1,4 +1,10 @@
-import { createFileRoute, Outlet, redirect, isRedirect, useRouterState } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  isRedirect,
+  useRouterState,
+} from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanner";
@@ -80,7 +86,6 @@ export const Route = createFileRoute("/_authenticated")({
       // section distinguishes voluntary churn from dunning cancellation.
       throw redirect({ to: "/account", hash: "subscription" });
     }
-
 
     if (!access.onboarded) {
       throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });

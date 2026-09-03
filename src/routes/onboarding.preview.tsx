@@ -19,17 +19,11 @@ import { type SampleListing } from "@/data/sampleListings";
 import { useCityListings } from "@/lib/queries/listings";
 import { OriginButton } from "@/components/ui/origin-button";
 import { toast } from "sonner";
-import {
-  OB_SUB,
-  OB_STEP_VARIANTS,
-  OB_SECTION_VARIANTS,
-} from "@/components/onboarding/stepStyles";
-
+import { OB_SUB, OB_STEP_VARIANTS, OB_SECTION_VARIANTS } from "@/components/onboarding/stepStyles";
 
 export const Route = createFileRoute("/onboarding/preview")({
   component: SamplePreview,
 });
-
 
 const PREVIEW_H1: React.CSSProperties = {
   fontWeight: 700,
@@ -45,8 +39,7 @@ function SamplePreview() {
   const commit = useServerFn(commitOnboarding);
   const hasSession = useHasSession();
   const accessQ = useQuery({ ...accessQueryOptions(), enabled: hasSession, retry: false });
-  const subscribed =
-    accessQ.data?.status === "active" || accessQ.data?.status === "trialing";
+  const subscribed = accessQ.data?.status === "active" || accessQ.data?.status === "trialing";
   const reduce = useReducedMotion();
   const [busy, setBusy] = useState(false);
   const { city, budget, neighborhoods } = useOnboardingStore();
@@ -55,10 +48,7 @@ function SamplePreview() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-
   const allListings: SampleListing[] = useCityListings(city);
-
-
 
   // Filter by budget range; if no neighborhoods picked, ignore the area filter.
   const matched = useMemo(() => {
@@ -82,9 +72,7 @@ function SamplePreview() {
 
   const pins = useMemo(
     () =>
-      matched
-        .filter((l) => l.coords)
-        .map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
+      matched.filter((l) => l.coords).map((l) => ({ id: l.id, coords: l.coords!, rent: l.rent })),
     [matched],
   );
 
@@ -124,7 +112,6 @@ function SamplePreview() {
             card={popupCard}
             className="relative h-full w-full overflow-hidden rounded-[20px] border border-black/20 bg-[#f5f2ea]"
           />
-
         )}
       </aside>
 
@@ -140,20 +127,18 @@ function SamplePreview() {
           <OnboardingHeader fixed={false} />
         </div>
 
-
         <div className="mx-auto flex h-full max-w-[760px] flex-col">
           <div className="flex-1">
             <motion.header variants={itemVariants} className="p-2">
               <h1 className="font-display" style={PREVIEW_H1}>
-                You'd have gotten{" "}
-                <span className="text-brand-logo">{matched.length}</span> match
+                You'd have gotten <span className="text-brand-logo">{matched.length}</span> match
                 {matched.length === 1 ? "" : "es"} in your area this past week
               </h1>
               <p style={OB_SUB}>
-                This is only a preview. You will see all matches with links inside your account and in your inbox
+                This is only a preview. You will see all matches with links inside your account and
+                in your inbox
               </p>
             </motion.header>
-
 
             {matched.length === 0 ? (
               <motion.div
@@ -165,7 +150,8 @@ function SamplePreview() {
                   No sample matches in {cityConfig?.displayName ?? "your area"} for this budget.
                 </p>
                 <p className="mt-2 text-xs text-charcoal-500">
-                  Real listings hit your inbox the moment they appear — even when our sample pool is thin.
+                  Real listings hit your inbox the moment they appear — even when our sample pool is
+                  thin.
                 </p>
               </motion.div>
             ) : (
@@ -184,7 +170,6 @@ function SamplePreview() {
                       onSelect={() => setActiveId(listing.id)}
                       onHover={setHoveredId}
                     />
-
                   ))}
                 </motion.div>
               </>
@@ -202,7 +187,8 @@ function SamplePreview() {
                     How we vet {cityConfig.displayName} listings
                   </div>
                   <p className="text-sm text-charcoal-700">
-                    Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")} records before it reaches your inbox.
+                    Every match is cross-checked against {cityConfig.buildingDataSources.join(", ")}{" "}
+                    records before it reaches your inbox.
                   </p>
                 </div>
               </motion.div>
@@ -248,7 +234,6 @@ function SamplePreview() {
               {subscribed ? "Start my apartment search" : "See my plan options"}{" "}
               <ArrowRight style={{ width: 16, height: 16 }} />
             </OriginButton>
-
           </div>
         </div>
       </motion.section>
