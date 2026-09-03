@@ -2,9 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getDefaultSearchName } from "@/lib/store";
 import { accessQueryKey } from "@/lib/queries/access";
-import type { commitOnboarding } from "@/lib/onboarding.functions";
-
-type CommitFn = (opts: { data: Parameters<typeof commitOnboarding>[0]["data"] }) => Promise<{
+type CommitFn = (opts: { data: unknown }) => Promise<{
   searchId: string | null;
   completedAt: string | null;
 }>;

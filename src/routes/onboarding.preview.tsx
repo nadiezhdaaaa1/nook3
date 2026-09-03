@@ -230,7 +230,7 @@ function SamplePreview() {
                   try {
                     // Paid already: this is where the onboarding answers become
                     // a real search, committed together with `completed_at`.
-                    await commitOnboardingFromStore(commit as never, qc);
+                    await commitOnboardingFromStore(commit as never, queryClient);
                     navigate({ to: "/home", replace: true });
                   } catch (e) {
                     toast.error("We couldn't finish setting up", {
