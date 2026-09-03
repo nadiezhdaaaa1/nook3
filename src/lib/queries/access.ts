@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getAccessState, type AccessState } from "@/lib/profile.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 export const accessQueryKey = ["access-state"] as const;
 
@@ -11,7 +12,19 @@ export const accessQueryKey = ["access-state"] as const;
 export const accessQueryOptions = () =>
   queryOptions({
     queryKey: accessQueryKey,
-    queryFn: () => getAccessState() as Promise<AccessState>,
+    queryFn: async () => {
+      // getAccessState requires a bearer token. A locally cached session can
+      // already be gone (signed out, revoked, or a deleted user whose refresh
+      // failed) while a component still thinks it has one — calling anyway
+      // throws "Unauthorized: No authorization header provided" and blanks the
+      // screen. Fail with a recognizable unauthorized error instead, which the
+      // `_authenticated` gate turns into a /login redirect.
+      const { data } = await supabase.auth.getSession();
+      if (!data.session?.access_token) {
+        throw new Error("Unauthorized: no active session");
+      }
+      return (await getAccessState()) as AccessState;
+    },
     // The gate turns an unauthorized result into a /login redirect itself.
     staleTime: 30_000,
     retry: false,
