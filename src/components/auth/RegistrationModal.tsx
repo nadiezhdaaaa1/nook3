@@ -71,8 +71,24 @@ export function RegistrationModal({
   const [resetSent, setResetSent] = useState(false);
   const [referralCode, setReferralCode] = useState<string | null>(null);
 
+  /**
+   * The commit marker is only meaningful while a full-page OAuth/email redirect
+   * is in flight. Any other outcome must clear it, or a later unrelated pass
+   * through /auth/callback in this tab would commit onboarding again.
+   */
+  const clearCommitMarker = () => {
+    try {
+      sessionStorage.removeItem("nook:postAuthCommitOnboarding");
+    } catch {
+      /* ignore */
+    }
+  };
+
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      clearCommitMarker();
+      return;
+    }
     setReferralCode(getReferralAttribution());
     setMode("signup");
     setSent(false);
@@ -82,10 +98,12 @@ export function RegistrationModal({
   }, [open]);
 
   const succeed = () => {
+    clearCommitMarker();
     trackEvent(ANALYTICS_EVENTS.registrationModalAuthed, { source, plan, cycle, mode });
     onOpenChange(false);
     onAuthed();
   };
+
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
