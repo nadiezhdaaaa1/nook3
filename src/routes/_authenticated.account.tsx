@@ -2204,6 +2204,7 @@ function SubscriptionSection({
   const visiblePlans = PLANS.filter((p) => visiblePlanKeys.includes(p.key));
   const dunningCanceled = accessStatus === "canceled" && Boolean(pastDueSince);
   const needsRestart = accessStatus === "none" || accessStatus === "canceled";
+  const firstPurchase = needsRestart && !hasEverSubscribed && !dunningCanceled;
 
   return (
     <>
@@ -2215,25 +2216,34 @@ function SubscriptionSection({
           <h2 className="font-display text-xl font-semibold text-charcoal-950">
             {dunningCanceled
               ? "Your alerts are off — we couldn't charge your card."
-              : "Turn your alerts back on."}
+              : firstPurchase
+                ? "Start your plan to switch your alerts on."
+                : "Turn your alerts back on."}
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-charcoal-700">
             {dunningCanceled
               ? "We tried your card ending 4242 a few times over the past week and couldn't take payment, so we've switched your alerts off. Nothing's lost — your searches are exactly where you left them."
-              : "Your searches are still here. Restart your plan and we'll start sending matches again."}
+              : firstPurchase
+                ? "Your search is saved and ready. Pick up where you left off and we'll start sending matches the moment they're listed."
+                : "Your searches are still here. Restart your plan and we'll start sending matches again."}
           </p>
           <OriginButton
             className="mt-4"
             variant="main"
             size="medium"
             onClick={() => {
-              useOnboardingStore.getState().set("selectedPlan", plan);
-              useOnboardingStore.getState().set("billingCycle", activeCycle);
-              window.location.href = "/checkout/mock";
+              useOnboardingStore.getState().set("selectedPlan", accessPlan ?? plan);
+              useOnboardingStore.getState().set("billingCycle", accessCycle ?? activeCycle);
+              navigate({ to: "/checkout/mock" });
             }}
           >
-            {dunningCanceled ? "Restart my alerts" : "Turn my alerts back on"}
+            {dunningCanceled
+              ? "Restart my alerts"
+              : firstPurchase
+                ? "Pay and start watching"
+                : "Turn my alerts back on"}
           </OriginButton>
+
         </section>
       )}
       <RenewSubscriptionDialog
