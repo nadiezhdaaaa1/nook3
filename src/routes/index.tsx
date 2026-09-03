@@ -69,7 +69,7 @@ function LandingPage() {
   useEffect(() => {
     if (!plan || funnelHandled.current) return;
     funnelHandled.current = true;
-    const billingCycle = cycle ?? (plan === "pro" ? "monthly" : "monthly");
+    const billingCycle = cycle ?? "monthly";
     void navigate({ to: "/", search: {}, replace: true }).then(() =>
       funnelFlow.selectPlan({ plan, billingCycle, trial: plan === "intro" }),
     );
