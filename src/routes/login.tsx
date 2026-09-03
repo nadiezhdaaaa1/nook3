@@ -81,7 +81,9 @@ function LoginPage() {
       marketing: false,
       source: "signin_google",
       postAuthPath: redirectTo ?? "/home",
+      isSignUp: false,
     });
+
     if (out.kind === "redirected") return;
     setSubmitting(false);
     if (out.kind === "error") {
