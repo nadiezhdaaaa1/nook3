@@ -248,6 +248,10 @@ function AccountPage() {
         activeCycle={activeCycle}
         accessStatus={accessQ.data?.status ?? "none"}
         pastDueSince={accessQ.data?.pastDueSince ?? null}
+        hasEverSubscribed={accessQ.data?.hasEverSubscribed ?? false}
+        accessPlan={accessQ.data?.plan ?? null}
+        accessCycle={accessQ.data?.billingCycle ?? null}
+
       />
 
       {/* Communications */}
