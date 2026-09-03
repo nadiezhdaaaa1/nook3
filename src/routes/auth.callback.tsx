@@ -1,7 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { commitOnboarding } from "@/lib/onboarding.functions";
+import { commitOnboardingFromStore } from "@/lib/onboarding/commit";
 
 export const Route = createFileRoute("/auth/callback")({
   ssr: false,
@@ -23,12 +27,21 @@ function safePath(value: string | null): string {
 
 function AuthCallback() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const commit = useServerFn(commitOnboarding);
 
   useEffect(() => {
     let cancelled = false;
     const target = safePath(
       typeof sessionStorage !== "undefined" ? sessionStorage.getItem("nook:postAuthPath") : null,
     );
+    const shouldCommitOnboarding = (() => {
+      try {
+        return sessionStorage.getItem("nook:postAuthCommitOnboarding") === "1";
+      } catch {
+        return false;
+      }
+    })();
 
     const expected = (() => {
       try {
@@ -52,8 +65,19 @@ function AuthCallback() {
       navigate({ to: "/signup", search: { redirect: target, lockEmail: 1 }, replace: true });
     };
 
-    const go = () => {
+    const go = async () => {
       if (cancelled) return;
+      if (shouldCommitOnboarding) {
+        try {
+          await commitOnboardingFromStore(commit as never, queryClient);
+          sessionStorage.removeItem("nook:postAuthCommitOnboarding");
+        } catch (e) {
+          toast.error("We couldn't finish setting up", {
+            description: e instanceof Error ? e.message : "Please try again.",
+          });
+          return;
+        }
+      }
       try {
         sessionStorage.removeItem("nook:postAuthPath");
       } catch {

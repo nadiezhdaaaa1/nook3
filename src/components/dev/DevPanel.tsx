@@ -496,7 +496,7 @@ export function DevPanel() {
                   onboarded: true,
                   hasEverSubscribed: true,
                 },
-                "/onboarding/success",
+                "/account#subscription",
               )
             }
           >

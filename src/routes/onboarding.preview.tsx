@@ -6,20 +6,25 @@ import { ShieldCheck, ArrowRight } from "lucide-react";
 import { SampleListingsMap } from "@/components/onboarding/SampleListingsMap";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { OnboardingHeader } from "@/components/onboarding/OnboardingHeader";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useHasSession } from "@/lib/queries/useHasSession";
 import { accessQueryOptions } from "@/lib/queries/access";
+import { useServerFn } from "@tanstack/react-start";
+import { commitOnboarding } from "@/lib/onboarding.functions";
+import { commitOnboardingFromStore } from "@/lib/onboarding/commit";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { useOnboardingStore } from "@/lib/onboarding/store";
 import { getCity } from "@/data/cities";
 import { type SampleListing } from "@/data/sampleListings";
 import { useCityListings } from "@/lib/queries/listings";
 import { OriginButton } from "@/components/ui/origin-button";
+import { toast } from "sonner";
 import {
   OB_SUB,
   OB_STEP_VARIANTS,
   OB_SECTION_VARIANTS,
 } from "@/components/onboarding/stepStyles";
+
 
 export const Route = createFileRoute("/onboarding/preview")({
   component: SamplePreview,
@@ -36,12 +41,16 @@ const PREVIEW_H1: React.CSSProperties = {
 
 function SamplePreview() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const commit = useServerFn(commitOnboarding);
   const hasSession = useHasSession();
   const accessQ = useQuery({ ...accessQueryOptions(), enabled: hasSession, retry: false });
   const subscribed =
     accessQ.data?.status === "active" || accessQ.data?.status === "trialing";
   const reduce = useReducedMotion();
+  const [busy, setBusy] = useState(false);
   const { city, budget, neighborhoods } = useOnboardingStore();
+
   const cityConfig = getCity(city);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -213,10 +222,23 @@ function SamplePreview() {
               variant="main"
               size="big"
               className="w-full"
-              onClick={() => {
+              disabled={busy}
+              onClick={async () => {
                 if (subscribed) {
                   trackEvent(ANALYTICS_EVENTS.previewCtaStartSearch);
-                  navigate({ to: "/onboarding/success" });
+                  setBusy(true);
+                  try {
+                    // Paid already: this is where the onboarding answers become
+                    // a real search, committed together with `completed_at`.
+                    await commitOnboardingFromStore(commit as never, qc);
+                    navigate({ to: "/home", replace: true });
+                  } catch (e) {
+                    toast.error("We couldn't finish setting up", {
+                      description: e instanceof Error ? e.message : "Please try again.",
+                    });
+                  } finally {
+                    setBusy(false);
+                  }
                   return;
                 }
                 trackEvent(ANALYTICS_EVENTS.previewCtaSeePlans);
@@ -226,6 +248,7 @@ function SamplePreview() {
               {subscribed ? "Start my apartment search" : "See my plan options"}{" "}
               <ArrowRight style={{ width: 16, height: 16 }} />
             </OriginButton>
+
           </div>
         </div>
       </motion.section>

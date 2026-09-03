@@ -39,6 +39,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useUpdatePlanMutation } from "@/lib/queries/billing";
 import { useUpdateProfileMutation, useScheduleAccountDeletionMutation, useCancelAccountDeletionMutation, useSetSubscriptionCanceledMutation, profileQueryOptions } from "@/lib/queries/profile";
+import { accessQueryOptions } from "@/lib/queries/access";
 import { useQuery } from "@tanstack/react-query";
 import { OriginButton } from "@/components/ui/origin-button";
 import { Input } from "@/components/ui/input";
@@ -129,10 +130,11 @@ function AccountPage() {
   const searches = useAppStore((s) => s.searches);
   const updateProfile = useAppStore((s) => s.updateProfile);
 
-  const plan: Plan = user?.plan ?? "intro";
+  const accessQ = useQuery({ ...accessQueryOptions(), retry: false });
+  const plan: Plan = accessQ.data?.plan ?? user?.plan ?? "intro";
   const trialActive = user?.trialActive ?? false;
   const trialEndsAt = user?.trialEndsAt;
-  const activeCycle: BillingCycle = user?.billingCycle ?? "monthly";
+  const activeCycle: BillingCycle = accessQ.data?.billingCycle ?? user?.billingCycle ?? "monthly";
 
   // Profile editable fields (sourced from onboarding store + user)
   const [timezone, setTimezone] = useState(user?.timezone || "America/New_York");
@@ -212,6 +214,8 @@ function AccountPage() {
         trialEndsAt={trialEndsAt}
         currentPlan={currentPlan}
         activeCycle={activeCycle}
+        accessStatus={accessQ.data?.status ?? "none"}
+        pastDueSince={accessQ.data?.pastDueSince ?? null}
       />
 
 
@@ -1972,13 +1976,15 @@ function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenCha
 }
 
 function SubscriptionSection({
-  plan, trialActive, trialEndsAt, currentPlan, activeCycle,
+  plan, trialActive, trialEndsAt, currentPlan, activeCycle, accessStatus, pastDueSince,
 }: {
   plan: Plan;
   trialActive: boolean;
   trialEndsAt?: string;
   currentPlan: PlanDef;
   activeCycle: BillingCycle;
+  accessStatus: "none" | "trialing" | "active" | "past_due" | "canceled";
+  pastDueSince: string | null;
 }) {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [renewOpen, setRenewOpen] = useState(false);
@@ -2030,9 +2036,35 @@ function SubscriptionSection({
   }, [plan, activeCycle]);
 
   const visiblePlans = PLANS.filter((p) => visiblePlanKeys.includes(p.key));
+  const dunningCanceled = accessStatus === "canceled" && Boolean(pastDueSince);
+  const needsRestart = accessStatus === "none" || accessStatus === "canceled";
 
   return (
     <>
+      {needsRestart && (
+        <section id="subscription" className="mb-8 rounded-card border border-[#d66c38]/35 bg-[#fff0e8] p-5">
+          <h2 className="font-display text-xl font-semibold text-charcoal-950">
+            {dunningCanceled ? "Your alerts are off — we couldn't charge your card." : "Turn your alerts back on."}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-charcoal-700">
+            {dunningCanceled
+              ? "We tried your card ending 4242 a few times over the past week and couldn't take payment, so we've switched your alerts off. Nothing's lost — your searches are exactly where you left them."
+              : "Your searches are still here. Restart your plan and we'll start sending matches again."}
+          </p>
+          <OriginButton
+            className="mt-4"
+            variant="main"
+            size="medium"
+            onClick={() => {
+              useOnboardingStore.getState().set("selectedPlan", plan);
+              useOnboardingStore.getState().set("billingCycle", activeCycle);
+              window.location.href = "/checkout/mock";
+            }}
+          >
+            {dunningCanceled ? "Restart my alerts" : "Turn my alerts back on"}
+          </OriginButton>
+        </section>
+      )}
       <RenewSubscriptionDialog
         open={renewOpen}
         onOpenChange={setRenewOpen}

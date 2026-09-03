@@ -102,7 +102,7 @@ export function useDbSync() {
 
   // 1b) NOTE: onboarding answers and `completed_at` are no longer written
   // here. Both are committed together by `commitOnboarding` from the
-  // /onboarding/success CTA, so merely loading the app can't create a search.
+  // pricing handoff or the subscribed preview CTA, so loading the app can't create a search.
 
   // 1c) Reconcile searches that were created locally but never persisted
   // (non-uuid ids). Without a real row id, saved/disliked listings can't be

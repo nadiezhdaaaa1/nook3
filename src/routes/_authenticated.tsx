@@ -69,21 +69,18 @@ export const Route = createFileRoute("/_authenticated")({
     // reached through an emailed sign-in token). Their next step is setting up
     // credentials on the account that already exists.
     if (!access.credentials) {
-      throw redirect({ to: "/onboarding/success" });
+      throw redirect({ to: "/signup", search: { lockEmail: 1 } });
     }
 
     if (!access.accessAllowed) {
       if (!access.onboarded) {
         throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
       }
-      // A dunning-caused cancellation gets the "alerts are off" screen
-      // (Success variant E), not the pricing pitch — they never chose to leave.
-      throw redirect(
-        access.status === "canceled" && access.pastDueSince
-          ? { to: "/onboarding/success" }
-          : { to: "/onboarding/pricing" },
-      );
+      // All onboarded no-access cases belong in Account. The subscription
+      // section distinguishes voluntary churn from dunning cancellation.
+      throw redirect({ to: "/account", hash: "subscription" });
     }
+
 
     if (!access.onboarded) {
       throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
