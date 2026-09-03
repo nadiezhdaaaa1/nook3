@@ -121,7 +121,7 @@ function AuthCallback() {
       cancelled = true;
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [commit, navigate, queryClient]);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-paper px-6">
