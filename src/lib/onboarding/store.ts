@@ -70,11 +70,12 @@ export interface OnboardingState {
   editingSearchId: string | null;
 
   /**
-   * True once these onboarding answers have been persisted as an account's
-   * first Search. Prevents the hand-off from re-inserting a search after the
-   * user deletes their last one.
+   * The user id whose first Search these onboarding answers were persisted as.
+   * For that SAME account it prevents the hand-off from re-inserting a search
+   * after the user deletes their last one. Scoped per account so a different
+   * (or newly registered) user in the same browser still gets a search.
    */
-  handoffCompleted: boolean;
+  handoffCompletedFor: string | null;
 
   // Move-out
   moveOut?: MoveOutInfo;
@@ -91,7 +92,7 @@ export interface OnboardingActions {
   cycleTransit: (id: string) => void;
   setTransit: (id: string, state: TriState | null) => void;
   setEditingSearch: (id: string | null) => void;
-  setHandoffCompleted: (v: boolean) => void;
+  setHandoffCompletedFor: (userId: string | null) => void;
   reset: () => void;
 }
 
@@ -117,7 +118,7 @@ const initial: OnboardingState = {
   lastStep: 1,
   completedAt: null,
   editingSearchId: null,
-  handoffCompleted: false,
+  handoffCompletedFor: null,
 };
 
 
@@ -183,14 +184,14 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
         set({ transit: { ...get().transit, lines } });
       },
       setEditingSearch: (id) => set({ editingSearchId: id }),
-      setHandoffCompleted: (v) => set({ handoffCompleted: v }),
+      setHandoffCompletedFor: (userId) => set({ handoffCompletedFor: userId }),
       // Clearing the buffer must not clear the hand-off flag, otherwise the
       // answers could be re-persisted as a brand-new search.
-      reset: () => set({ ...initial, handoffCompleted: get().handoffCompleted }),
+      reset: () => set({ ...initial, handoffCompletedFor: get().handoffCompletedFor }),
     }),
     {
       name: "nook.onboarding.v1",
-      version: 4,
+      version: 5,
       migrate: (persisted: unknown, version) => {
         const s = (persisted ?? {}) as Partial<OnboardingState> & {
           budget?: unknown;
@@ -207,6 +208,13 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
           if ((s.selectedPlan as unknown) === "free") s.selectedPlan = "intro";
           else if ((s.selectedPlan as unknown) === "premium" || (s.selectedPlan as unknown) === "max") s.selectedPlan = "pro";
           else if (s.selectedPlan !== "intro" && s.selectedPlan !== "pro") s.selectedPlan = null;
+        }
+        if (version < 5) {
+          // `handoffCompleted` was browser-global, so it leaked across accounts.
+          // Drop it: re-running the commit is safe because `commit_onboarding`
+          // is a no-op for the search when the account already owns one.
+          delete (s as { handoffCompleted?: unknown }).handoffCompleted;
+          s.handoffCompletedFor = null;
         }
         return s as OnboardingState;
       },

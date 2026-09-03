@@ -89,7 +89,9 @@ export function useDbSync() {
     hydratedRef.current = true;
     // The account already owns searches, so the onboarding answers were
     // already handed off — never re-insert them later.
-    if (rows.length > 0) useOnboardingStore.getState().setHandoffCompleted(true);
+    const ownerId = (profileQ.data as { id?: string } | undefined)?.id ?? null;
+    if (rows.length > 0 && ownerId)
+      useOnboardingStore.getState().setHandoffCompletedFor(ownerId);
   }, [searchesQ.data, profileQ.data]);
 
   // 1a) Keep deletion / subscription state fresh after hydration: any later
