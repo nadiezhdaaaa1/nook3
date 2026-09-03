@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import googleIcon from "@/assets/Google_Favicon_2025.svg.asset.json";
 import {
   getReferralAttribution,
+  sendPasswordResetEmail,
   signInWithEmailPassword,
   signUpWithEmailPassword,
   startGoogleOAuth,

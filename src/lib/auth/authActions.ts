@@ -81,6 +81,15 @@ export async function signInWithEmailPassword(
   return error ? { error: error.message } : {};
 }
 
+export async function sendPasswordResetEmail(email: string): Promise<{ error?: string }> {
+  const parsed = emailSchema.safeParse(email);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Enter a valid email address." };
+  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+  return error ? { error: error.message } : {};
+}
+
 /** Sets the password on the already-signed-in (locked email) account. */
 export async function setPasswordForCurrentUser(
   password: string,

@@ -65,13 +65,16 @@ function AuthCallback() {
       navigate({ to: "/signup", search: { redirect: target, lockEmail: 1 }, replace: true });
     };
 
+    let handling = false;
     const go = async () => {
-      if (cancelled) return;
+      if (cancelled || handling) return;
+      handling = true;
       if (shouldCommitOnboarding) {
         try {
           await commitOnboardingFromStore(commit as never, queryClient);
           sessionStorage.removeItem("nook:postAuthCommitOnboarding");
         } catch (e) {
+          handling = false;
           toast.error("We couldn't finish setting up", {
             description: e instanceof Error ? e.message : "Please try again.",
           });
