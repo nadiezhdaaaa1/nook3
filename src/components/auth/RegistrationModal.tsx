@@ -89,10 +89,11 @@ export function RegistrationModal({
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const { errors: credErrors, email: cleanEmail, password: cleanPassword } = validateCredentials(
-      email,
-      password,
-    );
+    const {
+      errors: credErrors,
+      email: cleanEmail,
+      password: cleanPassword,
+    } = validateCredentials(email, password);
     const next: typeof errors = { ...credErrors };
     if (mode === "signup" && !acceptTerms) {
       next.terms = "Please accept the Terms and Privacy Policy to continue.";
@@ -116,7 +117,8 @@ export function RegistrationModal({
 
     try {
       sessionStorage.setItem("nook:postAuthPath", postAuthPath);
-      if (source === "onboarding_pricing") sessionStorage.setItem("nook:postAuthCommitOnboarding", "1");
+      if (source === "onboarding_pricing")
+        sessionStorage.setItem("nook:postAuthCommitOnboarding", "1");
     } catch {
       /* ignore */
     }

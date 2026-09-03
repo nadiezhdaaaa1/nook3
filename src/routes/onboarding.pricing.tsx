@@ -23,10 +23,7 @@ function PricingScreen() {
     });
 
   return (
-    <div
-      className="pricing-full-width"
-      style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}
-    >
+    <div className="pricing-full-width" style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}>
       <PricingThreeTiers
         cycle={billingCycle}
         onCycleChange={(c) => set("billingCycle", c)}

@@ -31,10 +31,7 @@ const CHECKOUT_PATH = "/checkout/mock";
  * all leave the choice intact. A visitor who already has an active or trialing
  * subscription is sent to Account, never to a second checkout.
  */
-export function usePlanFlow(
-  source: RegistrationSource,
-  opts?: { commitBeforeCheckout?: boolean },
-) {
+export function usePlanFlow(source: RegistrationSource, opts?: { commitBeforeCheckout?: boolean }) {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const hasSession = useHasSession();
@@ -45,8 +42,7 @@ export function usePlanFlow(
   const [modalOpen, setModalOpen] = useState(false);
   const [intent, setIntent] = useState<PlanIntent | null>(null);
 
-  const subscribed =
-    accessQ.data?.status === "active" || accessQ.data?.status === "trialing";
+  const subscribed = accessQ.data?.status === "active" || accessQ.data?.status === "trialing";
 
   const maybeCommit = useCallback(async () => {
     if (!opts?.commitBeforeCheckout) return true;
@@ -112,7 +108,17 @@ export function usePlanFlow(
 
       await goCheckout(i);
     },
-    [accessQ, goCheckout, hasSession, maybeCommit, navigate, opts?.commitBeforeCheckout, set, source, subscribed],
+    [
+      accessQ,
+      goCheckout,
+      hasSession,
+      maybeCommit,
+      navigate,
+      opts?.commitBeforeCheckout,
+      set,
+      source,
+      subscribed,
+    ],
   );
 
   const modalProps = {
