@@ -72,15 +72,20 @@ function AuthCallback() {
       if (shouldCommitOnboarding) {
         try {
           await commitOnboardingFromStore(commit as never, queryClient);
-          sessionStorage.removeItem("nook:postAuthCommitOnboarding");
         } catch (e) {
-          handling = false;
+          // Never strand the user on the spinner: land them anyway and let the
+          // destination surface the problem.
           toast.error("We couldn't finish setting up", {
-            description: e instanceof Error ? e.message : "Please try again.",
+            description: e instanceof Error ? e.message : "Please try again from your account.",
           });
-          return;
+        }
+        try {
+          sessionStorage.removeItem("nook:postAuthCommitOnboarding");
+        } catch {
+          /* ignore */
         }
       }
+
       try {
         sessionStorage.removeItem("nook:postAuthPath");
       } catch {
