@@ -133,67 +133,94 @@ export type Database = {
       }
       listings: {
         Row: {
+          addr_city: string | null
           address: string
           amenities: Json
-          baths: number
+          baths: number | null
           beds: number
           below_median_pct: number | null
           building_note: string | null
           city_id: string
           created_at: string
           id: string
-          image: string
+          image: string | null
           lat: number | null
+          listed_at: string | null
           lng: number | null
           neighborhood: string
+          property_type: string
+          provider: string | null
           rent: number
           slug: string
+          sqft: number | null
+          state: string | null
           status: string
+          street: string | null
           tag: string | null
+          unit: string | null
           updated_at: string
           url: string | null
+          zip: string | null
         }
         Insert: {
+          addr_city?: string | null
           address: string
           amenities?: Json
-          baths?: number
+          baths?: number | null
           beds?: number
           below_median_pct?: number | null
           building_note?: string | null
           city_id: string
           created_at?: string
           id?: string
-          image?: string
+          image?: string | null
           lat?: number | null
+          listed_at?: string | null
           lng?: number | null
           neighborhood?: string
+          property_type?: string
+          provider?: string | null
           rent: number
           slug: string
+          sqft?: number | null
+          state?: string | null
           status?: string
+          street?: string | null
           tag?: string | null
+          unit?: string | null
           updated_at?: string
           url?: string | null
+          zip?: string | null
         }
         Update: {
+          addr_city?: string | null
           address?: string
           amenities?: Json
-          baths?: number
+          baths?: number | null
           beds?: number
           below_median_pct?: number | null
           building_note?: string | null
           city_id?: string
           created_at?: string
           id?: string
-          image?: string
+          image?: string | null
           lat?: number | null
+          listed_at?: string | null
           lng?: number | null
           neighborhood?: string
+          property_type?: string
+          provider?: string | null
           rent?: number
           slug?: string
+          sqft?: number | null
+          state?: string | null
           status?: string
+          street?: string | null
           tag?: string | null
+          unit?: string | null
           updated_at?: string
           url?: string | null
+          zip?: string | null
         }
         Relationships: []
       }
