@@ -166,20 +166,15 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
     );
   }
 
+  // SampleListing keeps the street as the `address` display string (which
+  // already includes the unit), with the optional `city`/`state`/`zip` parts
+  // added in Phase 1. Build a two-line address when those parts exist;
+  // otherwise fall back to the single address string + neighborhood.
   const addressParts =
-    listing.street || listing.addr_city || listing.state || listing.zip
+    listing.city || listing.state || listing.zip
       ? {
-          line1: [
-            listing.street,
-            listing.unit ? `, ${listing.unit}` : "",
-          ]
-            .filter(Boolean)
-            .join(""),
-          line2: [
-            listing.addr_city,
-            listing.state,
-            listing.zip,
-          ]
+          line1: listing.address,
+          line2: [listing.city, listing.state, listing.zip]
             .filter(Boolean)
             .join(", "),
         }
@@ -339,15 +334,15 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
       >
         {listing.url ? (
           <OriginButton
-            asChild
             variant="main"
             size="medium"
             className="w-full md:w-auto md:flex-1"
+            onClick={() =>
+              window.open(listing.url, "_blank", "noopener,noreferrer")
+            }
           >
-            <a href={listing.url} target="_blank" rel="noopener noreferrer">
-              View original listing
-              <ArrowUpRight className="h-4 w-4" />
-            </a>
+            View original listing
+            <ArrowUpRight className="h-4 w-4" />
           </OriginButton>
         ) : (
           <p
