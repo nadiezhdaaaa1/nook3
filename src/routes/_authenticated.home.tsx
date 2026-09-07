@@ -326,6 +326,7 @@ function HomeScreen() {
     ...(l.zip ? { zip: l.zip } : {}),
     ...(l.listedAt ? { listedAt: l.listedAt } : {}),
     ...(l.provider ? { provider: l.provider } : {}),
+    ...(l.description ? { description: l.description } : {}),
     ...(l.url ? { sourceUrl: l.url } : {}),
   });
 
