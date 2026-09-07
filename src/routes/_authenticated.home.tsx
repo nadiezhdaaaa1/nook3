@@ -1,4 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback, stripSearchParams } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { toast } from "sonner";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ListFilter } from "lucide-react";
@@ -26,6 +28,7 @@ import {
   useDismissListingSnapshotMutation,
 } from "@/lib/queries/listingReports";
 import { ListingActions } from "@/components/app/ListingActions";
+import { ListingDetailDrawer } from "@/components/app/ListingDetailDrawer";
 import { FiltersSheet } from "@/components/app/FiltersSheet";
 import {
   activeFilterCount,
@@ -38,7 +41,14 @@ import type { ReportReason } from "@/lib/listingReports.functions";
 
 
 
+/** `listing` deep-links the detail drawer; "" means closed. */
+const homeSearchSchema = z.object({
+  listing: fallback(z.string(), "").default(""),
+});
+
 export const Route = createFileRoute("/_authenticated/home")({
+  validateSearch: zodValidator(homeSearchSchema),
+  search: { middlewares: [stripSearchParams({ listing: "" })] },
   head: () => ({
     meta: [
       { title: "Your matches — Nook" },
@@ -132,6 +142,7 @@ function getPaginationItems(page: number, totalPages: number): (number | "ellips
 
 function HomeScreen() {
   const search = useActiveSearch();
+  const { listing: listingParam } = Route.useSearch();
   const noSearches = useAppStore((s) => s.searches.length === 0);
 
   const navigate = useNavigate();
@@ -165,6 +176,8 @@ function HomeScreen() {
   const pendingSelectKeyRef = useRef<string | null>(null);
 
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  /** Listing key of a card whose drawer is open when it got saved — the drawer follows the new id. */
+  const pendingDrawerKeyRef = useRef<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<string[]>([]);
   const [mapFullscreen, setMapFullscreen] = useState(false);
   const mapRef = useRef<SampleListingsMapRef | null>(null);
@@ -271,6 +284,21 @@ function HomeScreen() {
     setActiveId(next.id);
   }, [allAlertListings]);
 
+  // Same for an open drawer: follow the saved listing onto its new alert id.
+  useEffect(() => {
+    const key = pendingDrawerKeyRef.current;
+    if (!key) return;
+    const next = allAlertListings.find((l) => listingKey(l.address, l.rent) === key);
+    if (!next) return;
+    pendingDrawerKeyRef.current = null;
+    navigate({
+      to: "/home",
+      search: (prev) => ({ ...prev, listing: next.id }),
+      replace: true,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allAlertListings]);
+
 
 
 
@@ -335,6 +363,7 @@ function HomeScreen() {
     }
     // Remember which card was open so the selection can follow the new id.
     if (activeId === l.id) pendingSelectKeyRef.current = listingKey(l.address, l.rent);
+    if (drawerId === l.id) pendingDrawerKeyRef.current = listingKey(l.address, l.rent);
     saveSnapshot.mutate({ searchId: persistedSearchId, listing: toSnapshot(l) });
   };
 
@@ -358,6 +387,7 @@ function HomeScreen() {
       return;
     }
     if (activeId === l.id) setActiveId(null);
+    if (drawerId === l.id) closeDrawer();
     toast("Hidden from your matches", { description: "We'll show fewer listings like this." });
   };
 
@@ -375,6 +405,7 @@ function HomeScreen() {
       });
     }
     if (activeId === l.id) setActiveId(null);
+    if (drawerId === l.id) closeDrawer();
     reportMutation.mutate({
       listingRef: l.id,
       reason,
@@ -405,11 +436,34 @@ function HomeScreen() {
 
   const activeListing = search ? (visibleListings.find((l) => l.id === activeId) ?? null) : null;
 
+  /* ---- Listing detail drawer (deep-linked through ?listing=) ---- */
+  const drawerId = listingParam || null;
+  const drawerListing = drawerId
+    ? (visibleListings.find((l) => l.id === drawerId) ?? null)
+    : null;
+
+  const openDrawer = (id: string) => {
+    navigate({
+      to: "/home",
+      search: (prev) => ({ ...prev, listing: id }),
+      replace: true,
+    });
+  };
+
+  const closeDrawer = () => {
+    navigate({
+      to: "/home",
+      search: (prev) => ({ ...prev, listing: "" }),
+      replace: true,
+    });
+  };
+
   const popupCard = activeListing ? (
     <PreviewListingCard
       listing={activeListing}
       popup
       selected
+      onSelect={() => openDrawer(activeListing.id)}
       onClose={() => setActiveId(null)}
       actions={
         <ListingActions
@@ -629,7 +683,10 @@ function HomeScreen() {
                       key={listing.id}
                       listing={listing}
                       selected={listing.id === activeId}
-                      onSelect={() => setActiveId(listing.id)}
+                      onSelect={() => {
+                        setActiveId(listing.id);
+                        openDrawer(listing.id);
+                      }}
                       onHover={setHoveredId}
                       actions={
                         <ListingActions
@@ -709,6 +766,30 @@ function HomeScreen() {
         )}
 
       </section>
+
+      <ListingDetailDrawer
+        listing={drawerListing}
+        open={drawerId !== null}
+        onOpenChange={(open) => {
+          if (!open) closeDrawer();
+        }}
+        actions={
+          drawerListing ? (
+            <ListingActions
+              saved={savedIds.has(drawerListing.id)}
+              saving={
+                (saveSnapshot.isPending &&
+                  saveSnapshot.variables?.listing.title === drawerListing.address) ||
+                (updateStatus.isPending && updateStatus.variables?.id === drawerListing.id)
+              }
+              selected
+              onToggleSave={() => handleToggleSave(drawerListing)}
+              onDislike={(reason) => handleDislike(drawerListing, reason)}
+              onReport={(reason, details) => handleReport(drawerListing, reason, details)}
+            />
+          ) : undefined
+        }
+      />
 
       <FiltersSheet
         open={filtersOpen}
