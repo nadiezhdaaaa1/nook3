@@ -119,7 +119,6 @@ type CandidateRow = {
   zip: string | null;
   listed_at: string | null;
   provider: string | null;
-  description: string | null;
 };
 
 /** Stable pseudo-random rank so the mix varies per search but is repeatable. */
@@ -180,7 +179,7 @@ export const devRunDigest = createServerFn({ method: "POST" })
     let query = supabaseAdmin
       .from("listings")
       .select(
-        "slug, address, rent, beds, baths, neighborhood, tag, image, url, lat, lng, property_type, sqft, unit, addr_city, state, zip, listed_at, provider, description",
+        "slug, address, rent, beds, baths, neighborhood, tag, image, url, lat, lng, property_type, sqft, unit, addr_city, state, zip, listed_at, provider",
       )
       .eq("city_id", search.city_id)
       .eq("status", "active");
@@ -259,7 +258,6 @@ export const devRunDigest = createServerFn({ method: "POST" })
         listedAt: l.listed_at ? new Date(l.listed_at).toISOString() : null,
         provider: l.provider,
         sourceUrl: l.url,
-        description: l.description,
       }) as never,
     }));
 

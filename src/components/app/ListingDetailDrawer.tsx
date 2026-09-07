@@ -251,17 +251,6 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
               ))}
             </ul>
           )}
-
-          {listing.description && (
-            <section className="flex flex-col gap-2.5">
-              <h3 className="font-sans text-[16px] font-medium text-muted-foreground">
-                About this listing
-              </h3>
-              <p className="whitespace-pre-line text-[16px] font-normal leading-[1.6] text-foreground">
-                {listing.description}
-              </p>
-            </section>
-          )}
         </div>
       </div>
 

@@ -112,7 +112,6 @@ function alertToListing(a: AlertRow, cityId: CityId | undefined): SampleListing 
     zip: l.zip,
     listedAt: l.listedAt,
     provider: l.provider,
-    description: l.description,
     url: l.sourceUrl,
   };
 }
