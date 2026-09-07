@@ -55,7 +55,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       const { data: chunk, error } = await supabase
         .from("listings")
         .select(
-          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities, property_type, sqft, street, unit, addr_city, state, zip, listed_at, provider",
+          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities, property_type, sqft, street, unit, addr_city, state, zip, listed_at, provider, description",
         )
         .eq("city_id", data.cityId)
         .eq("status", "active")
