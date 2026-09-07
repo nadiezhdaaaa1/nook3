@@ -11,6 +11,8 @@ import {
   type AlertStatusDb,
   type PaginatedAlertsResult,
 } from "@/lib/alerts.functions";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export const alertsQueryKey = ["alerts"] as const;
 
