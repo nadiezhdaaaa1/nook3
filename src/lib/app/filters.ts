@@ -177,7 +177,9 @@ export function applyFilters(
   return listings.filter((l) => {
     if (filters.budget && (l.rent < filters.budget[0] || l.rent > filters.budget[1])) return false;
     if (!matchesBeds(l, filters.bedrooms)) return false;
-    if (filters.bathrooms && l.baths < bathValue(filters.bathrooms)) return false;
+    // Unknown bathroom count doesn't exclude a listing.
+    if (filters.bathrooms && l.baths != null && l.baths < bathValue(filters.bathrooms)) return false;
+
     if (filters.neighborhoods.length > 0 && !filters.neighborhoods.includes(l.neighborhood)) {
       return false;
     }
