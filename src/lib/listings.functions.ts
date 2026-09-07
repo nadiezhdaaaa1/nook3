@@ -46,6 +46,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       property_type: string | null; sqft: number | null; street: string | null;
       unit: string | null; addr_city: string | null; state: string | null;
       zip: string | null; listed_at: string | null; provider: string | null;
+      description: string | null;
     };
     const rows: Row[] = [];
 
