@@ -81,7 +81,6 @@ function SamplePreview() {
       listing={activeListing}
       popup
       selected
-      disableTitleLink
       onClose={() => setActiveId(null)}
     />
   ) : null;
@@ -166,7 +165,6 @@ function SamplePreview() {
                       key={listing.id}
                       listing={listing}
                       selected={listing.id === activeId}
-                      disableTitleLink
                       onSelect={() => setActiveId(listing.id)}
                       onHover={setHoveredId}
                     />
