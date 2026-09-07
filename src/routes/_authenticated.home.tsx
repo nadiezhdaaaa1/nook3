@@ -105,6 +105,7 @@ function alertToListing(
     zip: l.zip ?? catalog?.zip,
     listedAt: l.listedAt ?? catalog?.listedAt,
     provider: l.provider ?? catalog?.provider,
+    description: l.description ?? catalog?.description,
     url: l.sourceUrl ?? catalog?.url,
   };
 }
