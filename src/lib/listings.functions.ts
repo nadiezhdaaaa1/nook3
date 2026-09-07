@@ -96,6 +96,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       zip: r.zip ?? undefined,
       listedAt: r.listed_at ?? undefined,
       provider: r.provider ?? undefined,
+      description: r.description ?? undefined,
     }));
   });
 
