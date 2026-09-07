@@ -27,6 +27,8 @@ export interface SampleListing {
   /** ISO timestamp of when the listing appeared at the source. */
   listedAt?: string;
   provider?: string;
+  /** Free-text listing description; absent when the source provides none. */
+  description?: string;
   /** Extra amenities shown behind the "more" toggle on listing cards. */
   amenities?: string[];
 }
