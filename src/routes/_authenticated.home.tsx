@@ -82,16 +82,23 @@ function alertToListing(
     address: l.title,
     rent: l.price,
     beds: l.beds,
-    baths: l.baths,
+    baths: l.baths ?? null,
     neighborhood: l.neighborhood,
     tag: l.tags?.[0],
-    image:
-      l.imageUrl ??
-      catalog?.image ??
-      `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
+    image: l.imageUrl ?? catalog?.image,
     coords,
+    propertyType: l.propertyType ?? catalog?.propertyType,
+    sqft: l.sqft ?? catalog?.sqft ?? null,
+    unit: l.unit ?? catalog?.unit,
+    city: l.city ?? catalog?.city,
+    state: l.state ?? catalog?.state,
+    zip: l.zip ?? catalog?.zip,
+    listedAt: l.listedAt ?? catalog?.listedAt,
+    provider: l.provider ?? catalog?.provider,
+    url: l.sourceUrl ?? catalog?.url,
   };
 }
+
 
 
 /** Build a compact page-number/ellipsis list for pagination.
