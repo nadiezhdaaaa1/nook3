@@ -39,10 +39,13 @@ export const listCityListings = createServerFn({ method: "GET" })
     const target = data.limit ?? 6000;
     const PAGE = 1000;
     type Row = {
-      slug: string; address: string; rent: number; beds: number; baths: number;
+      slug: string; address: string; rent: number; beds: number; baths: number | null;
       neighborhood: string; below_median_pct: number | null; tag: string | null;
-      building_note: string | null; image: string; url: string | null;
+      building_note: string | null; image: string | null; url: string | null;
       lat: number | null; lng: number | null; amenities: unknown;
+      property_type: string | null; sqft: number | null; street: string | null;
+      unit: string | null; addr_city: string | null; state: string | null;
+      zip: string | null; listed_at: string | null; provider: string | null;
     };
     const rows: Row[] = [];
 
@@ -51,7 +54,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       const { data: chunk, error } = await supabase
         .from("listings")
         .select(
-          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities",
+          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities, property_type, sqft, street, unit, addr_city, state, zip, listed_at, provider",
         )
         .eq("city_id", data.cityId)
         .eq("status", "active")
@@ -74,15 +77,24 @@ export const listCityListings = createServerFn({ method: "GET" })
       address: r.address,
       rent: r.rent,
       beds: r.beds,
-      baths: Number(r.baths),
+      baths: r.baths == null ? null : Number(r.baths),
       neighborhood: r.neighborhood,
       belowMedianPct: r.below_median_pct ?? undefined,
       tag: r.tag ?? undefined,
       buildingNote: r.building_note ?? undefined,
-      image: r.image,
+      image: r.image ?? undefined,
       url: r.url ?? undefined,
       coords:
         r.lat != null && r.lng != null ? ([r.lat, r.lng] as [number, number]) : undefined,
       amenities: Array.isArray(r.amenities) ? (r.amenities as string[]) : undefined,
+      propertyType: (r.property_type ?? undefined) as SampleListing["propertyType"],
+      sqft: r.sqft ?? null,
+      unit: r.unit ?? undefined,
+      city: r.addr_city ?? undefined,
+      state: r.state ?? undefined,
+      zip: r.zip ?? undefined,
+      listedAt: r.listed_at ?? undefined,
+      provider: r.provider ?? undefined,
     }));
   });
+
