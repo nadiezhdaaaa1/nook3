@@ -5,11 +5,16 @@ import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
-import { devSetAccountState, type DevAccountStateInput } from "@/lib/dev.functions";
+import {
+  devRunDigest,
+  devSetAccountState,
+  type DevAccountStateInput,
+} from "@/lib/dev.functions";
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
 import { profileQueryKey } from "@/lib/queries/profile";
 import { useOnboardingStore } from "@/lib/onboarding/store";
-import { useAppStore, type Search } from "@/lib/store";
+import { useAppStore, selectActiveSearch, type Search } from "@/lib/store";
+import { alertsQueryKey } from "@/lib/queries/alerts";
 import { supabase } from "@/integrations/supabase/client";
 import { useHasSession } from "@/lib/queries/useHasSession";
 import { cn } from "@/lib/utils";
@@ -93,6 +98,31 @@ export function DevPanel() {
   const navigate = useNavigate();
   const hasSession = useHasSession();
   const setState = useServerFn(devSetAccountState);
+  const runDigest = useServerFn(devRunDigest);
+  const activeSearch = useAppStore(selectActiveSearch);
+  const [digestBusy, setDigestBusy] = useState(false);
+
+  async function onRunDigest() {
+    if (!activeSearch) return;
+    setDigestBusy(true);
+    try {
+      const res = (await runDigest({
+        data: { searchId: activeSearch.id, count: 30 } as never,
+      })) as { inserted: number; skipped: number };
+      if (res.inserted === 0) {
+        toast.info("No new matches — catalog exhausted for this search");
+      } else {
+        toast.success(`Digest ran — ${res.inserted} new matches`);
+      }
+      await qc.invalidateQueries({ queryKey: alertsQueryKey });
+    } catch (e) {
+      toast.error("Digest failed", {
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setDigestBusy(false);
+    }
+  }
 
   const access = useQuery({ ...accessQueryOptions(), enabled: !!hasSession && open });
 
@@ -284,6 +314,27 @@ export function DevPanel() {
               {label}
             </Chip>
           ))}
+        </Row>
+
+        <Row
+          label={
+            activeSearch ? `digest — ${activeSearch.name}` : "digest — no active search"
+          }
+        >
+          <button
+            type="button"
+            disabled={!activeSearch || digestBusy || !hasSession}
+            onClick={onRunDigest}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-medium transition-colors",
+              "border-[#BBD453] bg-[#BBD453] text-black hover:bg-[#c9de6d]",
+              "disabled:cursor-not-allowed disabled:border-white/20 disabled:bg-white/5 disabled:text-white/40",
+            )}
+            title={activeSearch ? undefined : "Select or create a search first"}
+          >
+            {digestBusy && <Loader2 className="h-3 w-3 animate-spin" />}
+            Run digest now
+          </button>
         </Row>
 
         <Row label="digest demo data (search cards)">
