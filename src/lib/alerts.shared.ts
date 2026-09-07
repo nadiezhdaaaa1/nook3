@@ -26,7 +26,6 @@ export const listingSchema = z.object({
   zip: z.string().max(20).optional(),
   listedAt: z.string().max(40).optional(),
   provider: z.string().max(80).optional(),
-  description: z.string().max(4000).optional(),
   sourceUrl: z.string().url().max(1000).optional(),
 });
 
