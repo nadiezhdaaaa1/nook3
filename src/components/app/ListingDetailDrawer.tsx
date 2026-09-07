@@ -183,25 +183,6 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
     <div className="flex h-full flex-col">
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto">
-        {/* 1. Photo */}
-        {listing.image ? (
-          <img
-            src={listing.image}
-            alt={listing.address}
-            className="mx-5 mt-5 h-[240px] w-[calc(100%-2.5rem)] rounded-[16px] object-cover"
-          />
-        ) : (
-          <div
-            className="mx-5 mt-5 flex h-[240px] w-[calc(100%-2.5rem)] flex-col items-center justify-center gap-3 rounded-[16px]"
-            style={{ background: "#f5f2ea" }}
-          >
-            <Building2 style={{ width: 40, height: 40, color: "#9a958a" }} />
-            <span style={{ fontSize: 13, color: "#6e6459" }}>
-              No photo from this source
-            </span>
-          </div>
-        )}
-
         {/* Body text */}
         <div className="px-5 py-5">
           {/* 2. Price + tag */}
