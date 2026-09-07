@@ -1,25 +1,22 @@
-# Registration modal and onboarding flow simplification
+# Restyle the listing detail drawer to the approved Figma
 
 ## User-visible result
-- Picking any plan from landing pricing, `/pricing`, or `/onboarding/pricing` captures the plan immediately.
-- Visitors without a session see an accessible registration/sign-in modal and remain on the current page while the modal is open.
-- Successful authentication continues to checkout (or commits onboarding first when coming from the onboarding pricing step).
-- Existing signed-in users go directly to checkout when unpaid, or to Account when already subscribed.
-- `/onboarding/success` is removed; `/thanks`, the four-step wizard, preview layout, checkout internals, login page, and signup page behavior remain working.
+- The listing drawer on Home and Saved matches Figma nodes `319:34` and `319:728` in both the desktop side panel and mobile bottom drawer.
+- Address, price, property facts, amenities, description, close control, and both source-link footer states use the approved hierarchy, spacing, typography, colors, and dimensions.
+- Report, dislike, save, external-link, close, deep-link, loading, and unavailable-listing behavior remains unchanged.
+- Listing action controls on cards and map popups keep their current appearance.
 
 ## Implementation
-1. Extract the existing signup validation, consent, referral, email-confirmation, Google OAuth, and email/password auth logic into a reusable client-safe auth form module.
-2. Add `RegistrationModal` using the existing dialog primitives, with signup/sign-in modes, forgot-password navigation, focus/ESC/backdrop behavior from the dialog primitive, post-auth callback, analytics, and `nook:postAuthPath` continuation storage for OAuth.
-3. Update `PricingThreeTiers` to own consistent plan-intent capture and session/subscription branching, with source metadata passed by landing and pricing-page callers.
-4. Add landing query validation/effect for `plan` and `cycle`; persist valid intent, remove the params from the URL, and run the same registration/checkout decision flow.
-5. Update `/onboarding/pricing` to open the modal for anonymous users and commit onboarding before checkout/home for authenticated users.
-6. Move the atomic onboarding commit to the onboarding-pricing authenticated handoff and the subscribed preview CTA; preserve the existing `handoffCompleted` guard and invalidate access state after commit.
-7. Change route-gate fallback destinations to `/signup?lockEmail=1` for missing credentials and `/account` for onboarded users without access. Add/reuse Account subscription copy and CTA behavior for voluntary restart versus dunning-caused cancellation, keeping the previous plan selected.
-8. Delete `/onboarding/success`, remove its success-variant machinery and all references, update auth redirect/fallback and dev links, and leave `/thanks` unchanged.
-9. Extend analytics event constants and fire modal-open, modal-auth-success, and checkout-redirect events with source/plan/cycle context.
-10. Verify route generation, build diagnostics, and key modal/CTA behavior in the running preview.
+1. Restructure the shared drawer content into the Figma section order: address header, price/tag row, icon-led specs, property/neighborhood/age lines, amenity pills, and conditional description.
+2. Apply the exact 482px desktop width, 24px horizontal content inset, 56px top inset, 24px section gaps, 32px content bottom spacing, and Figma typography. Use the existing Google Sans Flex, Fraunces, and semantic foreground/primary tokens; add only the missing drawer-specific neutral/badge tokens to the global design system.
+3. Restyle the desktop Sheet close control and add the matching accessible close control to the mobile Drawer while retaining overlay, Escape, drag-dismiss, focus restoration, and scroll-lock behavior from the existing primitives.
+4. Add a `drawer` presentation variant to `ListingActions` that reuses its current report/dislike dropdowns, report dialog, save state, and loading behavior, but renders the Figma utility controls and ordering. Keep the default/card presentation byte-for-byte equivalent in behavior and appearance.
+5. Update only the drawer action instances in Home and Saved to request the new presentation. Keep existing handlers, including closing after dislike/report, and keep list/map card action instances unchanged.
+6. Rebuild the sticky footer for the source-link and no-source states with the exact copy, dimensions, spacing, and fixed row structure from the two Figma frames.
+7. Restyle the loading skeleton and unavailable state only enough to fit the new panel insets and close layout, without changing their behavior or wording.
+8. Verify TypeScript, build diagnostics, and the live drawer at desktop and mobile sizes, including source/no-source footers and interactive action menus.
 
-## Assumptions
-- The existing `useHasSession` and access query are the source of truth for session/subscription decisions.
-- Registration-modal OAuth continuation targets `/checkout/mock`; onboarding-pricing auth continuation returns to that page, where the opener performs the authenticated onboarding commit before navigating.
-- Account subscription UI is the correct destination for both onboarded no-access cases; dunning copy is selected from existing server-derived status and `pastDueSince`, not client storage.
+## Technical details
+- Use Lucide `X`, `BedDouble`, `Bath`, `Ruler`, `House`, `MapPin`, `Clock`, `ArrowUpRight`, `Flag`, `ThumbsDown`, and `Heart`; no Figma localhost assets will be embedded.
+- Keep `ListingDetailDrawer` as the single shared content implementation used by both Sheet and Drawer.
+- Preserve the current `actions` slot contract while passing `variant="drawer"` from the existing Home/Saved action nodes.
