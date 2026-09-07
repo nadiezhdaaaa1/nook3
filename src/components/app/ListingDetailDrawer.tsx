@@ -289,6 +289,28 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
             </div>
           )}
 
+          {/* 5b. Description */}
+          {listing.description && (
+            <div className="mt-5">
+              <div
+                style={{
+                  fontWeight: 600,
+                  fontSize: 15,
+                  lineHeight: "22px",
+                  color: "#241c12",
+                }}
+              >
+                About this listing
+              </div>
+              <p
+                className="mt-1.5 whitespace-pre-line"
+                style={{ fontSize: 14, lineHeight: "20px", color: "#4a4238" }}
+              >
+                {listing.description}
+              </p>
+            </div>
+          )}
+
           {/* 6. Amenities */}
           {amenities.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-1.5">
