@@ -7,7 +7,8 @@ export const listingSchema = z.object({
   title: z.string().max(200),
   neighborhood: z.string().max(120),
   beds: z.number().int().min(0).max(20),
-  baths: z.number().min(0).max(20),
+  // Old snapshots always carry baths; new ones may omit it when unknown.
+  baths: z.number().min(0).max(20).nullable().optional(),
   price: z.number().int().min(0).max(1_000_000),
   receivedAt: z.string().max(40),
   source: z.string().max(60),
@@ -16,7 +17,18 @@ export const listingSchema = z.object({
   imageUrl: z.string().url().max(500).optional(),
   lat: z.number().min(-90).max(90).optional(),
   lng: z.number().min(-180).max(180).optional(),
+  // Added in NPI-656; all optional so pre-existing snapshots keep parsing.
+  propertyType: z.enum(["apartment", "condo", "house", "townhouse"]).optional(),
+  sqft: z.number().int().min(0).max(100_000).nullable().optional(),
+  unit: z.string().max(40).optional(),
+  city: z.string().max(120).optional(),
+  state: z.string().max(40).optional(),
+  zip: z.string().max(20).optional(),
+  listedAt: z.string().max(40).optional(),
+  provider: z.string().max(80).optional(),
+  sourceUrl: z.string().url().max(1000).optional(),
 });
+
 
 export type AlertListing = z.infer<typeof listingSchema>;
 
