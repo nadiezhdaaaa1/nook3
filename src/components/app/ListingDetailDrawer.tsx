@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowUpRight, Building2, Clock, MapPin } from "lucide-react";
+import { ArrowUpRight, Clock, MapPin } from "lucide-react";
 
 import {
   Sheet,
