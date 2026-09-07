@@ -45,7 +45,7 @@ const DISLIKE_REASONS = [
 const BTN =
   "inline-flex h-9 items-center gap-1.5 rounded-[8px] border border-black/10 bg-white px-3 text-[13px] font-semibold text-[#241c12] transition-colors hover:border-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#241c12] disabled:opacity-60";
 
-const ICON_BTN = "h-9 w-9 rounded-[8px] border-transparent px-0";
+const ICON_BTN = "h-9 w-9 rounded-[12px] border-transparent px-0";
 
 interface Props {
   saved: boolean;
@@ -87,7 +87,7 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
                     variant="tertiary"
                     size="medium"
                     aria-label="Report this listing"
-                    className={drawer ? "h-10 w-10 rounded-full border-0 bg-transparent p-2.5 text-muted-foreground" : ICON_BTN}
+                    className={drawer ? "h-10 w-10 rounded-[12px] border-0 bg-transparent p-2.5 text-muted-foreground" : ICON_BTN}
                   >
                     <Flag className={drawer ? "h-5 w-5 text-muted-foreground" : "h-4 w-4 text-muted-foreground"} />
                   </OriginButton>
@@ -123,7 +123,7 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
                     variant="tertiary"
                     size="medium"
                     aria-label="Not interested in this listing"
-                    className={drawer ? "h-10 w-10 rounded-full border-0 bg-transparent p-2.5 text-muted-foreground" : ICON_BTN}
+                    className={drawer ? "h-10 w-10 rounded-[12px] border-0 bg-transparent p-2.5 text-muted-foreground" : ICON_BTN}
                   >
                     <ThumbsDown className={drawer ? "h-5 w-5 text-muted-foreground" : "h-4 w-4 text-muted-foreground"} />
                   </OriginButton>
