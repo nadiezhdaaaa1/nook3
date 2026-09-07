@@ -52,14 +52,16 @@ interface Props {
   saving?: boolean;
   selected?: boolean;
   compactSave?: boolean;
+  variant?: "card" | "drawer";
   onToggleSave: () => void;
   onDislike: (reason?: string) => void;
   onReport: (reason: ReportReason, details: string) => void;
 }
 
-export function ListingActions({ saved, saving, selected = false, compactSave = false, onToggleSave, onDislike, onReport }: Props) {
+export function ListingActions({ saved, saving, selected = false, compactSave = false, variant = "card", onToggleSave, onDislike, onReport }: Props) {
   const [reason, setReason] = useState<ReportReason | null>(null);
   const [details, setDetails] = useState("");
+  const drawer = variant === "drawer";
 
   const close = () => {
     setReason(null);
@@ -69,11 +71,11 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
   return (
     <TooltipProvider delayDuration={100}>
       <div
-        className="flex items-center justify-end gap-1"
+        className={drawer ? "flex items-center justify-end gap-2 sm:gap-4" : "flex items-center justify-end gap-1"}
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center gap-1 opacity-100 transition-opacity duration-150 lg:opacity-0 group-hover:opacity-100 focus-within:opacity-100"
+          className={drawer ? "flex items-center gap-2 sm:gap-4" : "flex items-center gap-1 opacity-100 transition-opacity duration-150 lg:opacity-0 group-hover:opacity-100 focus-within:opacity-100"}
           data-selected={selected}
           style={{ opacity: selected ? 1 : undefined }}
         >
@@ -85,9 +87,9 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
                     variant="tertiary"
                     size="medium"
                     aria-label="Report this listing"
-                    className={ICON_BTN}
+                    className={drawer ? "h-10 w-10 rounded-full border-0 bg-transparent p-2.5 text-muted-foreground" : ICON_BTN}
                   >
-                    <Flag className="h-4 w-4" color="#6e6459" />
+                    <Flag className={drawer ? "h-5 w-5 text-muted-foreground" : "h-4 w-4 text-muted-foreground"} />
                   </OriginButton>
                 </TooltipTrigger>
               </DropdownMenuTrigger>
@@ -121,9 +123,9 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
                     variant="tertiary"
                     size="medium"
                     aria-label="Not interested in this listing"
-                    className={ICON_BTN}
+                    className={drawer ? "h-10 w-10 rounded-full border-0 bg-transparent p-2.5 text-muted-foreground" : ICON_BTN}
                   >
-                    <ThumbsDown className="h-4 w-4" color="#6e6459" />
+                    <ThumbsDown className={drawer ? "h-5 w-5 text-muted-foreground" : "h-4 w-4 text-muted-foreground"} />
                   </OriginButton>
                 </TooltipTrigger>
               </DropdownMenuTrigger>
@@ -155,14 +157,18 @@ export function ListingActions({ saved, saving, selected = false, compactSave = 
               disabled={saving}
               aria-pressed={saved}
               aria-label={saved ? "Remove from saved listings" : "Save listing"}
-              className={compactSave ? "ml-1 h-9 w-9 rounded-[8px] px-0" : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
+              className={drawer
+                ? "h-10 rounded-[10px] border-listing-border bg-surface-elevated px-4 font-['Inter',sans-serif] text-[14px] font-semibold text-ink-900 [&>span]:gap-1.5"
+                : compactSave
+                  ? "ml-1 h-9 w-9 rounded-[8px] px-0"
+                  : "ml-1 h-9 rounded-[8px] px-3 text-[13px] font-semibold"}
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Heart className="h-4 w-4" fill={saved ? "#D66C38" : "none"} color={saved ? "#D66C38" : "#6e6459"} />
+                <Heart className={drawer ? "h-4 w-4 text-ink-900" : "h-4 w-4 text-muted-foreground"} fill={saved ? "var(--primary)" : "none"} color={saved ? "var(--primary)" : undefined} />
               )}
-              {!compactSave && (saved ? "Saved" : "Save")}
+              {(drawer || !compactSave) && (saved ? "Saved" : "Save")}
             </OriginButton>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>

@@ -1,5 +1,14 @@
 import * as React from "react";
-import { ArrowUpRight, Clock, MapPin } from "lucide-react";
+import {
+  ArrowUpRight,
+  Bath,
+  BedDouble,
+  Clock,
+  House,
+  MapPin,
+  Ruler,
+  X,
+} from "lucide-react";
 
 import {
   Sheet,
@@ -10,6 +19,7 @@ import {
 import {
   Drawer,
   DrawerContent,
+  DrawerClose,
   DrawerTitle,
   DrawerDescription,
 } from "@/components/ui/drawer";
@@ -63,45 +73,25 @@ export function formatListingAge(
   return `Listed ${days} days ago`;
 }
 
-const KNOWN_PROVIDERS: Record<string, string> = {
-  rentcast: "RentCast",
-  streeteasy: "StreetEasy",
-  "apartments.com": "Apartments.com",
-  apartments: "Apartments",
-  rentcastapi: "RentCast",
-};
-
-/** Nice display form for a raw provider slug. */
-function prettyProvider(provider?: string): string | null {
-  if (!provider) return null;
-  const lower = provider.toLowerCase();
-  if (KNOWN_PROVIDERS[lower]) return KNOWN_PROVIDERS[lower];
-  // Fallback: capitalize the first letter of each space-separated token.
-  return provider
-    .split(/\s+/)
-    .map((tok) => (tok.length ? tok[0].toUpperCase() + tok.slice(1) : tok))
-    .join(" ");
-}
-
 function bedLabel(beds: number): string {
-  return beds === 0 ? "Studio" : `${beds} bed`;
+  return beds === 0 ? "Studio" : `${beds} Bed${beds === 1 ? "" : "s"}`;
 }
 
 function bathsLabel(baths: number | null | undefined): string {
-  if (baths === null || baths === undefined) return "— bath";
-  return `${baths} bath`;
+  if (baths === null || baths === undefined) return "— Bath";
+  return `${baths} Bath${baths === 1 ? "" : "s"}`;
 }
 
 function sqftLabel(sqft: number | null | undefined): string {
   if (sqft === null || sqft === undefined) return "Size not specified";
-  return `${sqft.toLocaleString()} sq ft`;
+  return `${sqft.toLocaleString()} ft²`;
 }
 
-const SPEC_STYLE: React.CSSProperties = {
-  fontSize: 14,
-  lineHeight: "20px",
-  color: "#6e6459",
-};
+const SPEC_ITEMS = [
+  { key: "beds", Icon: BedDouble },
+  { key: "baths", Icon: Bath },
+  { key: "sqft", Icon: Ruler },
+] as const;
 
 /* -------------------------------------------------------------------------- */
 /* Inner content (shared between desktop sheet + mobile drawer)               */
@@ -134,11 +124,18 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
   if (loading) {
     return (
       <div className="flex h-full flex-col">
-        <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-          <Skeleton className="h-8 w-40" />
-          <Skeleton className="h-4 w-64" />
-          <Skeleton className="h-4 w-48" />
-          <Skeleton className="h-4 w-56" />
+        <div className="flex-1 space-y-6 overflow-y-auto px-6 pb-8 pt-14">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-5 w-1/2" />
+          </div>
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-6 w-4/5" />
+          <div className="space-y-4">
+            <Skeleton className="h-5 w-1/3" />
+            <Skeleton className="h-5 w-2/5" />
+            <Skeleton className="h-5 w-1/2" />
+          </div>
         </div>
       </div>
     );
@@ -147,13 +144,10 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
   if (!listing) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4 px-8 text-center">
-        <div
-          className="font-display"
-          style={{ fontWeight: 700, fontSize: 22, color: "#241c12" }}
-        >
+        <div className="font-display text-[22px] font-bold text-foreground">
           This listing is no longer available
         </div>
-        <p style={{ fontSize: 14, lineHeight: "20px", color: "#6e6459" }}>
+        <p className="text-[14px] leading-5 text-muted-foreground">
           It may have been rented or removed by the source.
         </p>
         <OriginButton variant="tertiary" size="medium" onClick={onClose}>
@@ -177,166 +171,106 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
         }
       : null;
 
-  const providerName = prettyProvider(listing.provider);
+  const addressLine2 = addressParts?.line2 || listing.neighborhood;
+  const specs = [bedLabel(listing.beds), bathsLabel(listing.baths), sqftLabel(listing.sqft)];
+  const propertyType = listing.propertyType
+    ? PROPERTY_TYPE_LABEL[listing.propertyType]
+    : null;
 
   return (
     <div className="flex h-full flex-col">
-      {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto">
-        {/* Body text */}
-        <div className="px-5 py-5">
-          {/* 2. Price + tag */}
-          <div className="flex flex-wrap items-end justify-between gap-2">
-            <span
-              className="font-display tabular-nums"
-              style={{ fontWeight: 600, fontSize: 24, lineHeight: "28px", color: "#241c12" }}
-            >
-              ${listing.rent.toLocaleString()}
-              <span style={{ fontSize: 18, color: "#6e6459" }}>/mo</span>
-            </span>
+        <div className="flex flex-col gap-6 px-6 pb-8 pt-14">
+          <header className="flex flex-col gap-1 overflow-hidden break-words">
+            <h2 className="text-[28px] font-medium leading-[1.2] tracking-[-0.255px] text-foreground">
+              {addressParts?.line1 ?? listing.address}
+            </h2>
+            {addressLine2 && (
+              <p className="text-[16px] font-normal text-muted-foreground">
+                {addressLine2}
+              </p>
+            )}
+          </header>
 
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-display whitespace-nowrap tabular-nums text-[32px] font-semibold leading-[1.2] tracking-[-0.36px] text-foreground">
+              ${listing.rent.toLocaleString()}
+              <span className="text-[24px] text-muted-foreground">/mo</span>
+            </span>
             {listing.tag && (
-              <span
-                className="inline-flex items-center rounded-full px-2.5 py-1 text-[12px] font-semibold leading-[16px]"
-                style={{
-                  background: "#EBF0D5",
-                  color: "#5a6e50",
-                }}
-              >
+              <span className="inline-flex items-center rounded-full bg-listing-badge px-3 py-1.5 font-['Inter',sans-serif] text-[13px] font-semibold text-listing-badge-foreground">
                 {listing.tag}
               </span>
             )}
           </div>
 
-          {/* 3. Spec row */}
-          {(() => {
-            const bits: string[] = [];
-            if (listing.propertyType) {
-              bits.push(PROPERTY_TYPE_LABEL[listing.propertyType] ?? null);
-            }
-            bits.push(bedLabel(listing.beds));
-            bits.push(bathsLabel(listing.baths));
-            bits.push(sqftLabel(listing.sqft));
-            const filtered = bits.filter(Boolean) as string[];
-            return (
-              <div className="mt-2 flex flex-wrap items-center" style={SPEC_STYLE}>
-                {filtered.map((b, i) => (
-                  <React.Fragment key={b}>
-                    {i > 0 && <span style={{ margin: "0 6px" }}>·</span>}
-                    <span>{b}</span>
-                  </React.Fragment>
-                ))}
-              </div>
-            );
-          })()}
+          <div className="flex flex-wrap items-center gap-4">
+            {SPEC_ITEMS.map(({ key, Icon }, index) => (
+              <React.Fragment key={key}>
+                {index > 0 && (
+                  <span aria-hidden className="h-1 w-1 shrink-0 rounded-full bg-listing-dot" />
+                )}
+                <div className="flex items-center gap-2 font-['Inter',sans-serif] text-[16px] font-medium text-foreground">
+                  <Icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                  <span>{specs[index]}</span>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
 
-          {/* 4. Address block */}
-          <div className="mt-4">
-            {addressParts ? (
-              <>
-                <div
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 15,
-                    lineHeight: "22px",
-                    color: "#241c12",
-                  }}
-                >
-                  {addressParts.line1}
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    lineHeight: "20px",
-                    color: "#6e6459",
-                  }}
-                >
-                  {addressParts.line2}
-                </div>
-              </>
-            ) : (
-              <div
-                style={{
-                  fontWeight: 600,
-                  fontSize: 15,
-                  lineHeight: "22px",
-                  color: "#241c12",
-                }}
-              >
-                {listing.address}
+          <div className="flex flex-col gap-4">
+            {propertyType && (
+              <div className="flex items-center gap-2 text-[16px] font-medium text-foreground">
+                <House className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                <span>{propertyType}</span>
               </div>
             )}
-
             {listing.neighborhood && (
-              <div
-                className="mt-1.5 inline-flex items-center gap-1"
-                style={{ fontSize: 13, color: "#6e6459" }}
-              >
-                <MapPin style={{ width: 14, height: 14 }} />
-                {listing.neighborhood}
+              <div className="flex items-center gap-2 text-[16px] font-medium text-foreground">
+                <MapPin className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                <span>{listing.neighborhood}</span>
+              </div>
+            )}
+            {age && (
+              <div className="flex items-center gap-2 text-[16px] font-medium text-foreground">
+                <Clock className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                <span>{age}</span>
               </div>
             )}
           </div>
 
-          {/* 5. Listing age */}
-          {age && (
-            <div
-              className="mt-4 inline-flex items-center gap-1.5"
-              style={{ fontSize: 13, color: "#6e6459" }}
-            >
-              <Clock style={{ width: 14, height: 14 }} />
-              {age}
-            </div>
-          )}
-
-          {/* 5b. Description */}
-          {listing.description && (
-            <div className="mt-5">
-              <div
-                style={{
-                  fontWeight: 600,
-                  fontSize: 15,
-                  lineHeight: "22px",
-                  color: "#241c12",
-                }}
-              >
-                About this listing
-              </div>
-              <p
-                className="mt-1.5 whitespace-pre-line"
-                style={{ fontSize: 14, lineHeight: "20px", color: "#4a4238" }}
-              >
-                {listing.description}
-              </p>
-            </div>
-          )}
-
-          {/* 6. Amenities */}
           {amenities.length > 0 && (
-            <ul className="mt-4 flex flex-wrap gap-1.5">
+            <ul className="flex flex-wrap gap-2">
               {amenities.map((a) => (
                 <li
                   key={a}
-                  className="rounded-full border border-black/10 bg-[#faf6ee] px-2.5 py-1 text-[12px] leading-[16px] text-[#4a4238]"
+                  className="rounded-full border border-listing-border bg-paper px-3.5 py-2 text-[13px] font-medium text-foreground"
                 >
                   {a}
                 </li>
               ))}
             </ul>
           )}
+
+          {listing.description && (
+            <section className="flex flex-col gap-2.5">
+              <h3 className="text-[16px] font-medium text-muted-foreground">
+                About this listing
+              </h3>
+              <p className="whitespace-pre-line text-[16px] font-normal leading-[1.6] text-foreground">
+                {listing.description}
+              </p>
+            </section>
+          )}
         </div>
       </div>
 
-      {/* 7. Sticky footer */}
-      <div
-        className="flex flex-col gap-3 border-t border-black/[0.08] md:flex-row md:items-center"
-        style={{ background: "#ffffff", padding: "16px 20px" }}
-      >
+      <div className="flex shrink-0 items-center gap-2 border-t border-listing-footer-border bg-surface-elevated px-3 py-5 sm:gap-4 sm:px-6">
         {listing.url ? (
           <OriginButton
             variant="main"
             size="medium"
-            className="w-full md:w-auto md:flex-1"
+            className="h-10 min-w-0 flex-1 rounded-[12px] px-3 text-[14px] font-medium tracking-[-0.32px] sm:px-4 [&>span]:gap-1"
             onClick={() =>
               window.open(listing.url, "_blank", "noopener,noreferrer")
             }
@@ -345,18 +279,13 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
             <ArrowUpRight className="h-4 w-4" />
           </OriginButton>
         ) : (
-          <p
-            className="w-full text-[13px] leading-[18px] md:flex-1"
-            style={{ color: "#6e6459" }}
-          >
-            {providerName
-              ? `Found via ${providerName} — this source doesn't provide a public listing page.`
-              : "This source doesn't provide a public listing page."}
+          <p className="min-w-0 flex-1 text-[13px] leading-[18px] text-muted-foreground">
+            This source doesn't provide a public listing page
           </p>
         )}
 
         {actions && (
-          <div className="flex items-center justify-end gap-1 md:shrink-0">
+          <div className="shrink-0">
             {actions}
           </div>
         )}
@@ -403,8 +332,8 @@ export function ListingDetailDrawer({
         <SheetContent
           side="right"
           className={cn(
-            "flex w-full flex-col gap-0 bg-white p-0",
-            "sm:max-w-[480px]",
+            "flex w-full flex-col gap-0 bg-surface-elevated p-0 [&>button]:right-4 [&>button]:top-4 [&>button]:z-10 [&>button]:rounded-full [&>button]:border-0 [&>button]:bg-transparent [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:data-[state=open]:bg-transparent [&>button_svg]:h-5 [&>button_svg]:w-5",
+            "sm:max-w-[482px]",
           )}
         >
           <SheetTitle id={titleId} className="sr-only">
@@ -427,9 +356,19 @@ export function ListingDetailDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        className="mx-auto h-[92dvh] max-h-[92dvh] bg-white p-0"
+        className="mx-auto h-[92dvh] max-h-[92dvh] bg-surface-elevated p-0 [&>div:first-child]:hidden"
         aria-describedby={descId}
       >
+        <DrawerClose asChild>
+          <OriginButton
+            variant="tertiary"
+            size="medium"
+            aria-label="Close listing details"
+            className="absolute right-4 top-4 z-10 h-8 w-8 rounded-full border-0 bg-transparent p-1.5"
+          >
+            <X className="h-5 w-5" />
+          </OriginButton>
+        </DrawerClose>
         <DrawerTitle id={titleId} className="sr-only">
           {titleText}
         </DrawerTitle>
