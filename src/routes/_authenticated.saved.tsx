@@ -301,7 +301,19 @@ function SavedPage() {
           </ul>
         )}
       </div>
+
+      <ListingDetailDrawer
+        listing={detailListing}
+        open={detailId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDetailId(null);
+        }}
+        actions={
+          detailRow && detailListing ? savedActions(detailRow, detailListing) : undefined
+        }
+      />
     </AppPage>
+
   );
 }
 
