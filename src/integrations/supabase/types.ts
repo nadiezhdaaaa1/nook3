@@ -142,6 +142,7 @@ export type Database = {
           building_note: string | null
           city_id: string
           created_at: string
+          description: string | null
           id: string
           image: string | null
           lat: number | null
@@ -172,6 +173,7 @@ export type Database = {
           building_note?: string | null
           city_id: string
           created_at?: string
+          description?: string | null
           id?: string
           image?: string | null
           lat?: number | null
@@ -202,6 +204,7 @@ export type Database = {
           building_note?: string | null
           city_id?: string
           created_at?: string
+          description?: string | null
           id?: string
           image?: string | null
           lat?: number | null
