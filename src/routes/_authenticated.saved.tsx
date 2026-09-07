@@ -20,6 +20,7 @@ import { AppPage } from "@/components/app/AppPage";
 import { OriginButton } from "@/components/ui/origin-button";
 import { PreviewListingCard } from "@/components/onboarding/PreviewListingCard";
 import { ListingActions } from "@/components/app/ListingActions";
+import { ListingDetailDrawer } from "@/components/app/ListingDetailDrawer";
 import { cn } from "@/lib/utils";
 import { digestLines } from "@/lib/digest";
 import { useAppStore, useDisabledSearchIds, switchActiveSearch, type Search, SEARCH_LIMITS } from "@/lib/store";
@@ -154,6 +155,59 @@ function SavedPage() {
 
   const activeTabData = TABS.find((t) => t.key === activeTab)!;
 
+  /** Row id whose detail drawer is open (saved tab only). */
+  const [detailId, setDetailId] = useState<string | null>(null);
+
+  /** Shared action row for a saved listing — used by the card and the drawer. */
+  const savedActions = (r: AlertRow, listing: SampleListing) => (
+    <ListingActions
+      saved={r.status === "saved"}
+      saving={updateStatus.isPending && updateStatus.variables?.id === r.id}
+      compactSave
+      onToggleSave={() =>
+        updateStatus.mutate({
+          id: r.id,
+          status: r.status === "saved" ? "new" : "saved",
+        })
+      }
+      onDislike={(reason) => {
+        if (detailId === r.id) setDetailId(null);
+        updateStatus.mutate({
+          id: r.id,
+          status: "dismissed",
+          dismissReason: reason ?? null,
+        });
+      }}
+      onReport={(reason, details) => {
+        if (detailId === r.id) setDetailId(null);
+        updateStatus.mutate({
+          id: r.id,
+          status: "dismissed",
+          dismissReason: `Reported: ${reason}`,
+        });
+        reportMutation.mutate({
+          listingRef: r.id,
+          reason,
+          details,
+          searchId: r.searchId ?? null,
+          alertId: r.id,
+          listing: {
+            title: listing.address,
+            neighborhood: listing.neighborhood,
+            price: listing.rent,
+            beds: listing.beds,
+            baths: listing.baths,
+          },
+        });
+      }}
+    />
+  );
+
+  const detailRow = savedRows.find((r) => r.id === detailId) ?? null;
+  const detailListing = detailRow
+    ? alertToListing(detailRow, searchCity.get(detailRow.searchId ?? ""))
+    : null;
+
   return (
     <AppPage
       title={activeTabData.title}
@@ -218,47 +272,8 @@ function SavedPage() {
                   <PreviewListingCard
                     key={r.id}
                     listing={listing}
-                    actions={
-                      <ListingActions
-                        saved={r.status === "saved"}
-                        saving={updateStatus.isPending && updateStatus.variables?.id === r.id}
-                        compactSave
-                        onToggleSave={() =>
-                          updateStatus.mutate({
-                            id: r.id,
-                            status: r.status === "saved" ? "new" : "saved",
-                          })
-                        }
-                        onDislike={(reason) =>
-                          updateStatus.mutate({
-                            id: r.id,
-                            status: "dismissed",
-                            dismissReason: reason ?? null,
-                          })
-                        }
-                        onReport={(reason, details) => {
-                          updateStatus.mutate({
-                            id: r.id,
-                            status: "dismissed",
-                            dismissReason: `Reported: ${reason}`,
-                          });
-                          reportMutation.mutate({
-                            listingRef: r.id,
-                            reason,
-                            details,
-                            searchId: r.searchId ?? null,
-                            alertId: r.id,
-                            listing: {
-                              title: listing.address,
-                              neighborhood: listing.neighborhood,
-                              price: listing.rent,
-                              beds: listing.beds,
-                              baths: listing.baths,
-                            },
-                          });
-                        }}
-                      />
-                    }
+                    onSelect={() => setDetailId(r.id)}
+                    actions={savedActions(r, listing)}
                   />
                 );
               })}
