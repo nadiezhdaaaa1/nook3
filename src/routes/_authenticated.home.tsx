@@ -280,15 +280,26 @@ function HomeScreen() {
     title: l.address,
     neighborhood: l.neighborhood,
     beds: l.beds,
-    baths: l.baths,
+    baths: l.baths ?? null,
     price: l.rent,
     receivedAt: new Date().toISOString(),
     source: "nook",
     tags: l.tag ? [l.tag] : [],
     imageHue: 30,
-    imageUrl: l.image,
+    // No fallback photo: a listing without an image stays without one.
+    ...(l.image ? { imageUrl: l.image } : {}),
     ...(l.coords ? { lat: l.coords[0], lng: l.coords[1] } : {}),
+    ...(l.propertyType ? { propertyType: l.propertyType } : {}),
+    ...(l.sqft != null ? { sqft: l.sqft } : {}),
+    ...(l.unit ? { unit: l.unit } : {}),
+    ...(l.city ? { city: l.city } : {}),
+    ...(l.state ? { state: l.state } : {}),
+    ...(l.zip ? { zip: l.zip } : {}),
+    ...(l.listedAt ? { listedAt: l.listedAt } : {}),
+    ...(l.provider ? { provider: l.provider } : {}),
+    ...(l.url ? { sourceUrl: l.url } : {}),
   });
+
 
 
   const savedIds = useMemo(
