@@ -134,9 +134,6 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
   if (loading) {
     return (
       <div className="flex h-full flex-col">
-        <div className="px-5 pt-5">
-          <Skeleton className="h-[240px] w-full rounded-[16px]" />
-        </div>
         <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
           <Skeleton className="h-8 w-40" />
           <Skeleton className="h-4 w-64" />
