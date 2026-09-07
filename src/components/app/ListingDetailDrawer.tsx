@@ -182,7 +182,7 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
       <div className="flex-1 overflow-y-auto">
         <div className="flex flex-col gap-6 px-6 pb-8 pt-14">
           <header className="flex flex-col gap-1 overflow-hidden break-words">
-            <h2 className="text-[28px] font-medium leading-[1.2] tracking-[-0.255px] text-foreground">
+            <h2 className="font-sans text-[26px] font-medium leading-[1.2] tracking-[-0.255px] text-foreground">
               {addressParts?.line1 ?? listing.address}
             </h2>
             {addressLine2 && (
