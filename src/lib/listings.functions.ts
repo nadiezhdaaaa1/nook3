@@ -46,6 +46,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       property_type: string | null; sqft: number | null; street: string | null;
       unit: string | null; addr_city: string | null; state: string | null;
       zip: string | null; listed_at: string | null; provider: string | null;
+      description: string | null;
     };
     const rows: Row[] = [];
 
@@ -54,7 +55,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       const { data: chunk, error } = await supabase
         .from("listings")
         .select(
-          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities, property_type, sqft, street, unit, addr_city, state, zip, listed_at, provider",
+          "slug, address, rent, beds, baths, neighborhood, below_median_pct, tag, building_note, image, url, lat, lng, amenities, property_type, sqft, street, unit, addr_city, state, zip, listed_at, provider, description",
         )
         .eq("city_id", data.cityId)
         .eq("status", "active")
@@ -95,6 +96,7 @@ export const listCityListings = createServerFn({ method: "GET" })
       zip: r.zip ?? undefined,
       listedAt: r.listed_at ?? undefined,
       provider: r.provider ?? undefined,
+      description: r.description ?? undefined,
     }));
   });
 

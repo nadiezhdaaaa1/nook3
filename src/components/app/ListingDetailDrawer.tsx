@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowUpRight, Building2, Clock, MapPin } from "lucide-react";
+import { ArrowUpRight, Clock, MapPin } from "lucide-react";
 
 import {
   Sheet,
@@ -134,9 +134,6 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
   if (loading) {
     return (
       <div className="flex h-full flex-col">
-        <div className="px-5 pt-5">
-          <Skeleton className="h-[240px] w-full rounded-[16px]" />
-        </div>
         <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
           <Skeleton className="h-8 w-40" />
           <Skeleton className="h-4 w-64" />
@@ -186,25 +183,6 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
     <div className="flex h-full flex-col">
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto">
-        {/* 1. Photo */}
-        {listing.image ? (
-          <img
-            src={listing.image}
-            alt={listing.address}
-            className="mx-5 mt-5 h-[240px] w-[calc(100%-2.5rem)] rounded-[16px] object-cover"
-          />
-        ) : (
-          <div
-            className="mx-5 mt-5 flex h-[240px] w-[calc(100%-2.5rem)] flex-col items-center justify-center gap-3 rounded-[16px]"
-            style={{ background: "#f5f2ea" }}
-          >
-            <Building2 style={{ width: 40, height: 40, color: "#9a958a" }} />
-            <span style={{ fontSize: 13, color: "#6e6459" }}>
-              No photo from this source
-            </span>
-          </div>
-        )}
-
         {/* Body text */}
         <div className="px-5 py-5">
           {/* 2. Price + tag */}
@@ -308,6 +286,28 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
             >
               <Clock style={{ width: 14, height: 14 }} />
               {age}
+            </div>
+          )}
+
+          {/* 5b. Description */}
+          {listing.description && (
+            <div className="mt-5">
+              <div
+                style={{
+                  fontWeight: 600,
+                  fontSize: 15,
+                  lineHeight: "22px",
+                  color: "#241c12",
+                }}
+              >
+                About this listing
+              </div>
+              <p
+                className="mt-1.5 whitespace-pre-line"
+                style={{ fontSize: 14, lineHeight: "20px", color: "#4a4238" }}
+              >
+                {listing.description}
+              </p>
             </div>
           )}
 
