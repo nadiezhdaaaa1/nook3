@@ -11,14 +11,32 @@ import {
   type AlertStatusDb,
   type PaginatedAlertsResult,
 } from "@/lib/alerts.functions";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export const alertsQueryKey = ["alerts"] as const;
+
+/**
+ * These server fns require a bearer token. A locally cached session can already
+ * be gone while a component still thinks it has one — calling anyway throws
+ * "Unauthorized: No authorization header provided" and blanks the screen.
+ */
+async function requireSession() {
+  const { data } = await supabase.auth.getSession();
+  if (!data.session?.access_token) {
+    throw new Error("Unauthorized: no active session");
+  }
+}
 
 export const alertsQueryOptions = () =>
   queryOptions({
     queryKey: alertsQueryKey,
-    queryFn: () => listAlerts(),
+    queryFn: async () => {
+      await requireSession();
+      return listAlerts();
+    },
     staleTime: 30_000,
+    retry: false,
   });
 
 export const paginatedAlertsQueryKey = (page: number, pageSize: number) =>
@@ -27,10 +45,14 @@ export const paginatedAlertsQueryKey = (page: number, pageSize: number) =>
 export const paginatedAlertsQueryOptions = (page: number, pageSize: number) =>
   queryOptions({
     queryKey: paginatedAlertsQueryKey(page, pageSize),
-    queryFn: () =>
-      listAlertsPage({ data: { limit: pageSize, offset: (page - 1) * pageSize } }),
+    queryFn: async () => {
+      await requireSession();
+      return listAlertsPage({ data: { limit: pageSize, offset: (page - 1) * pageSize } });
+    },
     staleTime: 30_000,
+    retry: false,
   });
+
 
 export function useAlertsQuery() {
   return useQuery(alertsQueryOptions());
