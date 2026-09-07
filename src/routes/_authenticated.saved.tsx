@@ -160,8 +160,9 @@ function SavedPage() {
   const [detailId, setDetailId] = useState<string | null>(null);
 
   /** Shared action row for a saved listing — used by the card and the drawer. */
-  const savedActions = (r: AlertRow, listing: SampleListing) => (
+  const savedActions = (r: AlertRow, listing: SampleListing, variant: "card" | "drawer" = "card") => (
     <ListingActions
+      variant={variant}
       saved={r.status === "saved"}
       saving={updateStatus.isPending && updateStatus.variables?.id === r.id}
       compactSave
@@ -310,7 +311,7 @@ function SavedPage() {
           if (!open) setDetailId(null);
         }}
         actions={
-          detailRow && detailListing ? savedActions(detailRow, detailListing) : undefined
+          detailRow && detailListing ? savedActions(detailRow, detailListing, "drawer") : undefined
         }
       />
     </AppPage>

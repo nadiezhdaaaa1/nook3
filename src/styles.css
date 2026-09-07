@@ -74,6 +74,13 @@
   --color-brand-clay: #D9C7B2;
   --color-brand-logo: #6A820A;
 
+  /* Listing detail drawer */
+  --color-listing-badge: #e8efe1;
+  --color-listing-badge-foreground: #435b3b;
+  --color-listing-border: #e2dcd2;
+  --color-listing-footer-border: #efece3;
+  --color-listing-dot: #d9d3c7;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);

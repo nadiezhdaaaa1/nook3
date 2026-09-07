@@ -778,6 +778,7 @@ function HomeScreen() {
         actions={
           drawerListing ? (
             <ListingActions
+              variant="drawer"
               saved={savedIds.has(drawerListing.id)}
               saving={
                 (saveSnapshot.isPending &&

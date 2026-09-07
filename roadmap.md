@@ -1,5 +1,11 @@
 # Roadmap
 
+## Listing detail drawer Figma restyle
+- [ ] Match the shared desktop and mobile drawer to Figma nodes 319:34 and 319:728
+- [ ] Add drawer-only listing actions while preserving card/map action visuals
+- [ ] Keep exact no-source copy and existing drawer behavior
+- [ ] Verify TypeScript, build, and responsive interaction states
+
 ## Registration modal + remove /onboarding/success
 - [ ] Shared auth logic module extracted from /signup
 - [ ] RegistrationModal (signup + sign-in modes, Google, confirm-email state)
