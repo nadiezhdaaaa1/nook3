@@ -98,15 +98,23 @@ function alertToListing(a: AlertRow, cityId: CityId | undefined): SampleListing 
     address: l.title,
     rent: l.price,
     beds: l.beds,
-    baths: l.baths,
+    baths: l.baths ?? null,
     neighborhood: l.neighborhood,
     tag: l.tags?.[0],
-    image:
-      l.imageUrl ??
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop",
+    image: l.imageUrl,
     coords,
+    propertyType: l.propertyType,
+    sqft: l.sqft ?? null,
+    unit: l.unit,
+    city: l.city,
+    state: l.state,
+    zip: l.zip,
+    listedAt: l.listedAt,
+    provider: l.provider,
+    url: l.sourceUrl,
   };
 }
+
 
 function SavedPage() {
   const { tab } = Route.useSearch();

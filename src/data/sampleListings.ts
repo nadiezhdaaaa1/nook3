@@ -1,21 +1,36 @@
 import type { CityId } from "@/data/cities";
 
+export type PropertyType = "apartment" | "condo" | "house" | "townhouse";
+
 export interface SampleListing {
   id: string;
   address: string;
   rent: number;
   beds: number;
-  baths: number;
+  /** Null when the source doesn't report bathrooms. */
+  baths: number | null;
   neighborhood: string;
   belowMedianPct?: number;
   tag?: string; // "Likely RS", "Verified RS", etc.
   buildingNote?: string;
-  image: string;
+  /** Absent when the listing has no photo. */
+  image?: string;
+  /** Provider's public listing URL; absent when the provider exposes no link. */
   url?: string;
   coords?: [number, number]; // [lat, lng]
+  propertyType?: PropertyType;
+  sqft?: number | null;
+  unit?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  /** ISO timestamp of when the listing appeared at the source. */
+  listedAt?: string;
+  provider?: string;
   /** Extra amenities shown behind the "more" toggle on listing cards. */
   amenities?: string[];
 }
+
 
 const AMENITY_POOL = [
   "Pet friendly",

@@ -82,16 +82,23 @@ function alertToListing(
     address: l.title,
     rent: l.price,
     beds: l.beds,
-    baths: l.baths,
+    baths: l.baths ?? null,
     neighborhood: l.neighborhood,
     tag: l.tags?.[0],
-    image:
-      l.imageUrl ??
-      catalog?.image ??
-      `https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80&auto=format&fit=crop`,
+    image: l.imageUrl ?? catalog?.image,
     coords,
+    propertyType: l.propertyType ?? catalog?.propertyType,
+    sqft: l.sqft ?? catalog?.sqft ?? null,
+    unit: l.unit ?? catalog?.unit,
+    city: l.city ?? catalog?.city,
+    state: l.state ?? catalog?.state,
+    zip: l.zip ?? catalog?.zip,
+    listedAt: l.listedAt ?? catalog?.listedAt,
+    provider: l.provider ?? catalog?.provider,
+    url: l.sourceUrl ?? catalog?.url,
   };
 }
+
 
 
 /** Build a compact page-number/ellipsis list for pagination.
@@ -273,15 +280,26 @@ function HomeScreen() {
     title: l.address,
     neighborhood: l.neighborhood,
     beds: l.beds,
-    baths: l.baths,
+    baths: l.baths ?? null,
     price: l.rent,
     receivedAt: new Date().toISOString(),
     source: "nook",
     tags: l.tag ? [l.tag] : [],
     imageHue: 30,
-    imageUrl: l.image,
+    // No fallback photo: a listing without an image stays without one.
+    ...(l.image ? { imageUrl: l.image } : {}),
     ...(l.coords ? { lat: l.coords[0], lng: l.coords[1] } : {}),
+    ...(l.propertyType ? { propertyType: l.propertyType } : {}),
+    ...(l.sqft != null ? { sqft: l.sqft } : {}),
+    ...(l.unit ? { unit: l.unit } : {}),
+    ...(l.city ? { city: l.city } : {}),
+    ...(l.state ? { state: l.state } : {}),
+    ...(l.zip ? { zip: l.zip } : {}),
+    ...(l.listedAt ? { listedAt: l.listedAt } : {}),
+    ...(l.provider ? { provider: l.provider } : {}),
+    ...(l.url ? { sourceUrl: l.url } : {}),
   });
+
 
 
   const savedIds = useMemo(
