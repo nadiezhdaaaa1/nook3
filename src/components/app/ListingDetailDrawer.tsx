@@ -210,7 +210,7 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
                 {index > 0 && (
                   <span aria-hidden className="h-1 w-1 shrink-0 rounded-full bg-listing-dot" />
                 )}
-                <div className="flex items-center gap-2 font-['Inter',sans-serif] text-[16px] font-medium text-foreground">
+                <div className="flex items-center gap-2 font-['Inter',sans-serif] text-[14px] font-medium text-foreground">
                   <Icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
                   <span>{specs[index]}</span>
                 </div>
@@ -220,19 +220,19 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
 
           <div className="flex flex-col gap-4">
             {propertyType && (
-              <div className="flex items-center gap-2 text-[16px] font-medium text-foreground">
+              <div className="flex items-center gap-2 text-[14px] font-medium text-foreground">
                 <House className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
                 <span>{propertyType}</span>
               </div>
             )}
             {listing.neighborhood && (
-              <div className="flex items-center gap-2 text-[16px] font-medium text-foreground">
+              <div className="flex items-center gap-2 text-[14px] font-medium text-foreground">
                 <MapPin className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
                 <span>{listing.neighborhood}</span>
               </div>
             )}
             {age && (
-              <div className="flex items-center gap-2 text-[16px] font-medium text-foreground">
+              <div className="flex items-center gap-2 text-[14px] font-medium text-foreground">
                 <Clock className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
                 <span>{age}</span>
               </div>
