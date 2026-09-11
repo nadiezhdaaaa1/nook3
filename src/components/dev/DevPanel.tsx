@@ -101,6 +101,53 @@ export function DevPanel() {
   const runDigest = useServerFn(devRunDigest);
   const activeSearch = useAppStore(selectActiveSearch);
   const [digestBusy, setDigestBusy] = useState(false);
+  const wipeTestAccount = useServerFn(devWipeTestAccount);
+  const [wipeBusy, setWipeBusy] = useState(false);
+  const [wipeConfirm, setWipeConfirm] = useState(false);
+
+  async function onWipeTestAccount() {
+    if (!wipeConfirm) {
+      setWipeConfirm(true);
+      return;
+    }
+    setWipeConfirm(false);
+    setWipeBusy(true);
+    try {
+      const res = (await wipeTestAccount()) as WipeTestAccountResult;
+      if (!res.userId) {
+        toast.info(`No account found for ${res.email}`);
+        return;
+      }
+      const summary =
+        Object.entries(res.counts)
+          .filter(([, n]) => n > 0)
+          .map(([table, n]) => `${table}: ${n}`)
+          .join(", ") || "no app rows";
+
+      const { data: sess } = await supabase.auth.getUser();
+      if (sess.user?.id === res.userId) {
+        useOnboardingStore.getState().setHandoffCompletedFor(null);
+        useOnboardingStore.getState().reset();
+        try {
+          await supabase.auth.signOut();
+        } catch {
+          /* ignore */
+        }
+        qc.clear();
+        window.location.href = "/";
+        return;
+      }
+      toast.success(`Wiped ${res.email}`, { description: summary });
+    } catch (e) {
+      toast.error("Wipe failed", {
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setWipeBusy(false);
+    }
+  }
+
+
 
   async function onRunDigest() {
     if (!activeSearch) return;
