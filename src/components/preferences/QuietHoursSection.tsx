@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { usePreferencesStore } from "@/lib/preferences/store";
 import { detectTimezone, formatTimeLabel } from "@/lib/preferences/notifications";
 import { OriginButton } from "@/components/ui/origin-button";
-import { Input } from "@/components/ui/input";
+import { TimeField } from "@/components/preferences/TimeField";
 import {
   Dialog,
   DialogContent,
