@@ -3,7 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { passwordSchema } from "@/lib/validation/schemas";
-import { Logo, LogoMark } from "@/components/brand/Logo";
+import { Logo } from "@/components/brand/Logo";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
@@ -90,7 +90,6 @@ function ResetPasswordPage() {
       <header className="border-b border-charcoal-950/8">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center">
           <Link to="/" className="flex items-center gap-2.5">
-            <LogoMark size={28} />
             <Logo className="text-lg" />
           </Link>
         </div>
