@@ -2419,7 +2419,7 @@ function CommunicationsSection() {
         <OriginButton
           variant="tertiary"
           size="medium"
-          className="h-10 shrink-0 rounded-[12px]"
+          className="h-12 shrink-0 rounded-[12px] px-[20px] text-[15px] font-medium"
           onClick={() => setDisableAllOpen(true)}
         >
           Disable all
