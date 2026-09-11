@@ -1598,8 +1598,8 @@ function SignInMethodRows() {
 
   if (methods.error) {
     return (
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="text-xs text-charcoal-600">
+      <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-xs text-charcoal-600 w-full sm:w-auto">
           We couldn&apos;t load your sign-in methods right now.
         </div>
         <OriginButton variant="tertiary" size="medium" onClick={methods.refresh}>
