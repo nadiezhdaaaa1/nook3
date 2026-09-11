@@ -145,7 +145,7 @@ export function QuietHoursDialog({
             variant="main"
             size="medium"
             onClick={() => {
-              setQuiet("enabled", draft.enabled);
+              setQuiet("enabled", true);
               setQuiet("start", draft.start);
               setQuiet("end", draft.end);
               onOpenChange(false);
