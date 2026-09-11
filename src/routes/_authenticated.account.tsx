@@ -84,6 +84,12 @@ import {
 import { accessQueryOptions } from "@/lib/queries/access";
 import { useQuery } from "@tanstack/react-query";
 import { OriginButton } from "@/components/ui/origin-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
 
@@ -2523,24 +2529,36 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
                 For the match alerts of this search
               </div>
             </div>
-            <div className="flex shrink-0 flex-wrap items-center gap-1">
-              {FREQUENCY_LABELS.map((f) => {
-                const selected = search.frequency === f.id;
-                return (
-                  <OriginButton
-                    key={f.id}
-                    type="button"
-                    variant={selected ? "dark" : "tertiary"}
-                    size="medium"
-                    aria-pressed={selected}
-                    onClick={() => setSearchFrequency(search.id, f.id)}
-                    className="h-10 px-5 rounded-[12px] text-[15px] font-medium tracking-[-0.3px]"
-                  >
-                    {f.label}
-                  </OriginButton>
-                );
-              })}
-            </div>
+            <TooltipProvider delayDuration={300}>
+              <div className="flex shrink-0 flex-wrap items-center gap-1">
+                {FREQUENCY_LABELS.map((f) => {
+                  const selected = search.frequency === f.id;
+                  return (
+                    <Tooltip key={f.id}>
+                      <TooltipTrigger asChild>
+                        <OriginButton
+                          type="button"
+                          variant={selected ? "dark" : "tertiary"}
+                          size="medium"
+                          aria-pressed={selected}
+                          onClick={() => setSearchFrequency(search.id, f.id)}
+                          className="h-10 px-5 rounded-[12px] text-[15px] font-medium tracking-[-0.3px]"
+                        >
+                          {f.label}
+                        </OriginButton>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="top"
+                        sideOffset={6}
+                        className="z-[10002] rounded-[8px] bg-[#2B2521] px-3 py-1.5 text-[12px] font-normal text-white shadow-md"
+                      >
+                        {f.desc}
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+              </div>
+            </TooltipProvider>
           </div>
 
           <div className="flex items-center justify-between gap-4 px-[20px] py-[16px]">
