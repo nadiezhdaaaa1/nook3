@@ -90,7 +90,6 @@ function ResetPasswordPage() {
       <header className="border-b border-charcoal-950/8">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center">
           <Link to="/" className="flex items-center gap-2.5">
-            <LogoMark size={28} />
             <Logo className="text-lg" />
           </Link>
         </div>
