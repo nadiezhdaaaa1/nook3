@@ -8,8 +8,11 @@ import { toast } from "sonner";
 import {
   devRunDigest,
   devSetAccountState,
+  devWipeTestAccount,
   type DevAccountStateInput,
+  type WipeTestAccountResult,
 } from "@/lib/dev.functions";
+
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
 import { profileQueryKey } from "@/lib/queries/profile";
 import { useOnboardingStore } from "@/lib/onboarding/store";
