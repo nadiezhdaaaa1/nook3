@@ -254,44 +254,8 @@ function AccountPage() {
       />
 
       {/* Communications */}
-      <section>
-        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
-          Communications
-        </h2>
-        <p className="text-xs text-charcoal-600 mb-4">
-          We always send essential service emails. You control the optional ones.
-        </p>
-        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-          <ToggleRow
-            label="Rental match alerts"
-            alwaysOnNote="Always on"
-            desc="The listings you signed up for. Core to the service."
-            checked
-            onChange={() => {}}
-            disabled
-          />
-          <ToggleRow
-            label="Billing & account notices"
-            alwaysOnNote="Always on"
-            desc="Receipts, renewals, password resets, security alerts, policy changes."
-            checked
-            onChange={() => {}}
-            disabled
-          />
-          <ToggleRow
-            label="Product updates & tips"
-            desc="Occasional emails about new features and how to get more out of Nook."
-            checked={prefs.productUpdates}
-            onChange={(v) => prefs.setPref("productUpdates", v)}
-          />
-          <ToggleRow
-            label="Partner offers & promotions"
-            desc="Promotional content from partners and special offers. Unsubscribe anytime."
-            checked={prefs.marketingEmails}
-            onChange={(v) => prefs.setPref("marketingEmails", v)}
-          />
-        </div>
-      </section>
+      <CommunicationsSection />
+
 
       {/* Privacy */}
       <section>
