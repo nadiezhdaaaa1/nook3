@@ -164,8 +164,8 @@ export function QuietHoursDialog({
 export function QuietHoursRow({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={cn("flex items-start justify-between gap-4", className)}>
-      <div className="min-w-0">
+    <div className={cn("flex flex-col items-start gap-4 sm:flex-row sm:items-start sm:justify-between", className)}>
+      <div className="min-w-0 w-full sm:w-auto">
         <h3 className="font-display text-lg font-semibold text-charcoal-950">Quiet hours</h3>
         <QuietHoursSummary />
       </div>

@@ -2561,8 +2561,8 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
             </TooltipProvider>
           </div>
 
-          <div className="flex items-center justify-between gap-4 px-[20px] py-[16px]">
-            <div className="min-w-0">
+          <div className="flex flex-col items-start gap-4 px-[20px] py-[16px] sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 w-full sm:w-auto">
               <div className="text-sm font-semibold text-charcoal-950">Quiet hours</div>
               <QuietHoursSummary />
             </div>
