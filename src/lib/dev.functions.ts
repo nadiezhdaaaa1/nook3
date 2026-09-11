@@ -342,14 +342,7 @@ export const devWipeTestAccount = createServerFn({ method: "POST" })
     const uid = targetId;
     const counts: Record<string, number> = {};
 
-    async function wipe(
-      table: string,
-      apply: (q: ReturnType<typeof buildDelete>) => unknown,
-    ) {
-      void table;
-      void apply;
-    }
-    void wipe;
+
 
     const del = async (
       label: string,
