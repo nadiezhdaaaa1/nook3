@@ -18,7 +18,14 @@ type CommitFn = (opts: { data: unknown }) => Promise<{
 export async function commitOnboardingFromStore(commit: CommitFn, qc: QueryClient) {
   const o = useOnboardingStore.getState();
   const { data: sessionData } = await supabase.auth.getSession();
-  const userId = sessionData.session?.user?.id ?? null;
+  // commitOnboarding is bearer-protected: without a live token the RPC throws
+  // "Unauthorized: No authorization header provided" and blanks the screen.
+  // Fail with a recognizable unauthorized error instead, so callers can toast
+  // or redirect to /login.
+  if (!sessionData.session?.access_token) {
+    throw new Error("Unauthorized: no active session");
+  }
+  const userId = sessionData.session.user?.id ?? null;
   const alreadyHandedOff = !!userId && o.handoffCompletedFor === userId;
 
   // A stale `editingSearchId` belongs to whichever account last used this

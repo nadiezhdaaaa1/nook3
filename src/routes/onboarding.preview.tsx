@@ -217,8 +217,13 @@ function SamplePreview() {
                     await commitOnboardingFromStore(commit as never, queryClient);
                     navigate({ to: "/home", replace: true });
                   } catch (e) {
+                    const msg = e instanceof Error ? e.message : "";
+                    if (msg.toLowerCase().startsWith("unauthorized")) {
+                      navigate({ to: "/login", replace: true });
+                      return;
+                    }
                     toast.error("We couldn't finish setting up", {
-                      description: e instanceof Error ? e.message : "Please try again.",
+                      description: msg || "Please try again.",
                     });
                   } finally {
                     setBusy(false);
