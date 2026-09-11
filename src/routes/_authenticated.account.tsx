@@ -1439,7 +1439,7 @@ function TrialUpgradeCard({
 
   const priceLabel = `$${plan.monthly}`;
   const billLine =
-    plan.cycle === "annual" ? "billed $95.88/year · billed today" : "billed today";
+    plan.cycle === "annual" ? "$95.88/year, billed today" : "billed today";
   const ctaLabel = plan.cycle === "annual" ? "Get Pro annual" : "Get Pro now";
   const ctaVariant = plan.cycle === "annual" ? "max" : "premium";
   const finePrint =
