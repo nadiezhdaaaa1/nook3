@@ -7,6 +7,7 @@ import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { QuietHoursRow } from "@/components/preferences/QuietHoursSection";
 import { SearchAlertsToggle } from "@/components/preferences/SearchAlertsToggle";
 import { OriginButton } from "@/components/ui/origin-button";
+import { cn } from "@/lib/utils";
 import freqInstant from "@/assets/freq-instant.png.asset.json";
 import freqBalanced from "@/assets/freq-balanced.png.asset.json";
 import freqDaily from "@/assets/freq-daily.png.asset.json";
@@ -39,14 +40,16 @@ function NotificationsTab() {
     <div className="space-y-10 pb-32">
       {/* Master toggle */}
       <section className="space-y-3">
-        <div className="flex items-start justify-between gap-4">
+        <div className={cn("flex items-start justify-between gap-4", !enabled && "pb-8")}>
           <h2 className="font-display text-[18px] font-semibold text-charcoal-950">
             Notifications for this search
           </h2>
           <div className="flex shrink-0 items-center gap-3">
             <span
-              className="font-display text-[18px] font-semibold"
-              style={{ color: enabled ? "#6A820A" : "#C76B4A" }}
+              className={cn(
+                "font-display text-[18px] font-semibold",
+                enabled ? "text-[#6A820A]" : "text-danger",
+              )}
             >
               {enabled ? "Enabled" : "Disabled"}
             </span>
@@ -54,7 +57,7 @@ function NotificationsTab() {
           </div>
         </div>
         {!enabled && (
-          <p className="text-[13px] leading-relaxed text-charcoal-600">
+          <p className="max-w-[560px] text-[18px] font-normal leading-[32px] text-danger">
             No match alerts for this search — new matches still appear in the app. Your other
             searches aren't affected.
           </p>
