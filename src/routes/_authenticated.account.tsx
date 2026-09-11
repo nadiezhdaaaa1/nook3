@@ -2450,31 +2450,37 @@ function CommunicationsSection() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
+      <div className="space-y-4">
         {searches.map((s) => (
           <SearchCommunicationsBlock key={s.id} search={s} />
         ))}
 
-        <ToggleRow
-          label="Billing & account notices"
-          alwaysOnNote="Always on"
-          desc="Receipts, renewals, password resets, security alerts, policy changes."
-          checked
-          onChange={() => {}}
-          disabled
-        />
-        <ToggleRow
-          label="Product updates & tips"
-          desc="Occasional emails about new features and how to get more out of Nook."
-          checked={prefs.productUpdates}
-          onChange={(v) => prefs.setPref("productUpdates", v)}
-        />
-        <ToggleRow
-          label="Partner offers & promotions"
-          desc="Promotional content from partners and special offers. Unsubscribe anytime."
-          checked={prefs.marketingEmails}
-          onChange={(v) => prefs.setPref("marketingEmails", v)}
-        />
+        <div className="rounded-card border border-black/20 bg-paper">
+          <div className="border-b border-black/20">
+            <ToggleRow
+              label="Billing & account notices"
+              alwaysOnNote="Always on"
+              desc="Receipts, renewals, password resets, security alerts, policy changes."
+              checked
+              onChange={() => {}}
+              disabled
+            />
+          </div>
+          <div className="border-b border-black/20">
+            <ToggleRow
+              label="Product updates & tips"
+              desc="Occasional emails about new features and how to get more out of Nook."
+              checked={prefs.productUpdates}
+              onChange={(v) => prefs.setPref("productUpdates", v)}
+            />
+          </div>
+          <ToggleRow
+            label="Partner offers & promotions"
+            desc="Promotional content from partners and special offers. Unsubscribe anytime."
+            checked={prefs.marketingEmails}
+            onChange={(v) => prefs.setPref("marketingEmails", v)}
+          />
+        </div>
       </div>
     </section>
   );
@@ -2485,19 +2491,22 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
   const enabled = search.alertsEnabled;
 
   return (
-    <div className="px-5 py-4">
-      <div className="flex items-start justify-between gap-4">
+    <div className="rounded-card border border-black/20 bg-paper">
+      <div
+        className={cn(
+          "flex items-start justify-between gap-4 px-[20px] py-[16px]",
+          enabled && "border-b border-black/20",
+        )}
+      >
         <div className="min-w-0">
-          <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-sage-700">
-            Search name
-          </div>
-          <div className="mt-1 truncate font-display text-[20px] font-semibold text-charcoal-950">
+          <div className="text-[12px] text-charcoal-600">Search name</div>
+          <div className="mt-[2px] truncate font-display text-[24px] font-semibold tracking-[-0.88px] text-charcoal-950">
             {search.name}
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center gap-5">
           {!enabled && (
-            <span className="text-[12px]" style={{ color: "#C76B4A" }}>
+            <span className="text-[12px] font-semibold text-danger">
               Notifications for this search are disabled
             </span>
           )}
@@ -2506,15 +2515,15 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
       </div>
 
       {enabled && (
-        <div className="mt-5 space-y-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <>
+          <div className="flex flex-col gap-3 border-b border-black/20 px-[20px] py-[16px] sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
               <div className="text-sm font-semibold text-charcoal-950">Frequency</div>
               <div className="mt-0.5 text-xs text-charcoal-600">
                 For the match alerts of this search
               </div>
             </div>
-            <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+            <div className="flex shrink-0 flex-wrap items-center gap-1">
               {FREQUENCY_LABELS.map((f) => {
                 const selected = search.frequency === f.id;
                 return (
@@ -2524,10 +2533,10 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
                     aria-pressed={selected}
                     onClick={() => setSearchFrequency(search.id, f.id)}
                     className={cn(
-                      "h-9 rounded-pill px-3.5 text-xs font-semibold transition-colors",
+                      "rounded-[12px] border border-black/20 px-[20px] py-[8px] text-[15px] font-medium tracking-[-0.3px] transition-colors",
                       selected
-                        ? "bg-charcoal-950 text-paper"
-                        : "border border-black/20 text-charcoal-700 hover:bg-charcoal-950/[0.04]",
+                        ? "bg-charcoal-900 text-paper"
+                        : "text-charcoal-800 hover:bg-charcoal-950/[0.04]",
                     )}
                   >
                     {f.label}
@@ -2537,24 +2546,22 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
             </div>
           </div>
 
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center justify-between gap-4 px-[20px] py-[16px]">
             <div className="min-w-0">
-              <div className="font-display text-lg font-semibold text-charcoal-950">
-                Quiet hours
-              </div>
+              <div className="text-sm font-semibold text-charcoal-950">Quiet hours</div>
               <QuietHoursSummary />
             </div>
             <OriginButton
               variant="tertiary"
               size="medium"
-              className="h-10 shrink-0 rounded-[12px]"
+              className="shrink-0 rounded-[12px] py-[8px] pl-[16px] pr-[20px] text-[15px] font-medium"
               onClick={() => setQuietOpen(true)}
             >
-              <Pencil className="h-3.5 w-3.5" /> Edit
+              <Pencil className="h-4 w-4" /> Edit
             </OriginButton>
             <QuietHoursDialog open={quietOpen} onOpenChange={setQuietOpen} />
           </div>
-        </div>
+        </>
       )}
     </div>
   );
