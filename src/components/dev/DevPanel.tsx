@@ -387,6 +387,29 @@ export function DevPanel() {
           </button>
         </Row>
 
+        <Row label="test account">
+          <button
+            type="button"
+            disabled={wipeBusy || !hasSession}
+            onClick={onWipeTestAccount}
+            onBlur={() => setWipeConfirm(false)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-medium transition-colors",
+              wipeConfirm
+                ? "border-[#e06666] bg-[#e06666] text-black hover:bg-[#e88]"
+                : "border-white/20 bg-white/5 text-white/80 hover:bg-white/15",
+              "disabled:cursor-not-allowed disabled:border-white/20 disabled:bg-white/5 disabled:text-white/40",
+            )}
+          >
+            {wipeBusy && <Loader2 className="h-3 w-3 animate-spin" />}
+            {wipeConfirm
+              ? "Click again to confirm wipe"
+              : "Wipe test account (sergekrush@gmail.com)"}
+          </button>
+        </Row>
+
+
+
         <Row label="digest demo data (search cards)">
           <Chip
             active={false}
