@@ -20,12 +20,16 @@ export const Route = createFileRoute("/_authenticated/search/$searchId/notificat
 const FREQS: {
   id: Frequency; label: string; desc: string; bestFor: string;
   icon: string; iconAlt: string;
-}[] = [
-  { id: "maximum", label: "Instant", desc: "Every match, the moment it's listed.", bestFor: "Depending on your criteria, this can mean many alerts a day — narrow your search to receive fewer.", icon: freqInstant.url, iconAlt: "" },
-  { id: "balanced", label: "Balanced", desc: "Top matches, grouped 2–3 times a day.", bestFor: "Best for an active search without the noise.", icon: freqBalanced.url, iconAlt: "" },
-  { id: "minimal", label: "Daily", desc: "One roundup a day with your strongest matches.", bestFor: "Best for keeping watch without urgency.", icon: freqDaily.url, iconAlt: "" },
-  { id: "weekly", label: "Weekly", desc: "One curated digest every week.", bestFor: "Best for planning a future move.", icon: freqWeekly.url, iconAlt: "" },
-];
+}[] = FREQUENCY_LABELS.map((f, i) => {
+  const icons = [freqInstant.url, freqBalanced.url, freqDaily.url, freqWeekly.url];
+  const bestFor = [
+    "Depending on your criteria, this can mean many alerts a day — narrow your search to receive fewer.",
+    "Best for an active search without the noise.",
+    "Best for keeping watch without urgency.",
+    "Best for planning a future move.",
+  ];
+  return { id: f.id, label: f.label, desc: f.desc, bestFor: bestFor[i]!, icon: icons[i]!, iconAlt: "" };
+});
 
 function NotificationsTab() {
   const { searchId } = Route.useParams();
