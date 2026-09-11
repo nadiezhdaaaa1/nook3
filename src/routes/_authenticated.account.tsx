@@ -280,8 +280,8 @@ function AccountPage() {
           Privacy &amp; data
         </h2>
         <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-          <div className="px-5 py-4 flex items-center justify-between gap-4">
-            <div className="min-w-0">
+          <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 w-full sm:w-auto">
               <div className="text-sm font-semibold text-charcoal-950">Export your data</div>
               <div className="text-xs text-charcoal-600 mt-0.5">
                 Download a JSON copy of your searches and alerts.
@@ -307,8 +307,8 @@ function AccountPage() {
             </OriginButton>
           </div>
 
-          <div className="px-5 py-4 flex items-center justify-between gap-4">
-            <div className="min-w-0">
+          <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 w-full sm:w-auto">
               <div
                 className={cn(
                   "text-sm font-semibold",
@@ -548,8 +548,8 @@ function LogoutRow() {
   };
 
   return (
-    <div className="px-5 py-4 flex items-center justify-between gap-4">
-      <div className="min-w-0 flex items-center gap-3">
+    <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0 w-full sm:w-auto flex items-center gap-3">
         <img src={doorAsset.url} alt="" className="h-10 w-10 object-contain shrink-0" />
         <div>
           <div className="text-sm font-semibold text-charcoal-950">Log out</div>
@@ -1408,8 +1408,8 @@ function ProfileTimezoneRow({
 
   return (
     <>
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
           <span className="h-10 w-10 shrink-0 flex items-center justify-center">
             <img
               src={globeAsset.url}
@@ -1598,8 +1598,8 @@ function SignInMethodRows() {
 
   if (methods.error) {
     return (
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="text-xs text-charcoal-600">
+      <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-xs text-charcoal-600 w-full sm:w-auto">
           We couldn&apos;t load your sign-in methods right now.
         </div>
         <OriginButton variant="tertiary" size="medium" onClick={methods.refresh}>
@@ -1611,8 +1611,8 @@ function SignInMethodRows() {
 
   return (
     <>
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
           <span className="h-10 w-10 shrink-0 flex items-center justify-center">
             <img
               src={mailAsset.url}
@@ -1637,8 +1637,8 @@ function SignInMethodRows() {
 
       {methods.hasEmailPassword && <ProfilePasswordRow />}
 
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
           <span className="h-10 w-10 shrink-0 flex items-center justify-center">
             <img
               src={googleIcon.url}
@@ -1934,8 +1934,8 @@ function ProfilePasswordRow() {
 
   return (
     <>
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
           <span className="h-10 w-10 shrink-0 flex items-center justify-center">
             <img
               src={lockAsset.url}
@@ -2289,9 +2289,9 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
     <section>
       <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-4">Payment method</h2>
       <div className="rounded-card bg-paper-warm border border-border">
-        <div className="px-5 py-4 flex items-center justify-between gap-4">
+        <div className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           {hasCard ? (
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
               <img src={cardAsset.url} alt="Payment card" className="h-10 w-auto object-contain" />
               <div className="min-w-0">
                 <div className="text-sm font-semibold text-charcoal-950">Visa •••• 4242</div>
@@ -2299,7 +2299,7 @@ function PaymentMethodSection({ plan }: { plan: Plan }) {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
               <img src={cardAsset.url} alt="Payment card" className="h-10 w-auto object-contain" />
 
               <div className="min-w-0">
@@ -2374,8 +2374,8 @@ function PaymentHistorySection({
       ) : (
         <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
           {invoices.map((inv) => (
-            <div key={inv.id} className="px-5 py-4 flex items-center justify-between gap-4">
-              <div className="min-w-0">
+            <div key={inv.id} className="px-5 py-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 w-full sm:w-auto">
                 <div className="text-sm font-semibold text-charcoal-950">{inv.label}</div>
                 <div className="text-xs text-charcoal-600 mt-0.5">
                   {inv.date} · Paid · Visa •••• 4242
