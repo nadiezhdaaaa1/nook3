@@ -2510,10 +2510,10 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
             {search.name}
           </div>
         </div>
-        <div className="flex items-center gap-3 sm:shrink-0 sm:gap-5">
+        <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-1 sm:shrink-0">
           <SearchAlertsToggle searchId={search.id} name={search.name} enabled={enabled} />
           {!enabled && (
-            <span className="text-[12px] font-semibold text-danger">
+            <span className="text-[12px] font-semibold text-danger sm:text-right">
               Notifications for this search are disabled
             </span>
           )}
