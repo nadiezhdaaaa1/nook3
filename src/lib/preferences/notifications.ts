@@ -48,9 +48,9 @@ export function formatTimeLabel(hhmm: string): string {
   return `${h12}:${m.toString().padStart(2, "0")} ${period}`;
 }
 
-export const FREQUENCY_LABELS: { id: Frequency; label: string }[] = [
-  { id: "maximum", label: "Instant" },
-  { id: "balanced", label: "Balanced" },
-  { id: "minimal", label: "Daily" },
-  { id: "weekly", label: "Weekly" },
+export const FREQUENCY_LABELS: { id: Frequency; label: string; desc: string }[] = [
+  { id: "maximum", label: "Instant", desc: "Every match, the moment it's listed." },
+  { id: "balanced", label: "Balanced", desc: "Top matches, grouped 2–3 times a day." },
+  { id: "minimal", label: "Daily", desc: "One roundup a day with your strongest matches." },
+  { id: "weekly", label: "Weekly", desc: "One curated digest every week." },
 ];
