@@ -2527,20 +2527,17 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
               {FREQUENCY_LABELS.map((f) => {
                 const selected = search.frequency === f.id;
                 return (
-                  <button
+                  <OriginButton
                     key={f.id}
                     type="button"
+                    variant={selected ? "dark" : "tertiary"}
+                    size="medium"
                     aria-pressed={selected}
                     onClick={() => setSearchFrequency(search.id, f.id)}
-                    className={cn(
-                      "rounded-[12px] border border-black/20 px-[20px] py-[8px] text-[15px] font-medium tracking-[-0.3px] transition-colors",
-                      selected
-                        ? "bg-charcoal-900 text-paper"
-                        : "text-charcoal-800 hover:bg-charcoal-950/[0.04]",
-                    )}
+                    className="h-10 px-5 rounded-[12px] text-[15px] font-medium tracking-[-0.3px]"
                   >
                     {f.label}
-                  </button>
+                  </OriginButton>
                 );
               })}
             </div>
