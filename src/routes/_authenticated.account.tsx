@@ -2542,7 +2542,7 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
                           size="medium"
                           aria-pressed={selected}
                           onClick={() => setSearchFrequency(search.id, f.id)}
-                          className="h-10 px-5 rounded-[12px] text-[15px] font-medium tracking-[-0.3px]"
+                          className="px-5 rounded-[12px] text-[15px] font-medium tracking-[-0.3px]"
                         >
                           {f.label}
                         </OriginButton>
