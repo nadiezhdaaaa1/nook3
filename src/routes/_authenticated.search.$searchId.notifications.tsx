@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { type Frequency } from "@/lib/onboarding/store";
 import { useAppStore } from "@/lib/store";
-import { setSearchFrequency } from "@/lib/preferences/notifications";
+import { setSearchFrequency, FREQUENCY_LABELS } from "@/lib/preferences/notifications";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
 import { QuietHoursRow } from "@/components/preferences/QuietHoursSection";
 import { SearchAlertsToggle } from "@/components/preferences/SearchAlertsToggle";
