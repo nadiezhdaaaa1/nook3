@@ -2504,7 +2504,7 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
           enabled && "border-b border-black/20",
         )}
       >
-        <div className="min-w-0 w-full">
+        <div className="min-w-0 w-full sm:w-auto">
           <div className="text-[12px] text-charcoal-600">Search name</div>
           <div className="mt-[2px] truncate font-display text-[24px] font-semibold tracking-[-0.88px] text-charcoal-950">
             {search.name}
