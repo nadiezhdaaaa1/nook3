@@ -266,3 +266,158 @@ export const devRunDigest = createServerFn({ method: "POST" })
 
     return { inserted: rows.length, skipped };
   });
+
+/* --------------------------- test account wipe --------------------------- */
+
+/**
+ * The ONE account this endpoint may ever wipe. Hardcoded on purpose: the
+ * client cannot pass an email or a user id, so the endpoint can never be
+ * pointed at another account.
+ */
+const TEST_ACCOUNT_EMAIL = "sergekrush@gmail.com";
+
+export type WipeTestAccountResult = {
+  email: string;
+  userId: string;
+  counts: Record<string, number>;
+  authUserDeleted: boolean;
+};
+
+export const devWipeTestAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<WipeTestAccountResult> => {
+    // Authorization: admin role, or the test account wiping itself.
+    const callerEmail = String(
+      (context.claims as { email?: string }).email ?? "",
+    ).toLowerCase();
+    let allowed = callerEmail === TEST_ACCOUNT_EMAIL;
+    if (!allowed) {
+      const { data: isAdmin } = await context.supabase.rpc("has_role", {
+        _user_id: context.userId,
+        _role: "admin",
+      });
+      allowed = Boolean(isAdmin);
+    }
+    if (!allowed) {
+      throw new Response("Forbidden", { status: 403 });
+    }
+
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+
+    // Resolve the target user id from the hardcoded email only.
+    let targetId: string | null = null;
+    const { data: profileRow } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("email", TEST_ACCOUNT_EMAIL)
+      .maybeSingle();
+    if (profileRow?.id) targetId = profileRow.id;
+
+    if (!targetId) {
+      for (let page = 1; page <= 20 && !targetId; page += 1) {
+        const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+          page,
+          perPage: 200,
+        });
+        if (error) throw new Error(error.message);
+        const hit = data.users.find(
+          (u) => (u.email ?? "").toLowerCase() === TEST_ACCOUNT_EMAIL,
+        );
+        if (hit) targetId = hit.id;
+        if (data.users.length < 200) break;
+      }
+    }
+
+    if (!targetId) {
+      return {
+        email: TEST_ACCOUNT_EMAIL,
+        userId: "",
+        counts: {},
+        authUserDeleted: false,
+      };
+    }
+
+    const uid = targetId;
+    const counts: Record<string, number> = {};
+
+
+
+    const del = async (
+      label: string,
+      run: () => PromiseLike<{ data: unknown[] | null; error: { message: string } | null }>,
+    ) => {
+      const { data, error } = await run();
+      if (error) throw new Error(`${label}: ${error.message}`);
+      counts[label] = data?.length ?? 0;
+    };
+
+    const admin = supabaseAdmin as unknown as {
+      from: (t: string) => {
+        delete: () => {
+          eq: (c: string, v: string) => { select: (s: string) => PromiseLike<{ data: unknown[] | null; error: { message: string } | null }> };
+          or: (f: string) => { select: (s: string) => PromiseLike<{ data: unknown[] | null; error: { message: string } | null }> };
+        };
+        update: (v: Record<string, unknown>) => {
+          eq: (c: string, v: string) => { select: (s: string) => PromiseLike<{ data: unknown[] | null; error: { message: string } | null }> };
+        };
+      };
+    };
+
+    await del("wren_messages", () =>
+      admin.from("wren_messages").delete().eq("user_id", uid).select("id"),
+    );
+    await del("wren_conversations", () =>
+      admin.from("wren_conversations").delete().eq("user_id", uid).select("id"),
+    );
+    await del("listing_reports", () =>
+      admin.from("listing_reports").delete().eq("user_id", uid).select("id"),
+    );
+    await del("saved_alerts", () =>
+      admin.from("saved_alerts").delete().eq("user_id", uid).select("id"),
+    );
+    await del("searches", () =>
+      admin.from("searches").delete().eq("user_id", uid).select("id"),
+    );
+    await del("referral_notifications", () =>
+      admin.from("referral_notifications").delete().eq("user_id", uid).select("id"),
+    );
+    await del("referral_events", () =>
+      admin
+        .from("referral_events")
+        .delete()
+        .or(`referrer_user_id.eq.${uid},referred_user_id.eq.${uid}`)
+        .select("id"),
+    );
+    await del("referrals", () =>
+      admin
+        .from("referrals")
+        .delete()
+        .or(`referrer_user_id.eq.${uid},referred_user_id.eq.${uid}`)
+        .select("id"),
+    );
+    await del("user_roles", () =>
+      admin.from("user_roles").delete().eq("user_id", uid).select("id"),
+    );
+    await del("profiles_referred_by_cleared", () =>
+      admin
+        .from("profiles")
+        .update({ referred_by: null })
+        .eq("referred_by", uid)
+        .select("id"),
+    );
+    await del("profiles", () =>
+      admin.from("profiles").delete().eq("id", uid).select("id"),
+    );
+
+    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(uid);
+    if (authError) throw new Error(`auth user: ${authError.message}`);
+
+    return {
+      email: TEST_ACCOUNT_EMAIL,
+      userId: uid,
+      counts,
+      authUserDeleted: true,
+    };
+  });

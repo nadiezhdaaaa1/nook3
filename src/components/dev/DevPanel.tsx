@@ -8,8 +8,11 @@ import { toast } from "sonner";
 import {
   devRunDigest,
   devSetAccountState,
+  devWipeTestAccount,
   type DevAccountStateInput,
+  type WipeTestAccountResult,
 } from "@/lib/dev.functions";
+
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
 import { profileQueryKey } from "@/lib/queries/profile";
 import { useOnboardingStore } from "@/lib/onboarding/store";
@@ -101,6 +104,53 @@ export function DevPanel() {
   const runDigest = useServerFn(devRunDigest);
   const activeSearch = useAppStore(selectActiveSearch);
   const [digestBusy, setDigestBusy] = useState(false);
+  const wipeTestAccount = useServerFn(devWipeTestAccount);
+  const [wipeBusy, setWipeBusy] = useState(false);
+  const [wipeConfirm, setWipeConfirm] = useState(false);
+
+  async function onWipeTestAccount() {
+    if (!wipeConfirm) {
+      setWipeConfirm(true);
+      return;
+    }
+    setWipeConfirm(false);
+    setWipeBusy(true);
+    try {
+      const res = (await wipeTestAccount()) as WipeTestAccountResult;
+      if (!res.userId) {
+        toast.info(`No account found for ${res.email}`);
+        return;
+      }
+      const summary =
+        Object.entries(res.counts)
+          .filter(([, n]) => n > 0)
+          .map(([table, n]) => `${table}: ${n}`)
+          .join(", ") || "no app rows";
+
+      const { data: sess } = await supabase.auth.getUser();
+      if (sess.user?.id === res.userId) {
+        useOnboardingStore.getState().setHandoffCompletedFor(null);
+        useOnboardingStore.getState().reset();
+        try {
+          await supabase.auth.signOut();
+        } catch {
+          /* ignore */
+        }
+        qc.clear();
+        window.location.href = "/";
+        return;
+      }
+      toast.success(`Wiped ${res.email}`, { description: summary });
+    } catch (e) {
+      toast.error("Wipe failed", {
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setWipeBusy(false);
+    }
+  }
+
+
 
   async function onRunDigest() {
     if (!activeSearch) return;
@@ -336,6 +386,29 @@ export function DevPanel() {
             Run digest now
           </button>
         </Row>
+
+        <Row label="test account">
+          <button
+            type="button"
+            disabled={wipeBusy || !hasSession}
+            onClick={onWipeTestAccount}
+            onBlur={() => setWipeConfirm(false)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-medium transition-colors",
+              wipeConfirm
+                ? "border-[#e06666] bg-[#e06666] text-black hover:bg-[#e88]"
+                : "border-white/20 bg-white/5 text-white/80 hover:bg-white/15",
+              "disabled:cursor-not-allowed disabled:border-white/20 disabled:bg-white/5 disabled:text-white/40",
+            )}
+          >
+            {wipeBusy && <Loader2 className="h-3 w-3 animate-spin" />}
+            {wipeConfirm
+              ? "Click again to confirm wipe"
+              : "Wipe test account (sergekrush@gmail.com)"}
+          </button>
+        </Row>
+
+
 
         <Row label="digest demo data (search cards)">
           <Chip
