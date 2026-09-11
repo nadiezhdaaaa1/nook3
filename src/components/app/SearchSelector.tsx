@@ -148,7 +148,7 @@ export function SearchSelector() {
               {Array.from({ length: TOTAL_SLOTS }).map((_, i) => {
                 const s = live[i];
                 if (s) {
-                  const isDisabled = disabledIds.has(s.id);
+                  const isDisabled = disabledIds.has(s.id) || !s.alertsEnabled;
                   return (
                     <li key={s.id}>
                       <div

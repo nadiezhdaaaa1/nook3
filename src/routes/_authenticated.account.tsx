@@ -21,6 +21,7 @@ import {
   CreditCard,
   Receipt,
   Plus,
+  Pencil,
 } from "lucide-react";
 
 import cardAsset from "@/assets/Card.png.asset.json";
@@ -38,10 +39,20 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, useReducedMotion } from "framer-motion";
 import { useOnboardingStore } from "@/lib/onboarding/store";
-import { useAppStore, type Plan, type BillingCycle } from "@/lib/store";
+import { useAppStore, type Plan, type BillingCycle, type Search as StoredSearch } from "@/lib/store";
 import { SEARCH_LIMITS } from "@/lib/store/types";
 import { usePreferencesStore } from "@/lib/preferences/store";
 import { StickySaveBar } from "@/components/preferences/StickySaveBar";
+import {
+  QuietHoursDialog,
+  QuietHoursSummary,
+} from "@/components/preferences/QuietHoursSection";
+import { SearchAlertsToggle } from "@/components/preferences/SearchAlertsToggle";
+import {
+  disableAllNotifications,
+  setSearchFrequency,
+  FREQUENCY_LABELS,
+} from "@/lib/preferences/notifications";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -254,44 +265,8 @@ function AccountPage() {
       />
 
       {/* Communications */}
-      <section>
-        <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
-          Communications
-        </h2>
-        <p className="text-xs text-charcoal-600 mb-4">
-          We always send essential service emails. You control the optional ones.
-        </p>
-        <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
-          <ToggleRow
-            label="Rental match alerts"
-            alwaysOnNote="Always on"
-            desc="The listings you signed up for. Core to the service."
-            checked
-            onChange={() => {}}
-            disabled
-          />
-          <ToggleRow
-            label="Billing & account notices"
-            alwaysOnNote="Always on"
-            desc="Receipts, renewals, password resets, security alerts, policy changes."
-            checked
-            onChange={() => {}}
-            disabled
-          />
-          <ToggleRow
-            label="Product updates & tips"
-            desc="Occasional emails about new features and how to get more out of Nook."
-            checked={prefs.productUpdates}
-            onChange={(v) => prefs.setPref("productUpdates", v)}
-          />
-          <ToggleRow
-            label="Partner offers & promotions"
-            desc="Promotional content from partners and special offers. Unsubscribe anytime."
-            checked={prefs.marketingEmails}
-            onChange={(v) => prefs.setPref("marketingEmails", v)}
-          />
-        </div>
-      </section>
+      <CommunicationsSection />
+
 
       {/* Privacy */}
       <section>
@@ -2420,5 +2395,167 @@ function PaymentHistorySection({
         </div>
       )}
     </section>
+  );
+}
+
+/* ------------------------- Communications ------------------------- */
+
+function CommunicationsSection() {
+  const searches = useAppStore((s) => s.searches);
+  const prefs = usePreferencesStore();
+  const [disableAllOpen, setDisableAllOpen] = useState(false);
+
+  return (
+    <section>
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h2 className="font-display text-xl font-semibold text-charcoal-950 mb-2">
+            Communications
+          </h2>
+          <p className="text-xs text-charcoal-600">
+            We always send essential service emails. You control the optional ones.
+          </p>
+        </div>
+        <OriginButton
+          variant="tertiary"
+          size="medium"
+          className="h-10 shrink-0 rounded-[12px]"
+          onClick={() => setDisableAllOpen(true)}
+        >
+          Disable all
+        </OriginButton>
+      </div>
+
+      <AlertDialog open={disableAllOpen} onOpenChange={setDisableAllOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disable all email notifications?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This stops match alerts for all your searches, plus product updates and offers.
+              Essential account and billing emails still arrive when needed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                disableAllNotifications();
+                toast.success("All email notifications disabled");
+              }}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Disable all
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <div className="rounded-card bg-paper-warm border border-border divide-y divide-border">
+        {searches.map((s) => (
+          <SearchCommunicationsBlock key={s.id} search={s} />
+        ))}
+
+        <ToggleRow
+          label="Billing & account notices"
+          alwaysOnNote="Always on"
+          desc="Receipts, renewals, password resets, security alerts, policy changes."
+          checked
+          onChange={() => {}}
+          disabled
+        />
+        <ToggleRow
+          label="Product updates & tips"
+          desc="Occasional emails about new features and how to get more out of Nook."
+          checked={prefs.productUpdates}
+          onChange={(v) => prefs.setPref("productUpdates", v)}
+        />
+        <ToggleRow
+          label="Partner offers & promotions"
+          desc="Promotional content from partners and special offers. Unsubscribe anytime."
+          checked={prefs.marketingEmails}
+          onChange={(v) => prefs.setPref("marketingEmails", v)}
+        />
+      </div>
+    </section>
+  );
+}
+
+function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
+  const [quietOpen, setQuietOpen] = useState(false);
+  const enabled = search.alertsEnabled;
+
+  return (
+    <div className="px-5 py-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-sage-700">
+            Search name
+          </div>
+          <div className="mt-1 truncate font-display text-[20px] font-semibold text-charcoal-950">
+            {search.name}
+          </div>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
+          {!enabled && (
+            <span className="text-[12px]" style={{ color: "#C76B4A" }}>
+              Notifications for this search are disabled
+            </span>
+          )}
+          <SearchAlertsToggle searchId={search.id} name={search.name} enabled={enabled} />
+        </div>
+      </div>
+
+      {enabled && (
+        <div className="mt-5 space-y-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-charcoal-950">Frequency</div>
+              <div className="mt-0.5 text-xs text-charcoal-600">
+                For the match alerts of this search
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+              {FREQUENCY_LABELS.map((f) => {
+                const selected = search.frequency === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setSearchFrequency(search.id, f.id)}
+                    className={cn(
+                      "h-9 rounded-pill px-3.5 text-xs font-semibold transition-colors",
+                      selected
+                        ? "bg-charcoal-950 text-paper"
+                        : "border border-black/20 text-charcoal-700 hover:bg-charcoal-950/[0.04]",
+                    )}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="font-display text-lg font-semibold text-charcoal-950">
+                Quiet hours
+              </div>
+              <QuietHoursSummary />
+            </div>
+            <OriginButton
+              variant="tertiary"
+              size="medium"
+              className="h-10 shrink-0 rounded-[12px]"
+              onClick={() => setQuietOpen(true)}
+            >
+              <Pencil className="h-3.5 w-3.5" /> Edit
+            </OriginButton>
+            <QuietHoursDialog open={quietOpen} onOpenChange={setQuietOpen} />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
