@@ -49,7 +49,7 @@ export function TimeField({
           position="popper"
           sideOffset={4}
           className={cn(
-            "relative z-50 max-h-[280px] min-w-[var(--radix-select-trigger-width)] overflow-y-auto overflow-x-hidden",
+            "relative z-[10002] max-h-[280px] min-w-[var(--radix-select-trigger-width)] overflow-y-auto overflow-x-hidden",
             "rounded-[12px] border border-black/20 bg-white shadow-lg",
             "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           )}
