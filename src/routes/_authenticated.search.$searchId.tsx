@@ -143,7 +143,7 @@ function PageHeader({
                   setIsEditing(false);
                 }
               }}
-              className="font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px] bg-transparent border-b-2 border-charcoal-950 outline-none min-w-0"
+              className="font-display text-[36px] font-bold leading-[1.1] tracking-[-0.02em] text-charcoal-950 lg:text-[44px] bg-background border-b-2 border-charcoal-950 outline-none min-w-0"
             />
             <OriginButton
               variant="tertiary"
