@@ -95,56 +95,47 @@ export function QuietHoursDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between gap-4">
-            <span className="text-sm font-semibold text-charcoal-950">Quiet hours</span>
-            <ToggleSwitch
-              checked={draft.enabled}
-              onChange={(v) => setDraft({ ...draft, enabled: v })}
-            />
-          </div>
-
-          {draft.enabled && (
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label
-                  htmlFor="quiet-start"
-                  className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500"
-                >
-                  Start
-                </label>
-                <Input
-                  id="quiet-start"
-                  type="time"
-                  value={draft.start}
-                  onChange={(e) => setDraft({ ...draft, start: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  htmlFor="quiet-end"
-                  className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500"
-                >
-                  End
-                </label>
-                <Input
-                  id="quiet-end"
-                  type="time"
-                  value={draft.end}
-                  onChange={(e) => setDraft({ ...draft, end: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <span className="block text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
-                  Timezone
-                </span>
-                <div className="flex h-11 w-full items-center justify-between rounded-md border border-border bg-paper-warm/60 px-4 text-sm font-medium text-charcoal-700">
-                  <span>{tz}</span>
-                  <span className="text-[11px] text-charcoal-500">detected from your browser</span>
-                </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label
+                htmlFor="quiet-start"
+                className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500"
+              >
+                Start
+              </label>
+              <TimeField
+                id="quiet-start"
+                aria-label="Quiet hours start"
+                value={draft.start}
+                onChange={(start) => setDraft({ ...draft, start })}
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="quiet-end"
+                className="text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500"
+              >
+                End
+              </label>
+              <TimeField
+                id="quiet-end"
+                aria-label="Quiet hours end"
+                value={draft.end}
+                onChange={(end) => setDraft({ ...draft, end })}
+              />
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+              <span className="block text-[11px] font-mono uppercase tracking-[0.18em] text-charcoal-500">
+                Timezone
+              </span>
+              <div className="flex h-11 w-full items-center justify-between rounded-md border border-border bg-paper-warm/60 px-4 text-sm font-medium text-charcoal-700">
+                <span>{tz}</span>
+                <span className="text-[11px] text-charcoal-500">detected from your browser</span>
               </div>
             </div>
-          )}
+          </div>
         </div>
+
 
         <DialogFooter>
           <OriginButton variant="tertiary" size="medium" onClick={() => onOpenChange(false)}>
