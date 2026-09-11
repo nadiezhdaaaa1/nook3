@@ -166,6 +166,8 @@ const PLANS: PlanDef[] = [
   },
 ];
 
+const TRIAL_UPGRADE_KEYS = ["pro_monthly", "pro_annual"] as const;
+
 const TIMEZONES = [
   "America/New_York",
   "America/Chicago",
@@ -1396,6 +1398,170 @@ function PlanCard({
   );
 }
 
+/* =========================================================================
+   Trial upgrade card — shown only while the Intro trial is active.
+   Mirrors the PlanCard visual language (warm/cool dark treatment) but its
+   CTA seeds the onboarding store and routes to /checkout/mock, ending the
+   trial and starting billing today.
+   ========================================================================= */
+
+function TrialUpgradeCard({
+  plan,
+  onChoose,
+}: {
+  plan: PlanDef;
+  onChoose: () => void;
+}) {
+  const reduce = useReducedMotion();
+  const dur = reduce ? 0 : 0.25;
+
+  const CANCEL_TAIL = "Cancel anytime in Account → Subscription in two steps.";
+
+  const text = "#f8f3e1";
+  const checkColor = "#c2dd93";
+  const lockColor = "#db5919";
+  const badge = plan.cycle === "annual" ? { text: "Save 47%", bg: "#6a820a" } : null;
+
+  const cardStyle: React.CSSProperties =
+    plan.cycle === "annual"
+      ? {
+          backgroundColor: "#2d2340",
+          backgroundImage: COOL_BG,
+          boxShadow: DARK_SHADOW,
+          color: text,
+        }
+      : {
+          backgroundColor: "#2c2415",
+          backgroundImage: WARM_BG,
+          boxShadow: DARK_SHADOW,
+          color: text,
+        };
+
+  const priceLabel = `$${plan.monthly}`;
+  const billLine =
+    plan.cycle === "annual" ? "billed $95.88/year · billed today" : "billed today";
+  const ctaLabel = plan.cycle === "annual" ? "Get Pro annual" : "Get Pro now";
+  const ctaVariant = plan.cycle === "annual" ? "max" : "premium";
+  const finePrint =
+    plan.cycle === "annual"
+      ? `Auto-renews at $95.88/year until cancelled. ${CANCEL_TAIL}`
+      : `Auto-renews at $14.99/month until cancelled. ${CANCEL_TAIL}`;
+
+  return (
+    <div
+      className="relative p-8 rounded-[24px] flex flex-col gap-4"
+      style={cardStyle}
+    >
+      <div
+        className="absolute -top-4 left-0 right-8 flex justify-end pointer-events-none"
+        aria-hidden={!badge}
+      >
+        {badge && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={
+              dur === 0
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 520, damping: 12, mass: 0.6 }
+            }
+            className="inline-block rounded-full px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[1.32px] text-white"
+            style={{ background: badge.bg, fontFamily: "'Google Sans Flex', sans-serif" }}
+          >
+            {badge.text}
+          </motion.span>
+        )}
+      </div>
+
+      <div
+        className="text-[13px] font-bold uppercase tracking-[1.82px]"
+        style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
+      >
+        {plan.label}
+      </div>
+
+      <div className="text-sm opacity-80" style={{ fontFamily: "'Google Sans Flex', sans-serif" }}>
+        {plan.tagline}
+      </div>
+
+      <div className="flex items-baseline gap-2 pb-2">
+        <motion.span
+          key={priceLabel}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: dur, ease: "easeOut" }}
+          className="font-display text-[46px] leading-[46px] font-semibold"
+        >
+          {priceLabel}
+        </motion.span>
+        <span
+          className="text-sm font-medium opacity-70"
+          style={{ fontFamily: "'Google Sans Flex', sans-serif" }}
+        >
+          /month
+        </span>
+      </div>
+
+      <div
+        className="text-[13px] font-semibold"
+        style={{ fontFamily: "'Google Sans Flex', sans-serif", color: "#D6DEB8" }}
+      >
+        {billLine}
+      </div>
+
+      <OriginButton
+        className="w-full"
+        variant={ctaVariant}
+        style={{ borderRadius: 12 }}
+        onClick={onChoose}
+      >
+        {ctaLabel}
+      </OriginButton>
+
+      <div
+        className="text-xs leading-5"
+        style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 0.72 }}
+      >
+        {finePrint}
+      </div>
+
+      <ul className="flex flex-col gap-3 pt-2">
+        {plan.features.map((f) => (
+          <li
+            key={f.text}
+            className="flex items-start gap-2.5 text-sm"
+            style={{ fontFamily: "'Google Sans Flex', sans-serif", opacity: 1 }}
+          >
+            {f.icon === "check" ? (
+              <Check
+                size={16}
+                strokeWidth={2}
+                style={{ flexShrink: 0, marginTop: 3, color: checkColor }}
+              />
+            ) : (
+              <Lock
+                size={16}
+                strokeWidth={2}
+                style={{ flexShrink: 0, marginTop: 3, color: lockColor }}
+              />
+            )}
+            <span
+              style={
+                f.bold
+                  ? { fontWeight: 600, color: f.icon === "lock" ? lockColor : text }
+                  : undefined
+              }
+            >
+              {f.text}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function ProfileTimezoneRow({
   timezone,
   onChange,
@@ -2152,6 +2318,26 @@ function SubscriptionSection({
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   }, [profileQ.data?.subscriptionPeriodEnd]);
 
+  const isTrialing = accessStatus === "trialing";
+
+  const trialDaysLeft = useMemo(() => {
+    if (!trialEndsAt) return 3;
+    const ms = new Date(trialEndsAt).getTime() - Date.now();
+    return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+  }, [trialEndsAt]);
+
+  const firstChargeDate = useMemo(() => {
+    if (trialEndsAt) {
+      return new Date(trialEndsAt).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+    return periodEnd;
+  }, [trialEndsAt, periodEnd]);
+
+
   const setCanceledState = (v: boolean) => {
     setCanceledMutation.mutate(v, {
       onSuccess: (user) =>
@@ -2248,30 +2434,71 @@ function SubscriptionSection({
         }}
       />
       <section id="plan-options">
-        <div className="mb-5">
-          <h2 className="font-display text-xl font-semibold text-charcoal-950">
-            {plan === "intro" ? "Upgrade your plan" : "Plan options"}
-          </h2>
-          <p className="text-sm text-charcoal-600 mt-1">
-            Every match we find, plus up to 3 searches.
-          </p>
-        </div>
+        {isTrialing ? (
+          <>
+            <div className="mb-7 flex items-start gap-3 rounded-[16px] border border-black/20 bg-paper-warm p-5">
+              <Clock className="mt-1 h-5 w-5 shrink-0 text-[#6E6459]" />
+              <div>
+                <div className="font-display text-xl font-semibold text-charcoal-950">
+                  {trialDaysLeft} {trialDaysLeft === 1 ? "day" : "days"} left in your
+                  free trial
+                </div>
+                <p className="mt-1 text-sm text-charcoal-600">
+                  After day 3, your first charge of $14.99 lands on{" "}
+                  <span className="font-semibold text-charcoal-950">
+                    {firstChargeDate}
+                  </span>
+                  .
+                </p>
+              </div>
+            </div>
 
-        <div className="grid md:grid-cols-2 gap-7">
-          {visiblePlans.map((p) => (
-            <PlanCard
-              key={p.key}
-              plan={p}
-              currentPlan={plan}
-              activeCycle={activeCycle}
-              trialEndsAt={trialEndsAt}
-              periodEnd={periodEnd}
-              onCancelRequest={() => setCancelOpen(true)}
-              canceled={canceled}
-              onRenew={() => setRenewOpen(true)}
-            />
-          ))}
-        </div>
+            <div className="grid md:grid-cols-2 gap-7">
+              {TRIAL_UPGRADE_KEYS.map((key) => {
+                const p = PLANS.find((x) => x.key === key)!;
+                return (
+                  <TrialUpgradeCard
+                    key={p.key}
+                    plan={p}
+                    onChoose={() => {
+                      useOnboardingStore.getState().set("selectedPlan", "pro");
+                      useOnboardingStore.getState().set("billingCycle", p.cycle);
+                      useOnboardingStore.getState().set("trialActive", false);
+                      navigate({ to: "/checkout/mock" });
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mb-5">
+              <h2 className="font-display text-xl font-semibold text-charcoal-950">
+                {plan === "intro" ? "Upgrade your plan" : "Plan options"}
+              </h2>
+              <p className="text-sm text-charcoal-600 mt-1">
+                Every match we find, plus up to 3 searches.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-7">
+              {visiblePlans.map((p) => (
+                <PlanCard
+                  key={p.key}
+                  plan={p}
+                  currentPlan={plan}
+                  activeCycle={activeCycle}
+                  trialEndsAt={trialEndsAt}
+                  periodEnd={periodEnd}
+                  onCancelRequest={() => setCancelOpen(true)}
+                  canceled={canceled}
+                  onRenew={() => setRenewOpen(true)}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
       <PaymentMethodSection plan={plan} />
