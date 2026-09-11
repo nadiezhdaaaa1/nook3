@@ -2500,23 +2500,23 @@ function SearchCommunicationsBlock({ search }: { search: StoredSearch }) {
     <div className="rounded-card border border-black/20 bg-paper">
       <div
         className={cn(
-          "flex items-start justify-between gap-4 px-[20px] py-[16px]",
+          "flex flex-col gap-4 px-[20px] py-[16px] sm:flex-row sm:items-start sm:justify-between",
           enabled && "border-b border-black/20",
         )}
       >
-        <div className="min-w-0">
+        <div className="min-w-0 w-full">
           <div className="text-[12px] text-charcoal-600">Search name</div>
           <div className="mt-[2px] truncate font-display text-[24px] font-semibold tracking-[-0.88px] text-charcoal-950">
             {search.name}
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-5">
+        <div className="flex items-center gap-3 sm:shrink-0 sm:gap-5">
+          <SearchAlertsToggle searchId={search.id} name={search.name} enabled={enabled} />
           {!enabled && (
             <span className="text-[12px] font-semibold text-danger">
               Notifications for this search are disabled
             </span>
           )}
-          <SearchAlertsToggle searchId={search.id} name={search.name} enabled={enabled} />
         </div>
       </div>
 
