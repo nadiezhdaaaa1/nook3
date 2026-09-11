@@ -33,14 +33,17 @@ function UnsubscribePage() {
   const navigate = useNavigate();
   const [done, setDone] = useState(false);
 
-  const unsubscribe = async () => {
-    try {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) disableAllNotifications();
-    } catch {
-      // Prototype: no session available — proceed to the done state anyway.
-    }
+  const unsubscribe = () => {
+    // The page itself is the confirmation step — show the done state right away.
     setDone(true);
+    void (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) disableAllNotifications();
+      } catch {
+        // No session (prototype / signed-out link): nothing to apply locally.
+      }
+    })();
   };
 
   return (
