@@ -48,11 +48,11 @@ export function CookieBanner() {
               </a>
             </p>
             <div className="ckt-actions">
-              <button onClick={rejectAll} className="ckt-btn ckt-btn-primary">
-                Essential only
-              </button>
-              <button onClick={openModal} className="ckt-btn ckt-btn-outline">
+              <button onClick={openModal} className="ckt-btn ckt-btn-link">
                 Manage preferences
+              </button>
+              <button onClick={rejectAll} className="ckt-btn ckt-btn-outline">
+                Essential only
               </button>
               <button onClick={acceptAll} className="ckt-btn ckt-btn-primary">
                 Accept all
@@ -92,7 +92,7 @@ export function CookieBanner() {
               color: #f5ede0;
             }
             .ckt-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-            .ckt-actions { display: flex; gap: 8px; flex-shrink: 0; }
+            .ckt-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
             .ckt-btn {
               border-radius: 12px;
               padding: 12px 20px;
@@ -101,12 +101,21 @@ export function CookieBanner() {
               color: #ffffff;
               cursor: pointer;
               white-space: nowrap;
-              transition: background-color .15s ease;
+              transition: background-color .15s ease, color .15s ease;
             }
             .ckt-btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
             .ckt-btn-outline:hover { background: rgba(255,255,255,0.1); }
             .ckt-btn-primary { background: #d66c38; border: none; }
             .ckt-btn-primary:hover { background: #c25e2d; }
+            .ckt-btn-link {
+              background: none;
+              border: none;
+              padding: 12px 8px;
+              text-decoration: underline;
+              text-underline-offset: 2px;
+              color: rgba(255,255,255,0.85);
+            }
+            .ckt-btn-link:hover { color: #ffffff; text-decoration-thickness: 2px; }
             .ckt-btn:focus-visible { outline: 2px solid #f8f3e1; outline-offset: 2px; }
             @media (max-width: 680px) {
               .ckt-inner {
@@ -116,9 +125,10 @@ export function CookieBanner() {
                 padding: 20px;
                 border-radius: 20px;
               }
-              .ckt-actions { width: 100%; flex-wrap: wrap; }
-              .ckt-btn-primary { order: -1; width: 100%; flex: none; }
-              .ckt-btn-outline { flex: 1; }
+              .ckt-actions { width: 100%; flex-direction: column; flex-wrap: nowrap; gap: 8px; }
+              .ckt-btn-primary { order: 1; width: 100%; flex: none; }
+              .ckt-btn-outline { order: 2; width: 100%; flex: none; }
+              .ckt-btn-link { order: 3; width: 100%; text-align: center; }
             }
           `}</style>
         </div>
