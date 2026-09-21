@@ -32,6 +32,7 @@ import {
   type SampleListing,
 } from "@/data/sampleListings";
 import { cn } from "@/lib/utils";
+import { ARCHIVED_BADGE_LABEL } from "@/lib/listingAvailability";
 
 /* -------------------------------------------------------------------------- */
 /* Helpers                                                                     */
@@ -100,11 +101,13 @@ const SPEC_ITEMS = [
 interface InnerProps {
   listing: SampleListing | null;
   loading?: boolean;
+  archived?: boolean;
   actions?: React.ReactNode;
   onClose: () => void;
 }
 
-function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) {
+function ListingDetailInner({ listing, loading, archived, actions, onClose }: InnerProps) {
+
   const amenities = React.useMemo(
     () => (listing ? getListingAmenities(listing) : []),
     [listing],
@@ -182,6 +185,11 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
       <div className="flex-1 overflow-y-auto">
         <div className="flex flex-col gap-6 px-6 pb-8 pt-14">
           <header className="flex flex-col gap-1 overflow-hidden break-words">
+            {archived && (
+              <span className="mb-1 inline-flex w-fit items-center rounded-full border border-black/10 bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold leading-4 text-[#4a4238]">
+                {ARCHIVED_BADGE_LABEL}
+              </span>
+            )}
             <h2 className="font-sans text-[26px] font-medium leading-[1.2] tracking-[-0.255px] text-foreground">
               {addressParts?.line1 ?? listing.address}
             </h2>
@@ -191,6 +199,7 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
               </p>
             )}
           </header>
+
 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-display whitespace-nowrap tabular-nums text-[32px] font-semibold leading-[1.2] tracking-[-0.36px] text-foreground">
@@ -257,14 +266,14 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
       <div className="flex shrink-0 items-center gap-2 border-t border-listing-footer-border bg-surface-elevated px-3 py-5 sm:gap-4 sm:px-6">
         {listing.url ? (
           <OriginButton
-            variant="main"
+            variant={archived ? "tertiary" : "main"}
             size="medium"
             className="h-10 min-w-0 flex-1 rounded-[12px] px-3 text-[14px] font-medium tracking-[-0.32px] sm:px-4 [&>span]:gap-1"
             onClick={() =>
               window.open(listing.url, "_blank", "noopener,noreferrer")
             }
           >
-            View original listing
+            {archived ? "Open original page (may be gone)" : "View original listing"}
             <ArrowUpRight className="h-4 w-4" />
           </OriginButton>
         ) : (
@@ -272,6 +281,7 @@ function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) 
             This source doesn't provide a public listing page
           </p>
         )}
+
 
         {actions && (
           <div className="shrink-0">
@@ -293,6 +303,8 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   actions?: React.ReactNode;
   loading?: boolean;
+  /** Derived: listing is no longer available but kept in the user's list. */
+  archived?: boolean;
 }
 
 export function ListingDetailDrawer({
@@ -301,7 +313,9 @@ export function ListingDetailDrawer({
   onOpenChange,
   actions,
   loading,
+  archived,
 }: Props) {
+
   const isMobile = useIsMobile();
   const close = React.useCallback(() => onOpenChange(false), [onOpenChange]);
 
@@ -309,7 +323,9 @@ export function ListingDetailDrawer({
   const titleId = "listing-detail-title";
   const descId = "listing-detail-desc";
   const titleText = listing ? listing.address : "Listing details";
-  const descText = loading
+  const descText = archived
+    ? "Archived listing — no longer listed"
+    : loading
     ? "Loading listing details"
     : listing
       ? "Apartment listing details"
@@ -334,6 +350,7 @@ export function ListingDetailDrawer({
           <ListingDetailInner
             listing={listing}
             loading={loading}
+            archived={archived}
             actions={actions}
             onClose={close}
           />
@@ -367,6 +384,7 @@ export function ListingDetailDrawer({
         <ListingDetailInner
           listing={listing}
           loading={loading}
+          archived={archived}
           actions={actions}
           onClose={close}
         />

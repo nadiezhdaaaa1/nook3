@@ -30,6 +30,8 @@ import { CITY_MAP } from "@/data/cities/mapData";
 import type { SampleListing } from "@/data/sampleListings";
 import type { AlertRow } from "@/lib/alerts.functions";
 import { useAlertsQuery, useUpdateAlertStatusMutation } from "@/lib/queries/alerts";
+import { useActiveListingUrls } from "@/lib/queries/listingAvailability";
+import { isListingArchived } from "@/lib/listingAvailability";
 import { useReportListingMutation } from "@/lib/queries/listingReports";
 import { useDeleteSearchMutation } from "@/lib/queries/searches";
 import {
@@ -143,6 +145,27 @@ function SavedPage() {
     () => rows.filter((r) => r.status === "dismissed"),
     [rows],
   );
+
+  /**
+   * Archived state is derived at read time: a saved listing counts as archived
+   * when its source URL is no longer `active` in the catalog, or when the
+   * snapshot is older than 90 days. Nothing is deleted or hidden.
+   */
+  const savedUrls = useMemo(
+    () =>
+      Array.from(
+        new Set(savedRows.map((r) => r.listing.sourceUrl).filter((u): u is string => !!u)),
+      ),
+    [savedRows],
+  );
+  const activeUrls = useActiveListingUrls(savedUrls);
+  const isArchived = (r: AlertRow) =>
+    isListingArchived({
+      listedAt: r.listing.listedAt ?? null,
+      savedAt: r.createdAt,
+      sourceUrl: r.listing.sourceUrl ?? null,
+      activeUrls,
+    });
 
   const counts: Record<TabKey, number> = {
     saved: savedRows.length,
@@ -273,6 +296,7 @@ function SavedPage() {
                   <PreviewListingCard
                     key={r.id}
                     listing={listing}
+                    archived={isArchived(r)}
                     onSelect={() => setDetailId(r.id)}
                     actions={savedActions(r, listing)}
                   />
@@ -305,6 +329,7 @@ function SavedPage() {
 
       <ListingDetailDrawer
         listing={detailListing}
+        archived={detailRow ? isArchived(detailRow) : false}
         open={detailId !== null}
         onOpenChange={(open) => {
           if (!open) setDetailId(null);
