@@ -93,8 +93,14 @@ export function PreviewListingCard({
 
       <div
         className="flex flex-wrap items-center gap-1"
-        style={{ marginTop: 8, fontSize: 14, lineHeight: "20px", color: "#6e6459" }}
+        style={{
+          marginTop: 8,
+          fontSize: 14,
+          lineHeight: "20px",
+          color: archived ? "#847a6e" : "#6e6459",
+        }}
       >
+
         <MapPin style={{ width: 14, height: 14 }} />
         {listing.neighborhood}
         <span style={{ margin: "0 4px" }}>·</span>
