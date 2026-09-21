@@ -265,14 +265,14 @@ function ListingDetailInner({ listing, loading, archived, actions, onClose }: In
       <div className="flex shrink-0 items-center gap-2 border-t border-listing-footer-border bg-surface-elevated px-3 py-5 sm:gap-4 sm:px-6">
         {listing.url ? (
           <OriginButton
-            variant="main"
+            variant={archived ? "tertiary" : "main"}
             size="medium"
             className="h-10 min-w-0 flex-1 rounded-[12px] px-3 text-[14px] font-medium tracking-[-0.32px] sm:px-4 [&>span]:gap-1"
             onClick={() =>
               window.open(listing.url, "_blank", "noopener,noreferrer")
             }
           >
-            View original listing
+            {archived ? "Open original page (may be gone)" : "View original listing"}
             <ArrowUpRight className="h-4 w-4" />
           </OriginButton>
         ) : (
@@ -280,6 +280,7 @@ function ListingDetailInner({ listing, loading, archived, actions, onClose }: In
             This source doesn't provide a public listing page
           </p>
         )}
+
 
         {actions && (
           <div className="shrink-0">
