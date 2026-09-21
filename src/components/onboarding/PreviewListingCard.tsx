@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { ChevronDown, MapPin, TrendingDown, X } from "lucide-react";
 import { getListingAmenities, type SampleListing } from "@/data/sampleListings";
+import { ARCHIVED_BADGE_LABEL } from "@/lib/listingAvailability";
 
 interface Props {
   listing: SampleListing;
   selected?: boolean;
   /** popup = floating variant anchored to a map pin */
   popup?: boolean;
+  /** Derived state: the listing is no longer available, but stays in the list. */
+  archived?: boolean;
   onSelect?: () => void;
   onClose?: () => void;
   onHover?: (id: string | null) => void;
@@ -18,6 +21,7 @@ export function PreviewListingCard({
   listing,
   selected = false,
   popup = false,
+  archived = false,
   onSelect,
   onClose,
   onHover,
@@ -40,7 +44,7 @@ export function PreviewListingCard({
         onSelect ? "cursor-pointer" : ""
       }`}
       style={{
-        background: "#ffffff",
+        background: archived ? "#f7f5f1" : "#ffffff",
         borderRadius: 16,
         padding: 20,
         boxShadow: popup
@@ -48,6 +52,14 @@ export function PreviewListingCard({
           : "none",
       }}
     >
+      {archived && (
+        <span
+          className="mb-2 inline-flex w-fit items-center rounded-full border border-black/10 bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold leading-[16px] text-[#4a4238]"
+        >
+          {ARCHIVED_BADGE_LABEL}
+        </span>
+      )}
+
 
       <div className="flex items-start justify-between gap-3">
         <h3
