@@ -302,6 +302,8 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   actions?: React.ReactNode;
   loading?: boolean;
+  /** Derived: listing is no longer available but kept in the user's list. */
+  archived?: boolean;
 }
 
 export function ListingDetailDrawer({
@@ -310,7 +312,9 @@ export function ListingDetailDrawer({
   onOpenChange,
   actions,
   loading,
+  archived,
 }: Props) {
+
   const isMobile = useIsMobile();
   const close = React.useCallback(() => onOpenChange(false), [onOpenChange]);
 
