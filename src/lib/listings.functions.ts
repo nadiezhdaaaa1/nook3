@@ -98,3 +98,52 @@ export const listCityListings = createServerFn({ method: "GET" })
     }));
   });
 
+
+/**
+ * Availability probe for saved snapshots: given source URLs, returns the subset
+ * still present in the catalog with status `active`. Anything missing from the
+ * result is treated as archived (rented out / delisted) at read time.
+ */
+export const listActiveListingUrls = createServerFn({ method: "GET" })
+  .inputValidator((input: unknown) =>
+    z.object({ urls: z.array(z.string().max(1000)).max(500) }).parse(input),
+  )
+  .handler(async ({ data }): Promise<string[]> => {
+    const urls = Array.from(new Set(data.urls.filter(Boolean)));
+    if (urls.length === 0) return [];
+
+    const key = process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"]!;
+    const supabase = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+      auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+      global: {
+        fetch: (input, init) => {
+          const h = new Headers(init?.headers);
+          if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) {
+            h.delete("Authorization");
+          }
+          h.set("apikey", key);
+          return fetch(input as RequestInfo, { ...init, headers: h });
+        },
+      },
+    });
+
+    const active: string[] = [];
+    const CHUNK = 100;
+    for (let i = 0; i < urls.length; i += CHUNK) {
+      const slice = urls.slice(i, i + CHUNK);
+      const { data: rows, error } = await supabase
+        .from("listings")
+        .select("url")
+        .eq("status", "active")
+        .in("url", slice);
+      if (error) {
+        console.error("[listActiveListingUrls]", error.message);
+        // Fail open: treat everything in this chunk as still active so we never
+        // wrongly archive a saved listing because of a transient read error.
+        active.push(...slice);
+        continue;
+      }
+      for (const r of rows ?? []) if (r.url) active.push(r.url);
+    }
+    return active;
+  });
