@@ -32,6 +32,7 @@ import {
   type SampleListing,
 } from "@/data/sampleListings";
 import { cn } from "@/lib/utils";
+import { ARCHIVED_BADGE_LABEL } from "@/lib/listingAvailability";
 
 /* -------------------------------------------------------------------------- */
 /* Helpers                                                                     */
@@ -322,7 +323,9 @@ export function ListingDetailDrawer({
   const titleId = "listing-detail-title";
   const descId = "listing-detail-desc";
   const titleText = listing ? listing.address : "Listing details";
-  const descText = loading
+  const descText = archived
+    ? "Archived listing — no longer listed"
+    : loading
     ? "Loading listing details"
     : listing
       ? "Apartment listing details"
@@ -347,6 +350,7 @@ export function ListingDetailDrawer({
           <ListingDetailInner
             listing={listing}
             loading={loading}
+            archived={archived}
             actions={actions}
             onClose={close}
           />
@@ -380,6 +384,7 @@ export function ListingDetailDrawer({
         <ListingDetailInner
           listing={listing}
           loading={loading}
+          archived={archived}
           actions={actions}
           onClose={close}
         />
