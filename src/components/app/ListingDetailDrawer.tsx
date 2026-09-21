@@ -100,11 +100,13 @@ const SPEC_ITEMS = [
 interface InnerProps {
   listing: SampleListing | null;
   loading?: boolean;
+  archived?: boolean;
   actions?: React.ReactNode;
   onClose: () => void;
 }
 
-function ListingDetailInner({ listing, loading, actions, onClose }: InnerProps) {
+function ListingDetailInner({ listing, loading, archived, actions, onClose }: InnerProps) {
+
   const amenities = React.useMemo(
     () => (listing ? getListingAmenities(listing) : []),
     [listing],
