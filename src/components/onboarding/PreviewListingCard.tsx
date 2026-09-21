@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown, MapPin, TrendingDown, X } from "lucide-react";
 import { getListingAmenities, type SampleListing } from "@/data/sampleListings";
-import { ARCHIVED_BADGE_LABEL } from "@/lib/listingAvailability";
+import { ArchivedBadge } from "@/components/app/ArchivedBadge";
 
 interface Props {
   listing: SampleListing;
@@ -52,13 +52,7 @@ export function PreviewListingCard({
           : "none",
       }}
     >
-      {archived && (
-        <span
-          className="mb-2 inline-flex w-fit items-center rounded-full border border-black/10 bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold leading-[16px] text-[#4a4238]"
-        >
-          {ARCHIVED_BADGE_LABEL}
-        </span>
-      )}
+      {archived && <ArchivedBadge />}
 
 
       <div className="flex items-start justify-between gap-3">
