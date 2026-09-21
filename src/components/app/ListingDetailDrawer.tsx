@@ -32,7 +32,6 @@ import {
   type SampleListing,
 } from "@/data/sampleListings";
 import { cn } from "@/lib/utils";
-import { ARCHIVED_BADGE_LABEL } from "@/lib/listingAvailability";
 import { ArchivedBadge } from "@/components/app/ArchivedBadge";
 
 /* -------------------------------------------------------------------------- */
