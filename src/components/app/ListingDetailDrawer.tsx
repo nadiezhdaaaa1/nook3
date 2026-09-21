@@ -184,6 +184,11 @@ function ListingDetailInner({ listing, loading, archived, actions, onClose }: In
       <div className="flex-1 overflow-y-auto">
         <div className="flex flex-col gap-6 px-6 pb-8 pt-14">
           <header className="flex flex-col gap-1 overflow-hidden break-words">
+            {archived && (
+              <span className="mb-1 inline-flex w-fit items-center rounded-full border border-black/10 bg-black/[0.05] px-2.5 py-1 text-[12px] font-semibold leading-4 text-[#4a4238]">
+                {ARCHIVED_BADGE_LABEL}
+              </span>
+            )}
             <h2 className="font-sans text-[26px] font-medium leading-[1.2] tracking-[-0.255px] text-foreground">
               {addressParts?.line1 ?? listing.address}
             </h2>
@@ -193,6 +198,7 @@ function ListingDetailInner({ listing, loading, archived, actions, onClose }: In
               </p>
             )}
           </header>
+
 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-display whitespace-nowrap tabular-nums text-[32px] font-semibold leading-[1.2] tracking-[-0.36px] text-foreground">
