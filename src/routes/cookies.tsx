@@ -122,13 +122,13 @@ function CookiesPage() {
       <h2>5. Your Choices</h2>
       <h3>5.1 Cookie Banner</h3>
       <p>When you first visit the Service you will see a banner asking your preferences. You can choose:</p>
-      <ul>
-        <li>Accept all — enable all cookie categories</li>
-        <li>Reject all — decline all non-essential cookies</li>
-        <li>Manage preferences — choose category by category</li>
-      </ul>
-      <p>Strictly necessary cookies are always enabled. Every other category starts switched off. Nothing beyond the strictly necessary category is set until you choose to enable it.</p>
-      <p>Rejecting all is a single action and is offered with the same prominence as accepting all. Your choice is stored so that you are not asked again.</p>
+        <ul>
+          <li>Accept all — enable all cookie categories</li>
+          <li>Essential only — decline all non-essential cookies</li>
+          <li>Manage preferences — choose category by category</li>
+        </ul>
+        <p>Strictly necessary cookies are always enabled. Every other category starts switched off. Nothing beyond the strictly necessary category is set until you choose to enable it.</p>
+        <p>Choosing “Essential only” is a single action and is offered with the same prominence as accepting all. Your choice is stored so that you are not asked again.</p>
 
       <h3>5.2 Changing Your Preferences</h3>
       <p>You can change your preferences at any time by clicking “Cookie Preferences” in our footer. Withdrawing consent is as easy as giving it.</p>

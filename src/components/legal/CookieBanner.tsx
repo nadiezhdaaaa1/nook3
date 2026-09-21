@@ -48,13 +48,13 @@ export function CookieBanner() {
               </a>
             </p>
             <div className="ckt-actions">
-              <button onClick={rejectAll} className="ckt-btn ckt-btn-outline">
-                Reject all
+              <button onClick={rejectAll} className="ckt-btn ckt-btn-primary">
+                Essential only
               </button>
               <button onClick={openModal} className="ckt-btn ckt-btn-outline">
-                Manage
+                Manage preferences
               </button>
-              <button onClick={acceptAll} className="ckt-btn ckt-btn-accept">
+              <button onClick={acceptAll} className="ckt-btn ckt-btn-primary">
                 Accept all
               </button>
             </div>
@@ -105,8 +105,8 @@ export function CookieBanner() {
             }
             .ckt-btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
             .ckt-btn-outline:hover { background: rgba(255,255,255,0.1); }
-            .ckt-btn-accept { background: #d66c38; border: none; }
-            .ckt-btn-accept:hover { background: #c25e2d; }
+            .ckt-btn-primary { background: #d66c38; border: none; }
+            .ckt-btn-primary:hover { background: #c25e2d; }
             .ckt-btn:focus-visible { outline: 2px solid #f8f3e1; outline-offset: 2px; }
             @media (max-width: 680px) {
               .ckt-inner {
@@ -117,7 +117,7 @@ export function CookieBanner() {
                 border-radius: 20px;
               }
               .ckt-actions { width: 100%; flex-wrap: wrap; }
-              .ckt-btn-accept { order: -1; width: 100%; flex: none; }
+              .ckt-btn-primary { order: -1; width: 100%; flex: none; }
               .ckt-btn-outline { flex: 1; }
             }
           `}</style>
