@@ -136,7 +136,7 @@ export function BillingDunningBanner() {
           size="medium"
           onClick={() => void openRepair()}
           disabled={mode === "creating"}
-          className="shrink-0 focus-visible:!ring-white focus-visible:!ring-offset-0"
+          className="!h-[32px] !px-3.5 !text-[13px] shrink-0 focus-visible:!ring-white focus-visible:!ring-offset-0"
         >
           {mode === "creating" ? (
             <>
@@ -166,8 +166,8 @@ function Shell({
 }) {
   const style =
     tone === "good"
-      ? { background: "#EEF4DA", color: "#3A4606", borderBottom: "1px solid rgba(0,0,0,0.12)" }
-      : { background: "#d66c38", color: "#ffffff", borderBottom: "1px solid rgba(0,0,0,0.12)" };
+      ? { background: "#EEF4DA", color: "#3A4606" }
+      : { background: "#d66c38", color: "#ffffff" };
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   useLayoutEffect(() => {
@@ -196,7 +196,7 @@ function Shell({
         className="fixed inset-x-0 top-0 z-[55]"
         style={style}
       >
-        <div className="mx-auto flex max-w-[1440px] items-center gap-2 px-4 py-1.5 sm:px-6">
+        <div className="mx-auto flex max-w-[1440px] items-center gap-2 px-4 py-[6px] sm:px-6">
           {children}
           {onDismiss && (
             <button
