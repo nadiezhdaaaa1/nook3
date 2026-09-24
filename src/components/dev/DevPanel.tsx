@@ -171,8 +171,8 @@ export function DevPanel() {
     setBusy(true);
     try {
       await setState({ data: patch as never });
-      await qc.invalidateQueries({ queryKey: accessQueryKey });
-      await qc.invalidateQueries({ queryKey: profileQueryKey });
+      await qc.resetQueries({ queryKey: accessQueryKey });
+      await qc.resetQueries({ queryKey: profileQueryKey });
       await router.invalidate();
       if (to) navigate({ to, replace: true } as never);
     } catch (e) {
