@@ -46,9 +46,7 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }
 
-    if (GATE_EXEMPT_PREFIXES.some((p) => location.pathname.startsWith(p))) {
-      return { userId: data.user.id };
-    }
+    const gateExempt = GATE_EXEMPT_PREFIXES.some((p) => location.pathname.startsWith(p));
 
     // Awaited here, so the route does not render until access resolves — no
     // flash of app content. `pendingComponent` covers the wait.
@@ -73,7 +71,7 @@ export const Route = createFileRoute("/_authenticated")({
     // for (e.g. created by a checkout webhook from a Stripe customer email,
     // reached through an emailed sign-in token). Their next step is setting up
     // credentials on the account that already exists.
-    if (!access.credentials) {
+    if (!gateExempt && !access.credentials) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -83,11 +81,11 @@ export const Route = createFileRoute("/_authenticated")({
       }
     }
 
-    if (!access.onboarded) {
+    if (!gateExempt && !access.onboarded) {
       throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
     }
 
-    if (!access.accessAllowed && location.pathname.startsWith("/search/new")) {
+    if (!gateExempt && !access.accessAllowed && location.pathname.startsWith("/search/new")) {
       throw redirect({ to: "/account", hash: "subscription" });
     }
 
