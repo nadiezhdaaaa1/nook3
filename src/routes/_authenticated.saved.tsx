@@ -237,6 +237,9 @@ function SavedPage() {
     <AppPage
       title={activeTabData.title}
       subtitle={activeTabData.subtitle}
+      aboveTabs={
+        activeTab !== "searches" ? <ReengagementBanner /> : undefined
+      }
       tabs={
         <div
           role="tablist"
