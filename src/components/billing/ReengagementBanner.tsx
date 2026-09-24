@@ -113,8 +113,8 @@ export function ReengagementBanner({
         src={pausedIllustrationAsset.url}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute hidden h-[165px] w-[165px] max-w-none min-[680px]:block"
-        style={{ right: "-64px", bottom: "-48px", zIndex: 0 }}
+        className="pointer-events-none absolute hidden h-[88px] w-[88px] max-w-none min-[680px]:block"
+        style={{ right: "-34px", bottom: "-26px", zIndex: 0 }}
       />
     </section>
   );
