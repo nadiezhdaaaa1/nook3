@@ -10,6 +10,7 @@ import {
   dunningCopy,
   dunningState,
 } from "@/lib/dunning";
+import { OriginButton } from "@/components/ui/origin-button";
 
 /**
  * App-wide dunning notice for the `past_due` window. Access and digests keep
@@ -122,18 +123,20 @@ export function BillingDunningBanner() {
           <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden />
           <span className="min-w-0 truncate sm:whitespace-normal">
             <span className="font-semibold">{copy.headline}</span>{" "}
-            <span className="opacity-80">
+            <span>
               {mode === "error"
                 ? <>Couldn&rsquo;t open the payment page.</>
                 : "Your searches and alerts keep running until then."}
             </span>
           </span>
         </p>
-        <button
+        <OriginButton
           type="button"
+          variant="dark"
+          size="medium"
           onClick={() => void openRepair()}
           disabled={mode === "creating"}
-          className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[8px] bg-charcoal-950 px-3 text-[12px] font-semibold text-paper transition hover:opacity-90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950 focus-visible:ring-offset-1"
+          className="shrink-0 focus-visible:!ring-white focus-visible:!ring-offset-0"
         >
           {mode === "creating" ? (
             <>
@@ -146,7 +149,7 @@ export function BillingDunningBanner() {
               <CreditCard className="h-3.5 w-3.5" aria-hidden /> {copy.ctaLabel}
             </>
           )}
-        </button>
+        </OriginButton>
       </div>
     </Shell>
   );
@@ -164,7 +167,7 @@ function Shell({
   const style =
     tone === "good"
       ? { background: "#EEF4DA", color: "#3A4606", borderBottom: "1px solid rgba(0,0,0,0.12)" }
-      : { background: "#FFF1CF", color: "#5A4200", borderBottom: "1px solid rgba(0,0,0,0.12)" };
+      : { background: "#d66c38", color: "#ffffff", borderBottom: "1px solid rgba(0,0,0,0.12)" };
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   useLayoutEffect(() => {
