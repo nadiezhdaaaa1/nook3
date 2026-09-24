@@ -175,10 +175,6 @@ export function DevPanel() {
       await qc.resetQueries({ queryKey: profileQueryKey });
       await router.invalidate();
       if (to) {
-        if (window.location.pathname === to) {
-          window.location.reload();
-          return;
-        }
         navigate({ to, replace: true } as never);
       }
     } catch (e) {

@@ -66,9 +66,7 @@ export function ReengagementBanner({
     enabled: suppliedAccess === undefined,
     retry: false,
   });
-  const access = suppliedAccess === undefined
-    ? accessQuery.data ?? accessQueryOptions().initialData
-    : suppliedAccess;
+  const access = suppliedAccess === undefined ? accessQuery.data : suppliedAccess;
   const copy = getReengagementCopy(access);
   const navigate = useNavigate();
 
