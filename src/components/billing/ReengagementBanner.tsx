@@ -109,12 +109,17 @@ export function ReengagementBanner({
       >
         {copy.cta}
       </OriginButton>
-      <img
-        src={pausedIllustrationAsset.url}
-        alt=""
+      <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-[calc(50%+33px)] hidden h-[90px] w-[90px] translate-y-[-50%] object-contain min-[680px]:block"
-      />
+        className="pointer-events-none absolute right-0 top-[calc(50%+33px)] hidden h-[90px] w-[75px] translate-y-[-50%] overflow-hidden min-[680px]:block"
+      >
+        <img
+          src={pausedIllustrationAsset.url}
+          alt=""
+          className="absolute h-[183.61%] w-[220%] max-w-none"
+          style={{ left: "-34.67%", top: "-29.76%" }}
+        />
+      </div>
     </section>
   );
 }
