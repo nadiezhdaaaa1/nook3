@@ -96,8 +96,6 @@ import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThree
 import { ReengagementBanner } from "@/components/billing/ReengagementBanner";
 
 export const Route = createFileRoute("/_authenticated/account")({
-  loader: async ({ context }) =>
-    context.queryClient.ensureQueryData(accessQueryOptions()),
   component: () => (
     <AppPage title="Account" subtitle="Contact details, plan and billing.">
       <AccountPage />
@@ -184,7 +182,6 @@ const TIMEZONES = [
 ];
 
 function AccountPage() {
-  const routeAccess = Route.useLoaderData() as AccessState;
   const onboarding = useOnboardingStore();
   const user = useAppStore((s) => s.user);
   const searches = useAppStore((s) => s.searches);
@@ -270,8 +267,8 @@ function AccountPage() {
         trialEndsAt={trialEndsAt}
         currentPlan={currentPlan}
         activeCycle={activeCycle}
-        access={accessQ.data ?? routeAccess}
-        accessStatus={accessQ.data?.status ?? routeAccess.status}
+        access={accessQ.data ?? null}
+        accessStatus={accessQ.data?.status ?? "none"}
       />
 
       {/* Communications */}
