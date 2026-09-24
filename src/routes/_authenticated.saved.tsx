@@ -237,6 +237,9 @@ function SavedPage() {
     <AppPage
       title={activeTabData.title}
       subtitle={activeTabData.subtitle}
+      aboveTabs={
+        activeTab !== "searches" ? <ReengagementBanner /> : undefined
+      }
       tabs={
         <div
           role="tablist"
@@ -278,8 +281,6 @@ function SavedPage() {
       }
     >
       <div className="space-y-6">
-
-        {activeTab !== "searches" && <ReengagementBanner />}
 
         {alertsQ.isLoading && activeTab !== "searches" ? (
           <div className="flex items-center justify-center py-16 text-charcoal-500">
