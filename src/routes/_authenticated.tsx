@@ -81,6 +81,10 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
     }
 
+    if (!access.accessAllowed && location.pathname.startsWith("/search/new")) {
+      throw redirect({ to: "/account", hash: "subscription" });
+    }
+
     return { userId: data.user.id, access };
   },
   pendingComponent: GatePending,

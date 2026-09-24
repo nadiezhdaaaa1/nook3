@@ -2365,7 +2365,23 @@ function SubscriptionSection({
 
   return (
     <>
-      {needsRestart && <ReengagementBanner id="subscription" className="mb-8" />}
+      {needsRestart && (
+        <ReengagementBanner
+          access={{
+            credentials: true,
+            status: accessStatus,
+            accessAllowed: false,
+            onboarded: true,
+            plan,
+            billingCycle: activeCycle,
+            hasEverSubscribed: accessStatus === "canceled" && plan === "pro",
+            pastDueSince: null,
+            email: "",
+          }}
+          id="subscription"
+          className="mb-8"
+        />
+      )}
       <RenewSubscriptionDialog
         open={renewOpen}
         onOpenChange={setRenewOpen}
