@@ -10,14 +10,17 @@ export function AppPage({
   subtitle,
   children,
   tabs,
+  aboveTabs,
 }: {
   title: string;
   subtitle?: string;
   children: ReactNode;
   tabs?: ReactNode;
+  aboveTabs?: ReactNode;
 }) {
   return (
     <div className="mx-auto max-w-6xl px-6 pb-24 pt-8 lg:px-12 lg:pt-10">
+      {aboveTabs && <div className="mb-8">{aboveTabs}</div>}
       {tabs && (
         <div className="mb-8">
           {tabs}
