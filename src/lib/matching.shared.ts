@@ -51,5 +51,5 @@ export function isDigestEntitled(profile: DigestEntitlement | null | undefined):
   // Setup unfinished means the trial clock hasn't started yet.
   if (!profile.completedAt) return false;
   const s = profile.subscriptionStatus ?? "none";
-  return s === "active" || s === "trialing" || s === "past_due";
+  return s === "active" || s === "trialing";
 }

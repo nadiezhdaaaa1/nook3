@@ -26,12 +26,9 @@ export function dbRowToUser(row: any) {
     deletionCancelSubscription: row.deletion_cancel_subscription ?? null,
     subscriptionCanceledAt: row.subscription_canceled_at ?? null,
     subscriptionPeriodEnd: row.subscription_period_end ?? null,
-    subscriptionStatus: (row.subscription_status ?? "none") as
-      | "none"
-      | "trialing"
-      | "active"
-      | "past_due"
-      | "canceled",
+    subscriptionStatus: (row.subscription_status === "past_due"
+      ? "canceled"
+      : (row.subscription_status ?? "none")) as "none" | "trialing" | "active" | "canceled",
     pastDueSince: row.past_due_since ?? null,
     updatedAt: row.updated_at ?? undefined,
   };
@@ -46,12 +43,11 @@ export function dbRowToUser(row: any) {
                     self-writable `has_password` column, and never assumes an
                     authenticated user has a password identity (a Stripe-first
                     signup arrives with neither password nor Google).
-     subscription — `subscription_status`, with `past_due` expiring to
-                    `canceled` server-side after 7 days (self-healing).
+     subscription — only `trialing` and `active` receive new matches.
+                    Legacy `past_due` rows read as canceled immediately.
      onboarded    — `completed_at is not null`. Set once, never unset.
    ------------------------------------------------------------------------- */
 
-export const PAST_DUE_GRACE_DAYS = 7;
 /** Paid-but-unfinished setup is canceled after this many days. */
 export const SETUP_GRACE_DAYS = 14;
 
@@ -59,7 +55,6 @@ export type SubscriptionStatus =
   | "none"
   | "trialing"
   | "active"
-  | "past_due"
   | "canceled";
 
 export interface AccessState {
@@ -89,29 +84,8 @@ export const getAccessState = createServerFn({ method: "GET" })
       .eq("id", context.userId)
       .maybeSingle();
 
-    let status = ((row as any)?.subscription_status ?? "none") as SubscriptionStatus;
-    const pastDueSince = (row as any)?.past_due_since as string | null | undefined;
-
-    // Self-heal an expired past_due window. Computed server-side so a client
-    // clock can never extend the grace period.
-    if (status === "past_due") {
-      const started = pastDueSince ? new Date(pastDueSince).getTime() : 0;
-      const expired =
-        !pastDueSince ||
-        Date.now() - started > PAST_DUE_GRACE_DAYS * 24 * 60 * 60 * 1000;
-      if (expired) {
-        const { data: healed } = await supabaseAdmin.rpc("admin_expire_past_due", {
-          _user_id: context.userId,
-        } as never);
-        const updated = Array.isArray(healed) ? healed[0] : healed;
-        if (updated) {
-          row = updated as never;
-          status = ((updated as any).subscription_status ?? "canceled") as SubscriptionStatus;
-        } else {
-          status = "canceled";
-        }
-      }
-    }
+    const rawStatus = (row as any)?.subscription_status ?? "none";
+    let status: SubscriptionStatus = rawStatus === "past_due" ? "canceled" : rawStatus;
 
     // Paid but never finished setup: the trial clock only starts at
     // `completed_at`, so cap the wait instead of leaving it open-ended.
@@ -150,7 +124,7 @@ export const getAccessState = createServerFn({ method: "GET" })
     return {
       credentials,
       status,
-      accessAllowed: status === "active" || status === "trialing" || status === "past_due",
+      accessAllowed: status === "active" || status === "trialing",
       onboarded: !!(row as any)?.completed_at,
       plan: (((row as any)?.plan ?? "intro") as "intro" | "pro"),
       billingCycle: (((row as any)?.billing_cycle ?? "monthly") as "monthly" | "annual"),

@@ -16,3 +16,9 @@
 - [x] Route gate redirects: no credentials → /signup?lockEmail=1; onboarded no-access → /account#subscription
 - [x] Account subscription restart copy for voluntary churn vs dunning cancellation
 - [x] Analytics events for modal open / auth success / checkout redirect
+
+## Frozen-data cancellation model
+- [ ] Remove past-due grace access, UI, routes, and preview controls
+- [ ] Keep onboarded canceled accounts inside the app
+- [ ] Add cause-aware restart banners to Home, Saved, and Account
+- [ ] Verify all preview billing presets across the affected pages

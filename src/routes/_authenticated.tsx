@@ -8,7 +8,6 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { EmailVerificationBanner } from "@/components/EmailVerificationBanner";
 import { AccountDeletionBanner } from "@/components/account/AccountDeletionBanner";
-import { BillingDunningBanner } from "@/components/billing/BillingDunningBanner";
 import { AppHeader } from "@/components/app/AppHeader";
 import { useDbSync } from "@/lib/queries/useDbSync";
 import { HydrationSkeleton } from "@/components/system/HydrationSkeleton";
@@ -28,8 +27,8 @@ import { useOnboardingStore } from "@/lib/onboarding/store";
  *
  * Access gate. Three server-derived flags (see getAccessState):
  *   credentials  — the account can sign in on its own (password OR social).
- *   subscription — trialing/active grant access; past_due grants a 7-day
- *                  grace period; none/canceled do not.
+ *   subscription — trialing/active receive new matches. Canceled accounts keep
+ *                  browsing the frozen matches they already have.
  *   onboarded    — `completed_at` is set. Means "finished setting up", not
  *                  "finished paying". Set once, never unset — deleting every
  *                  search does not send a returning user back to onboarding.
@@ -78,15 +77,6 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/signup", search: { lockEmail: 1 } });
     }
 
-    if (!access.accessAllowed) {
-      if (!access.onboarded) {
-        throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
-      }
-      // All onboarded no-access cases belong in Account. The subscription
-      // section distinguishes voluntary churn from dunning cancellation.
-      throw redirect({ to: "/account", hash: "subscription" });
-    }
-
     if (!access.onboarded) {
       throw redirect({ to: "/onboarding/step/$step", params: { step: String(step) } });
     }
@@ -115,7 +105,6 @@ function AppLayout() {
   return (
     <div className="min-h-dvh bg-paper">
       <AccountDeletionBanner />
-      <BillingDunningBanner />
       <EmailVerificationBanner />
       {!hideHeader && <AppHeader />}
       {isHydrating ? (

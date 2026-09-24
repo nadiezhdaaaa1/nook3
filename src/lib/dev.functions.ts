@@ -19,11 +19,9 @@ import { dbRowToUser } from "@/lib/profile.functions";
 const devStateSchema = z.object({
   plan: z.enum(["intro", "pro"]).optional(),
   billingCycle: z.enum(["monthly", "annual"]).optional(),
-  status: z
-    .enum(["none", "trialing", "active", "past_due", "canceled"])
-    .optional(),
-  /** Days ago that `past_due` started. 0 = today, 7 = grace period expired. */
-  pastDueDayOffset: z.number().int().min(0).max(7).optional(),
+  status: z.enum(["none", "trialing", "active", "canceled"]).optional(),
+  /** Sets the retained payment-failure timestamp used to explain cancellation. */
+  paymentFailureMarker: z.boolean().optional(),
   clearPastDue: z.boolean().optional(),
   onboarded: z.boolean().optional(),
   hasEverSubscribed: z.boolean().optional(),
@@ -50,12 +48,7 @@ export const devSetAccountState = createServerFn({ method: "POST" })
       "@/integrations/supabase/client.server"
     );
 
-    const pastDueSince =
-      data.pastDueDayOffset === undefined
-        ? null
-        : new Date(
-            Date.now() - data.pastDueDayOffset * 24 * 60 * 60 * 1000,
-          ).toISOString();
+    const pastDueSince = data.paymentFailureMarker ? new Date().toISOString() : null;
 
     const { data: rows, error } = await supabaseAdmin.rpc(
       "dev_set_account_state",
