@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, CreditCard, Loader2, X } from "lucide-react";
 
-import { OriginButton } from "@/components/ui/origin-button";
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
 import { useHasSession } from "@/lib/queries/useHasSession";
 import {
@@ -16,10 +16,9 @@ import {
  * running for all seven days — this banner is the entire intervention, so it
  * has to carry the amount, the deadline and a one-click repair path.
  *
- * Dismissal is session-scoped: the deadline is real, so it comes back on the
- * next visit.
+ * Dismissal is page-scoped: it lives in component state and resets on every
+ * pathname change (and on reload).
  */
-const DISMISS_KEY = "nook.billing.dunningDismissed";
 export const BILLING_RETURN_KEY = "nook.billing.returning";
 
 type Mode = "idle" | "creating" | "error" | "checking" | "recovered";
@@ -41,10 +40,10 @@ export function BillingDunningBanner() {
     timers.current.push(setTimeout(fn, ms));
   }, []);
 
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    setDismissed(window.sessionStorage.getItem(DISMISS_KEY) === "1");
-  }, []);
+    setDismissed(false);
+  }, [pathname]);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
@@ -54,7 +53,6 @@ export function BillingDunningBanner() {
     if (typeof window === "undefined") return;
     if (window.sessionStorage.getItem(BILLING_RETURN_KEY) !== "1") return;
     window.sessionStorage.removeItem(BILLING_RETURN_KEY);
-    window.sessionStorage.removeItem(DISMISS_KEY);
     setDismissed(false);
     setMode("checking");
     later(() => {
@@ -88,15 +86,14 @@ export function BillingDunningBanner() {
   }
 
   function dismiss() {
-    if (typeof window !== "undefined") window.sessionStorage.setItem(DISMISS_KEY, "1");
     setDismissed(true);
   }
 
   if (mode === "recovered") {
     return (
       <Shell tone="good">
-        <span className="flex items-center gap-2 text-sm font-semibold">
-          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
+        <span className="flex items-center gap-2 text-[13px] font-semibold">
+          <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
           Payment received — you&rsquo;re all set.
         </span>
       </Shell>
@@ -106,8 +103,8 @@ export function BillingDunningBanner() {
   if (mode === "checking") {
     return (
       <Shell tone="warn">
-        <span className="flex items-center gap-2 text-sm font-semibold">
-          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+        <span className="flex items-center gap-2 text-[13px] font-semibold">
+          <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" aria-hidden />
           Checking your payment… this takes a few seconds.
         </span>
       </Shell>
@@ -120,42 +117,36 @@ export function BillingDunningBanner() {
 
   return (
     <Shell tone="warn" onDismiss={dismiss}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 w-full">
-        <p className="m-0 flex items-start gap-2 text-sm leading-relaxed">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-          <span>
+      <div className="flex w-full min-w-0 items-center justify-between gap-3">
+        <p className="m-0 flex min-w-0 items-center gap-2 text-[13px] leading-snug">
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+          <span className="min-w-0 truncate sm:whitespace-normal">
             <span className="font-semibold">{copy.headline}</span>{" "}
-            {mode === "error" ? (
-              <span className="opacity-80">
-                Couldn&rsquo;t open the payment page.
-              </span>
-            ) : (
-              <span className="opacity-80">
-                Your searches and alerts keep running until then.
-              </span>
-            )}
+            <span className="opacity-80">
+              {mode === "error"
+                ? <>Couldn&rsquo;t open the payment page.</>
+                : "Your searches and alerts keep running until then."}
+            </span>
           </span>
         </p>
-        <div className="shrink-0">
-          <OriginButton
-            variant="dark"
-            size="medium"
-            onClick={() => void openRepair()}
-            disabled={mode === "creating"}
-          >
-            {mode === "creating" ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Opening…
-              </>
-            ) : mode === "error" ? (
-              "Retry"
-            ) : (
-              <>
-                <CreditCard className="h-4 w-4" aria-hidden /> {copy.ctaLabel}
-              </>
-            )}
-          </OriginButton>
-        </div>
+        <button
+          type="button"
+          onClick={() => void openRepair()}
+          disabled={mode === "creating"}
+          className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[8px] bg-charcoal-950 px-3 text-[12px] font-semibold text-paper transition hover:opacity-90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal-950 focus-visible:ring-offset-1"
+        >
+          {mode === "creating" ? (
+            <>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden /> Opening…
+            </>
+          ) : mode === "error" ? (
+            "Retry"
+          ) : (
+            <>
+              <CreditCard className="h-3.5 w-3.5" aria-hidden /> {copy.ctaLabel}
+            </>
+          )}
+        </button>
       </div>
     </Shell>
   );
@@ -174,21 +165,49 @@ function Shell({
     tone === "good"
       ? { background: "#EEF4DA", color: "#3A4606", borderBottom: "1px solid rgba(0,0,0,0.12)" }
       : { background: "#FFF1CF", color: "#5A4200", borderBottom: "1px solid rgba(0,0,0,0.12)" };
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const apply = () => {
+      const h = el.offsetHeight;
+      setHeight(h);
+      root.style.setProperty("--dunning-banner-h", `${h}px`);
+    };
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty("--dunning-banner-h");
+    };
+  }, []);
   return (
-    <div role="status" aria-live="polite" className="sticky top-0 z-50" style={style}>
-      <div className="mx-auto flex max-w-[1440px] items-center gap-3 px-6 py-3">
-        {children}
-        {onDismiss && (
-          <button
-            type="button"
-            onClick={onDismiss}
-            aria-label="Dismiss"
-            className="ml-1 shrink-0 rounded-full p-1 opacity-60 transition hover:opacity-100"
-          >
-            <X className="h-4 w-4" aria-hidden />
-          </button>
-        )}
+    <>
+      <div
+        ref={ref}
+        role="status"
+        aria-live="polite"
+        className="fixed inset-x-0 top-0 z-[55]"
+        style={style}
+      >
+        <div className="mx-auto flex max-w-[1440px] items-center gap-2 px-4 py-1.5 sm:px-6">
+          {children}
+          {onDismiss && (
+            <button
+              type="button"
+              onClick={onDismiss}
+              aria-label="Dismiss"
+              className="shrink-0 rounded-full p-1 opacity-60 transition hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden />
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+      <div aria-hidden style={{ height }} />
+    </>
   );
 }
