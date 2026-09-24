@@ -96,6 +96,9 @@ import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThree
 import { ReengagementBanner } from "@/components/billing/ReengagementBanner";
 
 export const Route = createFileRoute("/_authenticated/account")({
+  beforeLoad: async ({ context }) => ({
+    access: await context.queryClient.ensureQueryData(accessQueryOptions()),
+  }),
   component: () => (
     <AppPage title="Account" subtitle="Contact details, plan and billing.">
       <AccountPage />
