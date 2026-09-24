@@ -174,7 +174,13 @@ export function DevPanel() {
       await qc.resetQueries({ queryKey: accessQueryKey });
       await qc.resetQueries({ queryKey: profileQueryKey });
       await router.invalidate();
-      if (to) navigate({ to, replace: true } as never);
+      if (to) {
+        if (window.location.pathname === to) {
+          window.location.reload();
+          return;
+        }
+        navigate({ to, replace: true } as never);
+      }
     } catch (e) {
       toast.error("Dev write failed", {
         description: e instanceof Error ? e.message : "Unknown error",
