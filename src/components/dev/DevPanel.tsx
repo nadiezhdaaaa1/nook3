@@ -294,6 +294,80 @@ export function DevPanel() {
       </div>
 
       <div className="mt-3 flex flex-col gap-3">
+        <Row
+          label={`billing state — now: ${
+            !a
+              ? "…"
+              : a.status === "past_due" && a.pastDueSince
+                ? `past_due day ${Math.floor((Date.now() - new Date(a.pastDueSince).getTime()) / 86400000)}`
+                : a.status === "canceled"
+                  ? a.pastDueSince
+                    ? "canceled (after dunning)"
+                    : "canceled (voluntary)"
+                  : `${a.status} · ${a.plan}/${a.billingCycle}`
+          }`}
+        >
+          <Chip
+            active={a?.status === "active"}
+            onClick={() =>
+              apply(
+                {
+                  plan: "pro",
+                  billingCycle: "monthly",
+                  status: "active",
+                  clearPastDue: true,
+                  onboarded: true,
+                  hasEverSubscribed: true,
+                },
+                "/home",
+              )
+            }
+          >
+            Active (Pro monthly)
+          </Chip>
+          <Chip
+            onClick={() =>
+              apply(
+                { status: "past_due", pastDueDayOffset: 0, onboarded: true, hasEverSubscribed: true },
+                "/home",
+              )
+            }
+          >
+            Past due — day 0
+          </Chip>
+          <Chip
+            onClick={() =>
+              apply(
+                { status: "past_due", pastDueDayOffset: 5, onboarded: true, hasEverSubscribed: true },
+                "/home",
+              )
+            }
+          >
+            Past due — day 5
+          </Chip>
+          <Chip
+            active={a?.status === "canceled" && !a.pastDueSince}
+            onClick={() =>
+              apply(
+                { status: "canceled", clearPastDue: true, onboarded: true, hasEverSubscribed: true },
+                "/home",
+              )
+            }
+          >
+            Canceled — voluntary
+          </Chip>
+          <Chip
+            active={a?.status === "canceled" && !!a.pastDueSince}
+            onClick={() =>
+              apply(
+                { status: "canceled", pastDueDayOffset: 7, onboarded: true, hasEverSubscribed: true },
+                "/home",
+              )
+            }
+          >
+            Canceled — after dunning
+          </Chip>
+        </Row>
         <Row label="credentials">
           <Chip active={a?.credentials === true} onClick={() => apply({ noCredentials: false })}>
             set
