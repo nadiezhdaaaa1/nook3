@@ -118,10 +118,10 @@ export function BillingDunningBanner() {
 
   return (
     <Shell tone="warn" onDismiss={dismiss}>
-      <div className="flex w-full min-w-0 items-center justify-between gap-3">
-        <p className="m-0 flex min-w-0 items-center gap-2 text-[13px] leading-snug">
-          <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden />
-          <span className="min-w-0 truncate sm:whitespace-normal">
+      <div className="flex w-full min-w-0 flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
+        <p className="m-0 flex min-w-0 items-start gap-2 text-[13px] leading-snug lg:items-center">
+          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 lg:mt-0" aria-hidden />
+          <span className="min-w-0 lg:truncate">
             <span className="font-semibold">{copy.headline}</span>{" "}
             <span>
               {mode === "error"
@@ -136,7 +136,7 @@ export function BillingDunningBanner() {
           size="medium"
           onClick={() => void openRepair()}
           disabled={mode === "creating"}
-          className="!h-[32px] !px-3.5 !text-[13px] !rounded-[10px] shrink-0 focus-visible:!ring-white focus-visible:!ring-offset-0"
+          className="!h-[32px] !px-3.5 !text-[13px] !rounded-[10px] shrink-0 self-start lg:self-auto focus-visible:!ring-white focus-visible:!ring-offset-0"
         >
           {mode === "creating" ? (
             <>
@@ -196,16 +196,16 @@ function Shell({
         className="fixed inset-x-0 top-0 z-[55]"
         style={style}
       >
-        <div className="mx-auto flex max-w-[1440px] items-center gap-2 px-4 py-[6px] sm:px-6">
-          {children}
+        <div className="relative mx-auto max-w-[1440px] px-4 py-[6px] sm:px-6">
+          <div className="pr-8 sm:pr-10">{children}</div>
           {onDismiss && (
             <button
               type="button"
               onClick={onDismiss}
               aria-label="Dismiss"
-              className="shrink-0 rounded-full p-1 opacity-60 transition hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+              className="absolute right-2 top-2 rounded-full p-1 opacity-70 transition hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current sm:right-4 lg:top-1/2 lg:-translate-y-1/2"
             >
-              <X className="h-3.5 w-3.5" aria-hidden />
+              <X className="h-3.5 w-3.5" aria-hidden" />
             </button>
           )}
         </div>
