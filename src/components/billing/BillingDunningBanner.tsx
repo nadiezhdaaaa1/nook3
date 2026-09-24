@@ -205,7 +205,7 @@ function Shell({
               aria-label="Dismiss"
               className="absolute right-2 top-2 rounded-full p-1 opacity-70 transition hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current sm:right-4 lg:top-1/2 lg:-translate-y-1/2"
             >
-              <X className="h-3.5 w-3.5" aria-hidden" />
+              <X className="h-3.5 w-3.5" aria-hidden />
             </button>
           )}
         </div>
