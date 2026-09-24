@@ -82,7 +82,6 @@ import {
   profileQueryOptions,
 } from "@/lib/queries/profile";
 import { accessQueryOptions } from "@/lib/queries/access";
-import type { AccessState } from "@/lib/profile.functions";
 import { useQuery } from "@tanstack/react-query";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
@@ -267,7 +266,6 @@ function AccountPage() {
         trialEndsAt={trialEndsAt}
         currentPlan={currentPlan}
         activeCycle={activeCycle}
-        access={accessQ.data ?? null}
         accessStatus={accessQ.data?.status ?? "none"}
       />
 
@@ -2282,7 +2280,6 @@ function SubscriptionSection({
   trialEndsAt,
   currentPlan,
   activeCycle,
-  access,
   accessStatus,
 }: {
   plan: Plan;
@@ -2290,7 +2287,6 @@ function SubscriptionSection({
   trialEndsAt?: string;
   currentPlan: PlanDef;
   activeCycle: BillingCycle;
-  access: AccessState | null;
   accessStatus: "none" | "trialing" | "active" | "canceled";
 }) {
   const navigate = useNavigate();
@@ -2371,7 +2367,6 @@ function SubscriptionSection({
     <>
       {needsRestart && (
         <ReengagementBanner
-          access={access}
           id="subscription"
           className="mb-8"
         />
