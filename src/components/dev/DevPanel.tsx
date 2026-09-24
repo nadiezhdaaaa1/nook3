@@ -300,6 +300,7 @@ export function DevPanel() {
                   clearPastDue: true,
                   onboarded: true,
                   hasEverSubscribed: true,
+                  noCredentials: false,
                 },
                 "/home",
               )
@@ -318,6 +319,7 @@ export function DevPanel() {
                   clearPastDue: true,
                   onboarded: true,
                   hasEverSubscribed: false,
+                  noCredentials: false,
                 },
                 "/home",
               )
@@ -336,6 +338,7 @@ export function DevPanel() {
                   clearPastDue: true,
                   onboarded: true,
                   hasEverSubscribed: true,
+                  noCredentials: false,
                 },
                 "/home",
               )
@@ -354,6 +357,7 @@ export function DevPanel() {
                   paymentFailureMarker: true,
                   onboarded: true,
                   hasEverSubscribed: true,
+                  noCredentials: false,
                 },
                 "/home",
               )
