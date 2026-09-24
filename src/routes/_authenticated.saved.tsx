@@ -282,8 +282,6 @@ function SavedPage() {
     >
       <div className="space-y-6">
 
-        {activeTab !== "searches" && <ReengagementBanner />}
-
         {alertsQ.isLoading && activeTab !== "searches" ? (
           <div className="flex items-center justify-center py-16 text-charcoal-500">
             <Loader2 className="h-5 w-5 animate-spin" />
