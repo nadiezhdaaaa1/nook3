@@ -82,6 +82,7 @@ import {
   profileQueryOptions,
 } from "@/lib/queries/profile";
 import { accessQueryOptions } from "@/lib/queries/access";
+import type { AccessState } from "@/lib/profile.functions";
 import { useQuery } from "@tanstack/react-query";
 import { OriginButton } from "@/components/ui/origin-button";
 import {
@@ -92,6 +93,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { WARM_BG, COOL_BG, DARK_SHADOW } from "@/components/landing/PricingThreeTiers";
+import { ReengagementBanner } from "@/components/billing/ReengagementBanner";
 
 export const Route = createFileRoute("/_authenticated/account")({
   component: () => (
@@ -265,11 +267,8 @@ function AccountPage() {
         trialEndsAt={trialEndsAt}
         currentPlan={currentPlan}
         activeCycle={activeCycle}
+        access={accessQ.data ?? null}
         accessStatus={accessQ.data?.status ?? "none"}
-        pastDueSince={accessQ.data?.pastDueSince ?? null}
-        hasEverSubscribed={accessQ.data?.hasEverSubscribed ?? false}
-        accessPlan={accessQ.data?.plan ?? null}
-        accessCycle={accessQ.data?.billingCycle ?? null}
       />
 
       {/* Communications */}
@@ -2283,22 +2282,16 @@ function SubscriptionSection({
   trialEndsAt,
   currentPlan,
   activeCycle,
+  access,
   accessStatus,
-  pastDueSince,
-  hasEverSubscribed,
-  accessPlan,
-  accessCycle,
 }: {
   plan: Plan;
   trialActive: boolean;
   trialEndsAt?: string;
   currentPlan: PlanDef;
   activeCycle: BillingCycle;
-  accessStatus: "none" | "trialing" | "active" | "past_due" | "canceled";
-  pastDueSince: string | null;
-  hasEverSubscribed: boolean;
-  accessPlan: Plan | null;
-  accessCycle: BillingCycle | null;
+  access: AccessState | null;
+  accessStatus: "none" | "trialing" | "active" | "canceled";
 }) {
   const navigate = useNavigate();
 
@@ -2372,48 +2365,16 @@ function SubscriptionSection({
   }, [plan, activeCycle]);
 
   const visiblePlans = PLANS.filter((p) => visiblePlanKeys.includes(p.key));
-  const dunningCanceled = accessStatus === "canceled" && Boolean(pastDueSince);
   const needsRestart = accessStatus === "none" || accessStatus === "canceled";
-  const firstPurchase = needsRestart && !hasEverSubscribed && !dunningCanceled;
 
   return (
     <>
       {needsRestart && (
-        <section
+        <ReengagementBanner
+          access={access}
           id="subscription"
-          className="mb-8 rounded-card border border-[#d66c38]/35 bg-[#fff0e8] p-5"
-        >
-          <h2 className="font-display text-xl font-semibold text-charcoal-950">
-            {dunningCanceled
-              ? "Your alerts are off — we couldn't charge your card."
-              : firstPurchase
-                ? "Start your plan to switch your alerts on."
-                : "Turn your alerts back on."}
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-charcoal-700">
-            {dunningCanceled
-              ? "We tried your card ending 4242 a few times over the past week and couldn't take payment, so we've switched your alerts off. Nothing's lost — your searches are exactly where you left them."
-              : firstPurchase
-                ? "Your search is saved and ready. Pick up where you left off and we'll start sending matches the moment they're listed."
-                : "Your searches are still here. Restart your plan and we'll start sending matches again."}
-          </p>
-          <OriginButton
-            className="mt-4"
-            variant="main"
-            size="medium"
-            onClick={() => {
-              useOnboardingStore.getState().set("selectedPlan", accessPlan ?? plan);
-              useOnboardingStore.getState().set("billingCycle", accessCycle ?? activeCycle);
-              navigate({ to: "/checkout/mock" });
-            }}
-          >
-            {dunningCanceled
-              ? "Restart my alerts"
-              : firstPurchase
-                ? "Pay and start watching"
-                : "Turn my alerts back on"}
-          </OriginButton>
-        </section>
+          className="mb-8"
+        />
       )}
       <RenewSubscriptionDialog
         open={renewOpen}

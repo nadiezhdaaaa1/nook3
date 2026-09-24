@@ -30,19 +30,13 @@ import { cn } from "@/lib/utils";
  * through `devSetAccountState`, which refuses to run in production.
  */
 
-const REASON_KEY_DEFAULT: DunningReason = "card_declined";
-import {
-  getDunningReasonOverride,
-  setDunningReasonOverride,
-  type DunningReason,
-} from "@/lib/dunning";
 import {
   getDashboardStateOverride,
   setDashboardStateOverride,
   type DashboardStateOverride,
 } from "@/lib/dev/dashboardState";
 
-const STATUSES = ["none", "trialing", "active", "past_due", "canceled"] as const;
+const STATUSES = ["none", "trialing", "active", "canceled"] as const;
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -84,15 +78,6 @@ function Chip({
 export function DevPanel() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [reason, setReason] = useState<DunningReason>(
-    () => getDunningReasonOverride() ?? REASON_KEY_DEFAULT,
-  );
-  const [sessionError, setSessionError] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.localStorage.getItem("nook.dev.dunningSessionError") === "1",
-  );
-  const [dayOffset, setDayOffset] = useState(0);
   const [dashboardState, setDashboardState] = useState<DashboardStateOverride>(() =>
     getDashboardStateOverride(),
   );
@@ -186,10 +171,12 @@ export function DevPanel() {
     setBusy(true);
     try {
       await setState({ data: patch as never });
-      await qc.invalidateQueries({ queryKey: accessQueryKey });
-      await qc.invalidateQueries({ queryKey: profileQueryKey });
+      await qc.resetQueries({ queryKey: accessQueryKey });
+      await qc.resetQueries({ queryKey: profileQueryKey });
       await router.invalidate();
-      if (to) navigate({ to, replace: true } as never);
+      if (to) {
+        navigate({ to, replace: true } as never);
+      }
     } catch (e) {
       toast.error("Dev write failed", {
         description: e instanceof Error ? e.message : "Unknown error",
@@ -276,9 +263,6 @@ export function DevPanel() {
             </div>
             <div>
               status: <b>{a.status}</b>
-              {a.status === "past_due" && a.pastDueSince
-                ? ` (day ${Math.floor((Date.now() - new Date(a.pastDueSince).getTime()) / 86400000)})`
-                : ""}
             </div>
             <div>
               onboarded: <b>{a.onboarded ? "yes" : "no"}</b>
@@ -298,12 +282,12 @@ export function DevPanel() {
           label={`billing state — now: ${
             !a
               ? "…"
-              : a.status === "past_due" && a.pastDueSince
-                ? `past_due day ${Math.floor((Date.now() - new Date(a.pastDueSince).getTime()) / 86400000)}`
-                : a.status === "canceled"
+              : a.status === "canceled"
                   ? a.pastDueSince
                     ? "canceled (after dunning)"
-                    : "canceled (voluntary)"
+                    : a.hasEverSubscribed
+                      ? "canceled (voluntary)"
+                      : "canceled (after trial)"
                   : `${a.status} · ${a.plan}/${a.billingCycle}`
           }`}
         >
@@ -318,6 +302,7 @@ export function DevPanel() {
                   clearPastDue: true,
                   onboarded: true,
                   hasEverSubscribed: true,
+                  noCredentials: false,
                 },
                 "/home",
               )
@@ -326,30 +311,37 @@ export function DevPanel() {
             Active (Pro monthly)
           </Chip>
           <Chip
+            active={a?.status === "canceled" && !a.hasEverSubscribed && !a.pastDueSince}
             onClick={() =>
               apply(
-                { status: "past_due", pastDueDayOffset: 0, onboarded: true, hasEverSubscribed: true },
+                {
+                  plan: "intro",
+                  billingCycle: "monthly",
+                  status: "canceled",
+                  clearPastDue: true,
+                  onboarded: true,
+                  hasEverSubscribed: false,
+                  noCredentials: false,
+                },
                 "/home",
               )
             }
           >
-            Past due — day 0
+            Canceled — after trial
           </Chip>
           <Chip
+            active={a?.status === "canceled" && a.hasEverSubscribed && !a.pastDueSince}
             onClick={() =>
               apply(
-                { status: "past_due", pastDueDayOffset: 5, onboarded: true, hasEverSubscribed: true },
-                "/home",
-              )
-            }
-          >
-            Past due — day 5
-          </Chip>
-          <Chip
-            active={a?.status === "canceled" && !a.pastDueSince}
-            onClick={() =>
-              apply(
-                { status: "canceled", clearPastDue: true, onboarded: true, hasEverSubscribed: true },
+                {
+                  plan: "pro",
+                  billingCycle: "monthly",
+                  status: "canceled",
+                  clearPastDue: true,
+                  onboarded: true,
+                  hasEverSubscribed: true,
+                  noCredentials: false,
+                },
                 "/home",
               )
             }
@@ -360,7 +352,15 @@ export function DevPanel() {
             active={a?.status === "canceled" && !!a.pastDueSince}
             onClick={() =>
               apply(
-                { status: "canceled", pastDueDayOffset: 7, onboarded: true, hasEverSubscribed: true },
+                {
+                  plan: "pro",
+                  billingCycle: "monthly",
+                  status: "canceled",
+                  paymentFailureMarker: true,
+                  onboarded: true,
+                  hasEverSubscribed: true,
+                  noCredentials: false,
+                },
                 "/home",
               )
             }
@@ -383,30 +383,10 @@ export function DevPanel() {
               key={s}
               active={a?.status === s}
               onClick={() =>
-                apply(
-                  s === "past_due"
-                    ? { status: s, pastDueDayOffset: dayOffset }
-                    : { status: s, clearPastDue: true },
-
-                )
+                apply({ status: s, clearPastDue: true })
               }
             >
               {s}
-            </Chip>
-          ))}
-        </Row>
-
-        <Row label={`past_due_since — day ${dayOffset}`}>
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((d) => (
-            <Chip
-              key={d}
-              active={dayOffset === d}
-              onClick={() => {
-                setDayOffset(d);
-                apply({ status: "past_due", pastDueDayOffset: d });
-              }}
-            >
-              {d}
             </Chip>
           ))}
         </Row>
@@ -525,41 +505,6 @@ export function DevPanel() {
           </Chip>
         </Row>
 
-        <Row label="dunning reason">
-
-          <Chip
-            active={reason !== "requires_confirmation"}
-            onClick={() => {
-              setDunningReasonOverride("card_declined");
-              setReason("card_declined");
-            }}
-          >
-            declined
-          </Chip>
-          <Chip
-            active={reason === "requires_confirmation"}
-            onClick={() => {
-              setDunningReasonOverride("requires_confirmation");
-              setReason("requires_confirmation");
-            }}
-          >
-            bank confirmation
-          </Chip>
-          <Chip
-            active={sessionError}
-            onClick={() => {
-              const next = !sessionError;
-              setSessionError(next);
-              if (typeof window !== "undefined") {
-                if (next) window.localStorage.setItem("nook.dev.dunningSessionError", "1");
-                else window.localStorage.removeItem("nook.dev.dunningSessionError");
-              }
-            }}
-          >
-            force session error
-          </Chip>
-        </Row>
-
         <Row label="onboarded">
           <Chip active={a?.onboarded === true} onClick={() => apply({ onboarded: true })}>
             yes
@@ -668,37 +613,6 @@ export function DevPanel() {
             }
           >
             5 · in app
-          </Chip>
-          <Chip
-            onClick={() =>
-              apply(
-                {
-                  noCredentials: false,
-                  status: "past_due",
-                  pastDueDayOffset: dayOffset,
-                  onboarded: true,
-                },
-                "/home",
-              )
-            }
-          >
-            6 · past_due grace
-          </Chip>
-          <Chip
-            onClick={() =>
-              apply(
-                {
-                  noCredentials: false,
-                  status: "past_due",
-                  pastDueDayOffset: 7,
-                  onboarded: true,
-                  hasEverSubscribed: true,
-                },
-                "/account#subscription",
-              )
-            }
-          >
-            7 · alerts paused
           </Chip>
         </Row>
 

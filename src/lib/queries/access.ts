@@ -6,7 +6,7 @@ export const accessQueryKey = ["access-state"] as const;
 
 /**
  * Access state used by the `_authenticated` gate. Short staleTime so a plan
- * change (or a `past_due` expiry) is picked up on the next navigation without
+ * change is picked up on the next navigation without
  * re-fetching on every route transition.
  */
 export const accessQueryOptions = () =>

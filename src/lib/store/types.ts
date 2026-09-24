@@ -82,7 +82,7 @@ export interface User {
   subscriptionCanceledAt?: string | null;
   subscriptionPeriodEnd?: string | null;
   /** Whether the subscription is paid for. Backend-owned. */
-  subscriptionStatus?: "none" | "trialing" | "active" | "past_due" | "canceled";
+  subscriptionStatus?: "none" | "trialing" | "active" | "canceled";
   pastDueSince?: string | null;
   updatedAt?: string;
 }
