@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { ReengagementBanner } from "@/components/billing/ReengagementBanner";
 
 const TABS = [
   {
@@ -277,6 +278,8 @@ function SavedPage() {
       }
     >
       <div className="space-y-6">
+
+        {activeTab !== "searches" && <ReengagementBanner />}
 
         {alertsQ.isLoading && activeTab !== "searches" ? (
           <div className="flex items-center justify-center py-16 text-charcoal-500">

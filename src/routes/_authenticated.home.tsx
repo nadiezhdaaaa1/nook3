@@ -30,6 +30,7 @@ import {
 import { ListingActions } from "@/components/app/ListingActions";
 import { ListingDetailDrawer } from "@/components/app/ListingDetailDrawer";
 import { FiltersSheet } from "@/components/app/FiltersSheet";
+import { ReengagementBanner } from "@/components/billing/ReengagementBanner";
 import {
   activeFilterCount,
   applyFilters,
@@ -571,6 +572,7 @@ function HomeScreen() {
       >
         {!noSearches && (
           <div className="mx-auto flex max-w-[960px] flex-col">
+          <ReengagementBanner className="mb-4" />
           <header className="p-2">
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
               <SearchSelector />
