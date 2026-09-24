@@ -1,22 +1,27 @@
-# Restyle the listing detail drawer to the approved Figma
+# Replace grace-period dunning with frozen-data re-engagement
 
 ## User-visible result
-- The listing drawer on Home and Saved matches Figma nodes `319:34` and `319:728` in both the desktop side panel and mobile bottom drawer.
-- Address, price, property facts, amenities, description, close control, and both source-link footer states use the approved hierarchy, spacing, typography, colors, and dimensions.
-- Report, dislike, save, external-link, close, deep-link, loading, and unavailable-listing behavior remains unchanged.
-- Listing action controls on cards and map popups keep their current appearance.
+- Failed payments no longer create a seven-day grace state. Only `trialing` and `active` accounts receive new matches.
+- Onboarded canceled or expired accounts can still browse Home, Saved, listing details, and their existing frozen matches instead of being redirected to Account.
+- Home and the Saved/Disliked listing tabs show a persistent, non-dismissible restart card with the approved copy for trial-ended, voluntary cancellation, or payment-failure cancellation.
+- Account uses the same three cancellation causes for its existing restart card.
+- The preview DevPanel exposes exactly four billing presets: Active, Canceled after trial, Canceled voluntary, and Canceled after dunning.
 
 ## Implementation
-1. Restructure the shared drawer content into the Figma section order: address header, price/tag row, icon-led specs, property/neighborhood/age lines, amenity pills, and conditional description.
-2. Apply the exact 482px desktop width, 24px horizontal content inset, 56px top inset, 24px section gaps, 32px content bottom spacing, and Figma typography. Use the existing Google Sans Flex, Fraunces, and semantic foreground/primary tokens; add only the missing drawer-specific neutral/badge tokens to the global design system.
-3. Restyle the desktop Sheet close control and add the matching accessible close control to the mobile Drawer while retaining overlay, Escape, drag-dismiss, focus restoration, and scroll-lock behavior from the existing primitives.
-4. Add a `drawer` presentation variant to `ListingActions` that reuses its current report/dislike dropdowns, report dialog, save state, and loading behavior, but renders the Figma utility controls and ordering. Keep the default/card presentation byte-for-byte equivalent in behavior and appearance.
-5. Update only the drawer action instances in Home and Saved to request the new presentation. Keep existing handlers, including closing after dislike/report, and keep list/map card action instances unchanged.
-6. Rebuild the sticky footer for the source-link and no-source states with the exact copy, dimensions, spacing, and fixed row structure from the two Figma frames.
-7. Restyle the loading skeleton and unavailable state only enough to fit the new panel insets and close layout, without changing their behavior or wording.
-8. Verify TypeScript, build diagnostics, and the live drawer at desktop and mobile sizes, including source/no-source footers and interactive action menus.
+1. Simplify the server-derived access state: remove grace-window self-healing and grant access only for `trialing`/`active`. Keep the existing payment-failure timestamp as a historical cancellation-cause marker, and tolerate the legacy database enum value without treating it as access.
+2. Change the authenticated gate so an onboarded user with valid credentials may enter the app even without subscription access. Keep unfinished onboarding and credential redirects unchanged, and keep existing search quota/upgrade enforcement unchanged.
+3. Remove the app-wide dunning strip and delete its module, repair screen, and mock portal/invoice routes. Remove all remaining DevPanel controls and local overrides tied to `past_due` repair/grace testing.
+4. Add one shared re-engagement model/component that derives:
+   - after trial: canceled/none, never paid, no payment-failure marker;
+   - after dunning: canceled with the payment-failure marker;
+   - voluntary: canceled after prior payment, without that marker.
+   It will seed the approved plan/cycle, disable trial mode, and navigate to `/checkout/mock`.
+5. Render the shared card above the Home matches list and above the Saved and Disliked listing lists. Do not render it in the My searches tab, create a new tab, dismiss it, or alter existing listing data.
+6. Align Account’s restart card with the same three causes and approved copy/actions while leaving its purchase cards and active/trialing states unchanged.
+7. Update the DevPanel presets to write the exact marker combinations for all three canceled causes, invalidate profile/access data, and navigate so changes appear immediately.
+8. Verify type/build diagnostics and use the preview DevPanel to check all four presets across Home, Saved, Disliked, and Account at desktop and mobile widths.
 
 ## Technical details
-- Use Lucide `X`, `BedDouble`, `Bath`, `Ruler`, `House`, `MapPin`, `Clock`, `ArrowUpRight`, `Flag`, `ThumbsDown`, and `Heart`; no Figma localhost assets will be embedded.
-- Keep `ListingDetailDrawer` as the single shared content implementation used by both Sheet and Drawer.
-- Preserve the current `actions` slot contract while passing `variant="drawer"` from the existing Home/Saved action nodes.
+- No schema change: `past_due_since` remains the mock-friendly payment-failure marker requested by the spec; the legacy `past_due` enum value may remain for database compatibility but is removed from current UI presets and access logic.
+- The shared banner will use existing Account card styling and `OriginButton`, with `role="status"`, semantic colors, responsive layout, and no dismiss control.
+- Checkout selection uses `selectedPlan`, `billingCycle`, and `trialActive: false`; after-trial always chooses Pro monthly, while voluntary/dunning reuse the access state’s stored plan/cycle.
