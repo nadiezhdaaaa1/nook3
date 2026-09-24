@@ -14,7 +14,7 @@
 - [x] Commit onboarding at new call sites (post-auth pricing flow, subscribed preview CTA)
 - [x] Delete /onboarding/success + success-variant machinery, update all references
 - [x] Route gate redirects: no credentials → /signup?lockEmail=1; onboarded no-access → /account#subscription
-- [x] Account subscription restart copy for voluntary churn vs dunning cancellation
+- [x] Account subscription restart copy for voluntary vs payment-failure cancellation
 - [x] Analytics events for modal open / auth success / checkout redirect
 
 ## Frozen-data cancellation model

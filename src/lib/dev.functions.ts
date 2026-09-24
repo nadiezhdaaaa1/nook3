@@ -22,7 +22,6 @@ const devStateSchema = z.object({
   status: z.enum(["none", "trialing", "active", "canceled"]).optional(),
   /** Sets the retained payment-failure timestamp used to explain cancellation. */
   paymentFailureMarker: z.boolean().optional(),
-  clearPastDue: z.boolean().optional(),
   onboarded: z.boolean().optional(),
   hasEverSubscribed: z.boolean().optional(),
   /** Simulates an account with no password and no linked social identity. */
@@ -58,7 +57,7 @@ export const devSetAccountState = createServerFn({ method: "POST" })
         _billing_cycle: data.billingCycle ?? null,
         _status: data.status ?? null,
         _past_due_since: pastDueSince,
-        _clear_past_due: data.clearPastDue ?? false,
+        _clear_past_due: !data.paymentFailureMarker,
         _onboarded: data.onboarded ?? null,
         _has_ever_subscribed: data.hasEverSubscribed ?? null,
         _no_credentials: data.noCredentials ?? null,

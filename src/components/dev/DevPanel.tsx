@@ -284,7 +284,7 @@ export function DevPanel() {
               ? "…"
               : a.status === "canceled"
                   ? a.pastDueSince
-                    ? "canceled (after dunning)"
+                    ? "canceled (payment failed)"
                     : a.hasEverSubscribed
                       ? "canceled (voluntary)"
                       : "canceled (after trial)"
@@ -365,7 +365,7 @@ export function DevPanel() {
               )
             }
           >
-            Canceled — after dunning
+            Canceled — payment failed
           </Chip>
         </Row>
         <Row label="credentials">
