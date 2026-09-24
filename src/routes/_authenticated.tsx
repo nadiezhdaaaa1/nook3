@@ -123,7 +123,7 @@ function AppLayout() {
           <HydrationSkeleton />
         </div>
       ) : (
-        <Outlet context={{ access }} />
+        <Outlet />
       )}
     </div>
   );
