@@ -2369,7 +2369,13 @@ function SubscriptionSection({
 
   return (
     <>
-      <ReengagementBanner access={access} id="subscription" className="mb-8" />
+      {needsRestart && (
+        <ReengagementBanner
+          access={access}
+          id="subscription"
+          className="mb-8"
+        />
+      )}
       <RenewSubscriptionDialog
         open={renewOpen}
         onOpenChange={setRenewOpen}
