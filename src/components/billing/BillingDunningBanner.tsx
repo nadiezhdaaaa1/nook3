@@ -136,7 +136,7 @@ export function BillingDunningBanner() {
           size="medium"
           onClick={() => void openRepair()}
           disabled={mode === "creating"}
-          className="!h-[32px] !px-3.5 !text-[13px] shrink-0 focus-visible:!ring-white focus-visible:!ring-offset-0"
+          className="!h-[32px] !px-3.5 !text-[13px] !rounded-[10px] shrink-0 focus-visible:!ring-white focus-visible:!ring-offset-0"
         >
           {mode === "creating" ? (
             <>
