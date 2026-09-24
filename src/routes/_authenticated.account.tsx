@@ -2471,6 +2471,27 @@ function SubscriptionSection({
               })}
             </div>
           </>
+        ) : needsRestart ? (
+          /* No active/trialing subscription: purchase mode, same as the
+             landing pricing cards — no "YOUR PLAN" badge, no next-charge
+             line; each CTA seeds the store and goes to checkout. */
+          <div className="grid md:grid-cols-2 gap-7">
+            {TRIAL_UPGRADE_KEYS.map((key) => {
+              const p = PLANS.find((x) => x.key === key)!;
+              return (
+                <TrialUpgradeCard
+                  key={p.key}
+                  plan={p}
+                  onChoose={() => {
+                    useOnboardingStore.getState().set("selectedPlan", "pro");
+                    useOnboardingStore.getState().set("billingCycle", p.cycle);
+                    useOnboardingStore.getState().set("trialActive", false);
+                    navigate({ to: "/checkout/mock" });
+                  }}
+                />
+              );
+            })}
+          </div>
         ) : (
           <>
             <div className="mb-5">
