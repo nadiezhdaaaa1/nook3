@@ -109,6 +109,7 @@ function GatePending() {
 
 function AppLayout() {
   const { isHydrating } = useDbSync();
+  const { access } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const hideHeader = pathname.startsWith("/search/new");
 
@@ -122,7 +123,7 @@ function AppLayout() {
           <HydrationSkeleton />
         </div>
       ) : (
-        <Outlet />
+        <Outlet context={{ access }} />
       )}
     </div>
   );

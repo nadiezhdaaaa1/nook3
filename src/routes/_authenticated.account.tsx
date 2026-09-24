@@ -1,6 +1,6 @@
 import { AppPage } from "@/components/app/AppPage";
 import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useOutletContext } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Check,
@@ -182,6 +182,7 @@ const TIMEZONES = [
 ];
 
 function AccountPage() {
+  const { access: routeAccess } = useOutletContext<{ access: AccessState }>();
   const onboarding = useOnboardingStore();
   const user = useAppStore((s) => s.user);
   const searches = useAppStore((s) => s.searches);
@@ -267,8 +268,8 @@ function AccountPage() {
         trialEndsAt={trialEndsAt}
         currentPlan={currentPlan}
         activeCycle={activeCycle}
-        access={accessQ.data ?? null}
-        accessStatus={accessQ.data?.status ?? "none"}
+        access={accessQ.data ?? routeAccess}
+        accessStatus={accessQ.data?.status ?? routeAccess.status}
       />
 
       {/* Communications */}
