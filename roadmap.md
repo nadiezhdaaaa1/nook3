@@ -18,7 +18,7 @@
 - [x] Analytics events for modal open / auth success / checkout redirect
 
 ## Frozen-data cancellation model
-- [ ] Remove past-due grace access, UI, routes, and preview controls
-- [ ] Keep onboarded canceled accounts inside the app
-- [ ] Add cause-aware restart banners to Home, Saved, and Account
+- [x] Remove past-due grace access, UI, routes, and preview controls
+- [x] Keep onboarded canceled accounts inside the app
+- [x] Add cause-aware restart banners to Home, Saved, and Account
 - [ ] Verify all preview billing presets across the affected pages

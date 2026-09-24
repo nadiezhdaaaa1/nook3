@@ -326,7 +326,7 @@ export function DevPanel() {
             Canceled — after trial
           </Chip>
           <Chip
-            active={a?.status === "canceled" && !a.pastDueSince}
+            active={a?.status === "canceled" && a.hasEverSubscribed && !a.pastDueSince}
             onClick={() =>
               apply(
                 {
@@ -499,41 +499,6 @@ export function DevPanel() {
           </Chip>
         </Row>
 
-        <Row label="dunning reason">
-
-          <Chip
-            active={reason !== "requires_confirmation"}
-            onClick={() => {
-              setDunningReasonOverride("card_declined");
-              setReason("card_declined");
-            }}
-          >
-            declined
-          </Chip>
-          <Chip
-            active={reason === "requires_confirmation"}
-            onClick={() => {
-              setDunningReasonOverride("requires_confirmation");
-              setReason("requires_confirmation");
-            }}
-          >
-            bank confirmation
-          </Chip>
-          <Chip
-            active={sessionError}
-            onClick={() => {
-              const next = !sessionError;
-              setSessionError(next);
-              if (typeof window !== "undefined") {
-                if (next) window.localStorage.setItem("nook.dev.dunningSessionError", "1");
-                else window.localStorage.removeItem("nook.dev.dunningSessionError");
-              }
-            }}
-          >
-            force session error
-          </Chip>
-        </Row>
-
         <Row label="onboarded">
           <Chip active={a?.onboarded === true} onClick={() => apply({ onboarded: true })}>
             yes
@@ -642,37 +607,6 @@ export function DevPanel() {
             }
           >
             5 · in app
-          </Chip>
-          <Chip
-            onClick={() =>
-              apply(
-                {
-                  noCredentials: false,
-                  status: "past_due",
-                  pastDueDayOffset: dayOffset,
-                  onboarded: true,
-                },
-                "/home",
-              )
-            }
-          >
-            6 · past_due grace
-          </Chip>
-          <Chip
-            onClick={() =>
-              apply(
-                {
-                  noCredentials: false,
-                  status: "past_due",
-                  pastDueDayOffset: 7,
-                  onboarded: true,
-                  hasEverSubscribed: true,
-                },
-                "/account#subscription",
-              )
-            }
-          >
-            7 · alerts paused
           </Chip>
         </Row>
 

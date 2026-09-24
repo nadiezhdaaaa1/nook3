@@ -6,7 +6,7 @@ import { dbRowToUser } from "@/lib/profile.functions";
 /**
  * DEV-ONLY account state writer.
  *
- * `plan`, `billing_cycle`, `subscription_status`, `past_due_since`,
+ * `plan`, `billing_cycle`, `subscription_status`, payment-failure marker,
  * `has_ever_subscribed` and `dev_no_credentials` are protected by the
  * `prevent_billing_field_self_update` trigger, so they can only be written by
  * the service role through a SECURITY DEFINER routine — here

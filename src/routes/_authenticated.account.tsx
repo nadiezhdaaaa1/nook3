@@ -267,10 +267,6 @@ function AccountPage() {
         currentPlan={currentPlan}
         activeCycle={activeCycle}
         accessStatus={accessQ.data?.status ?? "none"}
-        pastDueSince={accessQ.data?.pastDueSince ?? null}
-        hasEverSubscribed={accessQ.data?.hasEverSubscribed ?? false}
-        accessPlan={accessQ.data?.plan ?? null}
-        accessCycle={accessQ.data?.billingCycle ?? null}
       />
 
       {/* Communications */}
@@ -2285,21 +2281,13 @@ function SubscriptionSection({
   currentPlan,
   activeCycle,
   accessStatus,
-  pastDueSince,
-  hasEverSubscribed,
-  accessPlan,
-  accessCycle,
 }: {
   plan: Plan;
   trialActive: boolean;
   trialEndsAt?: string;
   currentPlan: PlanDef;
   activeCycle: BillingCycle;
-  accessStatus: "none" | "trialing" | "active" | "past_due" | "canceled";
-  pastDueSince: string | null;
-  hasEverSubscribed: boolean;
-  accessPlan: Plan | null;
-  accessCycle: BillingCycle | null;
+  accessStatus: "none" | "trialing" | "active" | "canceled";
 }) {
   const navigate = useNavigate();
 
