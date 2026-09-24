@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertTriangle, CheckCircle2, CreditCard, Loader2, X } from "lucide-react";
+import { CheckCircle2, CreditCard, Loader2, X } from "lucide-react";
 
 import { accessQueryKey, accessQueryOptions } from "@/lib/queries/access";
 import { useHasSession } from "@/lib/queries/useHasSession";
@@ -119,8 +119,7 @@ export function BillingDunningBanner() {
   return (
     <Shell tone="warn" onDismiss={dismiss}>
       <div className="flex w-full min-w-0 flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
-        <p className="m-0 flex min-w-0 items-start gap-2 text-[13px] leading-snug lg:items-center">
-          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 lg:mt-0" aria-hidden />
+        <p className="m-0 flex min-w-0 items-start text-[13px] leading-snug lg:items-center">
           <span className="min-w-0 lg:truncate">
             <span className="font-semibold">{copy.headline}</span>{" "}
             <span>
