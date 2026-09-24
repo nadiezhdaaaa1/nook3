@@ -74,7 +74,13 @@ export const Route = createFileRoute("/_authenticated")({
     // reached through an emailed sign-in token). Their next step is setting up
     // credentials on the account that already exists.
     if (!access.credentials) {
-      throw redirect({ to: "/signup", search: { lockEmail: 1 } });
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw redirect({ to: "/signup", search: { lockEmail: 1 } });
+      }
     }
 
     if (!access.onboarded) {
