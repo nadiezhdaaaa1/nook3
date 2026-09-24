@@ -195,7 +195,7 @@ export function DevPanel() {
             plan: "intro",
             billingCycle: "monthly",
             status: "none",
-            clearPastDue: true,
+            paymentFailureMarker: false,
             onboarded: false,
             hasEverSubscribed: false,
             noCredentials: false,
@@ -284,7 +284,7 @@ export function DevPanel() {
               ? "…"
               : a.status === "canceled"
                   ? a.pastDueSince
-                    ? "canceled (payment failed)"
+                    ? "canceled (after dunning)"
                     : a.hasEverSubscribed
                       ? "canceled (voluntary)"
                       : "canceled (after trial)"
@@ -299,7 +299,7 @@ export function DevPanel() {
                   plan: "pro",
                   billingCycle: "monthly",
                   status: "active",
-                  clearPastDue: true,
+                  paymentFailureMarker: false,
                   onboarded: true,
                   hasEverSubscribed: true,
                   noCredentials: false,
@@ -318,7 +318,7 @@ export function DevPanel() {
                   plan: "intro",
                   billingCycle: "monthly",
                   status: "canceled",
-                  clearPastDue: true,
+                  paymentFailureMarker: false,
                   onboarded: true,
                   hasEverSubscribed: false,
                   noCredentials: false,
@@ -337,7 +337,7 @@ export function DevPanel() {
                   plan: "pro",
                   billingCycle: "monthly",
                   status: "canceled",
-                  clearPastDue: true,
+                  paymentFailureMarker: false,
                   onboarded: true,
                   hasEverSubscribed: true,
                   noCredentials: false,
@@ -365,7 +365,7 @@ export function DevPanel() {
               )
             }
           >
-            Canceled — payment failed
+            Canceled — after dunning
           </Chip>
         </Row>
         <Row label="credentials">
@@ -383,7 +383,7 @@ export function DevPanel() {
               key={s}
               active={a?.status === s}
               onClick={() =>
-                apply({ status: s, clearPastDue: true })
+                apply({ status: s, paymentFailureMarker: false })
               }
             >
               {s}
@@ -564,7 +564,7 @@ export function DevPanel() {
           <Chip
             onClick={() =>
               apply(
-                { noCredentials: false, status: "canceled", clearPastDue: true, onboarded: true },
+                { noCredentials: false, status: "canceled", paymentFailureMarker: false, onboarded: true },
                 "/home",
               )
             }
@@ -574,7 +574,7 @@ export function DevPanel() {
           <Chip
             onClick={() =>
               apply(
-                { noCredentials: false, status: "none", clearPastDue: true, onboarded: false },
+                { noCredentials: false, status: "none", paymentFailureMarker: false, onboarded: false },
                 "/home",
               )
             }
@@ -587,7 +587,7 @@ export function DevPanel() {
                 {
                   noCredentials: false,
                   status: "trialing",
-                  clearPastDue: true,
+                  paymentFailureMarker: false,
                   onboarded: false,
                   plan: "intro",
                 },
@@ -603,7 +603,7 @@ export function DevPanel() {
                 {
                   noCredentials: false,
                   status: "active",
-                  clearPastDue: true,
+                  paymentFailureMarker: false,
                   onboarded: true,
                   plan: "pro",
                   hasEverSubscribed: true,

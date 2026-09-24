@@ -94,7 +94,7 @@ function MockCheckout() {
           plan,
           billingCycle,
           status: plan === "intro" ? "trialing" : "active",
-          clearPastDue: true,
+          paymentFailureMarker: false,
           hasEverSubscribed: true,
         } as never,
       });
